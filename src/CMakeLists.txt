@@ -210,5 +210,5 @@ set_target_properties(bppcore-shared
 install(TARGETS bppcore-static bppcore-shared DESTINATION lib)
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")
 
