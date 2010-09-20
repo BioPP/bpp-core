@@ -40,8 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _STATTEST_H_
 #define _STATTEST_H_
 
-// From Utils:
-#include <Utils/Clonable.h>
+#include "../../Clonable.h"
 
 namespace bpp
 {

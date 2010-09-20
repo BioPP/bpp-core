@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _IOFORMAT_H_
 #define _IOFORMAT_H_
 
-#include "Exceptions.h"
+#include "../Exceptions.h"
 
 // From STL:
 #include <string>
