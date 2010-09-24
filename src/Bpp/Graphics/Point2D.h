@@ -40,7 +40,7 @@
 #ifndef _POINT2D_H_
 #define _POINT2D_H_
 
-#include "Clonable.h"
+#include "../Clonable.h"
 
 namespace bpp
 {

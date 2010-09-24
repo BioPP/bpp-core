@@ -41,7 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _NUMBER_H_
 #define _NUMBER_H_
 
-#include "Clonable.h"
+#include "../Clonable.h"
 
 namespace bpp
 {
