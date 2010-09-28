@@ -1,5 +1,5 @@
 //
-// File: PGFGraphicDevice.h
+// File: PgfGraphicDevice.h
 // Created by: Julien Dutheil
 // Created on: Thu Jun 19 2008
 //
@@ -52,9 +52,9 @@ namespace bpp
 {
 
 /**
- * @brief LaTeX Portable Graphic Format (PGF) plotting format.
+ * @brief LaTeX Portable Graphic Format (Pgf) plotting format.
  */
-class PGFGraphicDevice:
+class PgfGraphicDevice:
   public AbstractGraphicDevice
 {
   private:
@@ -72,18 +72,18 @@ class PGFGraphicDevice:
 
   public:
     /**
-     * @brief Build a new PGF device object.
+     * @brief Build a new Pgf device object.
      *
-     * Coordinates in PGF are the same as in LaTeX, so it can be any of cm, mm, in, pt, px, etc.
+     * Coordinates in Pgf are the same as in LaTeX, so it can be any of cm, mm, in, pt, px, etc.
      * For compatibility with other devices, the constructor takes as input the scale of the drawing, as cm per points.
      * All coordinates and widths will be multiplied by the factor in the output file.
      *
      * @param out The output stream.
      * @param unit The unit length.
      */
-    PGFGraphicDevice(std::ostream& out, double unit);
+    PgfGraphicDevice(std::ostream& out, double unit);
 
-    virtual ~PGFGraphicDevice() {}
+    virtual ~PgfGraphicDevice() {}
 
   public:
     void begin();

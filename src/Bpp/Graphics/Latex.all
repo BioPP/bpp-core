@@ -1,2 +1,2 @@
 #include "Latex/DvipsColorSet.h"
-#include "Latex/PGFGraphicDevice.h"
+#include "Latex/PgfGraphicDevice.h"

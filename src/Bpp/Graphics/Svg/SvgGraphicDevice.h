@@ -1,5 +1,5 @@
 //
-// File: SVGGraphicDevice.h
+// File: SvgGraphicDevice.h
 // Created by: Julien Dutheil
 // Created on: Mon Mar 10 2008
 //
@@ -52,7 +52,7 @@ namespace bpp
 /**
  * @brief SVG plotting format.
  */
-class SVGGraphicDevice:
+class SvgGraphicDevice:
   public AbstractGraphicDevice
 {
   private:
@@ -64,7 +64,7 @@ class SVGGraphicDevice:
     std::map<short int, std::string> fontWeights_;
 
   public:
-    SVGGraphicDevice(std::ostream& out, bool inkscapeEnabled = false):
+    SvgGraphicDevice(std::ostream& out, bool inkscapeEnabled = false):
       out_(out),
       layers_(),
       inkscapeEnabled_(inkscapeEnabled),
@@ -77,7 +77,7 @@ class SVGGraphicDevice:
       fontWeights_[Font::WEIGHT_BOLD] = "bold";
     }
 
-    virtual ~SVGGraphicDevice() {}
+    virtual ~SvgGraphicDevice() {}
 
   public:
     void begin();

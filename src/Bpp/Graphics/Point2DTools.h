@@ -51,7 +51,7 @@
 namespace bpp
 {
 
-  template <class T> class CoordsTools
+  class CoordsTools
   {
     public:
       /**
@@ -61,7 +61,7 @@ namespace bpp
        * @param co2 An other Point2D object.
        * @return the distance between the 2 points as a double
        */
-      static template<class T> double getDistanceBetween(const bpp::Point2D<T>& co1, const bpp::Point2D<T>& co2)
+      template<class T> static double getDistanceBetween(const Point2D<T>& co1, const Point2D<T>& co2)
       {
         T base, height;
         base = co1.getX() - co2.getX();

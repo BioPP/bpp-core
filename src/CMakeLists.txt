@@ -23,9 +23,9 @@ set(CPP_FILES
   Bpp/Graphics/Fig/XFigPostscriptFontManager.cpp
   Bpp/Graphics/Font/Font.cpp
   Bpp/Graphics/Latex/DvipsColorSet.cpp
-  Bpp/Graphics/Latex/PGFGraphicDevice.cpp
+  Bpp/Graphics/Latex/PgfGraphicDevice.cpp
   Bpp/Graphics/Molscript/MolscriptColorSet.cpp
-  Bpp/Graphics/Svg/SVGGraphicDevice.cpp
+  Bpp/Graphics/Svg/SvgGraphicDevice.cpp
   Bpp/Numeric/NumTools.cpp
   Bpp/Numeric/Parameter.cpp
   Bpp/Numeric/ParameterExceptions.cpp
@@ -136,10 +136,10 @@ set(H_FILES
   Bpp/Graphics/Font/Font.h
   Bpp/Graphics/Font/FontManager.h
   Bpp/Graphics/Latex/DvipsColorSet.h
-  Bpp/Graphics/Latex/PGFGraphicDevice.h
+  Bpp/Graphics/Latex/PgfGraphicDevice.h
   Bpp/Graphics/Molscript/MolscriptColorSet.h
   Bpp/Graphics/R/RColorSet.h
-  Bpp/Graphics/Svg/SVGGraphicDevice.h
+  Bpp/Graphics/Svg/SvgGraphicDevice.h
   Bpp/Numeric/Function/AbstractNumericalDerivative.h
   Bpp/Numeric/Function/AbstractOptimizer.h
   Bpp/Numeric/Function/BrentOneDimension.h

@@ -1,5 +1,5 @@
 //
-// File: SVGGraphicDevice.cpp
+// File: SvgGraphicDevice.cpp
 // Created by: Julien Dutheil
 // Created on: Mon Mar 10 2008
 //
@@ -37,23 +37,23 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "SVGGraphicDevice.h"
+#include "SvgGraphicDevice.h"
 
 using namespace bpp;
 using namespace std;
 
-void SVGGraphicDevice::begin()
+void SvgGraphicDevice::begin()
 {
   layers_.clear();
   minx_ = maxx_ = miny_ = maxy_ = 0;
 }
 
-void SVGGraphicDevice::end()
+void SvgGraphicDevice::end()
 {
   //Header:
   out_ << "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" << endl;
-  out_ << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"" << endl;
-  out_ << "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">" << endl;
+  out_ << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD Svg 1.1//EN\"" << endl;
+  out_ << "\"http://www.w3.org/Graphics/Svg/1.1/DTD/svg11.dtd\">" << endl;
   out_ << "<svg width=\"" << (maxx_ - minx_) << "\" height=\"" << (maxy_ - miny_) << "\" version=\"1.1\"" << endl;
   out_ << " xmlns=\"http://www.w3.org/2000/svg\"" << endl;
   if (inkscapeEnabled_)
@@ -82,7 +82,7 @@ void SVGGraphicDevice::end()
   out_ << "</svg>" << endl;
 }
 
-void SVGGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
+void SvgGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
 {
   x1 = x_(x1);
   x2 = x_(x2);
@@ -106,7 +106,7 @@ void SVGGraphicDevice::drawLine(double x1, double y1, double x2, double y2)
   if (y2 > maxy_) maxy_ = y2;
 }
  
-void SVGGraphicDevice::drawRect(double x, double y, double width, double height, short fill)
+void SvgGraphicDevice::drawRect(double x, double y, double width, double height, short fill)
 {
   x = x_(x);
   y = y_(y);
@@ -126,7 +126,7 @@ void SVGGraphicDevice::drawRect(double x, double y, double width, double height,
   if (y + height > maxy_) maxx_ = y + height;
 }
 
-void SVGGraphicDevice::drawCircle(double x, double y, double radius, short fill)
+void SvgGraphicDevice::drawCircle(double x, double y, double radius, short fill)
 {
   x = x_(x);
   y = y_(y);
@@ -141,7 +141,7 @@ void SVGGraphicDevice::drawCircle(double x, double y, double radius, short fill)
   layers_[getCurrentLayer()].push_back(oss.str());
 }
 
-void SVGGraphicDevice::drawText(double x, double y, const std::string & text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
+void SvgGraphicDevice::drawText(double x, double y, const std::string & text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
 {
   x = x_(x);
   y = y_(y);
@@ -153,7 +153,7 @@ void SVGGraphicDevice::drawText(double x, double y, const std::string & text, sh
     style += "after-edge";
   else if (vpos == TEXT_VERTICAL_CENTER)
     style += "middle";
-  else throw UnvalidFlagException("SVGGraphicDevice::drawText. Invalid vertical alignment option.");
+  else throw UnvalidFlagException("SvgGraphicDevice::drawText. Invalid vertical alignment option.");
   style += ";text-anchor:";
   if (hpos == TEXT_HORIZONTAL_LEFT)
     style += "start";
@@ -161,7 +161,7 @@ void SVGGraphicDevice::drawText(double x, double y, const std::string & text, sh
     style += "end";
   else if (hpos == TEXT_HORIZONTAL_CENTER)
     style += "middle";
-  else throw UnvalidFlagException("SVGGraphicDevice::drawText. Invalid horizontal alignment option.");
+  else throw UnvalidFlagException("SvgGraphicDevice::drawText. Invalid horizontal alignment option.");
   style += ";fill:" + colorToText(getCurrentForegroundColor());
 
   ostringstream oss;
