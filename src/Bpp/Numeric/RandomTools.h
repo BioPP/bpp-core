@@ -403,13 +403,13 @@ namespace bpp
 
     /**
      * @brief Computes
-     * \f$ln\left(\Beta\left(\alpha,\beta\right)\right)\f$ given
+     * \f$ln\left(Beta\left(\alpha,\beta\right)\right)\f$ given
      * \f$\alpha\f$ and \f$b\eta\f$.
      * 
      * Returns ln(beta(alpha,beta)) for alpha>0 and beta>0.
      *
      * @param alpha, beta Alpha and Beta parameters.
-     * @return \f$ln\left(\Beta\left(\alpha,\beta\right)\right)\f$
+     * @return \f$ln\left(Beta\left(\alpha,\beta\right)\right)\f$
      */
   
     static double lnBeta (double alpha, double beta);

@@ -43,31 +43,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "Function/Functions.h"
 #include "Matrix/Matrix.h"
 
-/**
- * @mainpage
- *
- * @par
- * This library provides interfaces, classes and functions for numerical calculus.
- * The tools included are general enough to be useful beyond biology.
- * The originality of the library, unless many existing libraries, is to be fully
- * object-oriented. It is also fully compatible with the other Bio++ libraries, and uses
- * the core-classes of the BppUtils library.
- *
- * @par
- * Available methods include:
- * - Vector operations, based on the stl::vector class, see bpp::VectorTools,
- * - Matrix data and operations, see the bpp::Matrix interface and bpp::MatrixTools class,
- * - Functions are implemented using several general classes:
- *   - the bpp::Function interface and its derivatives,
- *   - the bpp::Parameter, bpp::Constraint and bpp::ParameterList classes, and the bpp::Parametrizable interface
- *     provide a very general way to deal with parameters
- * - Function opterations, see the bpp::Optimizer interface, and the bpp::AbstractNumericalDerivative class for
- *   numerical differenciation,
- * - Discrete probability distributions are implemented via the bpp::DiscreteDistribution interface
- * - Several random numbers generators are available through the bpp::RandomNumberFactory interface, and the
- *   bpp::RandomTools static class provides useful methods to deal with random numbers.
- */
-
 namespace bpp
 {
 
