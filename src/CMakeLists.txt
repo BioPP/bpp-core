@@ -1,5 +1,5 @@
-# CMake script for Bio++ Utils
-# Author: Sylvain Gaillard
+# CMake script for Bio++ Core
+# Author: Sylvain Gaillard and Julien Dutheil
 # Created: 17/08/2009
 
 # File list
