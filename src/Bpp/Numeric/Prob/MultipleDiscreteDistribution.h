@@ -85,7 +85,7 @@ namespace bpp
     virtual unsigned int getNumberOfCategories() const = 0;
 
     /**
-     * @param Vvalue
+     * @param Vvalue The vector of values to check.
      * @return The vector of categories of the classes the value is
      * in. Throws a ConstraintException if the value is off the domain
      * of the MultipleDiscreteDistribution.

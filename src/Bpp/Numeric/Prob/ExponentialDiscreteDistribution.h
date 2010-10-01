@@ -70,7 +70,7 @@ namespace bpp
      *
      * The Parameter is: lambda @f$ \in [0;\infty[ @f$.
      *
-     **/
+     */
     
     ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false);
     

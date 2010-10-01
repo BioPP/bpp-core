@@ -87,6 +87,7 @@ namespace bpp
 		
     /**
      * @param value 
+     * @param value The value to check.
      * @return The categoryIndex of the class the value is in. Throws a
      * ConstraintException if the value is off the domain of the
      * DiscreteDistribution.
