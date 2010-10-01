@@ -65,10 +65,11 @@ namespace bpp
      * @brief Build a new discretized exponential distribution.
      * @param n the number of categories to use.
      * @param lambda The lambda parameter.
+     * @param median Tells if median should be used as a value for each category instead of the mean.
      *
      * The Parameter is: lambda @f$ \in [0;\infty[ @f$.
      *
-     **/
+     */
     
     ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false);
     

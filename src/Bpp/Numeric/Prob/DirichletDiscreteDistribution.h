@@ -71,7 +71,7 @@ namespace bpp
    *
    * In the same example, if the distribution is followed by the
    * random vector @f$ (X_1,X_2,X_3) @f$, the 1D distribution used for
-   * @f$ X_1 is the marginal distribution, which discretized values
+   * @f$ X_1 @f$ is the marginal distribution, which discretized values
    * are say, @f$ v_1^1, v_1^2, v_1^3, v_1^4 @f$, then the four 1D
    * distributions used for @f$ X_2 @f$ are the conditional marginal
    * distributions @f$ (X_2|X_1=v_1^1), (X_2|X_1=v_1^2),
@@ -139,7 +139,7 @@ namespace bpp
     unsigned int getNumberOfCategories() const;
 
     /**
-     * @param Vdouble value
+     * @param value The vector of values to check.
      * @return The vector of categoryIndex of the classes the value is
      * in. Throws a ConstraintException if the value is off the domain
      * of the DirichletDiscreteDistribution.

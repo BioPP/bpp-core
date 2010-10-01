@@ -67,6 +67,7 @@ namespace bpp
      * @param n the number of categories to use.
      * @param lambda The lambda parameter
      * @param truncationPoint The trucation point
+     * @param useMedian Tells if median should be used as a value for each category instead of the mean.
      *
      * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
      *

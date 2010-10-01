@@ -77,8 +77,7 @@ namespace bpp
   private:
     /**
      *@brief functions for the computation of incompleteBeta
-     *
-     **/
+     */
     static double incompletebetafe(double a,
                                    double b,
                                    double x,
@@ -425,9 +424,9 @@ namespace bpp
      * Under GPL License
      *
      * @param x the upper limit of the integration.
-     * @param alpha and beta the shape parameter.
+     * @param alpha the shape parameter.
+     * @param beta the shape parameter.
      */
-  
     static double incompleteBeta(double x, double alpha, double beta);
     static double pBeta(double x, double alpha, double beta)
     {
