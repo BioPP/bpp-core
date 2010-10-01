@@ -64,6 +64,8 @@ class GammaDiscreteDistribution:
      * @param n the number of categories to use.
      * @param alpha The alpha parameter (shape)
      * @param beta The beta parameter (rate)
+     * @param minimumAlpha the minimum possible value for alpha
+     * @param minimumBeta the minimum possible value for beta
      *
      * The Parameters are: alpha and beta @f$ \in [0.0001;\infty[ @f$.
      *

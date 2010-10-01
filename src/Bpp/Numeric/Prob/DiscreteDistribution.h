@@ -86,7 +86,7 @@ namespace bpp
     virtual unsigned int getNumberOfCategories() const = 0;
 		
     /**
-     * @param double value
+     * @param value 
      * @return The categoryIndex of the class the value is in. Throws a
      * ConstraintException if the value is off the domain of the
      * DiscreteDistribution.

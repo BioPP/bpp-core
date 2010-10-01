@@ -57,7 +57,7 @@ namespace bpp
  * For the probabilities: they are called \c "theta1",... and defined
  * as @f$ \theta_{i \in 1..\textrm{size-1}} @f$ such that probability of value @f$i @f$ is @f$ (1-\theta_1).(1-\theta_2)...\theta_{i} @f$
  *
- * For the values: they are called \c "V1", \v "V2" ...
+ * For the values: they are called \c "V1", \c "V2" ...
  *
  */
 class SimpleDiscreteDistribution:

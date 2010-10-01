@@ -67,12 +67,14 @@ namespace bpp
      * @param n the number of categories to use.
      * @param lambda The lambda parameter
      * @param truncationPoint The trucation point
+     * @param median boolean value if the value of each category is
+     *         the median (if false, this value is the mean (default)).
      *
      * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
      *
      */
 
-    TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10., bool useMedian = false);
+    TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10., bool median = false);
 
     TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist):
       AbstractDiscreteDistribution(dist),

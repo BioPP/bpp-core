@@ -50,7 +50,7 @@ using namespace std;
   
 /** Constructor: **************************************************************/
 
-TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint, bool useMedian) : AbstractDiscreteDistribution("TruncExponential."), bounds_(), useMedian_(useMedian)
+TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint, bool median) : AbstractDiscreteDistribution("TruncExponential."), bounds_(), useMedian_(median)
 {
   addParameter_(Parameter("TruncExponential.lambda", lambda, new IncludingPositiveReal(0.000001), true));
   addParameter_(Parameter("TruncExponential.tp", truncationPoint, &Parameter::R_PLUS));

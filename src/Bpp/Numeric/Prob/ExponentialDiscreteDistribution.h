@@ -65,6 +65,8 @@ namespace bpp
      * @brief Build a new discretized exponential distribution.
      * @param n the number of categories to use.
      * @param lambda The lambda parameter.
+     * @param median boolean value if the value of each category is
+     *         the median (if false, this value is the mean (default)).
      *
      * The Parameter is: lambda @f$ \in [0;\infty[ @f$.
      *

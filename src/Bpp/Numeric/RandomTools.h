@@ -425,7 +425,7 @@ namespace bpp
      * Under GPL License
      *
      * @param x the upper limit of the integration.
-     * @param alpha and beta the shape parameter.
+     * @param alpha, beta the shape parameters.
      */
   
     static double incompleteBeta(double x, double alpha, double beta);
