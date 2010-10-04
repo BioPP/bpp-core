@@ -42,14 +42,14 @@
 // From local
 #include "Point2D.h"
 
-/**
- * @brief Some functions to deal with Point2D.
- *
- * @author Sylvain Gaillard
- */
-
 namespace bpp
 {
+
+  /**
+   * @brief Some functions to deal with Point2D.
+   *
+   * @author Sylvain Gaillard
+   */
 
   class CoordsTools
   {
