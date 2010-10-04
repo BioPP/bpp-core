@@ -47,6 +47,9 @@ knowledge of the CeCILL license and that you accept its terms.
 //From the STL:
 #include <string>
 
+namespace bpp
+{
+
 /**
  * @brief Extend the Parametrizable interface with support for parameter aliases.
  *
@@ -76,9 +79,6 @@ knowledge of the CeCILL license and that you accept its terms.
  * @endcode
  * is equivallent to the previous example.
  */
-namespace bpp
-{
-
 class ParameterAliasable :
   public virtual Parametrizable
 {
