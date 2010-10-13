@@ -1,9 +1,9 @@
-%define name bpp-seq
-%define version 1.7.0
+%define name bpp-core
+%define version 1.0.0
 %define release 1
 %define _prefix /usr
 
-Summary: The Bio++ SeqLib library.
+Summary: The Bio++ Core library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -17,8 +17,7 @@ AutoReq: yes
 AutoProv: yes
 
 %description
-This library contains utilitary and classes for bio-sequence analysis.
-It is part of the Bio++ project.
+This library contains the core classes and utilitary functions of the Bio++ project.
 
 %package devel
 Summary: Libraries, includes to develop applications with %{name}.
@@ -60,24 +59,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
-* Thu Mar 25 2010 Julien Dutheil <julien.dutheil@univ-montp2.fr>
-- Version 1.7.0
-* Wed Jun 10 2009 Julien Dutheil <jdutheil@birc.au.dk>
-- Version 1.6.0
-* Thu Dec 11 2008 Julien Dutheil <jdutheil@birc.au.dk>
-- Version 1.5.0
-* Mon Jul 21 2008 Julien Dutheil <jdutheil@birc.au.dk>
-- Version 1.4.1
-* Fri Jan 18 2008 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- Version 1.4.0
-* Fri Jul 06 2007 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- Version 1.3.0
-* Fri Jan 19 2007 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- Version 1.2.0
-* Mon Aug 28 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- Version 1.1.1
-* Tue Apr 18 2006 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- Version 1.1.0
-* Fri Nov 16 2005 Julien Dutheil <Julien.Dutheil@univ-montp2.fr>
-- First draft of the spec file
+* Wed Oct 13 2010 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+- Version 1.0.0
 
