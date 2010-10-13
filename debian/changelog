@@ -1,0 +1,26 @@
+libbpp-seq (1.7.0) unstable; urgency=low
+
+  * Several bug fixed. Compilation with -Weffc++.
+  * New compressed sites container.
+  * Improved security by changing several pointers to references.
+
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 25 Mar 2010 10:02:50 +0100
+
+libbpp-seq (1.6.0) unstable; urgency=low
+
+  * New support for Nexus sequence files.
+  * Update for version 1.8 of Bio++.
+
+ -- Julien Dutheil <jdutheil@birc.au.dk>  Wed, 10 Jun 2009 11:28:58 +0100
+
+libbpp-seq (1.5.0) unstable; urgency=low
+
+  * Several bugs fixed, new Phred sequence format, speed improvements.
+
+ -- Julien Dutheil <jdutheil@birc.au.dk>  Thu, 11 Dec 2008 12:21:37 +0100
+
+libbpp-seq (1.4.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Julien Dutheil <jdutheil@birc.au.dk>  Mon, 21 Jul 2008 15:17:26 +0200
