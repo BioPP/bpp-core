@@ -1,3 +1,3 @@
-#include "App/BppApplication.h"
 #include "App/NumCalcApplicationTools.h"
+#include "App/BppApplication.h"
 #include "App/ApplicationTools.h"
