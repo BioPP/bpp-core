@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: libbpp-core-dev
 Section: libdevel
 Architecture: any
-Depends: libbpp-core (= ${source:Version})
+Depends: libbpp-core (= ${binary:Version})
 Description: The Bio++ Sequence library development files.
  Contains the Bio++ classes for sequence analysis.
 
