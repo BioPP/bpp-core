@@ -1,21 +1,21 @@
-Source: libbpp-seq
+Source: libbpp-core
 Section: libs
 Priority: optional
 Maintainer: Julien Dutheil <julien.dutheil@univ-montp2.fr>
 Build-Depends: debhelper (>= 5), cmake (>= 2.6)
 Standards-Version: 3.7.2
 
-Package: libbpp-seq-dev
+Package: libbpp-core-dev
 Section: libdevel
 Architecture: any
-Depends: libbpp-seq (= ${source:Version}), libbpp-utils-dev (>= 1.5.0), libbpp-numcalc-dev (= 1.8.0)
+Depends: libbpp-core (= ${source:Version})
 Description: The Bio++ Sequence library development files.
  Contains the Bio++ classes for sequence analysis.
 
-Package: libbpp-seq
+Package: libbpp-core
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libbpp-utils (>= 1.5.0), libbpp-numcalc (= 1.8.0)
-Description: The Bio++ Sequence library.
- Contains the Bio++ classes for sequence analysis.
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: The Bio++ Core library.
+ Contains the Bio++ core classes.
 
