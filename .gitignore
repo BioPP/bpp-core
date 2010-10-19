@@ -1,0 +1,8 @@
+BppCore.tag
+CMakeCache.txt
+CMakeFiles
+*.cmake
+Makefile
+html
+install_manifest.txt
+libbpp-core.*
