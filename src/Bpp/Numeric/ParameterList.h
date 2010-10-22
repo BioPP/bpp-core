@@ -198,6 +198,15 @@ class ParameterList:
      */
     virtual void addParameters(const ParameterList& params) throw (ParameterException);
     
+  /**
+   * @brief Add parameters to the list. If the parameter already
+   * exists, only the value is updated, otherwise the new parameter is
+   * added at the end of the list.
+   *
+   * @param params The parameter list containing the new paramters to add to the list.
+   */
+  virtual void includeParameters(const ParameterList& params);
+    
     /**
      * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
      *

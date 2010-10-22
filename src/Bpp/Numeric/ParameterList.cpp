@@ -208,10 +208,21 @@ void ParameterList::setParameter(unsigned int index, const Parameter& param) thr
 
 /******************************************************************************/
 
-void ParameterList::addParameters(const ParameterList& params)
-throw (ParameterException)
+void ParameterList::includeParameters(const ParameterList& params)
 {
-	for (unsigned int i = 0; i < params.size(); i++)
+  for (unsigned int i = 0; i < params.size(); i++)
+    if (hasParameter(params[i].getName()))
+      setParameterValue(params[i].getName(),params[i].getValue());
+    else
+      parameters_.push_back(dynamic_cast<Parameter*>(params[i].clone()));
+}
+
+/******************************************************************************/
+
+void ParameterList::addParameters(const ParameterList& params)
+  throw (ParameterException)
+{
+  for (unsigned int i = 0; i < params.size(); i++)
     addParameter(params[i]);
 }
 
