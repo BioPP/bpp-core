@@ -336,6 +336,64 @@ throw (Exception)
 
 /******************************************************************************/
 
+std::string TextTools::removeSubstrings(const std::string& s, char blockBeginning, char blockEnding, std::vector<string>& exceptionsBeginning, std::vector<string>& exceptionsEnding)
+throw (Exception)
+{
+  string t = "";
+  int blockCount = 0;
+  int begPos = 0;
+  for(unsigned int i = 0; i < s.size(); i++)
+    {
+    char current = s[i];
+    if(current == blockBeginning)
+      {
+      bool except = false;
+      for (unsigned int j = 0; j < exceptionsBeginning.size() ; j++) 
+        {
+        int pos = exceptionsBeginning[j].find(blockBeginning);
+        int left = i-pos;
+        int right = i + exceptionsBeginning[j].length() - pos;
+        if ((left > 0 ) &&  (right < (int)(s.length())-1 ) && (hasSubstring (s.substr(left, right), exceptionsBeginning[j])) )
+          {
+          except = true;
+          break;
+          }
+        }
+      if (!except) 
+        {
+        blockCount++;
+        t += s.substr(begPos, i - begPos);
+        }
+      }
+    else if( (current == blockEnding) && (blockCount > 0) )
+      {
+      bool except = false;
+      for (unsigned int j = 0; j < exceptionsEnding.size() ; j++) 
+        {
+        int pos = exceptionsEnding[j].find(blockEnding);
+        int left = i-pos;
+        int right = i + exceptionsEnding[j].length() - pos;
+        if ((left > 0 ) &&  (right < (int)(s.length())-1 ) && (hasSubstring (s.substr(left, right), exceptionsEnding[j])) )
+          {
+          except = true;
+          break;
+          }        
+        }      
+      blockCount--;
+      if(blockCount == 0) {
+        begPos = i + 1;
+      }
+      else if(blockCount < 0)
+        throw Exception("TextTools::removeSubstrings(). " +
+                        string("Ending block character without corresponding beginning one at position ") + toString((int)i) + ".");
+      }
+    }
+  t += s.substr(begPos);
+  return t;
+}
+
+/******************************************************************************/
+
 std::string TextTools::removeChar(const std::string& s, char c)
 {
   // Copy sequence

@@ -315,7 +315,27 @@ namespace bpp
        */
       static std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding)
         throw (Exception);
-
+  
+      /**
+       * @brief Remove substrings from a string, unless they match some specific substrings.
+       *
+       * All substrings beginning with blockBeginning
+       * and ending with blockEnding will be removed, except if they begin with 
+       * a string included in the vector exceptionsBeginning or end with a string
+       * included in the vector exceptionsEnding.
+       * Nesting blocks are allowed, the most extern block will be removed.
+       *
+       * @param s The string to parse.
+       * @param blockBeginning The character specifying the beginning of each block.
+       * @param blockEnding    The character specifying the end of each block.
+       * @param exceptionsBeginning A vector containing all strings specifying the beginning of blocks that should not be removed. 
+       * @param exceptionsEnding A vector containing all strings specifying the ending of blocks that should not be removed.
+       * @return The string with all blocks removed.
+       * @throw Exception If some blocks are not well formed.
+       */
+  static std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding, std::vector<std::string>& exceptionsBeginning, std::vector<std::string>& exceptionsEnding)
+       throw (Exception);
+  
       /**
        * @brief Remove all occurences of a character in a string.
        *
