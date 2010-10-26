@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _RCOLORSET_H_
 #define _RCOLORSET_H_
 
-#include "ColorSet.h"
+#include "../ColorSet.h"
 
 namespace bpp
 {
