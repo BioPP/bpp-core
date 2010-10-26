@@ -11,4 +11,4 @@ libbpp-core.*
 
 # file to be specifically not ignored by previous rules
 
-#!/CTestConfig.cmake
+!/CTestConfig.cmake
