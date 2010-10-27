@@ -1,5 +1,4 @@
 #include "Bpp/BppString.h"
 #include "Bpp/Clonable.h"
-#include "Bpp/TestUnit.h"
 #include "Bpp/Exceptions.h"
 #include "Bpp/BppVector.h"

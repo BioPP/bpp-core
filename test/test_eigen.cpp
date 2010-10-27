@@ -1,5 +1,5 @@
 //
-// File: TestUnit.cpp
+// File: test_eigen.cpp
 // Created by: Julien Dutheil
 // Created on: Thu Feb 5 07:50 2009
 //
@@ -37,17 +37,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "TestUnit.h"
-#include "Numeric/Matrix/EigenValue.h"
-#include "Numeric/Matrix/MatrixTools.h"
+#include <Bpp/Numeric/Matrix.all>
 #include <vector>
+#include <iostream>
 
-using namespace test_numcalc;
 using namespace bpp;
 using namespace std;
 
-bool TestUnit::testEigen()
-{
+int main() {
   RowMatrix<double> m(2,2);
   m(0,0) = 2.3;
   m(0,1) = 1.4;
@@ -55,7 +52,7 @@ bool TestUnit::testEigen()
   m(1,1) = -0.9;
   EigenValue<double> eigen(m);
   RowMatrix<double> D  = eigen.getD();
-  const vector<double>    L  = eigen.getRealEigenValues();
+  const vector<double> L  = eigen.getRealEigenValues();
   RowMatrix<double> V1 = eigen.getV();
   RowMatrix<double> V2;
   MatrixTools::inv(V1, V2);
@@ -73,4 +70,3 @@ bool TestUnit::testEigen()
   MatrixTools::print(test);
   return test == m;
 }
-

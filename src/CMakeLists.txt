@@ -4,7 +4,6 @@
 
 # File list
 set(CPP_FILES
-  Bpp/TestUnit.cpp
   Bpp/Exceptions.cpp
   Bpp/BppString.cpp
   Bpp/App/ApplicationTools.cpp
@@ -83,7 +82,6 @@ set(H_FILES
   Bpp/BppVector.h
   Bpp/Clonable.h
   Bpp/Exceptions.h
-  Bpp/TestUnit.h
   Bpp/App/ApplicationTools.h
   Bpp/App/BppApplication.h
   Bpp/App/NumCalcApplicationTools.h
