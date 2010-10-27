@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <vector>
 #include "../../Clonable.h"
+#include "../NumConstants.h"
+#include <cmath>
 #include <iostream>
 
 namespace bpp
@@ -90,6 +92,15 @@ class Matrix:
      */
     virtual Scalar& operator()(int i, int j)  {
       return (*this)(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
+    }
+
+    virtual bool equals(const Matrix& m, Scalar threshold = NumConstants::TINY) {
+      if (m.getNumberOfRows() != getNumberOfRows() || m.getNumberOfColumns() != getNumberOfColumns())
+        return false;
+      for (unsigned int i = 0; i < getNumberOfRows(); i++)
+        for (unsigned int j = 0; j < getNumberOfColumns(); j++)
+          if (std::abs(operator()(i, j) - m(i, j)) > threshold) return false;
+      return true;
     }
     /**
      * @return The number of rows.

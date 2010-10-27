@@ -173,7 +173,7 @@ class AbstractOptimizer:
      *
      * Store all parameters, call the doInit method, print to profiler, initialize timer and notify all listeners.
      */
-    void init(const ParameterList & params) throw (Exception);
+    void init(const ParameterList& params) throw (Exception);
     /**
      * @brief Basic implementation.
      *

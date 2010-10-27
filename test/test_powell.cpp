@@ -1,11 +1,11 @@
 //
-// File: test_eigen.cpp
+// File: test_powell.cpp
 // Created by: Julien Dutheil
-// Created on: Thu Feb 5 07:50 2009
+// Created on: Wed Oct 27 18:46 2010
 //
 
 /*
-Copyright or © or Copr. Bio++Development Team, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus. This file is part of the Bio++ project.
@@ -37,36 +37,29 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Numeric/Matrix.all>
+#include <Bpp/Numeric/Function.all>
 #include <vector>
 #include <iostream>
+#include "PolynomialFunction.h"
 
 using namespace bpp;
 using namespace std;
 
 int main() {
-  RowMatrix<double> m(2,2);
-  m(0,0) = 2.3;
-  m(0,1) = 1.4;
-  m(1,0) = 5.0;
-  m(1,1) = -0.9;
-  EigenValue<double> eigen(m);
-  RowMatrix<double> D  = eigen.getD();
-  const vector<double> L  = eigen.getRealEigenValues();
-  RowMatrix<double> V1 = eigen.getV();
-  RowMatrix<double> V2;
-  MatrixTools::inv(V1, V2);
-  cout << "M=" << endl;
-  MatrixTools::print(m);
-  cout << "D=" << endl;
-  MatrixTools::print(D);
-  cout << "V1=" << endl;
-  MatrixTools::print(V1);
-  cout << "V2=" << endl;
-  MatrixTools::print(V2);
-  RowMatrix<double> test;
-  MatrixTools::mult(V1, L, V2, test);
-  cout << "V1 . D . V2=" << endl;
-  MatrixTools::print(test);
-  return (test.equals(m) ? 0 : 1);
+  PolynomialFunction1 f;
+  cout << f.getValue() << endl;
+  PowellMultiDimensions optimizer(&f);
+  optimizer.init(f.getParameters());
+  optimizer.optimize();
+  double minf = f.getValue();
+  double x = f.getParameterValue("x");
+  double y = f.getParameterValue("y");
+  double z = f.getParameterValue("z");
+  cout << "x=" << x << endl;
+  cout << "y=" << y << endl;
+  cout << "z=" << z << endl;
+  cout << "f=" << minf << endl;
+  cout << setprecision(20) << (abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3)) << endl;
+  bool test = abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3) < 1e-12;
+  return (test ? 0 : 1);
 }

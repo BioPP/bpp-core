@@ -151,14 +151,14 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
 	
 void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
 {
-  if(!function_) throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
+  if (!function_) throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
   //We do this in order to keep original constraints:
 	parameters_ = params;
   //More secure, but too slow:
 	//parameters_ = function_->getParameters().subList(params.getParameterNames());
   //parameters_.matchParametersValues(params);
-	     if(constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
-	else if(constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+	     if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+	else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
   doInit(params);
   nbEval_ = 0;
 	tolIsReached_ = false;

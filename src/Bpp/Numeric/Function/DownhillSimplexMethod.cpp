@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../NumTools.h"
 
 using namespace bpp;
+using namespace std;
 
 /******************************************************************************/
 
@@ -74,15 +75,17 @@ void DownhillSimplexMethod::doInit(const ParameterList& params) throw (Exception
 	_simplex.resize(nDim + 1);
 	_y.resize(nDim + 1);
 	double lambda = 0.2; //20% of the parameter value.
-	for(unsigned int i = 1; i < nDim + 1; i++)
+  for(unsigned int i = 1; i < nDim + 1; i++)
   {
 		// Copy the vector...
 		_simplex[i] = getParameters();
 		// ... and set the initial values.
 		for(unsigned int j = 0; j < nDim; j++)
     {
-			_simplex[i][j].setValue(getParameters()[j].getValue() * (1. + (j == i - 1 ? lambda : 0.)));
-		}
+      //Hummm... that does not work when the first point is 0!!! where does this come from???
+			//_simplex[i][j].setValue(getParameters()[j].getValue() * (1. + (j == i - 1 ? lambda : 0.)));
+			_simplex[i][j].setValue(getParameters()[j].getValue() + (j == i - 1 ? lambda : 0.));
+    }
 		//Compute the corresponding f value:
 		_y[i] = getFunction()->f(_simplex[i]);
     nbEval_++;

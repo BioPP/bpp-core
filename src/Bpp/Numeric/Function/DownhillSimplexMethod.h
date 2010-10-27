@@ -136,7 +136,7 @@ class DownhillSimplexMethod:
     double optimize() throw (Exception);
     /** @} */
 
-    void doInit(const ParameterList & params) throw (Exception);
+    void doInit(const ParameterList& params) throw (Exception);
     
     double doStep() throw (Exception);
   
