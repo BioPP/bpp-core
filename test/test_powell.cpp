@@ -60,6 +60,6 @@ int main() {
   cout << "z=" << z << endl;
   cout << "f=" << minf << endl;
   cout << setprecision(20) << (abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3)) << endl;
-  bool test = abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3) < 1e-12;
+  bool test = abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3) < optimizer.getStopCondition()->getTolerance();
   return (test ? 0 : 1);
 }

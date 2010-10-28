@@ -17,3 +17,7 @@ ADD_EXECUTABLE(test_powell test_powell.cpp)
 TARGET_LINK_LIBRARIES(test_powell ${LIBS})
 ADD_TEST(test_powell "test_powell")
 
+ADD_EXECUTABLE(test_gradient test_gradient.cpp)
+TARGET_LINK_LIBRARIES(test_gradient ${LIBS})
+ADD_TEST(test_gradient "test_gradient")
+

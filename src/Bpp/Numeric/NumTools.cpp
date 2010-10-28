@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "NumTools.h"
+#include "Matrix/Matrix.h"
 
 using namespace bpp;
 using namespace std;

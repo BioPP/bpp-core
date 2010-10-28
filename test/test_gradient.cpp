@@ -1,7 +1,7 @@
 //
-// File: test_downhill.cpp
+// File: test_gradient.cpp
 // Created by: Julien Dutheil
-// Created on: Wed Oct 27 18:46 2010
+// Created on: Thu Oct 28 10:28 2010
 //
 
 /*
@@ -46,12 +46,12 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  PolynomialFunction1 f;
+  PolynomialFunction1Der1 f;
   cout << f.getValue() << endl;
-  DownhillSimplexMethod optimizer(&f);
+  ConjugateGradientMultiDimensions optimizer(&f);
   optimizer.init(f.getParameters());
   optimizer.optimize();
-  double minf = f.getValue();
+  double minf = optimizer.getFunctionValue();
   double x = f.getParameterValue("x");
   double y = f.getParameterValue("y");
   double z = f.getParameterValue("z");

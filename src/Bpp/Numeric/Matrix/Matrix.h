@@ -45,7 +45,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <vector>
 #include "../../Clonable.h"
 #include "../NumConstants.h"
-#include <cmath>
+#include "../NumTools.h"
 #include <iostream>
 
 namespace bpp
@@ -99,7 +99,7 @@ class Matrix:
         return false;
       for (unsigned int i = 0; i < getNumberOfRows(); i++)
         for (unsigned int j = 0; j < getNumberOfColumns(); j++)
-          if (std::abs(operator()(i, j) - m(i, j)) > threshold) return false;
+          if (NumTools::abs<Scalar>(operator()(i, j) - m(i, j)) > threshold) return false;
       return true;
     }
     /**

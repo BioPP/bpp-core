@@ -41,10 +41,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _NUMTOOLS_H_
 
 #include "Function/Functions.h"
-#include "Matrix/Matrix.h"
 
 namespace bpp
 {
+//Forward declaration:
+template<class Scalar> class RowMatrix;
 
 /**
  * @brief Some utilitary function for numerical calculus.

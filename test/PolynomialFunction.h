@@ -40,7 +40,11 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <Bpp/Numeric/Function.all>
 #include <Bpp/Numeric/AbstractParametrizable.h>
 
+#include <map>
+#include <string>
+
 using namespace bpp;
+using namespace std;
 
 class PolynomialFunction1:
   public virtual Function,
@@ -73,6 +77,51 @@ class PolynomialFunction1:
       double y = getParameterValue("y");
       double z = getParameterValue("z");
       fval_ = (x-5)*(x-5) + (y+2)*(y+2) + (z-3)*(z-3);
+    }
+};
+
+class PolynomialFunction1Der1:
+  public PolynomialFunction1,
+  public virtual DerivableFirstOrder
+{
+  protected:
+    bool compFirstDer_;
+    mutable map<string, double> firstDer_;
+
+  public:
+    PolynomialFunction1Der1(): compFirstDer_(true), firstDer_() {
+      //Need to compute derivatives:
+      fireParameterChanged(getParameters());
+    }
+ 
+    PolynomialFunction1Der1* clone() const { return new PolynomialFunction1Der1(*this); }
+ 
+  public:
+    void setParameters(const ParameterList& pl) 
+        throw (ParameterNotFoundException, ConstraintException, Exception)
+    {
+      matchParametersValues(pl);
+    }
+ 
+    void fireParameterChanged(const ParameterList& pl) {
+      PolynomialFunction1::fireParameterChanged(pl);
+      if (compFirstDer_) {
+        double x = getParameterValue("x");
+        double y = getParameterValue("y");
+        double z = getParameterValue("z");
+        firstDer_["x"] = 2 * (x - 5);
+        firstDer_["y"] = 2 * (y + 2);
+        firstDer_["z"] = 2 * (z - 3);
+      }
+    }
+
+    void enableFirstOrderDerivatives(bool yn) { compFirstDer_ = yn; }
+    bool enableFirstOrderDerivatives() const { return compFirstDer_; }
+
+    double getFirstOrderDerivative(const std::string& variable) const throw (Exception) {
+      if (!compFirstDer_)
+        throw Exception("PolynomialFunction1Der1::getFirstOrderDerivative. First order derivatives are not computed.");
+      return firstDer_[variable];
     }
 };
 
