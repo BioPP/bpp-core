@@ -131,11 +131,16 @@ class AbstractNumericalDerivative:
     void setInterval(double h) { h_ = h; }
     
     /**
+     * @return The interval value used in numerical approximation.
+     */
+    double getInterval() const { return h_; }
+    
+    /**
      * @brief Set the list of parameters to derivate.
      *
      * @param variables A list of all parameter names.
      */
-    void setParametersToDerivate(const std::vector<std::string> & variables)
+    void setParametersToDerivate(const std::vector<std::string>& variables)
     {
       variables_ = variables;
       index_.clear();

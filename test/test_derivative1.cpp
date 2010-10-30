@@ -47,29 +47,35 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  double h = 1e-6; 
   PolynomialFunction1 f;
   PolynomialFunction1Der1 f1;
   ParameterList pl = f.getParameters();
+  TwoPointsNumericalDerivative nd2pt(&f)  ; nd2pt.setParametersToDerivate(pl.getParameterNames());
+  ThreePointsNumericalDerivative nd3pt(&f); nd3pt.setParametersToDerivate(pl.getParameterNames());
+  FivePointsNumericalDerivative nd5pt(&f) ; nd5pt.setParametersToDerivate(pl.getParameterNames());
   
   for (unsigned int repeat = 0; repeat < 10000; ++repeat) {
     for (unsigned int i = 0; i < pl.size(); ++i) {
       double val = RandomTools::giveRandomNumberBetweenZeroAndEntry(100) - 50;
       pl[i].setValue(val);
     }
-    f.setParameters(pl);
-    vector<double> derivativesNum(pl.size());
+
+    nd2pt.setParameters(pl);
+    vector<double> derivativesNum2pt(pl.size());
     for (unsigned int i = 0; i < pl.size(); ++i) {
-      double bck = pl[i].getValue();
-      pl[i].setValue(bck - h);
-      f.setParameters(pl);
-      double val1 = f.getValue();
-      pl[i].setValue(bck + h);
-      f.setParameters(pl);
-      double val2 = f.getValue();
-      pl[i].setValue(bck);
-      f.setParameters(pl);
-      derivativesNum[i] = (val2 - val1) / (2*h);
+      derivativesNum2pt[i] = nd2pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
+    }
+
+    nd3pt.setParameters(pl);
+    vector<double> derivativesNum3pt(pl.size());
+    for (unsigned int i = 0; i < pl.size(); ++i) {
+      derivativesNum3pt[i] = nd3pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
+    }
+
+    nd5pt.setParameters(pl);
+    vector<double> derivativesNum5pt(pl.size());
+    for (unsigned int i = 0; i < pl.size(); ++i) {
+      derivativesNum5pt[i] = nd5pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
     }
 
     vector<double> derivativesAna(pl.size());
@@ -77,17 +83,32 @@ int main() {
     bool test = true;
     for (unsigned int i = 0; i < pl.size(); ++i) {
       derivativesAna[i] = f1.getFirstOrderDerivative(pl.getParameterNames()[i]);
-      if (abs(derivativesAna[i] - derivativesNum[i]) > 1e-3)
-        test = false;
+      if (abs(derivativesAna[i] - derivativesNum2pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
+      if (abs(derivativesAna[i] - derivativesNum3pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
+      if (abs(derivativesAna[i] - derivativesNum5pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
     }
 
     //Test:
     if (!test) {
       //Failure!
       for (unsigned int i = 0; i < pl.size(); ++i) {
-        cout << setprecision(20) << pl[i].getName() << "=" << pl[i].getValue() << "\tAna. Der.=" << derivativesAna[i] << "\tNum. Der.=" << derivativesNum[i] << endl;
+        cout << setprecision(20) << pl[i].getName() << "=" << pl[i].getValue() << endl;
+        cout << setprecision(20) << "Ana. Der.     =" << derivativesAna[i]    << endl;
+        cout << setprecision(20) << "Num. Der. 2pts=" << derivativesNum2pt[i] << endl;
+        cout << setprecision(20) << "Num. Der. 3pts=" << derivativesNum3pt[i] << endl;
+        cout << setprecision(20) << "Num. Der. 5pts=" << derivativesNum5pt[i] << endl;
       }
       return 1;
+    } else {
+      //for (unsigned int i = 0; i < pl.size(); ++i) {
+      //  cout << pl[i].getName();
+      //  cout << "\t" << pl[i].getValue();
+      //  cout << "\t" << derivativesAna[i];
+      //  cout << "\t" << derivativesNum2pt[i];
+      //  cout << "\t" << derivativesNum3pt[i];
+      //  cout << "\t" << derivativesNum5pt[i];
+      //  cout << endl;
+      //}
     }
   }
   return 0;
