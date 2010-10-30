@@ -5,11 +5,11 @@
 MACRO(TEST_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
   #start:
   FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find})
-  SET(${lib_name}_NAMES ${lib_name} ${lib_name}lib ${lib_name}dll)
+  SET(${lib_name}_NAMES ${lib_name}.a)
   FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES})
 
   IF(${lib_name}_LIBRARY)
-    MESSAGE(WARNING "Library ${lib_name} is ialready installed in the system tree. Test will be built against it. This may lead to unexpected results. You may want to do 'make install' before 'make test', or remove the installed version.")
+    MESSAGE(WARNING "Library ${lib_name} is already installed in the system tree. Test will be built against it. This may lead to unexpected results. You may want to do 'make install' before 'make test', or remove the installed version.")
     #add the dependency:
     INCLUDE_DIRECTORIES(${${lib_name}_INCLUDE_DIR})
     SET(${OUTPUT_LIBS} ${${OUTPUT_LIBS}} ${${lib_name}_LIBRARY})
