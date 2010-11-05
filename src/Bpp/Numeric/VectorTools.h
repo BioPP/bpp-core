@@ -932,10 +932,10 @@ class VectorTools
     template<class T>
     static T min(const std::vector<T> & v) throw (EmptyVectorException<T>)
     {
-      if(v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
+      if (v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", & v);
       T mini = v[0];
-      for(unsigned int i = 1; i < v.size(); i++)
-        if(v[i] < mini) mini = v[i];
+      for (unsigned int i = 1; i < v.size(); i++)
+        if (v[i] < mini) mini = v[i];
       return mini;
     }
 
@@ -959,26 +959,6 @@ class VectorTools
     }
 
     /**
-     * @brief Template function to get the index of the minimum value of a std::vector.
-     *
-     * The < operator must be defined for the specified class.
-     * The position sent is the first one matching the minimum value.
-     *
-     * @param v The input std::vector.
-     * @return The position of the minimum value in the std::vector.
-     * @throw EmptyVectorException If the input std::vector is empty.
-     */
-    template<class T>
-    static unsigned int posmin(const std::vector<T> & v) throw (EmptyVectorException<T>)
-    {
-      T mini = min(v);
-      for(unsigned int i = 0; i < v.size(); i++)
-        if(v[i] == mini) return i;
-      // This is never reached but must be here, otherwise a warning is issued:
-      return 0;
-    }
-
-    /**
      * @brief Template function to get the index of the maximum value of a std::vector.
      *
      * The > operator must be defined for the specified class.
@@ -989,14 +969,46 @@ class VectorTools
      * @throw EmptyVectorException If the input std::vector is empty.
      */
     template<class T>
-    static unsigned int whichmax(const std::vector<T> & v) throw (EmptyVectorException<T>)
+    static unsigned int whichMax(const std::vector<T> & v) throw (EmptyVectorException<T>)
     {
-      T maxi = max(v);
-      for(unsigned int i = 0; i < v.size(); i++)
-        if(v[i] == maxi) return i;
-      // This is never reached but must be here, otherwise a warning is issued:
-      return 0;
+
+      if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::whichMax()", & v);
+      T maxi = v[0];
+      unsigned int pos = 0;
+      for (unsigned int i = 1; i < v.size(); i++) {
+        if (v[i] > maxi) {
+          maxi = v[i];
+          pos = i;
+        }
+      }
+      return pos;
     }
+
+    /**
+     * @brief Template function to get the index of the minimum value of a std::vector.
+     *
+     * The < operator must be defined for the specified class.
+     * The position sent is the first one matching the maximum value.
+     *
+     * @param v The input std::vector.
+     * @return The position of the minimum value in the std::vector.
+     * @throw EmptyVectorException If the input std::vector is empty.
+     */
+    template<class T>
+    static unsigned int whichMin(const std::vector<T> & v) throw (EmptyVectorException<T>)
+    {
+      if (v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::whichMin()", & v);
+      T mini = v[0];
+      unsigned int pos = 0;
+      for (unsigned int i = 1; i < v.size(); i++) {
+        if (v[i] < mini) {
+          mini = v[i];
+          pos = i;
+        }
+      }
+      return pos;
+    }
+
 
     /**
      * @brief Template function to get both extrema of a std::vector.
