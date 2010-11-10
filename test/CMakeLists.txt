@@ -53,6 +53,6 @@ IF(APPLE)
 ENDIF()
 
 IF(WIN32)
-  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient PROPERTY ENVIRONMENT "PATH=$ENV{PATH}:../src")
+  SET(ENV{PATH} "$ENV{PATH}:../src")
 ENDIF()
 
