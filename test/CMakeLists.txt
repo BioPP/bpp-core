@@ -5,7 +5,6 @@
 MACRO(TEST_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
   #start:
   FIND_PATH(${lib_name}_INCLUDE_DIR ${include_to_find})
-  INCLUDE_DIRECTORIES(${${lib_name}_INCLUDE_DIR})
 
   SET(${lib_name}_NAMES ${lib_name} ${lib_name}.lib ${lib_name}.dll)
   FIND_LIBRARY(${lib_name}_LIBRARY NAMES ${${lib_name}_NAMES})
@@ -14,11 +13,12 @@ MACRO(TEST_FIND_LIBRARY OUTPUT_LIBS lib_name include_to_find)
     MESSAGE("   includes: ${${lib_name}_INCLUDE_DIR}")
     MESSAGE("   dynamic libraries: ${${lib_name}_LIBRARY}")
     MESSAGE(WARNING "Library ${lib_name} is already installed in the system tree. Test will be built against it. This may lead to unexpected results. You may want to do 'make install' before 'make test', or remove the installed version.")
-    SET(${OUTPUT_LIBS} ${${OUTPUT_LIBS}} ${${lib_name}_LIBRARY})
   ELSE()
-    INCLUDE_DIRECTORIES("../src/")
-    SET(${OUTPUT_LIBS} "-L../src -lbpp-core" ${${OUTPUT_LIBS}})
+    SET(${lib_name}_LIBRARY "-L../src -lbpp-core")
+    SET(${lib_name}_INCLUDE_DIR "../src/")
   ENDIF()
+  INCLUDE_DIRECTORIES(${${lib_name}_INCLUDE_DIR})
+  SET(${OUTPUT_LIBS} ${${OUTPUT_LIBS}} ${${lib_name}_LIBRARY})
 ENDMACRO(TEST_FIND_LIBRARY)
 
 #Find the bpp-core library library:
