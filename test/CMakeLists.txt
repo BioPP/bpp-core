@@ -44,4 +44,15 @@ ADD_EXECUTABLE(test_gradient test_gradient.cpp)
 TARGET_LINK_LIBRARIES(test_gradient ${LIBS})
 ADD_TEST(test_gradient "test_gradient")
 
-SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=../src")
+IF(UNIX)
+  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=../src")
+ENDIF()
+
+IF(APPLE)
+  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=../src")
+ENDIF()
+
+IF(WIN32)
+  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient PROPERTY ENVIRONMENT "PATH=../src")
+ENDIF()
+
