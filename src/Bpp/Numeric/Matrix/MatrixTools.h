@@ -318,7 +318,7 @@ class MatrixTools
 		 * @param m The matrix.
 		 */
 		template<class Matrix>
-		static std::vector<unsigned int> whichmax(const Matrix & m)
+		static std::vector<unsigned int> whichMax(const Matrix & m)
 		{
 			unsigned int nrows = m.getNumberOfRows();
 			unsigned int ncols = m.getNumberOfColumns();
@@ -350,7 +350,7 @@ class MatrixTools
 		 * @param m The matrix.
 		 */
 		template<class Matrix>
-		static std::vector<unsigned int> whichmin(const Matrix& m)
+		static std::vector<unsigned int> whichMin(const Matrix& m)
 		{
 			unsigned int nrows = m.getNumberOfRows();
 			unsigned int ncols = m.getNumberOfColumns();
@@ -629,6 +629,24 @@ class MatrixTools
       }
     }
 
+    /**
+		 * @brief Sum all elements in M.
+		 * @param M A matrix.
+		 * @return The sum of all elements.
+		 */
+		template<class Scalar>
+		static Scalar sumElements(const Matrix<Scalar>& M)
+		{
+      Scalar sum = 0;
+			for (unsigned int i = 0; i < M.getNumberOfRows(); i++) {
+				for (unsigned int j = 0; j < M.getNumberOfColumns(); j++) {
+					sum += M(i, j);
+				}
+			}
+      return sum;
+		}
+
+	
 	
 };
 
