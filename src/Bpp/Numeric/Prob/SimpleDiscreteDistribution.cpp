@@ -69,13 +69,17 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   }
   unsigned int size = values.size();
   
-  for(unsigned int i = 0; i < size; i++)
-    distribution_[values[i]] = probas[i];
+  for(unsigned int i = 0; i < size; i++){
+    if (distribution_.find(values[i])!=distribution_.end())
+      throw Exception("SimpleDiscreteDistribution: two given values are equal");
+    else 
+      distribution_[values[i]] = probas[i];
+  }
   
   double sum = VectorTools::sum(probas);
   if (fabs(1. - sum) > NumConstants::SMALL)
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
-
+  
   if (! fixed){
     double y=1;
     for (unsigned int i=0;i<size-1;i++){
