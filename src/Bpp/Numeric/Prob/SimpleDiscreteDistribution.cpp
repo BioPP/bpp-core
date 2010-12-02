@@ -101,12 +101,21 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     
     distribution_.clear();
     double x = 1.0;
+    double v;
     for (unsigned int i = 0; i < size-1; i++) {
-      distribution_[getParameterValue("V"+TextTools::toString(i+1))]=getParameterValue("theta"+TextTools::toString(i+1))*x;
+      v=getParameterValue("V"+TextTools::toString(i+1));
+      if (distribution_.find(v)!=distribution_.end())
+        distribution_[v]+=getParameterValue("theta"+TextTools::toString(i+1))*x;
+      else
+        distribution_[v]=getParameterValue("theta"+TextTools::toString(i+1))*x;
       x *= 1 - getParameterValue("theta"+TextTools::toString(i+1));
     }
-    
-    distribution_[getParameterValue("V" + TextTools::toString(size))] = x;
+
+    v=getParameterValue("V" + TextTools::toString(size));
+    if (distribution_.find(v)!=distribution_.end())
+      distribution_[v] += x;
+    else
+      distribution_[v]=x;
   }
 }
 
