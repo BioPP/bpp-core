@@ -41,6 +41,7 @@
 #define _ABSTRACTDISCRETEDISTRIBUTION_H_
 
 #include "DiscreteDistribution.h"
+#include "../Constraints.h"
 #include "../AbstractParameterAliasable.h"
 
 #include <map>
@@ -75,14 +76,37 @@ namespace bpp
     };
 
   protected:
+
+    /*
+     * The numbre of categories
+     */
+
+    unsigned int numberOfCategories_;
+    
     /**
-     * This field must be initialized in the constructor of the derived classes.
+     * These fields must be initialized in the constructor of the derived classes.
      */
     std::map<double, double, Order> distribution_;
-  
+
+    std::vector<double> bounds_;
+
+    /**
+     * @brief the interval where the distribution is defined/restricted.
+     *
+     */
+    
+    Interval intMinMax_;    
+
+    /**
+     * Tells if the values in the classes is associated to the median or not (default: false)
+     *
+     */
+
+    bool median_;
+    
   public:
-    AbstractDiscreteDistribution(const std::string& prefix = "") :
-      AbstractParameterAliasable(prefix), distribution_() {}
+    AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix = "") :
+      AbstractParameterAliasable(prefix), numberOfCategories_(nbClasses), distribution_(), bounds_(), intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true), median_(false) {}
 
     virtual ~AbstractDiscreteDistribution() {}
 
@@ -94,6 +118,7 @@ namespace bpp
      * @{
      */
     unsigned int getNumberOfCategories() const;
+    void setNumberOfCategories(unsigned int nbClasses);
     double getCategory(unsigned int categoryIndex) const;
     double getProbability(unsigned int categoryIndex) const;
     double getProbability(double category) const;
@@ -102,31 +127,34 @@ namespace bpp
     double getValueCategory(double value) const throw (OutOfRangeException);
     void set(double category, double probability);
     void add(double category, double probability);
-    double  getInfCumulativeProbability(double category) const;
+    double getInfCumulativeProbability(double category) const;
     double getIInfCumulativeProbability(double category) const;
-    double  getSupCumulativeProbability(double category) const;
+    double getSupCumulativeProbability(double category) const;
     double getSSupCumulativeProbability(double category) const;
     double rand() const;
     double randC() const throw (Exception) { throw Exception("AbstractDiscreteDistribution::randC. No continuous version available for this distribution."); }
-    double getLowerBound() const;
-    double getUpperBound() const;
+    virtual double getLowerBound() const;
+    virtual double getUpperBound() const;
 
-    /**
-     * @brief Checks if the Parameters can respect the given
-     * Constraint and optionnaly tries to modify their Constraints.
-     *
-     * @param c The Constraint to respect.
-     * @param f boolean flag to say if the Constraints must be changed
-     * (if possible) (default: true)
-     *
-     * @return true if the Parameters Constraints are adapted to the
-     * given Constraints, false otherwise.
-     */
-    bool adaptToConstraint(const Constraint& c, bool f=true);
-      
     void print(OutputStream& out) const;
 
+    void setMedian(bool median) { if (median_!=median){ median_=median; discretize();}}
+    
+    virtual void discretize();
+
     /** @} */
+
+    /**
+     * @brief Restricts the distribution to the domain where the
+     * constraint is respected, in addition of other predefined
+     * constraints.
+     *
+     * @param c The Constraint to respect.
+     *
+     */
+    
+    virtual void restrictToConstraint(const Constraint& c);
+      
 
   };
 

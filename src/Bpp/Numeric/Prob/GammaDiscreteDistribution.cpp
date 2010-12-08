@@ -52,7 +52,7 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
-  AbstractDiscreteDistribution("Gamma."), bounds_() 
+  AbstractDiscreteDistribution(n,"Gamma."), alpha_(alpha), beta_(beta), ga1_(1)
 {
   // We use a lower bound of 0.0001 for alpha and beta to prohibe errors due to computer
   // floating precision: if alpha is quite low (gamma -> constant), some classes
@@ -63,7 +63,10 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alph
   addParameter_(p1);
   Parameter p2("Gamma.beta", beta, new IncludingPositiveReal(minimumBeta), true);
   addParameter_(p2);
-  applyParameters(n);
+  ga1_=exp(RandomTools::lnGamma(alpha_+1)-RandomTools::lnGamma(alpha_));
+  
+  intMinMax_.setLowerBound(0,true);
+  discretize();
 }
 
 GammaDiscreteDistribution::~GammaDiscreteDistribution() {}
@@ -73,7 +76,11 @@ GammaDiscreteDistribution::~GammaDiscreteDistribution() {}
 void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  applyParameters(getNumberOfCategories());  
+  alpha_ = getParameterValue("alpha");
+  beta_ = getParameterValue("beta");
+  ga1_=exp(RandomTools::lnGamma(alpha_+1)-RandomTools::lnGamma(alpha_));
+  
+  discretize();  
 }
 
 /******************************************************************************/
@@ -85,115 +92,21 @@ Domain GammaDiscreteDistribution::getDomain() const
 
 /******************************************************************************/
 
-void GammaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
-{
-  if(numberOfCategories <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in GammaDiscreteDistribution::applyParameters()." << endl;
-  distribution_.clear();
-  bounds_.clear();
-  bounds_.resize(numberOfCategories + 1);
-  double alpha = getParameterValue("alpha");
-  double beta = getParameterValue("beta");
-  vector<double> means = computeValues(numberOfCategories, alpha, beta, false);
-  if(numberOfCategories == 1)
-  {
-    distribution_[means[0]] = 1.0;
-    bounds_[0] = 0; bounds_[1] = NumConstants::VERY_BIG;
-    return;
-  }
-  else if(numberOfCategories > 1)
-  {
-    double p = 1. / (double)numberOfCategories;
-    for(unsigned int i = 0; i < numberOfCategories; i++)
-    {
-      distribution_[means[i]] = p;
-    }
-    bounds_ = computeBounds(numberOfCategories, alpha, beta);
-    if(getNumberOfCategories() != numberOfCategories)
-    {
-      cout << "WARNING!!! Couldn't create " << numberOfCategories << " distinct categories." << endl;
-      cout << "WARNING!!! This may occure if you specified a too low alpha parameter." << endl;
-    }
-    return ;
-  }
-  else
-  {
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in GammaDiscreteDistribution::applyParameters()." << endl;
-  }
-}
-
-/******************************************************************************/
-
 // Adapted from function DiscreteGamma of Yang
 
-vector<double> GammaDiscreteDistribution::computeValues(unsigned int nbClasses, double alpha, double beta, bool median)
+double GammaDiscreteDistribution::qProb(double x) const
 {
-/* discretization of gamma distribution with equal proportions in each 
-   category
-*/
-  unsigned int K = nbClasses;
-  vector<double> rK(K), freqK(K);
-  unsigned int i;
-  double gap05=1.0/(2.0*K), t, factor=alpha/beta*K, lnga1;
-
-  if(median)
-  {
-    for (i=0; i<K; i++) rK[i]=RandomTools::qGamma((i*2.0+1)*gap05, alpha, beta);
-    for (i=0,t=0; i<K; i++) t+=rK[i];
-    for (i=0; i<K; i++) rK[i]*=factor/t;
-  }
-  else
-  {
-    if(K==1) rK[0] = alpha/beta;
-    else
-    {
-      lnga1=RandomTools::lnGamma(alpha+1);
-      for (i=0; i<K-1; i++)
-        freqK[i]=RandomTools::qGamma((i+1.0)/K, alpha, beta);
-      for (i=0; i<K-1; i++)
-        freqK[i]=RandomTools::incompleteGamma(freqK[i]*beta, alpha+1, lnga1);
-      rK[0] = freqK[0]*factor;
-      rK[K-1] = (1-freqK[K-2])*factor;
-      for (i=1; i<K-1; i++) rK[i] = (freqK[i]-freqK[i-1])*factor;
-    }
-  }
-  //for (i=0; i<K; i++) freqK[i]=1.0/K; is that needed???
-
-  if (alpha>1)
-    for (i=0; i<nbClasses; i++){
-      if (rK[i]<NumConstants::VERY_TINY)
-        rK[i]=NumConstants::VERY_TINY;
-    }
-
-  return rK;
+  return RandomTools::qGamma(x, alpha_, beta_);  
 }
 
-vector<double> GammaDiscreteDistribution::computeBounds(unsigned int nbClasses, double alpha, double beta)
+     
+double GammaDiscreteDistribution::pProb(double x) const
 {
-  vector<double> bounds(nbClasses + 1);
-  bounds[0] = 0;
-  for(unsigned int i = 1; i < nbClasses; i++) bounds[i] = RandomTools::qGamma((double)i/(double)nbClasses, alpha, beta);
-  bounds[nbClasses] = NumConstants::VERY_BIG;
-  return bounds;
+  return RandomTools::pGamma(x, alpha_, beta_);  
 }
 
-bool GammaDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
+double GammaDiscreteDistribution::Expectation(double a) const
 {
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
-
-  if (pi->getLowerBound()>0 || pi->getUpperBound()!=NumConstants::VERY_BIG)
-    return false;
-  
-  if (pi->getLowerBound()==0 && pi->strictLowerBound()){
-    if (getParameterValue("alpha")<=1)
-      return false;
-    if (f)
-      getParameter_("alpha").setConstraint(new ExcludingPositiveReal(1));
-  }
-  
-  return true;
+  return RandomTools::pGamma(a, alpha_+1, beta_)/beta_*ga1_;
 }
-    
+

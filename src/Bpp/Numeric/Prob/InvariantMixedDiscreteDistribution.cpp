@@ -47,10 +47,9 @@ using namespace std;
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
     DiscreteDistribution* dist, double p, double invariant):
-  AbstractDiscreteDistribution("InvariantMixed."),
+  AbstractDiscreteDistribution(1,"InvariantMixed."),
   dist_(dist),
-  invariant_(invariant),
-  bounds_(),
+  invariant_(invariant), p_(p),
   nestedPrefix_("dist_" + dist->getNamespace())
 {
   //We first change the namespace of the nested distribution:
@@ -58,16 +57,18 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
   addParameters_(dist_->getIndependentParameters());
   Parameter pinv("InvariantMixed.p", p, &Parameter::PROP_CONSTRAINT_IN);
   addParameter_(pinv);
-  applyParameters();
+
+  updateDistribution();
 }
 
 /******************************************************************************/
 
 void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
-  AbstractDiscreteDistribution::fireParameterChanged(parameters);
+  p_ = getParameterValue("p");
   dist_->matchParametersValues(parameters);
-  applyParameters();
+  
+  updateDistribution();
 }
 
 /******************************************************************************/
@@ -80,11 +81,11 @@ Domain InvariantMixedDiscreteDistribution::getDomain() const
 
 /******************************************************************************/
 
-void InvariantMixedDiscreteDistribution::applyParameters()
+void InvariantMixedDiscreteDistribution::updateDistribution()
 {
-  double p = getParameterValue("p");
   distribution_.clear();
-  distribution_[invariant_] = p;
+  distribution_[invariant_] = p_;
+  
   unsigned int distNCat = dist_->getNumberOfCategories();
   bounds_.clear();
   bounds_.push_back(0.);
@@ -93,10 +94,24 @@ void InvariantMixedDiscreteDistribution::applyParameters()
   Domain d = dist_->getDomain();
   for(unsigned int i = 0; i < distNCat; i++)
     {
-      distribution_[cats[i]] = (1. - p) * probs[i];
+      if (cats[i]!=invariant_)
+        distribution_[cats[i]] = (1. - p_) * probs[i];
+      else
+        distribution_[invariant_] += (1. - p_) * probs[i];
+      
       bounds_.push_back(d.getBound(i));
     }
   bounds_.push_back(d.getBound(distNCat));
+
+  intMinMax_.setLowerBound(dist_->getLowerBound(),false);
+  intMinMax_.setUpperBound(dist_->getUpperBound(),false);
+
+  if (invariant_<=intMinMax_.getLowerBound())
+    intMinMax_.setLowerBound(invariant_,false);
+  if (invariant_>=intMinMax_.getUpperBound())
+    intMinMax_.setUpperBound(invariant_,false);
+
+  numberOfCategories_=distribution_.size();
 }
 
 /******************************************************************************/
@@ -110,26 +125,11 @@ void InvariantMixedDiscreteDistribution::setNamespace(const string& prefix)
 
 /******************************************************************************/
 
-bool InvariantMixedDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
+void InvariantMixedDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {
-  if (!c.isCorrect(invariant_))
-    return false;
-  
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
+  if (! c.isCorrect(invariant_))
+    throw ConstraintException("Impossible to restrict to Constraint", &getParameter_("p"), invariant_);
 
-  if (pi==NULL)
-    return false;
-
-  bool rep=dist_->adaptToConstraint(c,false);
-
-  if (rep && f){
-    dist_->adaptToConstraint(c);
-    vector<string> v=getParameters().getParameterNames();
-    for (unsigned int i=0;i<v.size();i++){
-      if (getParameterNameWithoutNamespace(v[i])!="p")
-        getParameter_(getParameterNameWithoutNamespace(v[i])).setConstraint(dist_->getParameter(dist_->getParameterNameWithoutNamespace(v[i])).getConstraint()->clone());
-    }
-  }
-  
-  return rep;
+  dist_->restrictToConstraint(c);
+  updateDistribution();
 }

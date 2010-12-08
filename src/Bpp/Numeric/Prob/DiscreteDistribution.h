@@ -84,6 +84,14 @@ namespace bpp
      * @return The number of categories.
      */
     virtual unsigned int getNumberOfCategories() const = 0;
+
+    
+    /**
+     * @param sets the number of categories and discretizes if there
+     * is a change in this number.
+     */
+    
+    virtual void setNumberOfCategories(unsigned int nbClasses) = 0;
 		
     /**
      * @param value 
@@ -188,10 +196,59 @@ namespace bpp
     virtual double randC() const throw (Exception) = 0;
 
     /**
+     * @brief Return the quantile of the continuous version of the
+     * distribution, ie y such that @f$ Prob(X<y)=x @f$
+     * 
+     **/
+     
+    virtual double qProb(double x) const  = 0;
+
+    /**
+     * @brief Return the cumulative quantile of the continuous version
+     * of the distribution, ie @f$ Prob(X<x) @f$.
+     *
+     **/
+     
+    virtual double pProb(double x) const  = 0;
+
+    /**
+     * @brief Return a primitive function used for the expectation
+     * of the continuous version of the distribution, ie
+     * @f$ E(X|...<=X<a) = \int_{...}^a t.dProb(t) dt @f$.
+     *
+     **/
+     
+    virtual double Expectation(double a) const  = 0;
+
+    /**
      * @return The domain associated to classes of this distribution.
      * @see Domain
      */
     virtual Domain getDomain() const = 0;
+
+    /**
+     * @brief Discretizes the distribution in equiprobable classes.
+     * @param nbClasses the number of classes to discretize into.
+     *
+     */
+
+    /**
+     *@brief Sets the median value to true to say that the value in a
+     * class is proportional to the median value of the class, the
+     * proportionality factor being such that the sum of the values
+     * equals the expectation of the distribution. If it is set to
+     * false, the value is the mean value in the class.
+     *
+     * If the median value is modified, the discretization process is
+     * launched.
+     *
+     * @param median tells how the value associated to each class is
+     * computed. 
+     */
+    
+    virtual void setMedian(bool median) = 0;
+    
+    virtual void discretize() = 0;
 
     /**
      * @return The lowest value.
@@ -208,18 +265,19 @@ namespace bpp
     }
   
     /**
-     * @brief Checks if the Parameters can respect the given
-     * Constraint and optionnaly tries to modify their Constraints.
+     * @brief Restricts the distribution to the domain where the
+     * constraint is respected, in addition of other predefined
+     * constraints.
+     *
+     * If the domain interval is modified, the discretization process
+     * is launched.
      *
      * @param c The Constraint to respect.
-     * @param f boolean flag to say if the Constraints must be changed
-     * (if possible) (default: true)
      *
-     * @return true if the Parameters Constraints are adapted to the
-     * given Constraints, false otherwise.
      */
-    virtual bool adaptToConstraint(const Constraint& c, bool f=true) = 0;
     
+    virtual void restrictToConstraint(const Constraint& c) = 0;
+          
     /**
      * @brief Print the distribution (categories and corresponding probabilities) to a stream.
      *

@@ -50,11 +50,14 @@ using namespace std;
   
 /** Constructor: **************************************************************/
 
-TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint, bool median) : AbstractDiscreteDistribution("TruncExponential."), bounds_(), useMedian_(median)
+TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint) : ExponentialDiscreteDistribution(n,lambda,"TruncExponential."), tp_(truncationPoint)
 {
-  addParameter_(Parameter("TruncExponential.lambda", lambda, new IncludingPositiveReal(0.000001), true));
   addParameter_(Parameter("TruncExponential.tp", truncationPoint, &Parameter::R_PLUS));
-  applyParameters(n);
+
+  intMinMax_.setLowerBound(0,true);
+  intMinMax_.setUpperBound(tp_,true);
+
+  discretize();
 }
 
 TruncatedExponentialDiscreteDistribution::~TruncatedExponentialDiscreteDistribution() {}
@@ -63,106 +66,18 @@ TruncatedExponentialDiscreteDistribution::~TruncatedExponentialDiscreteDistribut
 
 void TruncatedExponentialDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
-  applyParameters(getNumberOfCategories());  
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
+  lambda_=getParameterValue("lambda");
+  tp_=getParameterValue("tp");
+  intMinMax_.setUpperBound(tp_,false);
+  discretize();
 }
 
 /******************************************************************************/
 
-Domain TruncatedExponentialDiscreteDistribution::getDomain() const
+void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
+  ExponentialDiscreteDistribution::restrictToConstraint(c);
 
-/******************************************************************************/
-
-void TruncatedExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
-{
-  discretize(numberOfCategories, getParameter_(0).getValue(), getParameter_(1).getValue(), useMedian_);
-}
-
-/******************************************************************************/
-
-void TruncatedExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories, double lambda, double tp, bool median)
-{
-  if (numberOfCategories == 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in ExponentialDiscreteDistribution::applyParameters()." << endl;
-  distribution_.clear();
-  bounds_.resize(numberOfCategories + 1);
-  if (numberOfCategories == 1)
-  {
-    double value = median ? 
-      (log(2.) - log(1. + exp(-lambda * tp)))/ lambda :
-      (1. / lambda) - tp  / (exp(lambda * tp) - 1.);
-    distribution_[value] = 1.0;
-    bounds_[0] = 0; bounds_[1] = tp;
-    return;
-  }
-  else if(numberOfCategories > 1)
-  {
-    distribution_.clear();
-
-    bounds_[0] = 0;
-    vector<double> values(numberOfCategories);
-
-    //The probabilty without the truncated part:
-    double totalProb = 1 - exp(-lambda * tp);
-
-    for (unsigned int i = 1; i <= numberOfCategories; i++)
-    {
-      double a = bounds_[i-1];
-      double b;
-      if (i == numberOfCategories)
-        b = tp;
-      else
-        b = (1. / lambda) * log(static_cast<double>(numberOfCategories) / (static_cast<double>(numberOfCategories) - static_cast<double>(i) * totalProb));
-      bounds_[i] = b;
-      if(median)
-        values[i-1] = (1. / lambda) * log(2 * static_cast<double>(numberOfCategories) / (static_cast<double>(2 * numberOfCategories) - static_cast<double>(2 * i - 1) * totalProb)); 
-      else
-        values[i-1] = 1. / lambda + (a*exp(-a*lambda) - b*exp(-b*lambda)) / (exp(-a*lambda) - exp(-b*lambda));
-    }
-    bounds_[numberOfCategories] = tp;
-
-    double p = 1. / static_cast<double>(numberOfCategories);
-    for (unsigned int i = 0; i < numberOfCategories; i++)
-    {
-      distribution_[values[i]] += p;
-    }
-    if (getNumberOfCategories() != numberOfCategories)
-    {
-      cout << "WARNING!!! Couldn't create " << numberOfCategories << " distinct categories." << endl;
-      for(unsigned int i = 0; i < getNumberOfCategories(); i++)
-      {
-        cout << i << "\t" << values[i] << endl;
-      }
-      cout << "Lambda\t" << lambda << endl; 
-      cout << "Tp\t"     << tp << endl; 
-      cout << "WARNING!!! This may occure if you specified a too big lambda parameter or a two small upper bound." << endl;
-    }
-    return ;
-  }
-  else
-  {
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in ExponentialDiscreteDistribution::applyParameters()." << endl;
-  }
-}
-
-bool TruncatedExponentialDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
-{
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
-
-  if (pi->getUpperBound()!=NumConstants::VERY_BIG ||
-      (pi->getLowerBound()>=0  && pi->strictLowerBound()))
-    return false;
-  else {
-    if (! pi->isCorrect(getParameterValue("tp")))
-      return false;
-
-    if (pi->getLowerBound()>=0 && f)
-      getParameter_("tp").setConstraint(new IncludingPositiveReal(pi->getLowerBound()));
-    return true;
-  }
+  getParameter_("tp").setConstraint(&intMinMax_);
 }

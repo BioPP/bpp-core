@@ -50,13 +50,15 @@ using namespace std;
   
 /** Constructor: **************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, bool median) :
-  AbstractDiscreteDistribution("Exponential."), bounds_(), lambdaConstraint_(0), median_(median)
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, string prefix) :
+  AbstractDiscreteDistribution(n,prefix), lambdaConstraint_(0), lambda_(lambda)
 {
   lambdaConstraint_ = new IncludingPositiveReal(0.0);
-  Parameter p("Exponential.lambda", lambda, dynamic_cast<Constraint*>(lambdaConstraint_->clone()), true);
+  Parameter p(prefix+"lambda", lambda, dynamic_cast<Constraint*>(lambdaConstraint_->clone()), true);
   addParameter_(p);
-  applyParameters(n);
+
+  intMinMax_.setLowerBound(0,true);
+  discretize();
 }
 
 ExponentialDiscreteDistribution::~ExponentialDiscreteDistribution()
@@ -69,7 +71,8 @@ ExponentialDiscreteDistribution::~ExponentialDiscreteDistribution()
 void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  applyParameters(getNumberOfCategories());	
+  lambda_=getParameterValue("lambda");
+  discretize();	
 }
 
 /******************************************************************************/
@@ -79,78 +82,4 @@ Domain ExponentialDiscreteDistribution::getDomain() const
   return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
 }
 
-/******************************************************************************/
 
-void ExponentialDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
-{
-  discretize(numberOfCategories, getParameter_(0).getValue(), median_);
-}
-
-/******************************************************************************/
-
-void ExponentialDiscreteDistribution::discretize(unsigned int numberOfCategories, double lambda, bool median)
-{
-	if (numberOfCategories == 0)
-		cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in ExponentialDiscreteDistribution::applyParameters()." << endl;
-	distribution_.clear();
-	bounds_.resize(numberOfCategories + 1);
-	if (numberOfCategories == 1)
-  {
-    double value = median ? log(2.) / lambda : 1. / lambda;
-		distribution_[value] = 1.0;
-		bounds_[0] = 0; bounds_[1] = NumConstants::VERY_BIG;
-		return;
-	}
-  else if (numberOfCategories > 1)
-  {
-    bounds_.resize(numberOfCategories + 1);
-    distribution_.clear();
-
-	  bounds_[0] = 0;
-    vector<double> values(numberOfCategories);
-
-	  for (unsigned int i = 1; i <= numberOfCategories; i++)
-    {
-      double a = bounds_[i-1];
-      double b = (i == numberOfCategories)
-        ? NumConstants::VERY_BIG
-        : (1. / lambda) * log((double)numberOfCategories / ((double)(numberOfCategories - i)));
-      bounds_[i] = b;
-      if (median)
-        values[i-1] = (1. / lambda) * log(static_cast<double>(2*numberOfCategories) / static_cast<double>(2*(numberOfCategories - i) + 1)); 
-      else
-        values[i-1] = static_cast<double>(numberOfCategories) * ((a + 1./lambda) * exp(-a * lambda) - (b + 1. / lambda) * exp(-b * lambda)); 
-    }
-
-		double p = 1. / static_cast<double>(numberOfCategories);
-		for (unsigned int i = 0; i < numberOfCategories; i++)
-    {
-			distribution_[values[i]] += p;
-		}
-		if(getNumberOfCategories() != numberOfCategories)
-    {
-			cout << "WARNING!!! Couldn't create " << numberOfCategories << " distinct categories." << endl;
-			cout << "WARNING!!! This may occure if you specified a too low lambda parameter." << endl;
-		}
-		return ;
-	}
-  else
-  {
-		cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in ExponentialDiscreteDistribution::applyParameters()." << endl;
-	}
-}
-
-bool ExponentialDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
-{
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
-  
-  if (pi->getLowerBound()>0
-      || pi->getUpperBound()!=NumConstants::VERY_BIG
-      || (pi->getLowerBound()==0 && pi->strictLowerBound()))
-    return false;
-  else
-    return true;
-}

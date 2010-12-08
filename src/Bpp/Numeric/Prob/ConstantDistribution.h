@@ -94,25 +94,20 @@ namespace bpp
     double getUpperBound() const{
       return value_;
     }
-    
-    /**
-     * @brief Checks if the Parameters can respect the given
-     * Constraint and optionnaly tries to modify their Constraints.
-     *
-     * @param c The Constraint to respect.
-     * @param f boolean flag to say if the Constraints must be changed
-     * (if possible) (default: true)
-     *
-     * @return true if the Constraint is an interval, and the
-     * Parameter value accept the new Constraint, if needed.
-     *
-     * The constraint of Parameter value is changed to the given
-     * Constraint.
-     */
-  
-    bool adaptToConstraint(const Constraint& c, bool f=true);
 
-    
+    double qProb(double x) const{
+      return (x>=1)?value_:-NumConstants::VERY_BIG;
+    }
+     
+    double pProb(double x) const{
+      return x<value_?0:1;
+    }
+                                
+    double Expectation(double a) const{
+      return a<value_?0:1;
+    }
+
+    void restrictToConstraint(const Constraint& c);
 
   };
   

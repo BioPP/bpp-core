@@ -44,6 +44,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../Constraints.h"
 #include "../RandomTools.h"
 
+using namespace std;
+
 namespace bpp
 {
   
@@ -56,38 +58,32 @@ namespace bpp
     public AbstractDiscreteDistribution
   {
   protected:
-    std::vector<double> bounds_;
     IncludingPositiveReal* lambdaConstraint_;
-    bool median_;
-    
+
+    double lambda_;
+
   public:
     /**
      * @brief Build a new discretized exponential distribution.
      * @param n the number of categories to use.
      * @param lambda The lambda parameter.
-     * @param median boolean value if the value of each category is
-     *         the median (if false, this value is the mean (default)).
      *
      * The Parameter is: lambda @f$ \in [0;\infty[ @f$.
      *
      */
     
-    ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., bool median=false);
+    ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., string prefix="Exponential.");
     
     ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution & dist):
-      //AbstractParametrizable(dist),
       AbstractDiscreteDistribution(dist),
-      bounds_(dist.bounds_),
-      lambdaConstraint_(dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone())),
-      median_(dist.median_)
+      lambdaConstraint_(dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone())), lambda_(dist.lambda_)
     {}
   
     ExponentialDiscreteDistribution& operator=(const ExponentialDiscreteDistribution& dist)
     {
       AbstractDiscreteDistribution::operator=(dist);
-      bounds_ = dist.bounds_;
       lambdaConstraint_ = dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone());
-      median_ = dist.median_;
+      lambda_=dist.lambda_;
       return *this;
     }
   
@@ -102,33 +98,25 @@ namespace bpp
   public:
     double randC() const throw (Exception)
     {
-      return RandomTools::randExponential(getParameterValue("lambda"));
+      double x=RandomTools::randExponential(getParameterValue("lambda"));
+      while (!intMinMax_.isCorrect(x))
+        x=RandomTools::randExponential(getParameterValue("lambda"));
+
+      return x;
     }
 
-    double getLowerBound() const {
-      return 0;
+    double pProb(double x) const {
+      return 1-exp(-lambda_*x);
     }
 
-    /**
-     * @brief Checks if the Parameters can respect the given
-     * Constraint and optionnaly tries to modify their Constraints.
-     *
-     * @param c The Constraint to respect.
-     * @param f boolean flag to say if the Constraints must be changed
-     * (if possible) (default: true)
-     *
-     * @return true iff the Constraint is the interval @f$ [0;\infty[
-     * @f$.
-     *
-     */
-  
-    bool adaptToConstraint(const Constraint& c, bool f=true);
+    double qProb(double x) const {
+      return -log(1-x)/lambda_;
+    }
 
+    double Expectation(double a) const {
+      return  1./lambda_ - exp(-a * lambda_) * (a+ 1/lambda_);
+    }
 
-  protected:
-    void applyParameters(unsigned int numberOfCategories);
-    void discretize(unsigned int nbClasses, double lambda, bool median);
-  
   };
   
 } //end of namespace bpp.

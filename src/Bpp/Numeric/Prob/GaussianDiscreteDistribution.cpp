@@ -52,13 +52,13 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 GaussianDiscreteDistribution::GaussianDiscreteDistribution(unsigned int n, double mu, double sigma) :
-  AbstractDiscreteDistribution("Gaussian."), bounds_() 
+  AbstractDiscreteDistribution(n,"Gaussian."), mu_(mu), sigma_(sigma)
 {
   Parameter p1("Gaussian.mu", mu);
   addParameter_(p1);
   Parameter p2("Gaussian.sigma", sigma, &Parameter::R_PLUS_STAR);
   addParameter_(p2);
-  applyParameters(n);
+  discretize();
 }
 
 GaussianDiscreteDistribution::~GaussianDiscreteDistribution() {}
@@ -68,7 +68,9 @@ GaussianDiscreteDistribution::~GaussianDiscreteDistribution() {}
 void GaussianDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  applyParameters(getNumberOfCategories());  
+  mu_ = getParameterValue("mu");
+  sigma_ = getParameterValue("sigma");
+  discretize();  
 }
 
 /******************************************************************************/
@@ -80,89 +82,18 @@ Domain GaussianDiscreteDistribution::getDomain() const
 
 /******************************************************************************/
 
-void GaussianDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
+double GaussianDiscreteDistribution::qProb(double x) const
 {
-  if(numberOfCategories <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in GaussianDiscreteDistribution::applyParameters()." << endl;
-  double mu = getParameterValue("mu");
-  double sigma = getParameterValue("sigma");
-  discretize(numberOfCategories,mu,sigma, false);
+  return RandomTools::qNorm(x, mu_, sigma_);
 }
 
-/******************************************************************************/
-
-void GaussianDiscreteDistribution::discretize(unsigned int nbClasses, double mu, double sigma, bool median)
+double GaussianDiscreteDistribution::pProb(double x) const
 {
-/* discretization of normal distribution with equal proportions in
-   each category */
-
-  if (nbClasses <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in GaussianDiscreteDistribution::discretize()." << endl;
-  
-  distribution_.clear();
-  bounds_.resize(nbClasses + 1);
-
-  bounds_[0] = -NumConstants::VERY_BIG;
-  for(unsigned int i = 1; i < nbClasses; i++)
-    bounds_[i] = RandomTools::qNorm((double)i/(double)nbClasses, mu, sigma);
-  bounds_[nbClasses] = NumConstants::VERY_BIG;
-  
-  unsigned int i;
-  double gap05=1.0/(2.0*nbClasses), t;
-  vector<double> values(nbClasses);
-
-  if(median)
-  {
-    for (i=0; i<nbClasses; i++)
-      values[i]=RandomTools::qNorm((i*2.0+1)*gap05, mu, sigma);
-    for (i=0,t=0; i<nbClasses; i++) t+=values[i];
-    for (i=0; i<nbClasses; i++) values[i]*=mu/t*nbClasses;
-  }
-  else
-  {
-    if(nbClasses==1)
-      values[0] = mu;
-    else
-    {
-      double a,b=bounds_[1];
-      values[0]=(sigma/sqrt(2*M_PI)*(-exp(-pow((b-mu)/sigma,2)/2))
-                 +mu*RandomTools::pNorm((b-mu)/sigma))*nbClasses;
-      
-      for (i=1; i<nbClasses-1; i++){
-        b=bounds_[i+1];
-        a=bounds_[i];
-        values[i]=(sigma/sqrt(2*M_PI)*(exp(-pow((a-mu)/sigma,2)/2)-exp(-pow((b-mu)/sigma,2)/2))
-                   +mu*(RandomTools::pNorm((b-mu)/sigma)-RandomTools::pNorm((a-mu)/sigma)))*nbClasses;
-      }
-      a=bounds_[nbClasses-1];
-      values[nbClasses-1]=(sigma/sqrt(2*M_PI)*exp(-pow((a-mu)/sigma,2)/2)
-                           +mu*(1-RandomTools::pNorm((a-mu)/sigma)))*nbClasses;
-    }
-  }
-
-  double p=1./static_cast<double>(nbClasses);
-  for (i=0;i<nbClasses;i++){
-    distribution_[values[i]]+=p;
-  }
-  
-  if(getNumberOfCategories() != nbClasses)
-    {
-      cout << "WARNING!!! Couldn't create " << nbClasses << " distinct categories." << endl;
-      cout << "WARNING!!! This may occure if you specified a too low sigma parameter." << endl;
-    }
-  return ;
+  return RandomTools::pNorm(x, mu_, sigma_);
 }
 
-bool GaussianDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
+double GaussianDiscreteDistribution::Expectation(double a) const
 {
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
-
-  if (pi->getLowerBound()!=-NumConstants::VERY_BIG || pi->getUpperBound()!=NumConstants::VERY_BIG)
-    return false;
-  else
-    return true;
+  return -sigma_/sqrt(2*M_PI)*exp(-pow((a-mu_)/sigma_,2)/2)
+    +mu_*RandomTools::pNorm(a,mu_,sigma_);
 }
-    

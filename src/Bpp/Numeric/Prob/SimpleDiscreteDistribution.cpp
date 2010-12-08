@@ -47,7 +47,7 @@ using namespace std;
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const map<double, double>& distribution) throw(Exception) :
-  AbstractDiscreteDistribution("Simple.")
+  AbstractDiscreteDistribution(distribution.size(),"Simple.")
 {
   double sum=0;
   for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++) {
@@ -56,13 +56,16 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   }
   if (fabs(1. - sum) > NumConstants::SMALL)
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
+
+  intMinMax_.setLowerBound(distribution_.begin()->first,false);
+  intMinMax_.setUpperBound(distribution_.rbegin()->first,false);
 }
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const vector<double>& values,
                                                        const vector<double>& probas,
                                                        bool fixed
-                                                       ) throw(Exception)  : AbstractDiscreteDistribution("Simple.")
+                                                       ) throw(Exception)  : AbstractDiscreteDistribution(values.size(),"Simple.")
 {
   if (values.size() != probas.size()) {
     throw Exception("SimpleDiscreteDistribution. Values and probabilities vectors must have the same size (" + TextTools::toString(values.size()) + " != " + TextTools::toString(probas.size()) + ").");
@@ -90,7 +93,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
     addParameter_(Parameter("Simple.V"+TextTools::toString(size),values[size-1]));
 
   }
-  
+
 }
 
 void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
@@ -119,6 +122,43 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
   }
 }
 
+double SimpleDiscreteDistribution::qProb(double x) const{
+  double s=-NumConstants::VERY_BIG;
+  double x2=x;
+  for (map<double,double>::const_iterator it=distribution_.begin();it!=distribution_.end();it++){
+    x2-=it->second;
+    if (x2<0)
+      return s;
+    else
+      s=it->second;
+  }
+
+  return s;
+}
+     
+double SimpleDiscreteDistribution::pProb(double x) const{
+  double s=0;
+  for (map<double,double>::const_iterator it=distribution_.begin();it!=distribution_.end();it++)
+    if (it->first>=x)
+      s+=it->second;
+    else
+      break;
+  
+  return s;
+}
+                                
+double SimpleDiscreteDistribution::Expectation(double a) const{
+  double s=0;
+  for (map<double,double>::const_iterator it=distribution_.begin();it!=distribution_.end();it++)
+    if (it->first>=a)
+      s+=it->second;
+    else
+      break;
+  
+  return s;
+}
+
+
 Domain SimpleDiscreteDistribution::getDomain() const
 {
   // Compute a new arbitray bounderi:
@@ -140,45 +180,26 @@ Domain SimpleDiscreteDistribution::getDomain() const
   return Domain(bounderi, values);
 }
 
-double SimpleDiscreteDistribution::getLowerBound() const
-{
-  double m = NumConstants::VERY_BIG;
-  
-  for (map<double, double>::const_iterator i = distribution_.begin(); i != distribution_.end(); i++)
-    if (m > i->first)
-      m = i->first;
-  return m;
-}
-
-double SimpleDiscreteDistribution::getUpperBound() const
-{
-  double m =- NumConstants::VERY_BIG;
-  
-  for (map<double, double>::const_iterator i = distribution_.begin(); i != distribution_.end(); i++)
-    if (m < i->first)
-      m = i->first;
-  return m;
-}
-
-bool SimpleDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
+void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {
   if (getNumberOfParameters() == 0)
-    return true;
+    return;
   
   const Interval* pi = dynamic_cast<const Interval*>(&c);
 
   if (!pi)
-    return false;
-  unsigned int size = distribution_.size();
+    throw Exception("SimpleDiscreteDistribution::restrictToConstraint: Non-interval exception");
 
-  for (unsigned int i = 0; i < size; i++)
-    if (! pi->isCorrect(getParameterValue("V" + TextTools::toString(i + 1))))
-      return false;
+  map<double, double>::const_iterator it;
 
-  if (f)
-    for (unsigned int i = 0; i< size; i++)
-      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(pi->clone());
+  for (it=distribution_.begin(); it!= distribution_.end(); it++)
+    if (! pi->isCorrect(it->first))
+      throw Exception("Impossible to restrict to Constraint  value" + TextTools::toString(it->first));
 
-  return true;
+  AbstractDiscreteDistribution::restrictToConstraint(c);
+
+  unsigned int size=distribution_.size();
+  for (unsigned int i = 0; i< size; i++)
+    getParameter_("V" + TextTools::toString(i + 1)).setConstraint(&intMinMax_);
 }
 

@@ -52,23 +52,51 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 BetaDiscreteDistribution::BetaDiscreteDistribution(unsigned int n, double alpha, double beta) :
-  AbstractDiscreteDistribution("Beta."), bounds_() 
+  AbstractDiscreteDistribution(n,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
   Parameter p1("Beta.alpha", alpha, new IncludingPositiveReal(0.0001), true);
   addParameter_(p1);
   Parameter p2("Beta.beta", beta, new IncludingPositiveReal(0.0001), true);
   addParameter_(p2);
-  applyParameters(n);
+  intMinMax_.setLowerBound(0,true);
+  intMinMax_.setUpperBound(1,true);
+
+  diffln_=exp(RandomTools::lnBeta(alpha_+1,beta_)-RandomTools::lnBeta(alpha_,beta_));
+  discretize();
 }
 
-BetaDiscreteDistribution::~BetaDiscreteDistribution() {}
+BetaDiscreteDistribution::BetaDiscreteDistribution(const BetaDiscreteDistribution& bdd) :
+  AbstractDiscreteDistribution(bdd), alpha_(bdd.alpha_), beta_(bdd.beta_), diffln_(bdd.diffln_)
+{
+}
 
+BetaDiscreteDistribution& BetaDiscreteDistribution::operator=(const BetaDiscreteDistribution& bdd)
+{
+  AbstractDiscreteDistribution::operator=(bdd);
+
+  alpha_=bdd.alpha_;
+  beta_=bdd.beta_;
+  diffln_=bdd.diffln_;
+  
+  return *this;
+}
+  
 /******************************************************************************/
 
 void BetaDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  applyParameters(getNumberOfCategories());  
+  alpha_=getParameterValue("alpha");
+  beta_=getParameterValue("beta");
+
+  if (alpha_<=1 && intMinMax_.getLowerBound()==0)
+    intMinMax_.setLowerBound(NumConstants::VERY_TINY,false);
+
+  if (beta_<=1 && intMinMax_.getUpperBound()==1)
+    intMinMax_.setUpperBound(1-NumConstants::VERY_TINY,false);
+
+  diffln_=exp(RandomTools::lnBeta(alpha_+1,beta_)-RandomTools::lnBeta(alpha_,beta_));
+  discretize();
 }
 
 /******************************************************************************/
@@ -80,107 +108,19 @@ Domain BetaDiscreteDistribution::getDomain() const
 
 /******************************************************************************/
 
-void BetaDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
+double BetaDiscreteDistribution::qProb(double x) const
 {
-  if(numberOfCategories <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in BetaDiscreteDistribution::applyParameters()." << endl;
-  double alpha = getParameterValue("alpha");
-  double beta = getParameterValue("beta");
-  discretize(numberOfCategories,alpha,beta, false);
+  return RandomTools::qBeta(x, alpha_, beta_);
 }
 
-/******************************************************************************/
-
-void BetaDiscreteDistribution::discretize(unsigned int nbClasses, double alpha, double beta, bool median)
+double BetaDiscreteDistribution::pProb(double x) const 
 {
-/* discretization of beta distribution with equal proportions in each 
-   category
-*/
-  if (nbClasses <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in BetaDiscreteDistribution::discretize()." << endl;
-  
-  distribution_.clear();
-  bounds_.resize(nbClasses + 1);
-
-  bounds_[0] = 0;
-  for(unsigned int i = 1; i < nbClasses; i++)
-    bounds_[i] = RandomTools::qBeta((double)i/(double)nbClasses, alpha, beta);
-  bounds_[nbClasses] = 1;
-  
-  unsigned int i;
-  double gap05=1.0/(2.0*nbClasses), t;
-  vector<double> values(nbClasses);
-
-  if(median)
-    {
-      for (i=0; i<nbClasses; i++)
-        values[i]=RandomTools::qBeta((i*2.0+1)*gap05, alpha, beta);
-      for (i=0,t=0; i<nbClasses; i++)
-        t+=values[i];
-      for (i=0; i<nbClasses; i++)
-        values[i]*=alpha/(alpha+beta)/t*nbClasses;
-    }
-  else
-    {
-      if(nbClasses==1)
-        values[0] = alpha/(alpha+beta);
-      else
-        for (i=0; i<nbClasses; i++){
-          values[i]=(RandomTools::pBeta(bounds_[i+1],alpha+1,beta)
-                     -RandomTools::pBeta(bounds_[i],alpha+1,beta))
-            *exp(RandomTools::lnBeta(alpha+1,beta)-RandomTools::lnBeta(alpha,beta))
-            *nbClasses;
-        }
-    }
-
-  if (alpha>1)
-    for (i=0; i<nbClasses; i++){
-      if (values[i]<NumConstants::VERY_TINY)
-        values[i]=NumConstants::VERY_TINY;
-    }
-    
-  if (beta>1)
-    for (i=0; i<nbClasses; i++){
-      if (values[i]>1-NumConstants::VERY_TINY)
-        values[i]=1-NumConstants::VERY_TINY;
-    }
-  
-  double p=1./static_cast<double>(nbClasses);
-  for (i=0;i<nbClasses;i++)
-    distribution_[values[i]]+=p;
-  
-  
-  if(getNumberOfCategories() != nbClasses)
-    {
-      cout << alpha << " " << beta << endl;
-      cout << "WARNING!!! Couldn't create " << nbClasses << " distinct categories." << endl;
-    }
-  return ;
+  return RandomTools::pBeta(x, alpha_, beta_);
 }
 
-bool BetaDiscreteDistribution::adaptToConstraint(const Constraint& c, bool f)
+double BetaDiscreteDistribution::Expectation(double a) const
 {
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
-
-  if (pi->getLowerBound()>0 || pi->getUpperBound()<1)
-    return false;
-
-  if ((pi->getLowerBound()==0 && pi->strictLowerBound() && getParameterValue("alpha")<=1)
-      || (pi->getUpperBound()==1 && pi->strictUpperBound() &&  getParameterValue("beta")<=1))
-    return false;
-
-  if (f){
-    if (pi->getLowerBound()==0 && pi->strictLowerBound())
-      getParameter_("alpha").setConstraint(new ExcludingPositiveReal(1));
-    
-    if (pi->getUpperBound()==1 && pi->strictUpperBound())
-      getParameter_("beta").setConstraint(new ExcludingPositiveReal(1));
-  }
-  
-  return true;
-
+  return RandomTools::pBeta(a,alpha_+1,beta_)*diffln_;
 }
+
     

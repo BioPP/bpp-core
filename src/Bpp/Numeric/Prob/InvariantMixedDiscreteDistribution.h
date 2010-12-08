@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _INVARIANTMIXEDDISCRETEDISTRIBUTION_H_
@@ -45,19 +45,18 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief Discrete mixed distribution, with a one-category fixed value (called "invariant") and a user-specified multi-categories distribution.
- *
- * The term "invariant" comes from the use of such distributions in phylogenetics:
- * the fixed category corresponds to a value of 0 and describes invariant positions in an alignment.
- */
-class InvariantMixedDiscreteDistribution:
-  public AbstractDiscreteDistribution
-{
+  /**
+   * @brief Discrete mixed distribution, with a one-category fixed value (called "invariant") and a user-specified multi-categories distribution.
+   *
+   * The term "invariant" comes from the use of such distributions in phylogenetics:
+   * the fixed category corresponds to a value of 0 and describes invariant positions in an alignment.
+   */
+  class InvariantMixedDiscreteDistribution:
+    public AbstractDiscreteDistribution
+  {
   private:
     DiscreteDistribution* dist_;
-    double invariant_;
-    std::vector<double> bounds_;
+    double invariant_, p_;
     std::string nestedPrefix_;
 
   public:
@@ -80,8 +79,7 @@ class InvariantMixedDiscreteDistribution:
     InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd):
       AbstractDiscreteDistribution(imdd),
       dist_(dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone())),
-      invariant_(imdd.invariant_),
-      bounds_(imdd.bounds_),
+      invariant_(imdd.invariant_), p_(imdd.p_),
       nestedPrefix_(imdd.nestedPrefix_)
     {}
     
@@ -90,7 +88,7 @@ class InvariantMixedDiscreteDistribution:
       AbstractDiscreteDistribution::operator=(imdd);
       dist_         = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
       invariant_    = imdd.invariant_;
-      bounds_       = imdd.bounds_;
+      p_            = imdd.p_;
       nestedPrefix_ = imdd.nestedPrefix_;
       return *this;
     }
@@ -104,47 +102,60 @@ class InvariantMixedDiscreteDistribution:
 
   public:
     Domain getDomain() const;
-		void fireParameterChanged(const ParameterList & parameters);
+    void fireParameterChanged(const ParameterList & parameters);
 
     void setNamespace(const std::string& prefix);
 
+    /*
+     *@ brief Sets the number of categories of the embedded
+     *distribution. The number of categories of this class equals this
+     *plus one if the invariant_ is not in the embedded distribution
+     *values.
+     *
+     */
+    
+    void setNumberOfCategories(unsigned int nbClasses) {
+      dist_->setNumberOfCategories(nbClasses);
+      updateDistribution();
+    }
+    
     /**
      * @return The nested, conditional, sub-distribution.
      */
     const DiscreteDistribution * getVariableSubDistribution() const { return dist_; }
 
-  double getLowerBound() const {
-    return (invariant_<dist_->getLowerBound())?invariant_:dist_->getLowerBound();
-  }
-    
-  double getUpperBound() const {
-    return (invariant_>dist_->getUpperBound())?invariant_:dist_->getUpperBound();
-  }
+    double qProb(double x) const{
+      return (x>=p_+(1-p_)*dist_->pProb(invariant_))?dist_->qProb((x-p_)/(1-p_)):dist_->qProb(x/(1-p_));
+    }
+     
+    double pProb(double x) const{
+      return (1-p_)*dist_->pProb(x)+(x<invariant_)?0:p_;
+    }
+                                
+    double Expectation(double a) const{
+      return (1-p_)*dist_->Expectation(a)+(a<invariant_?0:p_);
+    }
 
-  /**
-   * @brief Checks if the Parameters can respect the given
-   * Constraint and optionnaly tries to modify their Constraints.
-   *
-   * @param c The Constraint to respect.
-   * @param f boolean flag to say if the Constraints must be changed
-   * (if possible) (default: true)
-   *
-   * @return true if invariant_ is in the Constraint and the
-   * Constraint can be adapted with the DiscreteDistribution
-   *
-   * If returns true and authorized, the constraints of the Parameters
-   * of the DiscreteDistribution are adapted following the
-   * adaptToConstraint method of this DiscreteDistribution.
-   *
-   */
+    void setMedian(bool median){
+      if (median_!=median){
+        median_=median;
+        dist_->setMedian(median);
+        updateDistribution();
+      }
+    }
   
-  bool adaptToConstraint(const Constraint& c, bool f=true);
+    void discretize(){
+      dist_->discretize();
+      updateDistribution();
+    }
 
+    void restrictToConstraint(const Constraint& c);
 
   protected:
-    void applyParameters();
+    void updateDistribution();
 
-};
+
+  };
 
 } //end of namespace bpp.
 

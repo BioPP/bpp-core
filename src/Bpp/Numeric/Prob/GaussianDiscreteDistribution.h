@@ -56,7 +56,7 @@ class GaussianDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
   private:
-    std::vector<double> bounds_;
+  double mu_, sigma_;
   
   public:
     /**
@@ -81,11 +81,13 @@ public:
   
   double randC() const throw (Exception)
   {
-    return RandomTools::randGaussian(getParameterValue("mu"), pow(getParameterValue("sigma"),2));
+    return RandomTools::randGaussian(mu_,sigma_);
   }
+
   /**
-   * @brief Checks if the Parameters can respect the given
-   * Constraint and optionnaly tries to modify their Constraints.
+   * @brief Checks if the distribution can respect the given
+   * Constraint and optionnaly tries to modify the parameters
+   * Constraints.
    *
    * @param c The Constraint to respect.
    * @param f boolean flag to say if the Constraints must be changed
@@ -96,13 +98,12 @@ public:
    * ]-\infty;\infty[ @f$.
    *
    */
-  
-  bool adaptToConstraint(const Constraint& c, bool f=true);
 
-protected:
-  void applyParameters(unsigned int numberOfCategories);
-  void discretize(unsigned int nbClasses, double mu, double sigma, bool median);
-  
+  double qProb(double x) const;
+     
+  double pProb(double x) const;
+
+  double Expectation(double a) const;
 
 };
   

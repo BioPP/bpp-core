@@ -100,27 +100,21 @@ public:
   void fireParameterChanged(const ParameterList & parameters);
   Domain getDomain() const;
 
-  double getLowerBound() const;
-    
-  double getUpperBound() const;
+  double getLowerBound() const {
+    return distribution_.begin()->first;
+  }
 
-  /**
-   * @brief Checks if the Parameters can respect the given
-   * Constraint and optionnaly tries to modify their Constraints.
-   *
-   * @param c The Constraint to respect.
-   * @param f boolean flag to say if the Constraints must be changed
-   * (if possible) (default: true)
-   *
-   * @return true iff the Constraint is an interval, and the
-   * Parameters values accept the new Constraint, if needed.
-   *
-   * The constraint of Parameters Vi are changed to the given
-   * Constraint.
-   */
+  double getUpperBound() const {
+    return distribution_.rbegin()->first;
+  }  
   
-  bool adaptToConstraint(const Constraint& c, bool f=true);
+  double qProb(double x) const ;
+  
+  double pProb(double x) const ;
+                                
+  double Expectation(double a) const;
 
+  void restrictToConstraint(const Constraint& c);
     
 };
 

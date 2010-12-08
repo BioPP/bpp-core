@@ -43,7 +43,7 @@ using namespace bpp;
 
 /******************************************************************************/
 
-ConstantDistribution::ConstantDistribution(double value, bool fixed) : AbstractDiscreteDistribution("Constant."),
+ConstantDistribution::ConstantDistribution(double value, bool fixed) : AbstractDiscreteDistribution(1,"Constant."),
                                                                        value_(value)
 {
   if (! fixed)
@@ -78,23 +78,21 @@ std::string ConstantDistribution::getName() const
   return("ConstantDistribution");
 }
 
-bool ConstantDistribution::adaptToConstraint(const Constraint& c, bool f)
+/******************************************************************************/
+
+void ConstantDistribution::restrictToConstraint(const Constraint& c)
 {
   if (getNumberOfParameters()==0)
-    return true;
+    return;
   
   const Interval* pi=dynamic_cast<const Interval*>(&c);
-
-  if (pi==NULL)
-    return false;
+  if (!pi)
+    throw Exception("ConstantDistribution::restrictToConstraint: Non-interval exception");
 
   if (! pi->isCorrect(getParameterValue("value")))
-    return false;
+    throw ConstraintException("Impossible to restrict to Constraint", &getParameter_("value"), getParameterValue("value_"));
+
+  AbstractDiscreteDistribution::restrictToConstraint(c);
   
-  if (f)
-    getParameter_("value").setConstraint(pi->clone());
-
-  return true;
-
+  getParameter_("value").setConstraint(&intMinMax_);
 }
-

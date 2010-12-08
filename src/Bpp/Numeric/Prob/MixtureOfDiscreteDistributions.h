@@ -73,6 +73,8 @@ class MixtureOfDiscreteDistributions:
 protected:
 
   std::vector<DiscreteDistribution*> vdd_;
+
+  std::vector<double> probas_;
   
 public:
   /**
@@ -100,35 +102,36 @@ public:
 #endif
 
 public:
-  void fireParameterChanged(const ParameterList & parameters);
-  Domain getDomain() const;
 
-  double getLowerBound() const;
-    
-  double getUpperBound() const;
-
-  /**
-   * @brief Checks if the Parameters can respect the given
-   * Constraint and optionnaly tries to modify their Constraints.
+  /*
+   *@brief sets the number of categories of EACH submodel to
+   *nbClasses, so the number of categories of the mixture is at most
+   *the power of all these numbers.
    *
-   * @param c The Constraint to respect.
-   * @param f boolean flag to say if the Constraints must be changed
-   * (if possible) (default: true)
-   *
-   *
-   * @return true iff the Constraint is an interval, and the
-   * DiscreteDistributions of the mixture accept the new Constraint,
-   * if needed.
-   *
-   * If ALL the DiscreteDistributions can fit the Constraint, the
-   * Constraints of the Parameters of the
-   * MixtureOfDiscreteDistributions and off each DiscreteDistribution
-   * are adapted to the given Constraint.
    */
   
-  bool adaptToConstraint(const Constraint& c, bool f=true);
+  void setNumberOfCategories(unsigned int nbClasses);
 
-    
+  void fireParameterChanged(const ParameterList & parameters);
+
+  Domain getDomain() const;
+
+  double qProb(double x) const;
+     
+  double pProb(double x) const;
+                                
+  double Expectation(double a) const;
+
+  void setMedian(bool median);
+  
+  void restrictToConstraint(const Constraint& c);
+
+  void discretize();
+
+protected:
+
+  void updateDistribution();
+  
 };
 
 } //end of namespace bpp.

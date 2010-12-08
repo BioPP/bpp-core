@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _GAMMADISCRETEDISTRIBUTION_H_
@@ -47,17 +47,22 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief Discretized Gamma distribution.
- *
- * @author Julien Dutheil, David Fournier, with original code from Tal Pupko and Ziheng Yang.
- */
-class GammaDiscreteDistribution:
-  public AbstractDiscreteDistribution
-{
-  private:
-    std::vector<double> bounds_;
+  /**
+   * @brief Discretized Gamma distribution.
+   *
+   * @author Julien Dutheil, Laurent Guéguen, with original code from Tal Pupko and Ziheng Yang.
+   */
   
+  class GammaDiscreteDistribution:
+    public AbstractDiscreteDistribution
+  {
+  private:
+
+    double alpha_, beta_;
+
+    // To prevent useless computations
+    double ga1_;
+    
   public:
     /**
      * @brief Build a new discretized gamma distribution.
@@ -83,43 +88,22 @@ class GammaDiscreteDistribution:
     Domain getDomain() const;
     void fireParameterChanged(const ParameterList & parameters);
   
-  double randC() const throw (Exception)
+    double randC() const throw (Exception)
     {
-      return RandomTools::randGamma(getParameterValue("alpha"),getParameterValue("beta"));
+      double x= RandomTools::randGamma(getParameterValue("alpha"),
+                                       getParameterValue("beta"));
+      while (!intMinMax_.isCorrect(x))
+        x= RandomTools::randGamma(getParameterValue("alpha"),
+                                  getParameterValue("beta"));
+      return x;
     }
 
-  double getLowerBound() const {
-    if (getParameterValue("alpha")>=1)
-      return NumConstants::VERY_TINY;
-    else
-      return 0;
-  }
+    double qProb(double x) const;
+     
+    double pProb(double x) const;
 
-  /**
-   * @brief Checks if the Parameters can respect the given
-   * Constraint and optionnaly tries to modify their Constraints.
-   *
-   * @param c The Constraint to respect.
-   * @param f boolean flag to say if the Constraints must be changed
-   * (if possible) (default: true)
-   *
-   *
-   * @return true if the Constraint constrains @f$ ]0;\infty[ @f$, and
-   * the Parameters values accept the new Constraint, if needed.
-   *
-   * If the Constraint excludes 0, the constraint of Parameters
-   * alpha is restricted to @f$ \in [0.05;1[ @f$, otherwise
-   * it is not changed.
-   *
-   */
-  
-  bool adaptToConstraint(const Constraint& c, bool f=true);
+    double Expectation(double a) const;
 
-  protected:
-    void applyParameters(unsigned int numberOfCategories);
-    static std::vector<double> computeBounds(unsigned int nbClasses, double alpha, double beta);
-    static std::vector<double> computeValues(unsigned int nbClasses, double alpha, double beta, bool median);
-    
 };
 
 } //end of namespace bpp.

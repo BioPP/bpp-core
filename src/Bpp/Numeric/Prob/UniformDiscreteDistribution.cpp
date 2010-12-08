@@ -52,9 +52,12 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 UniformDiscreteDistribution::UniformDiscreteDistribution(unsigned int n, double min, double max) :
-  AbstractDiscreteDistribution("Uniform."), bounds_(), min_((min<max)?min:max), max_((min<max)?max:min) 
+  AbstractDiscreteDistribution(n,"Uniform."), min_((min<max)?min:max), max_((min<max)?max:min) 
 {
-  applyParameters(n);
+  intMinMax_.setLowerBound(min_,false);
+  intMinMax_.setUpperBound(max_,false);
+
+  discretize();
 }
 
 UniformDiscreteDistribution::~UniformDiscreteDistribution() {}
@@ -72,24 +75,6 @@ Domain UniformDiscreteDistribution::getDomain() const
   return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
 }
 
-/******************************************************************************/
-
-void UniformDiscreteDistribution::applyParameters(unsigned int numberOfCategories)
-{
-  if(numberOfCategories <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in UniformDiscreteDistribution::applyParameters()." << endl;
-  distribution_.clear();
-  bounds_.clear();
-  bounds_.resize(numberOfCategories + 1);
-
-  double delta=(max_-min_)/numberOfCategories;
-
-  for (unsigned int i=0;i<numberOfCategories;i++){
-    distribution_[min_+delta*(i+0.5)]= 1.0/numberOfCategories;
-    bounds_[i]=min_+i*delta;
-  }
-  bounds_[numberOfCategories]=max_;
-}
 
 
 
