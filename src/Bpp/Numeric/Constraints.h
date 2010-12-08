@@ -140,8 +140,8 @@ namespace bpp
     Interval* clone() const { return new Interval(*this);}
 
   public:
-    void setLowerBound(double lowerBound) { lowerBound_ = lowerBound; }
-    void setUpperBound(double upperBound) { upperBound_ = upperBound; }
+    void setLowerBound(double lowerBound, bool strict) { lowerBound_ = lowerBound; inclLowerBound_=!strict;}
+    void setUpperBound(double upperBound, bool strict) { upperBound_ = upperBound; inclUpperBound_=!strict;}
 
     double getLowerBound() const { return lowerBound_;}
     double getUpperBound() const { return upperBound_;}
@@ -192,8 +192,8 @@ namespace bpp
     /*
      *@brief Intersect this Interval with another one
      *
-     *@param the intersected Interval
-     *@return the intersection
+     *@param c the intersected Interval
+     *@return the intersection, or NULL if c is not an Interval
      */
     
     Constraint* operator &(const Constraint& c) const {
@@ -225,6 +225,85 @@ namespace bpp
       else
         return NULL;
     }
+
+    /*
+     *@brief Intersect this Interval with another one
+     *
+     *@param c the intersected Interval
+     *@return this Interval modified, or not modified if c is not an Interval
+     */
+    
+    Interval& operator &=(const Constraint& c)
+    {
+
+      const Interval* pi=dynamic_cast<const Interval*>(&c);
+
+      if (pi){
+        if (lowerBound_<=pi->lowerBound_){
+          lowerBound_=pi->lowerBound_;
+          inclLowerBound_=pi->inclLowerBound_;
+        }
+        else {
+          lowerBound_=lowerBound_;
+          inclLowerBound_=inclLowerBound_;
+        }
+        
+        if (upperBound_>=pi->upperBound_){
+          upperBound_=pi->upperBound_;
+          inclUpperBound_=pi->inclUpperBound_;
+        }
+        else {
+          upperBound_=upperBound_;
+          inclUpperBound_=inclUpperBound_;
+        }
+      }
+
+      return *this;
+    }
+
+    /*
+     *@brief Tells if this interval equals another one
+     *
+     *@param i the compared Interval
+     */
+    
+    bool operator ==(const Interval& i) const
+    {
+      return (lowerBound_==i.lowerBound_
+              && inclLowerBound_==i.inclLowerBound_
+              && upperBound_==i.upperBound_
+              && inclUpperBound_==i.inclUpperBound_
+              );
+    }
+
+    /*
+     *@brief Tells if this interval is different from another one
+     *
+     *@param i the compared Interval
+     */
+
+    bool operator !=(const Interval& i) const
+    {
+      return (lowerBound_!=i.lowerBound_
+              || inclLowerBound_!=i.inclLowerBound_
+              || upperBound_!=i.upperBound_
+              || inclUpperBound_!=i.inclUpperBound_
+              );
+    }
+
+    /*
+     *@brief Tells if this interval is included or equal in another one
+     *
+     *@param i the compared Interval
+     */
+    
+    bool operator <=(const Interval& i) const
+    {
+      return (lowerBound_>=i.lowerBound_
+              && upperBound_<=i.upperBound_);
+    }
+
+
   };
 
   
