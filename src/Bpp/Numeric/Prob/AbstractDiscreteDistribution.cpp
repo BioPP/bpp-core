@@ -242,73 +242,87 @@ double AbstractDiscreteDistribution::getUpperBound() const
 
 void AbstractDiscreteDistribution::discretize()
 {
-  /* discretization of beta distribution with equal proportions in
-     each category
+  /* discretization of distribution with equal proportions in each
+     category
   */
   
-  unsigned int nbClasses=getNumberOfCategories();
   distribution_.clear();  
-  bounds_.resize(nbClasses + 1);
+  bounds_.resize(numberOfCategories_ + 1);
   bounds_[0] = intMinMax_.getLowerBound()+(intMinMax_.strictLowerBound()?NumConstants::VERY_TINY:0);
-  bounds_[nbClasses] = intMinMax_.getUpperBound()-(intMinMax_.strictUpperBound()?NumConstants::VERY_TINY:0);
+  bounds_[numberOfCategories_] = intMinMax_.getUpperBound()-(intMinMax_.strictUpperBound()?NumConstants::VERY_TINY:0);
 
   double minX=pProb(bounds_[0]);
-  double maxX=pProb(bounds_[nbClasses]);
-  double ec=(maxX-minX)/nbClasses;
+  double maxX=pProb(bounds_[numberOfCategories_]);
 
-  for(unsigned int i = 1; i < nbClasses; i++)
-    bounds_[i] = qProb(minX+i*ec);
-
+  double ec;
   unsigned int i;
-  vector<double> values(nbClasses);
+  vector<double> values(numberOfCategories_);
 
-  if(median_)
-    {
-      double t;
-      for (i=0; i<nbClasses; i++)
-        values[i]=qProb(minX+(i+0.5)*ec);
-      
-      for (i=0,t=0; i<nbClasses; i++)
-        t+=values[i];
-      double mean=Expectation(bounds_[nbClasses])-Expectation(bounds_[0]);
-      for (i=0; i<nbClasses; i++)
-        values[i]*=mean/t*nbClasses/(maxX-minX);
-    }
-  else
-    {
-      if(nbClasses==1)
-        values[0] = Expectation(bounds_[1])-Expectation(bounds_[0]);
-      else{
-        double a=Expectation(bounds_[0]), b;
-        for (i=0; i<nbClasses; i++){
-          b=Expectation(bounds_[i+1]);
-          values[i]=(b-a)*nbClasses/(maxX-minX);
-          a=b;
+  // if maxX==minX, uniform discretization of the range
+  if (maxX!=minX){
+    ec=(maxX-minX)/numberOfCategories_;
+    
+    for( i = 1; i < numberOfCategories_; i++)
+      bounds_[i] = qProb(minX+i*ec);
+    
+  
+    if(median_)
+      {
+        double t;
+        for (i=0; i<numberOfCategories_; i++)
+          values[i]=qProb(minX+(i+0.5)*ec);
+        
+        for (i=0,t=0; i<numberOfCategories_; i++)
+          t+=values[i];
+        double mean=Expectation(bounds_[numberOfCategories_])-Expectation(bounds_[0]);
+        for (i=0; i<numberOfCategories_; i++)
+          values[i]*=mean/t*numberOfCategories_/(maxX-minX);
+      }
+    else
+      {
+        if(numberOfCategories_==1)
+          values[0] = Expectation(bounds_[1])-Expectation(bounds_[0]);
+        else{
+          double a=Expectation(bounds_[0]), b;
+          for (i=0; i<numberOfCategories_; i++){
+            b=Expectation(bounds_[i+1]);
+            values[i]=(b-a)*numberOfCategories_/(maxX-minX);
+            a=b;
+          }
         }
       }
-    }
+  }
+  else {
+    ec=(bounds_[numberOfCategories_]-bounds_[0])/numberOfCategories_;
+    for( i = 1; i < numberOfCategories_; i++)
+      bounds_[i] = bounds_[0]+i*ec;
+
+    for( i = 0; i < numberOfCategories_; i++)
+      values[i] = (bounds_[i]+bounds_[i+1])/2;
+  }
 
   // useful? //
   
   if (intMinMax_.strictLowerBound())
-    for (i=0; i<nbClasses; i++){
+    for (i=0; i<numberOfCategories_; i++){
       if (values[i]<intMinMax_.getLowerBound()+NumConstants::VERY_TINY)
         values[i]=intMinMax_.getLowerBound()+NumConstants::VERY_TINY;
     }
     
   if (intMinMax_.strictUpperBound())
-    for (i=0; i<nbClasses; i++){
+    for (i=0; i<numberOfCategories_; i++){
       if (values[i]>intMinMax_.getUpperBound()-NumConstants::VERY_TINY)
         values[i]=intMinMax_.getUpperBound()-NumConstants::VERY_TINY;
     }
   
-  double p=1./static_cast<double>(nbClasses);
-  for (i=0;i<nbClasses;i++)
+  double p=1./static_cast<double>(numberOfCategories_);
+  for (i=0;i<numberOfCategories_;i++)
     distribution_[values[i]]+=p;
   
-  if(getNumberOfCategories() != nbClasses)
+  if(distribution_.size() != numberOfCategories_)
     {
-      cout << "WARNING!!! Couldn't create " << nbClasses << " distinct categories." << endl;
+      cout << "WARNING!!! Couldn't create " << numberOfCategories_ << " distinct categories." << endl;
+      numberOfCategories_=distribution_.size();
     }
   return ;
 }
@@ -320,7 +334,7 @@ void AbstractDiscreteDistribution::restrictToConstraint(const Constraint& c)
 
   if (pi==NULL)
     throw Exception("AbstractDiscreteDistribution::restrictToConstraint: the constraint is not an interval");
-  
+
   if (!(intMinMax_<=(*pi))){
     intMinMax_&=c;
     discretize();
