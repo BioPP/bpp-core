@@ -349,6 +349,12 @@ l4:
 }
 
 
+double RandomTools::pNorm(double x, double mu, double sigma)
+{
+  return RandomTools::pNorm((x-mu)/sigma);
+}
+
+
 double RandomTools::pNorm(double x)
 {
   const static double a[5] = {

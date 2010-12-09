@@ -240,10 +240,11 @@ namespace bpp
     /**
      * @name Probability functions.
      *
+     * @{
      * Adapted from Yang's PAML package.
      *
-     * @{
      */
+
     /**
      * @brief Normal quantile function.
      *
@@ -270,7 +271,7 @@ namespace bpp
      * returns (-9999) if in error
      * Odeh RE & Evans JO (1974) The percentage points of the normal distribution.
      * Applied Statistics 22: 96-97 (AS70)
-     >   *
+     *
      * Newer methods:
      *  Wichura MJ (1988) Algorithm AS 241: the percentage points of the
      *    normal distribution.  37: 477-484.
@@ -296,6 +297,7 @@ namespace bpp
      * @param alpha Alpha parameter.
      * @return \f$ln\left(\Gamma\left(\alpha\right)\right)\f$
      */
+    
     static double lnGamma (double alpha);
 
     /**
@@ -391,14 +393,26 @@ namespace bpp
      * @{
      */
     /**
-     * @brief Normal quantile function.
+     * @brief Normal cumulative function.
      *
      * Returns Prob{x<=z} where x ~ N(0,1)
      
-     * @param z the upper quantile.
+     * @param z the value.
      * @return The corresponding probability.
      */
     static double pNorm(double z);
+
+    /* @brief Normal cumulative function.
+    *
+    * Returns Prob{x<=z} where x ~ N(mu,sigma^2)
+     
+    * @param z the value.
+    * @param mu The mean of the distribution
+    * @param sigma The standard deviation of the distribution
+    * @return The corresponding probability.
+    */
+    
+    static double pNorm(double z, double mu, double sigma);
 
     /**
      * @brief Computes
@@ -410,7 +424,7 @@ namespace bpp
      * @param alpha, beta Alpha and Beta parameters.
      * @return \f$ln\left(Beta\left(\alpha,\beta\right)\right)\f$
      */
-  
+
     static double lnBeta (double alpha, double beta);
 
     /**
