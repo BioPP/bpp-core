@@ -87,7 +87,7 @@ namespace bpp
 
     
     /**
-     * @param sets the number of categories and discretizes if there
+     * @brief sets the number of categories and discretizes if there
      * is a change in this number.
      */
     
@@ -227,12 +227,6 @@ namespace bpp
     virtual Domain getDomain() const = 0;
 
     /**
-     * @brief Discretizes the distribution in equiprobable classes.
-     * @param nbClasses the number of classes to discretize into.
-     *
-     */
-
-    /**
      *@brief Sets the median value to true to say that the value in a
      * class is proportional to the median value of the class, the
      * proportionality factor being such that the sum of the values
@@ -248,6 +242,10 @@ namespace bpp
     
     virtual void setMedian(bool median) = 0;
     
+    /**
+     * @brief Discretizes the distribution in equiprobable classes.
+     */
+
     virtual void discretize() = 0;
 
     /**

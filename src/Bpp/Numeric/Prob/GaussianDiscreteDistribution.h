@@ -84,21 +84,6 @@ public:
     return RandomTools::randGaussian(mu_,sigma_);
   }
 
-  /**
-   * @brief Checks if the distribution can respect the given
-   * Constraint and optionnaly tries to modify the parameters
-   * Constraints.
-   *
-   * @param c The Constraint to respect.
-   * @param f boolean flag to say if the Constraints must be changed
-   * (if possible) (default: true)
-   *
-   *
-   * @return true iff the Constraint is the interval @f$
-   * ]-\infty;\infty[ @f$.
-   *
-   */
-
   double qProb(double x) const;
      
   double pProb(double x) const;

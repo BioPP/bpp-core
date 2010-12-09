@@ -48,7 +48,7 @@ using namespace bpp;
 #include <cmath>
 using namespace std;
   
-/** Constructor: **************************************************************/
+/****************************************************************/
 
 ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, string prefix) :
   AbstractDiscreteDistribution(n,prefix), lambdaConstraint_(0), lambda_(lambda)
