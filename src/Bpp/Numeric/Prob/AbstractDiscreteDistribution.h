@@ -71,7 +71,7 @@ namespace bpp
     public:
       bool operator() (double l1, double l2) const
       {
-        return (l1 < l2 - 0.000000001); //precision of E9
+        return (l1 < l2 - NumConstants::TINY); //precision of E12
       }
     };
 
