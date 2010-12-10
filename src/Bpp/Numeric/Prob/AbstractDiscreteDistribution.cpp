@@ -248,8 +248,8 @@ void AbstractDiscreteDistribution::discretize()
 
   distribution_.clear();  
   bounds_.resize(numberOfCategories_ + 1);
-  bounds_[0] = intMinMax_.getLowerBound()+(intMinMax_.strictLowerBound()?NumConstants::VERY_TINY:0);
-  bounds_[numberOfCategories_] = intMinMax_.getUpperBound()-(intMinMax_.strictUpperBound()?NumConstants::VERY_TINY:0);
+  bounds_[0] = intMinMax_.getLowerBound()+(intMinMax_.strictLowerBound()?NumConstants::TINY:0);
+  bounds_[numberOfCategories_] = intMinMax_.getUpperBound()-(intMinMax_.strictUpperBound()?NumConstants::TINY:0);
 
   double minX=pProb(bounds_[0]);
   double maxX=pProb(bounds_[numberOfCategories_]);
@@ -265,7 +265,6 @@ void AbstractDiscreteDistribution::discretize()
     for( i = 1; i < numberOfCategories_; i++)
       bounds_[i] = qProb(minX+i*ec);
     
-  
     if(median_)
       {
         double t;
@@ -301,18 +300,27 @@ void AbstractDiscreteDistribution::discretize()
       values[i] = (bounds_[i]+bounds_[i+1])/2;
   }
 
-  // useful? //
-  
   if (intMinMax_.strictLowerBound())
     for (i=0; i<numberOfCategories_; i++){
-      if (values[i]<intMinMax_.getLowerBound()+NumConstants::VERY_TINY)
-        values[i]=intMinMax_.getLowerBound()+NumConstants::VERY_TINY;
+      if (values[i]<intMinMax_.getLowerBound()+NumConstants::TINY)
+        values[i]=intMinMax_.getLowerBound()+NumConstants::TINY;
     }
+  else {
+    for (i=0; i<numberOfCategories_; i++){
+      if (values[i]<intMinMax_.getLowerBound())
+        values[i]=intMinMax_.getLowerBound()+NumConstants::TINY;
+    }
+  }
     
   if (intMinMax_.strictUpperBound())
     for (i=0; i<numberOfCategories_; i++){
-      if (values[i]>intMinMax_.getUpperBound()-NumConstants::VERY_TINY)
-        values[i]=intMinMax_.getUpperBound()-NumConstants::VERY_TINY;
+      if (values[i]>intMinMax_.getUpperBound()-NumConstants::TINY)
+        values[i]=intMinMax_.getUpperBound()-NumConstants::TINY;
+    }
+  else
+    for (i=0; i<numberOfCategories_; i++){
+      if (values[i]>intMinMax_.getUpperBound())
+        values[i]=intMinMax_.getUpperBound()-NumConstants::TINY;
     }
   
   double p=1./static_cast<double>(numberOfCategories_);
