@@ -55,7 +55,7 @@ unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const
 void AbstractDiscreteDistribution::setNumberOfCategories(unsigned int nbClasses)
 {
   if (nbClasses <= 0)
-    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in AbstractDiscreteDistribution::discretize()." << endl;
+    cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in AbstractDiscreteDistribution::setNumberOfCategories()." << endl;
 
   if (numberOfCategories_!=nbClasses){
     numberOfCategories_=nbClasses;
@@ -245,7 +245,7 @@ void AbstractDiscreteDistribution::discretize()
   /* discretization of distribution with equal proportions in each
      category
   */
-  
+
   distribution_.clear();  
   bounds_.resize(numberOfCategories_ + 1);
   bounds_[0] = intMinMax_.getLowerBound()+(intMinMax_.strictLowerBound()?NumConstants::VERY_TINY:0);
@@ -317,13 +317,15 @@ void AbstractDiscreteDistribution::discretize()
   
   double p=1./static_cast<double>(numberOfCategories_);
   for (i=0;i<numberOfCategories_;i++)
-    distribution_[values[i]]+=p;
-  
-  if(distribution_.size() != numberOfCategories_)
-    {
-      cout << "WARNING!!! Couldn't create " << numberOfCategories_ << " distinct categories." << endl;
-      numberOfCategories_=distribution_.size();
+    if (distribution_.find(values[i])!=distribution_.end()){
+      unsigned int j=1;
+      while (distribution_.find(values[i]+j*NumConstants::TINY)!=distribution_.end())
+        j++;
+      distribution_[values[i]+j*NumConstants::TINY]=p;
     }
+    else
+      distribution_[values[i]]=p;
+    
   return ;
 }
 
