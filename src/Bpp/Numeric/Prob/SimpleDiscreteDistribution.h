@@ -115,7 +115,8 @@ public:
   double Expectation(double a) const;
 
   void restrictToConstraint(const Constraint& c);
-    
+
+  void discretize() {};
 };
 
 } //end of namespace bpp.
