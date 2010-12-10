@@ -109,6 +109,7 @@ namespace bpp
 
     void restrictToConstraint(const Constraint& c);
 
+    void discretize() {}
   };
   
 } //end of namespace bpp.
