@@ -48,7 +48,7 @@ ConstantDistribution::ConstantDistribution(double value, bool fixed) : AbstractD
 {
   if (! fixed)
     addParameter_(Parameter("Constant.value",value));
-  distribution_[value_] = 1; //One single class of rate 1 with probability 1.
+  distribution_[value_] = 1; //One single class  with probability 1.
 }
 
 /******************************************************************************/
