@@ -319,9 +319,12 @@ void AbstractDiscreteDistribution::discretize()
   for (i=0;i<numberOfCategories_;i++)
     if (distribution_.find(values[i])!=distribution_.end()){
       unsigned int j=1;
-      while (distribution_.find(values[i]+j*NumConstants::TINY)!=distribution_.end())
+      int f=((values[i]+NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+      while (distribution_.find(values[i]+f*j*NumConstants::TINY)!=distribution_.end()){
         j++;
-      distribution_[values[i]+j*NumConstants::TINY]=p;
+        f=((values[i]+f*j*NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+      }
+      distribution_[values[i]+f*j*NumConstants::TINY]=p;
     }
     else
       distribution_[values[i]]=p;
