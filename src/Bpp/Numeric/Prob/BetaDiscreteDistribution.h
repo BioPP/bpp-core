@@ -41,7 +41,7 @@
 #define _BETADISCRETEDISTRIBUTION_H_
 
 #include "AbstractDiscreteDistribution.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 
 namespace bpp
 {

@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -41,18 +41,15 @@
 #ifndef _RANDOMTOOLS_H_
 #define _RANDOMTOOLS_H_
 
+#include "RandomFactory.h"
+#include "../VectorExceptions.h"
+#include "../../Exceptions.h"
+
 // From the STL:
 #include <cmath>
 #include <cassert>
 #include <ctime>
 #include <vector>
-
-// From NumCalc
-#include "RandomFactory.h"
-#include "VectorExceptions.h"
-
-// From Utils:
-#include "../Exceptions.h"
 
 namespace bpp
 {
@@ -94,7 +91,7 @@ namespace bpp
                                    double maxgam);
   
   public:
-    static RandomFactory * DEFAULT_GENERATOR;
+    static RandomFactory* DEFAULT_GENERATOR;
     
     /**
      * @brief Get a double random value (between 0 and specified range).
@@ -103,14 +100,14 @@ namespace bpp
      * @param entry Max number to reach.
      * @param generator Random number generator to use.
      */
-    static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory& generator = *DEFAULT_GENERATOR);
 
     /**
      * @brief Get a boolean random value.
      *
      * @param generator Random number generator to use.
      */
-    static bool flipCoin(const RandomFactory * generator = DEFAULT_GENERATOR);
+    static bool flipCoin(const RandomFactory& generator = *DEFAULT_GENERATOR);
 
     /**
      * @brief Get an integer random value (between 0 and specified range).
@@ -119,7 +116,7 @@ namespace bpp
      * @param entry Max number to reach.
      * @param generator Random number generator to use.
      */
-    static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory& generator = *DEFAULT_GENERATOR);
 
     /**
      * @brief Set the default generator seed.
@@ -134,14 +131,14 @@ namespace bpp
      * @param variance The variance of the law.
      * @param generator The uniform generator to use.
      */
-    static double randGaussian(double mean, double variance, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double randGaussian(double mean, double variance, const RandomFactory& generator = *DEFAULT_GENERATOR);
     
     /**
      * @return A random number drawn from a gamma distribution with unit scale (beta=1).
      * @param dblAlpha The alpha parameter.
      * @param generator The uniform generator to use.
      */
-    static double randGamma(double dblAlpha, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double randGamma(double dblAlpha, const RandomFactory& generator = *DEFAULT_GENERATOR);
 
     /**
      * @return A random number drawn from a gamma distribution.
@@ -149,7 +146,7 @@ namespace bpp
      * @param beta The beta parameter.
      * @param generator The uniform generator to use.
      */
-    static double randGamma(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double randGamma(double alpha, double beta, const RandomFactory& generator = *DEFAULT_GENERATOR);
   
     /**
      * @return A random number drawn from a beta distribution.
@@ -158,14 +155,14 @@ namespace bpp
      * @param generator The uniform generator to use.
      */
 
-    static double randBeta(double alpha, double beta, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double randBeta(double alpha, double beta, const RandomFactory& generator = *DEFAULT_GENERATOR);
   
     /**
      * @return A random number drawn from an exponential distribution.
      * @param mean The mean of the distribution.
      * @param generator The uniform generator to use.
      */
-    static double randExponential(double mean, const RandomFactory * generator = DEFAULT_GENERATOR);
+    static double randExponential(double mean, const RandomFactory& generator = *DEFAULT_GENERATOR);
 
     /**
      * @brief Pick one element in a vector
@@ -344,7 +341,7 @@ namespace bpp
      */
     static double pChisq(double x, double v)
     {
-      if(x < 0) return 0;
+      if (x < 0) return 0;
       return pGamma(x, v / 2, 0.5);
     }
 
@@ -463,10 +460,9 @@ namespace bpp
 
     /** @} */
 
-  
   private:
-    static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator);
-    static double DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator);
+    static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory& generator);
+    static double DblGammaLessThanOne(double dblAlpha, const RandomFactory& generator);
   };
 
 } //end of namespace bpp.

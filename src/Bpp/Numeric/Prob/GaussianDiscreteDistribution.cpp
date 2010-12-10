@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "GaussianDiscreteDistribution.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 #include "../NumConstants.h"
 #include "../../Utils/MapTools.h"
 

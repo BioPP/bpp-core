@@ -1,14 +1,14 @@
 //
-// File: ExponentialDiscreteDistribution.cpp
+// File: test_stats.cpp
 // Created by: Julien Dutheil
-// Created on: Tue Nov 13 12:37 2007
+// Created on: Thu Dec 9 15:38 2010
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+for numerical calculus. This file is part of the Bio++ project.
 
 This software is governed by the CeCILL  license under French law and
 abiding by the rules of distribution of free software.  You can  use, 
@@ -37,49 +37,50 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "ExponentialDiscreteDistribution.h"
-#include "../Random/RandomTools.h"
-#include "../NumConstants.h"
-#include "../../Utils/MapTools.h"
+#include <Bpp/Numeric/Stat.all>
+#include <Bpp/Numeric/VectorTools.h>
+#include <Bpp/Numeric/Random.all>
+#include <Bpp/Numeric/Matrix.all>
+#include <vector>
+#include <iostream>
+#include <cmath>
 
 using namespace bpp;
-
-// From the STL:
-#include <cmath>
 using namespace std;
-  
-/****************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, string prefix) :
-  AbstractDiscreteDistribution(n,prefix), lambdaConstraint_(0), lambda_(lambda)
-{
-  lambdaConstraint_ = new IncludingPositiveReal(0.0);
-  Parameter p(prefix+"lambda", lambda, dynamic_cast<Constraint*>(lambdaConstraint_->clone()), true);
-  addParameter_(p);
+//tbl<-rbind(c(6,12,16,20),c(9,34,28,12))
+//chisq.test(tbl);
+int main() {
+  vector< vector<unsigned int> > table;
+  vector<unsigned int> row1;
+  row1.push_back(6);
+  row1.push_back(12);
+  row1.push_back(16);
+  row1.push_back(20);
+  table.push_back(row1);
+  vector<unsigned int> row2;
+  row2.push_back(9);
+  row2.push_back(34);
+  row2.push_back(28);
+  row2.push_back(12);
+  table.push_back(row2);
+  ContingencyTableTest test(table);
+  VectorTools::print(test.getMarginRows());
+  VectorTools::print(test.getMarginColumns());
+  ContingencyTableGenerator ctRand(test.getMarginRows(), test.getMarginColumns());
+  RowMatrix<unsigned int> rtable = ctRand.rcont2();
+  MatrixTools::print(rtable);
 
-  intMinMax_.setLowerBound(0,true);
-  discretize();
+  cout << test.getStatistic() << " \t" << test.getPValue() << endl;
+  if (abs(test.getPValue() - 0.01324) > 0.0001)
+    return 1;
+
+  //Now test permutations:
+  ContingencyTableTest test2(table, 20000);
+  cout << test2.getStatistic() << " \t" << test2.getPValue() << endl;
+  if (abs(test2.getPValue() - 0.01324) > 0.01)
+    return 1;
+
+  return 0;
 }
-
-ExponentialDiscreteDistribution::~ExponentialDiscreteDistribution()
-{
-  delete lambdaConstraint_;
-}
-
-/******************************************************************************/
-
-void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
-{
-  AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  lambda_=getParameterValue("lambda");
-  discretize();	
-}
-
-/******************************************************************************/
-
-Domain ExponentialDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
-
 

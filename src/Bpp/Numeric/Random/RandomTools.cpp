@@ -38,16 +38,16 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "RandomTools.h"
-#include "VectorTools.h"
 #include "Uniform01K.h"
-#include "NumConstants.h"
+#include "../VectorTools.h"
+#include "../NumConstants.h"
 
 #include <iostream>
 
 using namespace bpp;
 using namespace std;
 
-RandomFactory * RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
+RandomFactory* RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
 
 // Initiate random seed :
 //RandomTools::RandInt RandomTools::r = time(NULL) ;
@@ -59,32 +59,32 @@ void RandomTools::setSeed(long seed)
 
 // Method to get a double random value (between 0 and specified range)
 // Note : the number you get is between 0 and entry not including entry !
-double RandomTools::giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory * generator)
+double RandomTools::giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory& generator)
 {
   //double tm = r.drawFloatNumber();
-  double tm = generator->drawNumber();
+  double tm = generator.drawNumber();
   return (tm * entry);
 }
 
 // Method to get a boolean random value
-bool RandomTools::flipCoin(const RandomFactory * generator)
+bool RandomTools::flipCoin(const RandomFactory& generator)
 {
   return ((RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator) - 0.5) > 0);
 }
 
 // Method to get a integer random value (between 0 and specified range)
 // Note : the number you get is between 0 and entry not including entry !
-int RandomTools::giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory * generator)
+int RandomTools::giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory& generator)
 {
-  return (int)(giveRandomNumberBetweenZeroAndEntry(entry, generator));
+  return static_cast<int>(giveRandomNumberBetweenZeroAndEntry(entry, generator));
 }
 
-double RandomTools::randGaussian(double mean, double variance, const RandomFactory * generator)
+double RandomTools::randGaussian(double mean, double variance, const RandomFactory& generator)
 {
-  return RandomTools::qNorm(generator->drawNumber(),mean,sqrt(variance));
+  return RandomTools::qNorm(generator.drawNumber(), mean, sqrt(variance));
 }
 
-double RandomTools::randGamma(double dblAlpha, const RandomFactory * generator)
+double RandomTools::randGamma(double dblAlpha, const RandomFactory& generator)
 {
   assert(dblAlpha > 0.0);
   if( dblAlpha < 1.0 ) return RandomTools::DblGammaLessThanOne(dblAlpha, generator);
@@ -92,13 +92,13 @@ double RandomTools::randGamma(double dblAlpha, const RandomFactory * generator)
   return -log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator));
 }  
 
-double RandomTools::randGamma(double alpha, double beta, const RandomFactory * generator)
+double RandomTools::randGamma(double alpha, double beta, const RandomFactory& generator)
 {
   double x= RandomTools::randGamma(alpha, generator) / beta;
   return x;
 }
 
-double RandomTools::randExponential(double mean, const RandomFactory * generator)
+double RandomTools::randExponential(double mean, const RandomFactory& generator)
 {
   return - mean * log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1, generator));
 }
@@ -132,7 +132,7 @@ std::vector<unsigned int> RandomTools::randMultinomial(unsigned int n, const std
 //------------------------------------------------------------------------------
 
   
-double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory * generator)
+double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory& generator)
 {
   // Code adopted from David Heckerman
   //-----------------------------------------------------------
@@ -175,7 +175,7 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory 
   return 0.0;
 }
 
-double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory * generator) {
+double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory& generator) {
   //routine to generate a gamma random variable with 
   //unit scale and alpha < 1
   //reference: Ripley, Stochastic Simulation, p.88 
@@ -440,9 +440,9 @@ double RandomTools::pNorm(double x)
     }
     temp = (xnum + c[7]) / (xden + d[7]);
 
-    xsq = trunc(y * 16) / 16;				
+    xsq = trunc(y * 16) / 16;        
     del = (y - xsq) * (y + xsq);                                
-    cum = exp(-xsq * xsq * 0.5) * exp(-del * 0.5) * temp;	
+    cum = exp(-xsq * xsq * 0.5) * exp(-del * 0.5) * temp;  
   
     if (x > 0.)
       cum=1-cum;
@@ -474,14 +474,14 @@ double RandomTools::pNorm(double x)
   return cum;
 }
 
-double RandomTools::lnBeta(double alpha,double beta)
+double RandomTools::lnBeta(double alpha, double beta)
 {
   return lnGamma(alpha)+lnGamma(beta)-lnGamma(alpha+beta);
 }
 
-double RandomTools::randBeta(double alpha, double beta, const RandomFactory * generator)
+double RandomTools::randBeta(double alpha, double beta, const RandomFactory& generator)
 {
-  return RandomTools::qBeta(generator->drawNumber(),alpha,beta);
+  return RandomTools::qBeta(generator.drawNumber(), alpha, beta);
 }
 
 
@@ -509,9 +509,9 @@ double RandomTools::qBeta(double prob, double alpha, double beta)
   /* initialize */
   logbeta = lnBeta(alpha, beta);
 
-  /* change tail if necessary;  afterwards   0 < a <= 1/2	 */
+  /* change tail if necessary;  afterwards   0 < a <= 1/2   */
   if (prob <= 0.5) {
-    a = prob;	pp = alpha; qq = beta; swap_tail = 0;
+    a = prob;  pp = alpha; qq = beta; swap_tail = 0;
   } else { /* change tail, swap  alpha <-> beta :*/
     a = 1-prob;
     pp = beta; qq = alpha; swap_tail = 1;
@@ -570,7 +570,7 @@ double RandomTools::qBeta(double prob, double alpha, double beta)
   double po=pow(10., -13 - 2.5/(pp * pp) - 0.5/(a * a));
   acu = (lower>po)?lower:po;
   
-  tx = prev = 0.;	/* keep -Wall happy */
+  tx = prev = 0.;  /* keep -Wall happy */
 
   for (i_pb=0; i_pb < 1000; i_pb++) {
     y = incompleteBeta(xinbta, pp, qq);
@@ -1002,4 +1002,6 @@ double RandomTools::incompletebetaps(double a, double b, double x, double maxgam
   result = s;
   return result;
 }
+
+/**************************************************************************/
 

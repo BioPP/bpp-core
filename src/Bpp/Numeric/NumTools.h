@@ -116,17 +116,6 @@ public:
   template<class T> static T sqr(T a) { return a * a; }
 
   /**
-   * @brief Get a number to a given power.
-   *
-   * @warning This function uses the log and exp function on the input type, which can lead to unexpected results if it is not a floating type, use with care!
-   *
-   * @param a The value.
-   * @param b The power
-   * @return @f$ a^b @f$.
-   */ 
-  template<class T> static T pow(T a, T b) { return exp(b * log(a)); }
-
-  /**
    * @brief Compute the logarithm of a sum from the sum of logarithms.
    *
    * The following formula is used:

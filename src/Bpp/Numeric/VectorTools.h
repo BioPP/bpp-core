@@ -526,7 +526,7 @@ class VectorTools
       std::vector<T> r1 = VectorTools::range(v);
       T r = r1[1] - r1[0];
       double n = v.size();
-      double h = 3.5 * VectorTools::sd<T, double>(v) * NumTools::pow(n, -1. / 3);
+      double h = 3.5 * VectorTools::sd<T, double>(v) * std::pow(n, -1. / 3);
       return (unsigned int) ceil(r / h);
     }
 
@@ -734,7 +734,7 @@ class VectorTools
     static std::vector<T> pow(const std::vector<T> & v1, T & b)
     {
       std::vector<T> v2(v1.size());
-       for(unsigned int i = 0; i < v1.size(); i++) v2[i] = NumTools::pow<T>(v1[i], b);
+       for(unsigned int i = 0; i < v1.size(); i++) v2[i] = std::pow(v1[i], b);
       return v2;
     }
     /** @} */

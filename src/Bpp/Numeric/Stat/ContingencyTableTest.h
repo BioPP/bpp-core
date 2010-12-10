@@ -60,11 +60,17 @@ class ContingencyTableTest:
     double statistic_;
     double pvalue_;
     double df_;
-    std::vector<double> margin1_;
-    std::vector<double> margin2_;
+    std::vector<unsigned int> margin1_;
+    std::vector<unsigned int> margin2_;
 
   public:
-    ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table);
+    /**
+     * @brief Build a new test object and perform computations.
+     *
+     * @param table The input contingency table.
+     * @param nbPermutations If greater than 0, performs a randomization test instead of using the chisquare approximation.
+     */
+    ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations = 0);
     virtual ~ContingencyTableTest() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -79,6 +85,8 @@ class ContingencyTableTest:
     double getStatistic() const { return statistic_; }
     double getPValue() const { return pvalue_; }
     double getDegreesOfFreedom() const { return df_; }
+    const std::vector<unsigned int> getMarginRows() const { return margin1_; }
+    const std::vector<unsigned int> getMarginColumns() const { return margin2_; }
 
 };
 

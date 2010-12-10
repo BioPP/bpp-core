@@ -29,12 +29,13 @@ set(CPP_FILES
   Bpp/Numeric/Parameter.cpp
   Bpp/Numeric/ParameterExceptions.cpp
   Bpp/Numeric/ParameterList.cpp
-  Bpp/Numeric/RandomTools.cpp
-  Bpp/Numeric/Uniform01K.cpp
+  Bpp/Numeric/Random/RandomTools.cpp
+  Bpp/Numeric/Random/ContingencyTableGenerator.cpp
+  Bpp/Numeric/Random/Uniform01K.cpp
+  Bpp/Numeric/Random/Uniform01QD.cpp
+  Bpp/Numeric/Random/Uniform01WH.cpp
   Bpp/Numeric/AbstractParameterAliasable.cpp
-  Bpp/Numeric/Uniform01QD.cpp
   Bpp/Numeric/AbstractParametrizable.cpp
-  Bpp/Numeric/Uniform01WH.cpp
   Bpp/Numeric/AdaptiveKernelDensityEstimation.cpp
   Bpp/Numeric/VectorTools.cpp
   Bpp/Numeric/AutoParameter.cpp
@@ -75,6 +76,7 @@ set(CPP_FILES
   Bpp/Numeric/Prob/SimpleDiscreteDistribution.cpp
   Bpp/Numeric/Prob/TruncatedExponentialDiscreteDistribution.cpp
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
+  Bpp/Numeric/Stat/ContingencyTableTest.cpp
   )
 
 set(H_FILES
@@ -114,12 +116,13 @@ set(H_FILES
   Bpp/Numeric/Parameter.h
   Bpp/Numeric/ParameterList.h
   Bpp/Numeric/Parametrizable.h
-  Bpp/Numeric/RandomFactory.h
-  Bpp/Numeric/RandomTools.h
   Bpp/Numeric/TransformedParameter.h
-  Bpp/Numeric/Uniform01K.h
-  Bpp/Numeric/Uniform01QD.h
-  Bpp/Numeric/Uniform01WH.h
+  Bpp/Numeric/Random/RandomFactory.h
+  Bpp/Numeric/Random/RandomTools.h
+  Bpp/Numeric/Random/ContingencyTableGenerator.h
+  Bpp/Numeric/Random/Uniform01K.h
+  Bpp/Numeric/Random/Uniform01QD.h
+  Bpp/Numeric/Random/Uniform01WH.h
   Bpp/Numeric/VectorExceptions.h
   Bpp/Numeric/VectorTools.h
   Bpp/Text/KeyvalTools.h
@@ -186,6 +189,7 @@ set(H_FILES
   Bpp/Numeric/Prob/TruncatedExponentialDiscreteDistribution.h
   Bpp/Numeric/Prob/UniformDiscreteDistribution.h
   Bpp/Numeric/Stat/StatTest.h 
+  Bpp/Numeric/Stat/ContingencyTableTest.h 
 )
 
 # Build the static lib

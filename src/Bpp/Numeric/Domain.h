@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -78,7 +78,7 @@ class OutOfRangeException: public Exception
  */ 
 class Domain
 {
-  protected:
+  private:
     Vdouble bounds_;
     Vdouble midPoints_;
   

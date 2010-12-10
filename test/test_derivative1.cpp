@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Function.all>
-#include <Bpp/Numeric/RandomTools.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
 #include <vector>
 #include <iostream>
 #include "PolynomialFunction.h"

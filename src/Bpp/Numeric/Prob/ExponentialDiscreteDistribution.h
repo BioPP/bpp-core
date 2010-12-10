@@ -42,7 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractDiscreteDistribution.h"
 #include "../Constraints.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 
 using namespace std;
 

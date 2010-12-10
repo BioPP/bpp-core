@@ -38,17 +38,19 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "ContingencyTableTest.h"
+#include "../Random/ContingencyTableGenerator.h"
 
 #include "../../App/ApplicationTools.h"
 #include "../VectorTools.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 
 #include <iostream>
+#include <algorithm>
 
 using namespace bpp;
 using namespace std;
 
-ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table):
+ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations):
   statistic_(0),
   pvalue_(0),
   df_(0),
@@ -76,20 +78,44 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
       margin2_[j] += c;
     }
   }
-  if (test)
-    ApplicationTools::displayWarning("Unsufficient observations, p-value might be incorrect.");
-
-  double tot = VectorTools::sum(margin1_);
+  unsigned int tot = VectorTools::sum(margin1_);
+  df_ = static_cast<double>((m - 1) * (n - 1));
+  
+  RowMatrix<double> expc(n, m);
   for (size_t i = 0; i < n; ++i) {
     for (size_t j = 0; j < m; ++j) {
       double c = table[i][j];
-      double e = margin1_[i] * margin2_[j] / static_cast<double>(tot);
+      double e = static_cast<double>(margin1_[i] * margin2_[j]) / static_cast<double>(tot);
+      expc(i, j) = e;
       statistic_ += std::pow(c - e, 2.) / e;
     }
   }
 
-  df_ = static_cast<double>((m - 1) * (n - 1));
-  //Compute p-value:
-  pvalue_ = 1. - RandomTools::pChisq(statistic_, df_);
+  if (nbPermutations > 0) {
+    unsigned int count = 0;
+    ContingencyTableGenerator ctgen(margin1_, margin2_);
+    for (unsigned int k = 0; k < nbPermutations; ++k) {
+      //Randomize:
+      RowMatrix<unsigned int> table_rep = ctgen.rcont2();
+      //Recompute statistic:
+      double stat_rep = 0;
+      for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
+          double c = table_rep(i , j);
+          double e = expc(i, j);
+          stat_rep += std::pow(c - e, 2.) / e;
+        }
+      }
+      if (stat_rep >= statistic_)
+        count++;
+    }
+    pvalue_ = static_cast<double>(count + 1) / static_cast<double>(nbPermutations + 1);
+  } else {
+    if (test)
+      ApplicationTools::displayWarning("Unsufficient observations, p-value might be incorrect.");
+
+    //Compute p-value:
+    pvalue_ = 1. - RandomTools::pChisq(statistic_, df_);
+  }
 }
 

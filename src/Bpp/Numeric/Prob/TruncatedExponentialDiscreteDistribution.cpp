@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "TruncatedExponentialDiscreteDistribution.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 #include "../../Utils/MapTools.h"
 
 using namespace bpp;

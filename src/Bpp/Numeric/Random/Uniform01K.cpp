@@ -39,7 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "Uniform01K.h"
 
-#include "NumTools.h"
+#include "../NumTools.h"
 
 using namespace bpp;
 

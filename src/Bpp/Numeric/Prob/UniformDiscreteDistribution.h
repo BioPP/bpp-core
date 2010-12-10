@@ -42,7 +42,7 @@
 
 #include "AbstractDiscreteDistribution.h"
 #include "../Constraints.h"
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 
 namespace bpp
 {

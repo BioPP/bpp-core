@@ -39,7 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractDiscreteDistribution.h"
 
-#include "../RandomTools.h"
+#include "../Random/RandomTools.h"
 #include "../VectorTools.h"
 
 using namespace bpp;
