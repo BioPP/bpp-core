@@ -107,18 +107,34 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     double v;
     for (unsigned int i = 0; i < size-1; i++) {
       v=getParameterValue("V"+TextTools::toString(i+1));
-      if (distribution_.find(v)!=distribution_.end())
-        distribution_[v]+=getParameterValue("theta"+TextTools::toString(i+1))*x;
-      else
-        distribution_[v]=getParameterValue("theta"+TextTools::toString(i+1))*x;
+      if (distribution_.find(v)!=distribution_.end()){
+        unsigned int j=1;
+        int f=((v+NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+        while (distribution_.find(v+f*j*NumConstants::TINY)!=distribution_.end()){
+          j++;
+          f=((v+f*j*NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+        }
+        v+=f*j*NumConstants::TINY;
+        // approximation to avoid useless computings:
+        // setParameterValue("V"+TextTools::toString(i+1),v);
+      }
+      distribution_[v]=getParameterValue("theta"+TextTools::toString(i+1))*x;
       x *= 1 - getParameterValue("theta"+TextTools::toString(i+1));
     }
 
     v=getParameterValue("V" + TextTools::toString(size));
-    if (distribution_.find(v)!=distribution_.end())
-      distribution_[v] += x;
-    else
-      distribution_[v]=x;
+    if (distribution_.find(v)!=distribution_.end()){
+      unsigned int j=1;
+      int f=((v+NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+      while (distribution_.find(v+f*j*NumConstants::TINY)!=distribution_.end()){
+        j++;
+        f=((v+f*j*NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+      }
+      v+=f*j*NumConstants::TINY;
+      // approximation to avoid useless computings:
+      // setParameterValue("V"+TextTools::toString(size),v);
+    }
+    distribution_[v]=x;
   }
 }
 
