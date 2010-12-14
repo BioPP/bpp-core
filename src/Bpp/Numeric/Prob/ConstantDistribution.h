@@ -82,7 +82,7 @@ namespace bpp
   
   public:
     Domain getDomain() const;
-    void fireParameterChanged(const ParameterList & parameters);
+    void fireParameterChanged(const ParameterList& parameters);
     double randC() const throw (Exception) { return value_;}
 
     std::string getName() const;
@@ -96,15 +96,15 @@ namespace bpp
     }
 
     double qProb(double x) const{
-      return (x>=1)?value_:-NumConstants::VERY_BIG;
+      return (x >= 1) ? value_ : -NumConstants::VERY_BIG;
     }
      
     double pProb(double x) const{
-      return x<value_?0:1;
+      return x < value_ ? 0 : 1;
     }
                                 
     double Expectation(double a) const{
-      return a<value_?0:1;
+      return a < value_ ? 0 : 1;
     }
 
     void restrictToConstraint(const Constraint& c);

@@ -43,11 +43,12 @@ using namespace bpp;
 
 /******************************************************************************/
 
-ConstantDistribution::ConstantDistribution(double value, bool fixed) : AbstractDiscreteDistribution(1,"Constant."),
-                                                                       value_(value)
+ConstantDistribution::ConstantDistribution(double value, bool fixed):
+  AbstractDiscreteDistribution(1, "Constant."),
+  value_(value)
 {
   if (! fixed)
-    addParameter_(Parameter("Constant.value",value));
+    addParameter_(Parameter("Constant.value", value));
   distribution_[value_] = 1; //One single class  with probability 1.
 }
 
@@ -57,7 +58,7 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
   
-  if (hasParameter("value")){
+  if (hasParameter("value")) {
     value_=getParameterValue("value");
     distribution_.clear();
     distribution_[getParameterValue("value")] = 1; //One single class of rate 1 with probability 1.
@@ -68,7 +69,7 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
 
 Domain ConstantDistribution::getDomain() const
 {
-  return Domain(value_,value_,1);
+  return Domain(value_, value_, 1);
 }
 
 /******************************************************************************/

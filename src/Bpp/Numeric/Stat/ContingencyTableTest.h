@@ -69,8 +69,9 @@ class ContingencyTableTest:
      *
      * @param table The input contingency table.
      * @param nbPermutations If greater than 0, performs a randomization test instead of using the chisquare approximation.
+     * @param warn Should a warning message be displayed in case of unsufficient observations?
      */
-    ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations = 0);
+    ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations = 0, bool warn = true);
     virtual ~ContingencyTableTest() {}
 
 #ifndef NO_VIRTUAL_COV

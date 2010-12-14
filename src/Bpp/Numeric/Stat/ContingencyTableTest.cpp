@@ -50,7 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations):
+ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations, bool warn):
   statistic_(0),
   pvalue_(0),
   df_(0),
@@ -78,6 +78,14 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
       margin2_[j] += c;
     }
   }
+  for (size_t i = 0; i < n; ++i)
+    if (margin1_[i] == 0)
+      throw Exception("ContingencyTableTest. Row " + TextTools::toString(i) + " sums to 0.");
+  for (size_t j = 0; j < m; ++j)
+    if (margin2_[j] == 0)
+      throw Exception("ContingencyTableTest. Column " + TextTools::toString(j) + " sums to 0.");
+
+
   unsigned int tot = VectorTools::sum(margin1_);
   df_ = static_cast<double>((m - 1) * (n - 1));
   
@@ -111,7 +119,7 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
     }
     pvalue_ = static_cast<double>(count + 1) / static_cast<double>(nbPermutations + 1);
   } else {
-    if (test)
+    if (test && warn)
       ApplicationTools::displayWarning("Unsufficient observations, p-value might be incorrect.");
 
     //Compute p-value:
