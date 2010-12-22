@@ -188,6 +188,7 @@ class AbstractOptimizer:
     double optimize() throw (Exception);
     bool isInitialized() const { return isInitialized_; }
     const ParameterList& getParameters() const { return parameters_; }
+  double getParameterValue(const std::string& name) const { return parameters_.getParameterValue(name); }
     void setFunction(Function* function)
     { 
       function_ = function;
