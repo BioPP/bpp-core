@@ -8,36 +8,36 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for phylogenetic data analysis.
+  This software is a computer program whose purpose is to provide classes
+  for phylogenetic data analysis.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef METAOPTIMIZER_H__
@@ -51,12 +51,12 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief Provide a list of optimizer and corresponding options to be used with the MetaOptimizer class.
- */
-class MetaOptimizerInfos:
-  public virtual Clonable
-{
+  /**
+   * @brief Provide a list of optimizer and corresponding options to be used with the MetaOptimizer class.
+   */
+  class MetaOptimizerInfos:
+    public virtual Clonable
+  {
   public:
     static std::string IT_TYPE_STEP;
     static std::string IT_TYPE_FULL;
@@ -170,28 +170,28 @@ class MetaOptimizerInfos:
      * @return The number of optimizers in the set.
      */
     virtual unsigned int getNumberOfOptimizers() const { return optimizers_.size(); }
-};
+  };
 
-/**
- * @brief Meta-optimizer.
- *
- * This optimizer uses a set of optimizers to applyied sequentially on distinct parameters.
- * The set of optimizers is fully specified by a MetaOptimizerInfos object.
- * 
- * To decrease the optimization time, the precision of the optimizers can be increased progressively:
- * if @f$\varepsilon@f$ is the final precision required, one may consider using a precision increment of @f$\sigma=\log_10(\varepsilon/n)@f$, where @f$n@f$ is the number of progressive steps.
- * During the first step optimization step, the precisions of type 1 and 2 optimizers are set to @f$10^{\sigma}@f$, @f$10^{2\sigma}@f$ for step 2, ... until precision @f$10^{n\sigma}=\varepsilon@f$ at step @f$n@f$ and later.
- * This saves some time spending in the first steps of the estimation.
- * The number of steps @f$n@f$ is set in the constructor of the optimizer.
- *
- * This optimizer can be used with numerical derivatives.
- * 
- * @see MetaOptimizerInfos.
- */
-class MetaOptimizer:
-  public AbstractOptimizer
-{
-	private:
+  /**
+   * @brief Meta-optimizer.
+   *
+   * This optimizer uses a set of optimizers to applyied sequentially on distinct parameters.
+   * The set of optimizers is fully specified by a MetaOptimizerInfos object.
+   * 
+   * To decrease the optimization time, the precision of the optimizers can be increased progressively:
+   * if @f$\varepsilon@f$ is the final precision required, one may consider using a precision increment of @f$\sigma=\log_10(\varepsilon/n)@f$, where @f$n@f$ is the number of progressive steps.
+   * During the first step optimization step, the precisions of type 1 and 2 optimizers are set to @f$10^{\sigma}@f$, @f$10^{2\sigma}@f$ for step 2, ... until precision @f$10^{n\sigma}=\varepsilon@f$ at step @f$n@f$ and later.
+   * This saves some time spending in the first steps of the estimation.
+   * The number of steps @f$n@f$ is set in the constructor of the optimizer.
+   *
+   * This optimizer can be used with numerical derivatives.
+   * 
+   * @see MetaOptimizerInfos.
+   */
+  class MetaOptimizer:
+    public AbstractOptimizer
+  {
+  private:
     MetaOptimizerInfos* optDesc_;
     std::vector<ParameterList> optParameters_;
     std::vector<unsigned int> nbParameters_;
@@ -200,7 +200,7 @@ class MetaOptimizer:
     unsigned int stepCount_;
     double initialValue_;
 		
-	public:
+  public:
     /**
      * @brief Build a new MetaOptimizer object.
      *
@@ -209,9 +209,9 @@ class MetaOptimizer:
      *                 The optimizer will own the instance of the MetaOptimizerInfos object.
      * @param n        The number of progressive steps to use in optimization).
      */
-		MetaOptimizer(Function* function, MetaOptimizerInfos* desc, unsigned int n = 1);
+    MetaOptimizer(Function* function, MetaOptimizerInfos* desc, unsigned int n = 1);
 
-		virtual ~MetaOptimizer();
+    virtual ~MetaOptimizer();
 
     MetaOptimizer(const MetaOptimizer& opt);
 
@@ -219,7 +219,7 @@ class MetaOptimizer:
 
     MetaOptimizer* clone() const { return new MetaOptimizer(*this); }
 
-	public:
+  public:
 		
     void setFunction(Function* function)
     { 
@@ -228,7 +228,7 @@ class MetaOptimizer:
         optDesc_->getOptimizer(i)->setFunction(function);
     }
 
-		void doInit(const ParameterList& parameters) throw (Exception);
+    void doInit(const ParameterList& parameters) throw (Exception);
     
     double doStep() throw (Exception);
 
@@ -242,7 +242,7 @@ class MetaOptimizer:
      */
     const MetaOptimizerInfos* getOptimizers() const { return optDesc_; }
 
-};
+  };
 
 } //end of namespace bpp.
 
