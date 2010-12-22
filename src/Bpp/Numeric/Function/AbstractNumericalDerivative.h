@@ -59,9 +59,9 @@ namespace bpp
  * Derivations of this class can be used as full DerivableSecondOrder objects, with derivative functions.
  * 
  * Three kinds of constructors are provided: one with a Function object, another with a DerivableFirstOrder object, and one with a DerivableSecondOrder object.
- * In the first case, all derivatives will be computed analytically.
- * In the second case, first order derivative will be computed analytically only if no appropriate analytical derivative is available, second order derivative will always be computed numerically.
- * In the last case, first and second order derivative will be computed analytically only if no appropriate analytical derivative is available.
+ * In the first case, all derivatives will be computed numerically.
+ * In the second case, first order derivative will be computed numerically only if no appropriate analytical derivative is available, second order derivative will always be computed numerically.
+ * In the last case, first and second order derivative will be computed numerically only if no appropriate analytical derivative is available.
  */
 class AbstractNumericalDerivative:
   public DerivableSecondOrder,
