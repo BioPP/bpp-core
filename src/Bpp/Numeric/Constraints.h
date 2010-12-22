@@ -91,6 +91,17 @@ namespace bpp
     virtual double getLimit(double value) const = 0;
 
     /**
+     * @brief Give the nearest accepted limit for a bad value. The
+     * difference with getLimit() is when the Constraint is open at
+     * the limit, in which case the retruned value is the limit +- 1e-12.
+     *
+     * @param value The bad value.
+     * @return The nearer limit.
+     */
+    
+    virtual double getAcceptedLimit(double value) const = 0;
+
+    /**
      * @brief Give a short description on the type of constraint.
      *
      * @return A string which describes the constraint.
@@ -180,6 +191,13 @@ namespace bpp
         (*this >= value ? lowerBound_ : upperBound_);
     }
     
+    double getAcceptedLimit(double value) const {
+      return isCorrect(value) ? value :
+        (*this >= value ?
+         strictLowerBound()? lowerBound_ + NumConstants::TINY: lowerBound_ :
+         strictUpperBound()? upperBound_ - NumConstants::TINY: upperBound_);
+    }
+
     std::string getDescription() const
     {
       return (inclLowerBound_?"[ ":"]")
