@@ -1,2 +1,2 @@
-#include "Stat/StatTest.h"
 #include "Stat/ContingencyTableTest.h"
+#include "Stat/StatTest.h"
