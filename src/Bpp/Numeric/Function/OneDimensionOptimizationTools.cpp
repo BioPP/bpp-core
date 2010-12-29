@@ -213,7 +213,7 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
     slope+=xi[i]*gradient[i];
 
   if (slope>=0)
-    throw "Slope problem in OneDimensionOptimizationTools::lineSearch";
+    throw Exception("Slope problem in OneDimensionOptimizationTools::lineSearch. Slope="+TextTools::toString(slope));
 
   double x, temp, test=0;
   for (unsigned int i=0;i<size;i++){
@@ -224,7 +224,7 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
     if (temp>test)
       test=temp;
   }
-    
+
   NewtonBacktrackOneDimension nbod(&f1dim, slope, test);
 
   nbod.setMessageHandler(messenger);
