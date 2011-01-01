@@ -451,6 +451,33 @@ class ApplicationTools
      */
     static void displayGauge(unsigned int iter, unsigned int total, char symbol='>', const std::string& mes="");
 
+    /**
+     * @brief Display a gauge for unefined amount of iterations.
+     *
+     * Show progress status.
+     * @code
+     * for(unsigned int i = 0; i < 1000; i++)
+     * {
+     *   ApplicationTools::displayGaugeUnlimited(i);
+     *   //Perform time consuming task...
+     * }
+     * @endcode
+     * will result in something like:
+     * @verbatim
+     * - 1
+     * / 2
+     * - 3
+     * \ 4
+     * - 5
+     * etc
+     * @endverbatim
+     * 
+     * @param iter   The current iteration number.
+     * @param mes    A message to print before the gauge.
+     */
+    static void displayUnlimitedGauge(unsigned int iter, const std::string& mes="");
+
+
     /** @} */
 
     /**

@@ -184,20 +184,18 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
 
 double AbstractOptimizer::step() throw (Exception)
 {
-  if(verbose_ > 0) { cout << stepChar_; cout.flush(); }
   currentValue_ = doStep();
   printPoint(parameters_, currentValue_);
   fireOptimizationStepPerformed(OptimizationEvent(this));
   if (listenerModifiesParameters())
-    {
-      if (!updateParameters_)
-        parameters_.matchParametersValues(function_->getParameters());
-      //else already done!
- 
-      //_currentValue = function_->getValue();
-      //Often useless, but avoid some bizare behaviour in particular cases:
-      currentValue_ = function_->f(parameters_);
-    }
+  {
+    if (!updateParameters_)
+      parameters_.matchParametersValues(function_->getParameters());
+    //else already done!
+     //_currentValue = function_->getValue();
+    //Often useless, but avoid some bizare behaviour in particular cases:
+    currentValue_ = function_->f(parameters_);
+  }
   tolIsReached_ = tolIsReached_ || stopCondition_->isToleranceReached();
   return currentValue_;
 }
@@ -210,9 +208,11 @@ double AbstractOptimizer::optimize() throw (Exception)
     throw Exception("AbstractOptimizer::optimize. Optimizer not initialized: call the 'init' method first!");
   tolIsReached_ = false;
   for (nbEval_ = 1; nbEval_ < nbEvalMax_ && ! tolIsReached_; nbEval_++)
-    {
-      step();
-    }
+  {
+    if (verbose_ > 0)
+      ApplicationTools::displayUnlimitedGauge(nbEval_, "Optimizing... ");
+    step();
+  }
   return currentValue_;
 }
 

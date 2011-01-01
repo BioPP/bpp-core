@@ -259,13 +259,13 @@ namespace bpp
        * @return An object of class R corresponding to s.
        */
       template<class T>
-        static T to(const std::string& s)
-        {
-          std::istringstream iss(s);
-          T t;
-          iss >> t;
-          return t;
-        }
+      static T to(const std::string& s)
+      {
+        std::istringstream iss(s);
+        T t;
+        iss >> t;
+        return t;
+      }
 
       /**
        * @brief Send a string of size 'newSize', which is a copy of 's' truncated or

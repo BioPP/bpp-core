@@ -83,6 +83,7 @@ set(CPP_FILES
 
 set(H_FILES
   Bpp/BppString.h
+  Bpp/BppBoolean.h
   Bpp/BppVector.h
   Bpp/Clonable.h
   Bpp/Exceptions.h

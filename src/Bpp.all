@@ -1,3 +1,4 @@
+#include "Bpp/BppBoolean.h"
 #include "Bpp/BppString.h"
 #include "Bpp/BppVector.h"
 #include "Bpp/Clonable.h"

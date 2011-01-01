@@ -140,15 +140,15 @@ int ApplicationTools::getIntParameter(
 /******************************************************************************/
 
 std::string ApplicationTools::getStringParameter(
-  const std::string & parameterName,
-  std::map<std::string, std::string> & params,
-  const std::string & defaultValue,
-  const std::string & suffix,
+  const std::string& parameterName,
+  std::map<std::string, std::string>& params,
+  const std::string& defaultValue,
+  const std::string& suffix,
   bool suffixIsOptional,
   bool warn)
 {
   string sParam = defaultValue;
-  if(parameterExists(parameterName + suffix, params)) {
+  if (parameterExists(parameterName + suffix, params)) {
     sParam = params[parameterName + suffix];
   } else if(suffixIsOptional && parameterExists(parameterName, params)) {
     sParam = params[parameterName];
@@ -241,7 +241,7 @@ void ApplicationTools::displayGauge(unsigned int iter, unsigned int total, char 
   }
   else
   {
-    if(iter == 0)
+    if (iter == 0)
     {
       *message << "[";
       message->flush();
@@ -256,7 +256,30 @@ void ApplicationTools::displayGauge(unsigned int iter, unsigned int total, char 
       return;
     }
     unsigned int x = iter % step;
-    if(x == 0) { *message << symbol; message->flush(); }
+    if (x == 0) { *message << symbol; message->flush(); }
+  }
+}
+
+/******************************************************************************/
+
+void ApplicationTools::displayUnlimitedGauge(unsigned int iter, const std::string& mes)
+{
+  if (!message) return;
+  string chars = "-/-\\";
+  string info = mes;
+  if (interactive)
+  {
+    unsigned int i = iter % 4;
+    *message << '\r' << info << chars[i] << " " << TextTools::toString(iter);
+    message->flush();
+  }
+  else
+  {
+    if (iter == 0)
+      *message << info;
+    *message << "*";
+    message->flush();
+    return;
   }
 }
 

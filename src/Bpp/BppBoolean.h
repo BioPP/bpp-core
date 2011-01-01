@@ -1,7 +1,7 @@
 //
-// File: BppString.h
+// File: BppBoolean.h
 // Created by: Julien Dutheil
-// Created on: Thu May 04 10:21 2006
+// Created on: Fri 31 10:44 2010
 //
 
 /*
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPP_STRING_H_
-#define _BPP_STRING_H_
+#ifndef _BPP_BOOLEAN_H_
+#define _BPP_BOOLEAN_H_
 
 #include "Clonable.h"
 
@@ -50,23 +50,20 @@ namespace bpp
 {
 
 /**
- * @brief The BppString object class.
+ * @brief The BppBoolean object class.
  *
- * This class extends the stl::string class to support the Clonable interface.
+ * This class extends the bool type to support the Clonable interface.
  */
-class BppString: public virtual Clonable
+class BppBoolean: public virtual Clonable
 {
   private:
-    std::string text_;
+    bool value_;
 
 	public:
 		
-		BppString(): text_() {}
-		BppString(const char* value): text_(value) {}
-		BppString(const std::string& value): text_(value) {}
-		BppString& operator=(const char* value) { text_ = value; return *this; }
-		BppString& operator=(const std::string& value) { text_ = value; return *this; }
-		virtual ~BppString() {}
+		BppBoolean(): value_(false) {}
+		BppBoolean(bool value): value_(value) {}
+		virtual ~BppBoolean() {}
 	
 	public:
 	
@@ -78,18 +75,20 @@ class BppString: public virtual Clonable
 #ifdef NO_VIRTUAL_COV
     Clonable*
 #else
-		BppString*
+		BppBoolean*
 #endif
-    clone() const { return new BppString(*this); }
+    clone() const { return new BppBoolean(*this); }
 		/** @} */
 
-    const std::string& toSTL() const { return text_; }
+    const bool getValue() const { return value_; }
     
 };
 
-std::ostream& operator<<(std::ostream& out, const BppString& s);
+std::ostream& operator<<(std::ostream& out, const BppBoolean& s) {
+  return out << s.getValue();
+}
 
 } //end of namespace bpp.
 
-#endif	//_BPP_STRING_H_
+#endif	//_BPP_BOOLEAN_H_
 
