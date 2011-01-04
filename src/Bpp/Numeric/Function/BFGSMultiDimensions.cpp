@@ -50,7 +50,7 @@ BFGSMultiDimensions::BFGSMultiDimensions(DerivableFirstOrder* function, double g
 {
   setDefaultStopCondition_(new FunctionStopCondition(this));
   setStopCondition(*getDefaultStopCondition());
-  setOptimizationProgressCharacter("");
+  setOptimizationProgressCharacter(".");
 }
 
 /******************************************************************************/
@@ -117,21 +117,24 @@ double BFGSMultiDimensions::doStep() throw (Exception)
 
   setDirection();
 
+  getFunction()->enableFirstOrderDerivatives(false);
   nbEval_ += OneDimensionOptimizationTools::lineSearch(f1dim_,
                                                        getParameters_(), xi_,
                                                        gradient_,
                                     //getStopCondition()->getTolerance(),
                                                        0, 0,
                                                        getVerbose() > 0 ? getVerbose() - 1 : 0);
+  getFunction()->enableFirstOrderDerivatives(true);
 
   for ( i=0;i<n;i++)
     xi_[i]=getParameters_()[i].getValue()-p_[i];
-  
+
   f = getFunction()->f(getParameters());
 
-  if(tolIsReached_)
+  if(tolIsReached_){
     return f;
- 
+  }
+  
   double temp, test=0.0;
   for ( i=0;i<n;i++){
     temp=xi_[i];
@@ -222,7 +225,7 @@ void BFGSMultiDimensions::setDirection()
     for (unsigned int j=0;j<nbParams;j++)
       xi_[i]-= hessian_[i][j]*gradient_[j];
   }
-  
+
   double v=1, alpmax=1;
   for(unsigned int i = 0; i < nbParams; i++) {
     if ((xi_[i]>0) && (p_[i]+NumConstants::TINY*xi_[i]<Up_[i]))
