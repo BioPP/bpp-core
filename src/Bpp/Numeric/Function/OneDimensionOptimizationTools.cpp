@@ -212,8 +212,8 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
   for (unsigned int i=0;i<size;i++)
     slope+=xi[i]*gradient[i];
 
-  if (slope>=0)
-    throw Exception("Slope problem in OneDimensionOptimizationTools::lineSearch. Slope="+TextTools::toString(slope));
+  //  if (slope>=0)
+  //  throw Exception("Slope problem in OneDimensionOptimizationTools::lineSearch. Slope="+TextTools::toString(slope));
 
   double x, temp, test=0;
   for (unsigned int i=0;i<size;i++){
