@@ -77,8 +77,8 @@ void BFGSMultiDimensions::doInit(const ParameterList & params) throw (Exception)
       Lo_[i]=-NumConstants::VERY_BIG;
     }
     else {
-      Up_[i]=cp->getAcceptedLimit(NumConstants::VERY_BIG);
-      Lo_[i]=cp->getAcceptedLimit(-NumConstants::VERY_BIG);
+      Up_[i]=cp->getAcceptedLimit(NumConstants::VERY_BIG)-NumConstants::TINY;
+      Lo_[i]=cp->getAcceptedLimit(-NumConstants::VERY_BIG)+NumConstants::TINY;
     }
   }
 
