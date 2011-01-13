@@ -58,15 +58,8 @@ namespace bpp {
        * @{
        */
 
-      /**
-       * @brief Get all node's neighbors in const environment.
-       */
-      virtual std::vector< const ONode * > getNeighbors() const = 0;
-
-      /**
-       * @brief Get all node's neighbors.
-       */
-      virtual std::vector< ONode * > getNeighbors() = 0;
+      virtual const ONode * getNeighbor(int pos) const = 0;
+      virtual ONode * getNeighbor(int pos) = 0;
 
       /** @} */
 
@@ -87,24 +80,14 @@ namespace bpp {
        */
 
       /**
-       * @brief Get all the fathers in const environment.
-       */
-      virtual std::vector< const ONode * > getFathers() const = 0;
-
-      /**
-       * @brief Get all the fathers.
-       */
-      virtual std::vector< ONode * > getFathers() = 0;
-
-      /**
        * @brief Get a particular father in const environment.
        */
-      virtual const ONode * getFather(size_t pos) const = 0;
+      virtual const ONode * getFather(int pos) const = 0;
 
       /**
        * @brief Get a particular father.
        */
-      virtual ONode * getFather(size_t pos) = 0;
+      virtual ONode * getFather(int pos) = 0;
 
       /**
        * @brief Tell if this node has one or more father nodes.
@@ -114,7 +97,7 @@ namespace bpp {
       /**
        * @brief Give the number of father nodes for this node.
        */
-      virtual unsigned int getNumberOfFathers() const = 0;
+      virtual int getNumberOfFathers() const = 0;
 
       /** @} */
 
@@ -125,24 +108,14 @@ namespace bpp {
        */
 
       /**
-       * @brief Get all the sons in const environment.
-       */
-      virtual std::vector< const ONode * > getSons() const = 0;
-
-      /**
-       * @brief Get all the sons.
-       */
-      virtual std::vector< ONode * > getSons() = 0;
-
-      /**
        * @brief Get a particular son in const environment.
        */
-      virtual const ONode * getSon(size_t pos) const = 0;
+      virtual const ONode * getSon(int pos) const = 0;
 
       /**
        * @brief Get a particular son.
        */
-      virtual ONode * getSon(size_t pos) = 0;
+      virtual ONode * getSon(int pos) = 0;
 
       /**
        * @brief Tell if this node has one or more son nodes.
@@ -152,7 +125,7 @@ namespace bpp {
       /**
        * @brief Give the number of son nodes for this node.
        */
-      virtual unsigned int getNumberOfSons() const = 0;
+      virtual int getNumberOfSons() const = 0;
 
       /** @} */
 
@@ -162,8 +135,33 @@ namespace bpp {
        * @{
        */
 
-      const ONode * operator[] (size_t i) const = 0;
-      ONode * operator[] (size_t i) = 0;
+      /**
+       * @brief Direct access to a neighbor in const context.
+       *
+       * - a positive i gives access to sons (from 0 to n - 1)
+       * - a negative i gives access to fathers (from 1 to m)
+       *
+       * No check is done, you have to ensure that you query an existing
+       * neighbor.
+       *
+       * @param i the position of the neighbor
+       * @return A pointer toward the neighbor
+       */
+      virtual const ONode * operator[] (int i) const = 0;
+
+      /**
+       * @brief Direct access to a neighbor.
+       *
+       * - a positive i gives access to sons (from 0 to n - 1)
+       * - a negative i gives access to fathers (from 1 to m)
+       *
+       * No check is done, you have to ensure that you query an existing
+       * neighbor.
+       *
+       * @param i the position of the neighbor
+       * @return A pointer toward the neighbor
+       */
+      virtual ONode * operator[] (int i) = 0;
 
       /** @} */
   };

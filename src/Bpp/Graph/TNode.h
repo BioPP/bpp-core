@@ -54,14 +54,22 @@ namespace bpp {
   class TNode: public virtual ONode {
     public:
       /**
-       * @brief Get all node's neighbors in const environment.
+       * @name Neighbors
+       *
+       * @{
        */
-      virtual std::vector< const TNode * > getNeighbors() const = 0;
 
       /**
-       * @brief Get all node's neighbors.
+       * @copydoc bpp::ONode::getNeighbor(int) const
        */
-      virtual std::vector< TNode * > getNeighbors() = 0;
+      virtual const TNode * getNeighbor(int pos) const = 0;
+
+      /**
+       * @copydoc bpp::ONode::getNeighbor(int)
+       */
+      virtual TNode * getNeighbor(int pos) = 0;
+
+      /** @} */
 
       /**
        * @name The Clonable interface.
@@ -71,6 +79,49 @@ namespace bpp {
 #ifndef NO_VIRTUAL_COV      
       TNode * clone() const = 0;
 #endif
+      /** @} */
+
+      /**
+       * @name Fathers
+       *
+       * @{
+       */
+
+      virtual const TNode * getFather(int pos) const = 0;
+      virtual TNode * getFather(int pos) = 0;
+
+      /**
+       * @brief Get the father in const environment.
+       */
+      virtual const TNode * getFather() const = 0;
+
+      /**
+       * @brief Get the father.
+       */
+      virtual TNode * getFather() = 0;
+
+      /** @} */
+
+      /**
+       * @name Sons
+       *
+       * @{
+       */
+
+      virtual const TNode * getSon(int pos) const = 0;
+      virtual TNode * getSon(int pos) = 0;
+
+      /** @} */
+
+      /**
+       * @name Operators
+       *
+       * @{
+       */
+
+      virtual const TNode * operator[] (int i) const = 0;
+      virtual TNode * operator[] (int i) = 0;
+
       /** @} */
   };
 }

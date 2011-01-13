@@ -52,6 +52,10 @@ namespace bpp {
    * UNode is an interface for unoriented nodes aimed to build unoriented
    * graphs.
    *
+   * In these classes we choose to use int for positions rathed than size_t
+   * because negative positions are used in some implementations to distinguish
+   * between two types of neighbors in operator[]. @see bpp::ONode
+   *
    * @author Sylvain Gaillard
    */
   class UNode: public virtual Clonable {
@@ -63,19 +67,25 @@ namespace bpp {
        */
 
       /**
-       * @brief Get all node's neighbors in const environment.
+       * @brief Get a neighbor of this node in const context.
+       *
+       * @param pos the position of the neighbor to get.
+       * @return A pointer toward the neighbor node.
        */
-      virtual std::vector< const UNode * > getNeighbors() const = 0;
+      virtual const UNode * getNeighbor(int pos) const = 0;
 
       /**
-       * @brief Get all node's neighbors.
+       * @brief Get a neighbor of this node.
+       *
+       * @param pos the position of the neighbor to get.
+       * @return A pointer toward the neighbor node.
        */
-      virtual std::vector< UNode * > getNeighbors() = 0;
+      virtual UNode * getNeighbor(int pos) = 0;
 
       /**
-       * @brief Get the degree i.e. the number of neighbors.
+       * @brief Get the degree i.e. the number of neighbors of this node.
        */
-      virtual unsigned int degree() = 0;
+      virtual int degree() = 0;
 
       /** @} */
 
@@ -95,8 +105,15 @@ namespace bpp {
        * @{
        */
 
-      const UNode * operator[] (size_t i) const = 0;
-      UNode * operator[] (size_t i) = 0;
+      /**
+       * @brief Direct access to a neighbor in const context.
+       */
+      virtual const UNode * operator[] (int i) const = 0;
+
+      /**
+       * @brief Direct access to a neighbor.
+       */
+      virtual UNode * operator[] (int i) = 0;
 
       /** @} */
 
