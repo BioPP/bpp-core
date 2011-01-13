@@ -138,7 +138,12 @@ namespace bpp
 
     void print(OutputStream& out) const;
 
-    void setMedian(bool median) { if (median_!=median){ median_=median; discretize();}}
+    void setMedian(bool median) {
+      if (median_ != median) {
+        median_ = median;
+        discretize();
+      }
+    }
     
     virtual void discretize();
 
