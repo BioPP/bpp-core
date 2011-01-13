@@ -111,7 +111,7 @@ namespace bpp
     /**
      * @brief Intersect this Constraint with another one
      *
-     * @param the intersected Constraint
+     * @param c the intersected Constraint
      * @return the intersection
      */
     virtual Constraint* operator &(const Constraint& c) const = 0;
