@@ -57,8 +57,8 @@ void AbstractDiscreteDistribution::setNumberOfCategories(unsigned int nbClasses)
   if (nbClasses <= 0)
     cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in AbstractDiscreteDistribution::setNumberOfCategories()." << endl;
 
-  if (numberOfCategories_!=nbClasses){
-    numberOfCategories_=nbClasses;
+  if (numberOfCategories_ != nbClasses) {
+    numberOfCategories_ = nbClasses;
     discretize();
   }
 }
@@ -251,57 +251,57 @@ void AbstractDiscreteDistribution::discretize()
   bounds_[0] = intMinMax_.getLowerBound()+(intMinMax_.strictLowerBound()?NumConstants::TINY:0);
   bounds_[numberOfCategories_] = intMinMax_.getUpperBound()-(intMinMax_.strictUpperBound()?NumConstants::TINY:0);
 
-  double minX=pProb(bounds_[0]);
-  double maxX=pProb(bounds_[numberOfCategories_]);
+  double minX = pProb(bounds_[0]);
+  double maxX = pProb(bounds_[numberOfCategories_]);
 
   double ec;
   unsigned int i;
   vector<double> values(numberOfCategories_);
 
   // if maxX==minX, uniform discretization of the range
-  if (maxX!=minX){
-    ec=(maxX-minX)/numberOfCategories_;
+  if (maxX != minX){
+    ec = (maxX - minX) / numberOfCategories_;
     
-    for( i = 1; i < numberOfCategories_; i++)
+    for ( i = 1; i < numberOfCategories_; i++)
       bounds_[i] = qProb(minX+i*ec);
     
-    if(median_)
-      {
-        double t;
-        for (i=0; i<numberOfCategories_; i++)
-          values[i]=qProb(minX+(i+0.5)*ec);
+    if( median_)
+    {
+      double t;
+      for (i=0; i<numberOfCategories_; i++)
+        values[i]=qProb(minX+(i+0.5)*ec);
         
-        for (i=0,t=0; i<numberOfCategories_; i++)
-          t+=values[i];
-        double mean=Expectation(bounds_[numberOfCategories_])-Expectation(bounds_[0]);
-        for (i=0; i<numberOfCategories_; i++)
-          values[i]*=mean/t*numberOfCategories_/(maxX-minX);
-      }
+      for (i = 0, t = 0; i<numberOfCategories_; i++)
+        t += values[i];
+      double mean = Expectation(bounds_[numberOfCategories_])-Expectation(bounds_[0]);
+      for (i = 0; i < numberOfCategories_; i++)
+        values[i] *= mean / t * numberOfCategories_ / (maxX - minX);
+    }
     else
-      {
-        if(numberOfCategories_==1)
-          values[0] = Expectation(bounds_[1])-Expectation(bounds_[0]);
-        else{
-          double a=Expectation(bounds_[0]), b;
-          for (i=0; i<numberOfCategories_; i++){
-            b=Expectation(bounds_[i+1]);
-            values[i]=(b-a)*numberOfCategories_/(maxX-minX);
-            a=b;
-          }
+    {
+      if (numberOfCategories_ == 1)
+        values[0] = Expectation(bounds_[1])-Expectation(bounds_[0]);
+      else {
+        double a=Expectation(bounds_[0]), b;
+        for (i=0; i<numberOfCategories_; i++){
+          b=Expectation(bounds_[i+1]);
+          values[i]=(b-a)*numberOfCategories_/(maxX-minX);
+          a=b;
         }
       }
+    }
   }
   else {
-    ec=(bounds_[numberOfCategories_]-bounds_[0])/numberOfCategories_;
-    for( i = 1; i < numberOfCategories_; i++)
+    ec = (bounds_[numberOfCategories_]-bounds_[0])/numberOfCategories_;
+    for (i = 1; i < numberOfCategories_; i++)
       bounds_[i] = bounds_[0]+i*ec;
 
-    for( i = 0; i < numberOfCategories_; i++)
+    for (i = 0; i < numberOfCategories_; i++)
       values[i] = (bounds_[i]+bounds_[i+1])/2;
   }
 
   if (intMinMax_.strictLowerBound())
-    for (i=0; i<numberOfCategories_; i++){
+    for (i = 0; i < numberOfCategories_; i++){
       if (values[i]<intMinMax_.getLowerBound()+NumConstants::TINY)
         values[i]=intMinMax_.getLowerBound()+NumConstants::TINY;
     }

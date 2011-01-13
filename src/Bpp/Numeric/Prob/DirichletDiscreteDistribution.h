@@ -47,8 +47,6 @@
 #include "../../Exceptions.h"
 #include "../../Io/OutputStream.h"
 
-using namespace std;
-
 namespace bpp
 {
 
@@ -107,7 +105,7 @@ namespace bpp
   {
   private:
 
-    vector<BetaDiscreteDistribution* > vpBDD_;
+    std::vector<BetaDiscreteDistribution* > vpBDD_;
   public:
 
     /**
@@ -118,7 +116,7 @@ namespace bpp
      *
      */
     
-    DirichletDiscreteDistribution(vector<unsigned int> vn, Vdouble valpha);
+    DirichletDiscreteDistribution(std::vector<unsigned int> vn, Vdouble valpha);
     
     ~DirichletDiscreteDistribution();
 
