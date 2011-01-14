@@ -108,13 +108,12 @@ namespace bpp
      */
     virtual std::string getDescription() const = 0;
 
-    /*
+    /**
      *@brief Intersect this Constraint with another one
      *
      *@param the intersected Constraint
      *@return the intersection
-     */
-    
+     */    
     virtual Constraint* operator &(const Constraint& c) const = 0;
 
   };
