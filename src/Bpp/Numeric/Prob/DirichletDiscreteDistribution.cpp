@@ -278,3 +278,6 @@ Vdouble DirichletDiscreteDistribution::randC() const
   vd.push_back(1 - sumc);
   return vd;
 }
+
+/******************************************************************************/
+

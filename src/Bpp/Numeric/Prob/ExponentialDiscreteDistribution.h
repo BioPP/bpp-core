@@ -44,8 +44,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../Constraints.h"
 #include "../Random/RandomTools.h"
 
-using namespace std;
-
 namespace bpp
 {
   
@@ -73,9 +71,9 @@ namespace bpp
      *
      */
     
-    ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., string prefix="Exponential.");
+    ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., std::string prefix = "Exponential.");
     
-    ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution & dist):
+    ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist):
       AbstractDiscreteDistribution(dist),
       lambdaConstraint_(dynamic_cast<IncludingPositiveReal *>(dist.lambdaConstraint_->clone())), lambda_(dist.lambda_)
     {}

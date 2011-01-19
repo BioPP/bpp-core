@@ -47,8 +47,6 @@
 #include "../../Exceptions.h"
 #include "../../Io/OutputStream.h"
 
-using namespace std;
-
 namespace bpp
 {
 /**
@@ -167,7 +165,6 @@ public:
    *
    * @return A random vector according to this distribution.
    */
-
   Vdouble randC() const;
 
 protected:

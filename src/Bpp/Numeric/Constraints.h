@@ -91,14 +91,14 @@ namespace bpp
     virtual double getLimit(double value) const = 0;
 
     /**
-     * @brief Give the nearest accepted limit for a bad value. The
-     * difference with getLimit() is when the Constraint is open at
+     * @brief Give the nearest accepted limit for a bad value.
+     *
+     * The difference with getLimit() is when the Constraint is open at
      * the limit, in which case the retruned value is the limit +- 1e-12.
      *
      * @param value The bad value.
      * @return The nearer limit.
      */
-    
     virtual double getAcceptedLimit(double value) const = 0;
 
     /**
@@ -109,11 +109,19 @@ namespace bpp
     virtual std::string getDescription() const = 0;
 
     /**
+<<<<<<< HEAD
      *@brief Intersect this Constraint with another one
      *
      *@param the intersected Constraint
      *@return the intersection
      */    
+=======
+     * @brief Intersect this Constraint with another one
+     *
+     * @param c the intersected Constraint
+     * @return the intersection
+     */
+>>>>>>> e2379963b8c339341e7fc9b356a854ffd34679f5
     virtual Constraint* operator &(const Constraint& c) const = 0;
 
   };
@@ -131,13 +139,11 @@ namespace bpp
      **/
     double lowerBound_, upperBound_;
 
-    
     /**
      * @brief Boolean flags are true if the boundaries are included
      *
      **/
     bool inclLowerBound_, inclUpperBound_;
-    
     
   public:
     Interval() :  lowerBound_(-NumConstants::VERY_BIG), upperBound_(NumConstants::VERY_BIG),
@@ -206,11 +212,11 @@ namespace bpp
         + (inclUpperBound_?"] ":"[");
     }
 
-    /*
-     *@brief Intersect this Interval with another one
+    /**
+     * @brief Intersect this Interval with another one
      *
-     *@param c the intersected Interval
-     *@return the intersection, or NULL if c is not an Interval
+     * @param c the intersected Interval
+     * @return the intersection, or NULL if c is not an Interval
      */
     
     Constraint* operator &(const Constraint& c) const {
@@ -243,11 +249,11 @@ namespace bpp
         return NULL;
     }
 
-    /*
-     *@brief Intersect this Interval with another one
+    /**
+     * @brief Intersect this Interval with another one
      *
-     *@param c the intersected Interval
-     *@return this Interval modified, or not modified if c is not an Interval
+     * @param c the intersected Interval
+     * @return this Interval modified, or not modified if c is not an Interval
      */
     
     Interval& operator &=(const Constraint& c)
@@ -278,10 +284,10 @@ namespace bpp
       return *this;
     }
 
-    /*
-     *@brief Tells if this interval equals another one
+    /**
+     * @brief Tells if this interval equals another one
      *
-     *@param i the compared Interval
+     * @param i the compared Interval
      */
     
     bool operator ==(const Interval& i) const
@@ -293,10 +299,10 @@ namespace bpp
               );
     }
 
-    /*
-     *@brief Tells if this interval is different from another one
+    /**
+     * @brief Tells if this interval is different from another one
      *
-     *@param i the compared Interval
+     * @param i the compared Interval
      */
 
     bool operator !=(const Interval& i) const
@@ -308,10 +314,10 @@ namespace bpp
               );
     }
 
-    /*
-     *@brief Tells if this interval is included or equal in another one
+    /**
+     * @brief Tells if this interval is included or equal in another one
      *
-     *@param i the compared Interval
+     * @param i the compared Interval
      */
     
     bool operator <=(const Interval& i) const
