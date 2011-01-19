@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 19, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -103,7 +103,7 @@ class DirichletDiscreteDistribution :
   public AbstractParameterAliasable
 {
 private:
-  vector<BetaDiscreteDistribution* > vpBDD_;
+  std::vector<BetaDiscreteDistribution* > vpBDD_;
 
 public:
   /**
@@ -112,7 +112,7 @@ public:
    * @param vn the vector of the dim-1 numbers of categories to use.
    * @param valpha the vector of the dim alpha parameters.
    */
-  DirichletDiscreteDistribution(vector<unsigned int> vn, Vdouble valpha);
+  DirichletDiscreteDistribution(std::vector<unsigned int> vn, Vdouble valpha);
 
   ~DirichletDiscreteDistribution();
 
