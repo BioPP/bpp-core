@@ -69,11 +69,11 @@ Parameter::Parameter(const Parameter& p) :
   listeners_(p.listeners_),
   listenerAttach_(p.listenerAttach_)
 {
-	if(p.attach_ && p.constraint_)
-    constraint_   = p.constraint_->clone();
+	if (p.attach_ && p.constraint_)
+    constraint_ = p.constraint_->clone();
   else
-    constraint_   = p.constraint_;
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+    constraint_ = p.constraint_;
+  for (size_t i = 0; i < listeners_.size(); i++)
     if (listenerAttach_[i])
       listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
 }
@@ -89,7 +89,7 @@ Parameter& Parameter::operator=(const Parameter& p)
     constraint_   = p.constraint_;
   listeners_      = p.listeners_;
   listenerAttach_ = p.listenerAttach_;
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (size_t i = 0; i < listeners_.size(); i++)
     if (listenerAttach_[i])
       listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
 	return *this;	
@@ -100,7 +100,7 @@ Parameter& Parameter::operator=(const Parameter& p)
 Parameter::~Parameter()
 {
   if (attach_ && constraint_) delete constraint_;
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (size_t i = 0; i < listeners_.size(); i++)
     if (listenerAttach_[i])
       delete listeners_[i];
 } 
@@ -109,7 +109,7 @@ Parameter::~Parameter()
 
 void Parameter::setValue(double value) throw (ConstraintException)
 {
-	if(constraint_ && !constraint_->isCorrect(value)) 
+	if (constraint_ && !constraint_->isCorrect(value)) 
 		throw ConstraintException("Parameter::setValue", this, value);
 	value_ = value;
   ParameterEvent event(this);
@@ -121,7 +121,7 @@ void Parameter::setValue(double value) throw (ConstraintException)
 const Constraint* Parameter::removeConstraint()
 {
 	const Constraint * c = constraint_;
-	constraint_ = NULL;
+	constraint_ = 0;
 	return c;
 }
 
@@ -138,6 +138,16 @@ void Parameter::removeParameterListener(const std::string& listenerId)
       listenerAttach_.erase(listenerAttach_.begin() + i);
     }
   }
+}
+
+/******************************************************************************/
+
+bool Parameter::hasParameterListener(const std::string& listenerId)
+{
+  for (unsigned int i = 0; i < listeners_.size(); i++)
+    if (listeners_[i]->getId() == listenerId)
+      return true;
+  return false;
 }
 
 /******************************************************************************/

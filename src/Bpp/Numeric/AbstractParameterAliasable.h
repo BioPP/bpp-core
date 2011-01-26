@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -153,7 +153,7 @@ namespace bpp
     public:
       void setNamespace(const std::string& prefix);
  
-      const ParameterList & getIndependentParameters() const { return independentParameters_; }
+      const ParameterList& getIndependentParameters() const { return independentParameters_; }
     
       unsigned int getNumberOfIndependentParameters() const { return independentParameters_.size(); }
 
@@ -190,7 +190,7 @@ namespace bpp
       {
         std::string name = getParameter_(index).getName();
         AbstractParametrizable::deleteParameter_(index);
-        if(independentParameters_.hasParameter(name))
+        if (independentParameters_.hasParameter(name))
         independentParameters_.deleteParameter(name);
       }
 
