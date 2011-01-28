@@ -5,37 +5,37 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
+   This software is a computer program whose purpose is to provide classes
+   for numerical calculus.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
 #define _TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
@@ -46,56 +46,53 @@
 
 namespace bpp
 {
+/**
+ * @brief Discretized Truncated (on the right) Exponential distribution.
+ *
+ * This distribution has two parameters: the traditional exponential law parameter,
+ * and the abscissa of the truncation. The distribution will be truncated on the right
+ * of this point.
+ */
+class TruncatedExponentialDiscreteDistribution :
+  public ExponentialDiscreteDistribution
+{
+protected:
+  double tp_;
 
+public:
   /**
-   * @brief Discretized Truncated (on the right) Exponential distribution.
+   * @brief Build a new truncated exponential discrete distribution.
+   * @param n the number of categories to use.
+   * @param lambda The lambda parameter
+   * @param truncationPoint The trucation point
    *
-   * This distribution has two parameters: the traditional exponential law parameter,
-   * and the abscissa of the truncation. The distribution will be truncated on the right 
-   * of this point.
+   * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
+   *
    */
-  class TruncatedExponentialDiscreteDistribution:
-    public ExponentialDiscreteDistribution
+
+  TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10);
+
+  TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist) :
+    ExponentialDiscreteDistribution(dist),
+    tp_(dist.tp_) {}
+
+  TruncatedExponentialDiscreteDistribution& operator=(const TruncatedExponentialDiscreteDistribution& dist)
   {
-  protected:
-    double tp_;
-    
-  public:
-    /**
-     * @brief Build a new truncated exponential discrete distribution.
-     * @param n the number of categories to use.
-     * @param lambda The lambda parameter
-     * @param truncationPoint The trucation point
-     *
-     * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
-     *
-     */
+    ExponentialDiscreteDistribution::operator=(dist);
+    tp_ = dist.tp_;
+    return *this;
+  }
 
-    TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10);
+  virtual ~TruncatedExponentialDiscreteDistribution();
 
-    TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist):
-      ExponentialDiscreteDistribution(dist),
-      tp_(dist.tp_) {}
-    
-    TruncatedExponentialDiscreteDistribution& operator=(const TruncatedExponentialDiscreteDistribution& dist)
-    {
-      ExponentialDiscreteDistribution::operator=(dist);
-      tp_= dist.tp_;
-      return *this;
-    }
+  TruncatedExponentialDiscreteDistribution* clone() const { return new TruncatedExponentialDiscreteDistribution(*this); }
 
-    virtual ~TruncatedExponentialDiscreteDistribution();
+public:
+  void fireParameterChanged(const ParameterList& parameters);
 
-    TruncatedExponentialDiscreteDistribution* clone() const { return new TruncatedExponentialDiscreteDistribution(*this); }
-
-  public:
-    void fireParameterChanged(const ParameterList & parameters);
-
-    void restrictToConstraint(const Constraint& c);
-    
-  };
-
+  void restrictToConstraint(const Constraint& c);
+};
 } //end of namespace bpp.
 
-#endif	//_TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
+#endif  //_TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
 

@@ -168,7 +168,7 @@ class Parameter:
     /**
      * @brief Assignment operator.
      */
-    Parameter & operator=(const Parameter& param);
+    Parameter& operator=(const Parameter& param);
   
     virtual ~Parameter();
     
@@ -246,7 +246,7 @@ class Parameter:
 
     virtual void setConstraint(Constraint* constraint) throw (ConstraintException)
     {
-      if(constraint && constraint->isCorrect(value_))
+      if (constraint && constraint->isCorrect(value_))
       {
         if (constraint_ && attach_) delete constraint_;
         constraint_ = constraint;
@@ -275,6 +275,14 @@ class Parameter:
      * @param listenerId The id of listener to remove.
      */
     virtual void removeParameterListener(const std::string& listenerId);
+
+    /**
+     * @brief Tell is there is a listener with a given id from this parameter.
+     *
+     * @param listenerId The id of listener to remove.
+     * @return True if at list one listener with the given id was found.
+     */
+    virtual bool hasParameterListener(const std::string& listenerId);
 
   protected:
     void fireParameterNameChanged(ParameterEvent& event)

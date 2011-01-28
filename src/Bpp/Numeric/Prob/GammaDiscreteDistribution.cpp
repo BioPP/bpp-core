@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+   This software is a computer program whose purpose is to provide classes
+   for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "GammaDiscreteDistribution.h"
 #include "../Random/RandomTools.h"
@@ -52,7 +52,10 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
-  AbstractDiscreteDistribution(n,"Gamma."), alpha_(alpha), beta_(beta), ga1_(1)
+  AbstractDiscreteDistribution(n, "Gamma."),
+  alpha_(alpha),
+  beta_(beta),
+  ga1_(1)
 {
   // We use a lower bound of 0.0001 for alpha and beta to prohibe errors due to computer
   // floating precision: if alpha is quite low (gamma -> constant), some classes
@@ -63,9 +66,9 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alph
   addParameter_(p1);
   Parameter p2("Gamma.beta", beta, new IncludingPositiveReal(minimumBeta), true);
   addParameter_(p2);
-  ga1_=exp(RandomTools::lnGamma(alpha_+1)-RandomTools::lnGamma(alpha_));
-  
-  intMinMax_.setLowerBound(0,true);
+  ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
+
+  intMinMax_.setLowerBound(0, true);
   discretize();
 }
 
@@ -78,9 +81,9 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parame
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
   alpha_ = getParameterValue("alpha");
   beta_ = getParameterValue("beta");
-  ga1_=exp(RandomTools::lnGamma(alpha_+1)-RandomTools::lnGamma(alpha_));
-  
-  discretize();  
+  ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
+
+  discretize();
 }
 
 /******************************************************************************/
@@ -96,17 +99,17 @@ Domain GammaDiscreteDistribution::getDomain() const
 
 double GammaDiscreteDistribution::qProb(double x) const
 {
-  return RandomTools::qGamma(x, alpha_, beta_);  
+  return RandomTools::qGamma(x, alpha_, beta_);
 }
 
-     
+
 double GammaDiscreteDistribution::pProb(double x) const
 {
-  return RandomTools::pGamma(x, alpha_, beta_);  
+  return RandomTools::pGamma(x, alpha_, beta_);
 }
 
 double GammaDiscreteDistribution::Expectation(double a) const
 {
-  return RandomTools::pGamma(a, alpha_+1, beta_)/beta_*ga1_;
+  return RandomTools::pGamma(a, alpha_ + 1, beta_) / beta_ * ga1_;
 }
 
