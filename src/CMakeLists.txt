@@ -79,6 +79,7 @@ set(CPP_FILES
   Bpp/Numeric/Prob/TruncatedExponentialDiscreteDistribution.cpp
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
   Bpp/Numeric/Stat/ContingencyTableTest.cpp
+  Bpp/Numeric/Stat/StatTools.cpp
   )
 
 set(H_FILES
@@ -195,6 +196,7 @@ set(H_FILES
   Bpp/Numeric/Prob/UniformDiscreteDistribution.h
   Bpp/Numeric/Stat/StatTest.h 
   Bpp/Numeric/Stat/ContingencyTableTest.h 
+  Bpp/Numeric/Stat/StatTools.h 
 )
 
 # Build the static lib

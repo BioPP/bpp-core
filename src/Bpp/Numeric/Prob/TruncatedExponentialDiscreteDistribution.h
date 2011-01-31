@@ -46,56 +46,53 @@
 
 namespace bpp
 {
+/**
+ * @brief Discretized Truncated (on the right) Exponential distribution.
+ *
+ * This distribution has two parameters: the traditional exponential law parameter,
+ * and the abscissa of the truncation. The distribution will be truncated on the right
+ * of this point.
+ */
+class TruncatedExponentialDiscreteDistribution :
+  public ExponentialDiscreteDistribution
+{
+protected:
+  double tp_;
 
+public:
   /**
-   * @brief Discretized Truncated (on the right) Exponential distribution.
+   * @brief Build a new truncated exponential discrete distribution.
+   * @param n the number of categories to use.
+   * @param lambda The lambda parameter
+   * @param truncationPoint The trucation point
    *
-   * This distribution has two parameters: the traditional exponential law parameter,
-   * and the abscissa of the truncation. The distribution will be truncated on the right 
-   * of this point.
+   * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
+   *
    */
-  class TruncatedExponentialDiscreteDistribution:
-    public ExponentialDiscreteDistribution
+
+  TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10);
+
+  TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist) :
+    ExponentialDiscreteDistribution(dist),
+    tp_(dist.tp_) {}
+
+  TruncatedExponentialDiscreteDistribution& operator=(const TruncatedExponentialDiscreteDistribution& dist)
   {
-  protected:
-    double tp_;
-    
-  public:
-    /**
-     * @brief Build a new truncated exponential discrete distribution.
-     * @param n the number of categories to use.
-     * @param lambda The lambda parameter
-     * @param truncationPoint The trucation point
-     *
-     * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
-     *
-     */
+    ExponentialDiscreteDistribution::operator=(dist);
+    tp_ = dist.tp_;
+    return *this;
+  }
 
-    TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10);
+  virtual ~TruncatedExponentialDiscreteDistribution();
 
-    TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist):
-      ExponentialDiscreteDistribution(dist),
-      tp_(dist.tp_) {}
-    
-    TruncatedExponentialDiscreteDistribution& operator=(const TruncatedExponentialDiscreteDistribution& dist)
-    {
-      ExponentialDiscreteDistribution::operator=(dist);
-      tp_= dist.tp_;
-      return *this;
-    }
+  TruncatedExponentialDiscreteDistribution* clone() const { return new TruncatedExponentialDiscreteDistribution(*this); }
 
-    virtual ~TruncatedExponentialDiscreteDistribution();
+public:
+  void fireParameterChanged(const ParameterList& parameters);
 
-    TruncatedExponentialDiscreteDistribution* clone() const { return new TruncatedExponentialDiscreteDistribution(*this); }
-
-  public:
-    void fireParameterChanged(const ParameterList & parameters);
-
-    void restrictToConstraint(const Constraint& c);
-    
-  };
-
+  void restrictToConstraint(const Constraint& c);
+};
 } //end of namespace bpp.
 
-#endif	//_TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
+#endif  //_TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H_
 
