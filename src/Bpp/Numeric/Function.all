@@ -1,6 +1,6 @@
 #include "Function/AbstractNumericalDerivative.h"
 #include "Function/AbstractOptimizer.h"
-#include "Function/BFGSMultiDimensions.h"
+#include "Function/BfgsMultiDimensions.h"
 #include "Function/BrentOneDimension.h"
 #include "Function/ConjugateGradientMultiDimensions.h"
 #include "Function/DirectionFunction.h"

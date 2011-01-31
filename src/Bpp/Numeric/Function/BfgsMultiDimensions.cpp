@@ -1,11 +1,11 @@
 //
-// File: BFGSMultiDimensions.cpp
+// File: BfgsMultiDimensions.cpp
 // Created by: Laurent Guéguen
-// Created on: jeudi 16 décembre 2010, à 13h 49
+// Created on: Dec 16 13:49 2010
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -37,14 +37,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "BFGSMultiDimensions.h"
+#include "BfgsMultiDimensions.h"
 #include "OneDimensionOptimizationTools.h"
 
 using namespace bpp;
 
 /******************************************************************************/
 
-BFGSMultiDimensions::BFGSMultiDimensions(DerivableFirstOrder* function, double gtol):
+BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function, double gtol):
   AbstractOptimizer(function), gtol_(gtol), slope_(0), Up_(), Lo_(),
   p_(), gradient_(), xi_(), dg_(), hdg_(), hessian_(), f1dim_(function)
 {
@@ -55,7 +55,7 @@ BFGSMultiDimensions::BFGSMultiDimensions(DerivableFirstOrder* function, double g
 
 /******************************************************************************/
 
-void BFGSMultiDimensions::doInit(const ParameterList & params) throw (Exception)
+void BfgsMultiDimensions::doInit(const ParameterList & params) throw (Exception)
 {
   unsigned int nbParams = params.size();
   p_.resize(nbParams);
@@ -104,7 +104,7 @@ void BFGSMultiDimensions::doInit(const ParameterList & params) throw (Exception)
 
 /******************************************************************************/
 
-double BFGSMultiDimensions::doStep() throw (Exception)
+double BfgsMultiDimensions::doStep() throw (Exception)
 {
   double f;
   unsigned int n = getParameters().size();
@@ -206,7 +206,7 @@ double BFGSMultiDimensions::doStep() throw (Exception)
 
 /******************************************************************************/
 
-void BFGSMultiDimensions::getGradient(std::vector<double>& gradient) const
+void BfgsMultiDimensions::getGradient(std::vector<double>& gradient) const
 {
   for(unsigned int i = 0; i < gradient.size(); i++)
   {
@@ -216,7 +216,7 @@ void BFGSMultiDimensions::getGradient(std::vector<double>& gradient) const
 
 /******************************************************************************/
 
-void BFGSMultiDimensions::setDirection()
+void BfgsMultiDimensions::setDirection()
 {
   unsigned int nbParams=getParameters().size();
 

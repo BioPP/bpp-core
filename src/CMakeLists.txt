@@ -54,7 +54,7 @@ set(CPP_FILES
   Bpp/Numeric/Function/MetaOptimizer.cpp
   Bpp/Numeric/Function/NewtonOneDimension.cpp
   Bpp/Numeric/Function/NewtonBacktrackOneDimension.cpp
-  Bpp/Numeric/Function/BFGSMultiDimensions.cpp
+  Bpp/Numeric/Function/BfgsMultiDimensions.cpp
   Bpp/Numeric/Function/OneDimensionOptimizationTools.cpp
   Bpp/Numeric/Function/OptimizationStopCondition.cpp
   Bpp/Numeric/Function/PowellMultiDimensions.cpp
@@ -158,7 +158,7 @@ set(H_FILES
   Bpp/Numeric/Function/MetaOptimizer.h
   Bpp/Numeric/Function/NewtonOneDimension.h
   Bpp/Numeric/Function/NewtonBacktrackOneDimension.h
-  Bpp/Numeric/Function/BFGSMultiDimensions.h
+  Bpp/Numeric/Function/BfgsMultiDimensions.h
   Bpp/Numeric/Function/OneDimensionOptimizationTools.h
   Bpp/Numeric/Function/OptimizationStopCondition.h
   Bpp/Numeric/Function/Optimizer.h

@@ -1,11 +1,11 @@
 //
-// File: BFGSMultiDimensions.h
-// Created by: Julien Dutheil
-// Created on: Wed Apr 11 16:51 2007
+// File: BfgsMultiDimensions.h
+// Created by: Laurent Guéguen
+// Created on: Dec 16 13:49 2010
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -56,7 +56,7 @@ namespace bpp
    *    Oper Res (2008) 67:443­454
    */
   
-  class BFGSMultiDimensions:
+  class BfgsMultiDimensions:
     public AbstractOptimizer
   {
   protected:
@@ -73,11 +73,11 @@ namespace bpp
     
   public:
 
-    BFGSMultiDimensions(DerivableFirstOrder* function, double gtol=1e-5);
+    BfgsMultiDimensions(DerivableFirstOrder* function, double gtol=1e-5);
 
-    virtual ~BFGSMultiDimensions() {}
+    virtual ~BfgsMultiDimensions() {}
 
-    BFGSMultiDimensions* clone() const { return new BFGSMultiDimensions(*this); }
+    BfgsMultiDimensions* clone() const { return new BfgsMultiDimensions(*this); }
 
   public:
 
