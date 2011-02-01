@@ -343,6 +343,9 @@ class IncludingPositiveReal : public Interval
 public:
   IncludingPositiveReal(double lowerBound) :
     Interval(lowerBound, NumConstants::VERY_BIG, true, true) {}
+
+  IncludingPositiveReal* clone() const { return new IncludingPositiveReal(*this); }
+
   bool isCorrect(double value) const
   {
     return value >= getLowerBound();
@@ -357,6 +360,9 @@ class ExcludingPositiveReal : public Interval
 public:
   ExcludingPositiveReal(double lowerBound) :
     Interval (lowerBound, NumConstants::VERY_BIG, false, true) {}
+  
+  ExcludingPositiveReal* clone() const { return new ExcludingPositiveReal(*this); }
+  
   bool isCorrect(double value) const
   {
     return value > getLowerBound();
@@ -371,6 +377,9 @@ class IncludingNegativeReal : public Interval
 public:
   IncludingNegativeReal(double upperBound) :
     Interval(-NumConstants::VERY_BIG, upperBound, true, true) {}
+  
+  IncludingNegativeReal* clone() const { return new IncludingNegativeReal(*this); }
+  
   bool isCorrect(double value) const
   {
     return value <= getUpperBound();
@@ -385,6 +394,8 @@ class ExcludingNegativeReal : public Interval
 public:
   ExcludingNegativeReal(double upperBound) :
     Interval(-NumConstants::VERY_BIG, upperBound, true, false) {}
+  
+  ExcludingNegativeReal* clone() const { return new ExcludingNegativeReal(*this); }
 
   bool isCorrect(double value) const
   {
