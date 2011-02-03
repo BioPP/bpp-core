@@ -85,7 +85,7 @@ namespace bpp {
       /**
        * @brief Get the degree i.e. the number of neighbors of this node.
        */
-      virtual int degree() = 0;
+      virtual int degree() const = 0;
 
       /** @} */
 
