@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _BPP_GRAPH_BASICTNODE_H_
 
 #include "TNode.h"
+#include "../Exceptions.h"
 
 namespace bpp {
   /**
@@ -73,6 +74,57 @@ namespace bpp {
        * @brief Copy constructor.
        */
       BasicTNode(const BasicTNode& node);
+
+      /**
+       * @brief Assignation operator.
+       */
+      BasicTNode& operator=(const BasicTNode& node);
+
+      BasicTNode* clone() const {
+        return new BasicTNode(* this);
+      }
+
+      // Neighbors
+
+      const BasicTNode* getNeighbor(int pos) const;
+      BasicTNode* getNeighbor(int pos);
+
+      int degree() const { return sons_.size() - 1 + father_ ? 1 : 0; }
+
+      const BasicTNode* operator[](int i) const;
+      BasicTNode* operator[](int i);
+
+      // Fathers
+
+      bool hasFathers() const { return father_ ? true : false; }
+      int getNumberOfFathers() const { return father_ ? 1 : 0; }
+
+      const BasicTNode* getFather(int pos) const;
+      BasicTNode* getFather(int pos);
+      const BasicTNode* getFather() const;
+      BasicTNode* getFather();
+
+      /**
+       * @brief Remove the father of this node.
+       *
+       * @return A pointer to the removed father node.
+       */
+      virtual BasicTNode* removeFather();
+
+      // Sons
+
+      bool hasSons() const { return !sons_.empty(); }
+      int getNumberOfSons() const { return static_cast<int>(sons_.size()); }
+      const BasicTNode* getSon(int pos) const;
+      BasicTNode* getSon(int pos);
+
+      /**
+       * @brief Remove a son of this node.
+       *
+       * @return A pointer to the removed son node or a Null pointer if son is
+       * not found.
+       */
+      virtual BasicTNode* removeSon(BasicTNode* son);
   };
 }
 
