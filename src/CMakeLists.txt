@@ -56,7 +56,7 @@ set(CPP_FILES
   Bpp/Numeric/Function/MetaOptimizer.cpp
   Bpp/Numeric/Function/NewtonOneDimension.cpp
   Bpp/Numeric/Function/NewtonBacktrackOneDimension.cpp
-  Bpp/Numeric/Function/BFGSMultiDimensions.cpp
+  Bpp/Numeric/Function/BfgsMultiDimensions.cpp
   Bpp/Numeric/Function/OneDimensionOptimizationTools.cpp
   Bpp/Numeric/Function/OptimizationStopCondition.cpp
   Bpp/Numeric/Function/PowellMultiDimensions.cpp
@@ -81,6 +81,7 @@ set(CPP_FILES
   Bpp/Numeric/Prob/TruncatedExponentialDiscreteDistribution.cpp
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
   Bpp/Numeric/Stat/ContingencyTableTest.cpp
+  Bpp/Numeric/Stat/StatTools.cpp
   )
 
 set(H_FILES
@@ -164,7 +165,7 @@ set(H_FILES
   Bpp/Numeric/Function/MetaOptimizer.h
   Bpp/Numeric/Function/NewtonOneDimension.h
   Bpp/Numeric/Function/NewtonBacktrackOneDimension.h
-  Bpp/Numeric/Function/BFGSMultiDimensions.h
+  Bpp/Numeric/Function/BfgsMultiDimensions.h
   Bpp/Numeric/Function/OneDimensionOptimizationTools.h
   Bpp/Numeric/Function/OptimizationStopCondition.h
   Bpp/Numeric/Function/Optimizer.h
@@ -202,6 +203,7 @@ set(H_FILES
   Bpp/Numeric/Prob/UniformDiscreteDistribution.h
   Bpp/Numeric/Stat/StatTest.h 
   Bpp/Numeric/Stat/ContingencyTableTest.h 
+  Bpp/Numeric/Stat/StatTools.h 
 )
 
 # Build the static lib
