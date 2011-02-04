@@ -105,6 +105,16 @@ namespace bpp {
       BasicTNode* getFather();
 
       /**
+       * @brief Tell if the node is a father of this node.
+       */
+      virtual bool isFather(const BasicTNode* node) const;
+
+      /**
+       * @brief Add a father to this node.
+       */
+      virtual void addFather(BasicTNode* node);
+
+      /**
        * @brief Remove the father of this node.
        *
        * @return A pointer to the removed father node.
@@ -117,6 +127,16 @@ namespace bpp {
       int getNumberOfSons() const { return static_cast<int>(sons_.size()); }
       const BasicTNode* getSon(int pos) const;
       BasicTNode* getSon(int pos);
+
+      /**
+       * @brief Tell if a node is son of this node.
+       */
+      virtual bool isSon(const BasicTNode* node) const;
+
+      /**
+       * @brief Add a son to this node.
+       */
+      virtual void addSon(BasicTNode* node);
 
       /**
        * @brief Remove a son of this node.

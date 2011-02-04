@@ -90,6 +90,21 @@ BasicTNode* BasicTNode::getFather() {
   return father_;
 }
 
+bool BasicTNode::isFather(const BasicTNode* node) const {
+  if (father_ == node)
+    return true;
+  return false;
+}
+
+void BasicTNode::addFather(BasicTNode* node) {
+  if (!node)
+    throw NullPointerException("BasicTNode::addFather() Empty node given as input");
+  if (!isFather(node))
+    father_ = node;
+  if (!node->isSon(this))
+    node->addSon(this);
+}
+
 BasicTNode* BasicTNode::removeFather() {
   if (hasFathers()) {
     BasicTNode* father = father_;
@@ -114,6 +129,23 @@ BasicTNode* BasicTNode::getSon(int pos) {
     throw IndexOutOfBoundsException("BasicTNode::getSon() pos out of range", pos, 0, sons_.size() - 1);
   }
   return sons_[static_cast<size_t>(pos)];
+}
+
+bool BasicTNode::isSon(const BasicTNode* node) const {
+  for (size_t i = 0 ; i < sons_.size() ; i++) {
+    if (sons_[i] == node)
+      return true;
+  }
+  return false;
+}
+
+void BasicTNode::addSon(BasicTNode* node) {
+  if (!node)
+    throw NullPointerException("BasicTNode::addSon() Empty node given as input.");
+  if (!isSon(node))
+    sons_.push_back(node);
+  if (!node->isFather(this))
+    node->addFather(this);
 }
 
 BasicTNode* BasicTNode::removeSon(BasicTNode* node) {
