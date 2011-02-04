@@ -60,7 +60,8 @@ namespace bpp
     public AbstractOptimizer
   {
   protected:
-    double gtol_, slope_;
+    //double gtol_;
+    double slope_;
 
     // vectors of the Lower & Upper bounds of the parameters
     Vdouble Up_, Lo_;
@@ -73,7 +74,7 @@ namespace bpp
     
   public:
 
-    BfgsMultiDimensions(DerivableFirstOrder* function, double gtol=1e-5);
+    BfgsMultiDimensions(DerivableFirstOrder* function);
 
     virtual ~BfgsMultiDimensions() {}
 
@@ -111,8 +112,7 @@ namespace bpp
     /**
      * Sets the direction for linesearch in case of bounds
      * To be used after gradient_ & pi_ are computed
-     */
-    
+     */ 
     void setDirection();
     
   };

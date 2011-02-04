@@ -83,13 +83,13 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
       0, 0, getVerbose() > 0 ? getVerbose() - 1 : 0);
   getFunction_()->enableFirstOrderDerivatives(true);
   f = getFunction()->f(getParameters());
-  if(tolIsReached_)
+  if (tolIsReached_)
   {
     return f;
   }
   getGradient(xi_);
   dgg = gg = 0.0;
-  for(unsigned j = 0; j < n; j++)
+  for (unsigned j = 0; j < n; j++)
   {
     gg += g_[j] * g_[j];
     /* dgg += xi[j] * xi[j]; */ //This statement for Fletcher-Reeves.
@@ -114,7 +114,7 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
 
 void ConjugateGradientMultiDimensions::getGradient(std::vector<double>& gradient) const
 {
-  for(unsigned int i = 0; i < gradient.size(); i++)
+  for (size_t i = 0; i < gradient.size(); ++i)
   {
     gradient[i] = getFunction()->getFirstOrderDerivative(getParameters()[i].getName());
   }
