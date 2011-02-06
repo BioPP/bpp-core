@@ -1,5 +1,5 @@
 %define name bpp-core
-%define version 1.0.0
+%define version 2.0.0
 %define release 1
 %define _prefix /usr
 
@@ -60,5 +60,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Mon Feb 07 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
-- Version 1.0.0
+- Version 2.0.0
 

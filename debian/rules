@@ -101,10 +101,6 @@ binary-arch: build install
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
-	#have to do that, otherwise nothing is installed!
-	cp -r $(CURDIR)/debian/tmp/usr/lib/lib*.so* $(CURDIR)/debian/libbpp-seq/usr/lib
-	cp -r $(CURDIR)/debian/tmp/usr/lib/lib*.*a $(CURDIR)/debian/libbpp-seq-dev/usr/lib
-	cp -r $(CURDIR)/debian/tmp/usr/include/* $(CURDIR)/debian/libbpp-seq-dev/usr/include
 	dh_builddeb
 
 binary: binary-indep binary-arch
