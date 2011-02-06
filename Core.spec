@@ -59,6 +59,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
-* Wed Oct 13 2010 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+* Mon Feb 07 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
 - Version 1.0.0
 
