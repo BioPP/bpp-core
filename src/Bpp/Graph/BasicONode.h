@@ -48,6 +48,8 @@ namespace bpp {
    *
    * Contains only methods for node manipulation.
    *
+   * @warning Class not implemented yet!
+   *
    * @author Sylvain Gaillard
    */
   class BasicONode: public ONode {
