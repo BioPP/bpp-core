@@ -96,6 +96,10 @@ namespace bpp {
 
       // Fathers
 
+      /**
+       * @brief Tell if the node has a father.
+       */
+      bool hasFather() const { return father_ ? true : false; }
       bool hasFathers() const { return father_ ? true : false; }
       int getNumberOfFathers() const { return father_ ? 1 : 0; }
 
@@ -140,11 +144,16 @@ namespace bpp {
 
       /**
        * @brief Remove a son of this node.
+       */
+      virtual void removeSon(BasicTNode* son);
+
+      /**
+       * @brief Remove a son of this node.
        *
        * @return A pointer to the removed son node or a Null pointer if son is
        * not found.
        */
-      virtual BasicTNode* removeSon(BasicTNode* son);
+      virtual BasicTNode* removeSon(int pos);
   };
 }
 

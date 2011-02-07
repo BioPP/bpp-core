@@ -37,7 +37,7 @@ const BasicTNode* BasicTNode::getNeighbor(int pos) const {
   if (pos == 0)
     return father_;
   else
-    return sons_[static_cast<size_t>(pos)];
+    return sons_[static_cast<size_t>(pos - 1)];
 }
 
 BasicTNode* BasicTNode::getNeighbor(int pos) {
@@ -47,7 +47,7 @@ BasicTNode* BasicTNode::getNeighbor(int pos) {
   if (pos == 0)
     return father_;
   else
-    return sons_[static_cast<size_t>(pos)];
+    return sons_[static_cast<size_t>(pos - 1)];
 }
 
 const BasicTNode* BasicTNode::operator[](int i) const {
@@ -99,6 +99,8 @@ bool BasicTNode::isFather(const BasicTNode* node) const {
 void BasicTNode::addFather(BasicTNode* node) {
   if (!node)
     throw NullPointerException("BasicTNode::addFather() Empty node given as input");
+  if (father_)
+    throw Exception("BasicTNode::addFather() This node already has a father.");
   if (!isFather(node))
     father_ = node;
   if (!node->isSon(this))
@@ -148,15 +150,22 @@ void BasicTNode::addSon(BasicTNode* node) {
     node->addFather(this);
 }
 
-BasicTNode* BasicTNode::removeSon(BasicTNode* node) {
+void BasicTNode::removeSon(BasicTNode* node) {
   if (!node)
     throw NullPointerException("BasicTNode::removeSon() Empty node given as input.");
   for (size_t i = 0 ; i < sons_.size() ; i++) {
     if (sons_[i] == node) {
       sons_.erase(sons_.begin() + i);
       node->removeFather();
-      return node;
     }
   }
-  return 0; // return 0 if son is not found
+}
+
+BasicTNode* BasicTNode::removeSon(int pos) {
+  if (pos < 0 || pos > static_cast<int>(sons_.size() - 1))
+    throw IndexOutOfBoundsException("BasicTNode::removeSon() pos out of bound", pos, 0, sons_.size() - 1);
+  BasicTNode* node = sons_[static_cast<size_t>(pos)];
+  sons_.erase(sons_.begin() + pos);
+  node->removeFather();
+  return node;
 }
