@@ -95,7 +95,7 @@ ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
 
 IF (UNIX)
 #This creates deb packages:
-ADD_CUSTOM_TARGET(deb fakeroot debian/rules binary)
+ADD_CUSTOM_TARGET(deb dpkg-buildpackage)
 ADD_DEPENDENCIES(deb dist)
 
 #This creates rpm packages:
