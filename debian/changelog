@@ -1,7 +1,7 @@
-libbpp-core (1.0.0) unstable; urgency=low
+libbpp-core (2.0.0) unstable; urgency=low
 
   * New package merging old bpp-utils and bpp-numcalc.
   * New source tree.
 
- -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Wed, 13 Oct 2010 13:53:21 +0200
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 07 Feb 2011 09:00:00 +0100
 
