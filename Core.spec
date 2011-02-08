@@ -8,7 +8,7 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 Vendor: The Bio++ Project
-Source: http://kimura.univ-montp2.fr/BioPP/Repositories/sources/%{name}-%{version}.tar.gz
+Source: http://biopp.univ-montp2.fr/Repositories/sources/%{name}-%{version}.tar.gz
 License: CeCILL 2
 Group: System Environment/Libraries
 BuildRoot: %{_builddir}/%{name}-root
@@ -48,13 +48,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS COPYING INSTALL ChangeLog
+%doc AUTHORS.txt COPYING.txt INSTALL.txt ChangeLog
 %{_prefix}/lib/lib*.so
 %{_prefix}/lib/lib*.so.*
 
 %files devel
 %defattr(-,root,root)
-%doc AUTHORS COPYING INSTALL ChangeLog
+%doc AUTHORS.txt COPYING.txt INSTALL.txt ChangeLog
 %{_prefix}/lib/lib*.a
 %{_prefix}/include/*
 
