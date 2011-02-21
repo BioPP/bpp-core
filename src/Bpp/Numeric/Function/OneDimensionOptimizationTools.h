@@ -112,7 +112,7 @@ namespace bpp
     /**
      * @brief Search a 'sufficiently low' value for a function in a given direction.
      *
-     * This function stands for the lnsrch function defined at page 385 of
+     * This function performs a similar computation as the lnsrch function defined at page 385 of
      *
      * <pre>
      * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
@@ -120,8 +120,7 @@ namespace bpp
      * </pre>
      * 
      * without the stpmax argument, since the steps are bounded in another way.
-     */
-  
+     */ 
     static unsigned int lineSearch(DirectionFunction& f1dim, ParameterList& parameters, std::vector<double>& xi, std::vector<double>& gradient, OutputStream* profiler = 0, OutputStream* messenger = 0, int verbose = 2);
                                  
   public:

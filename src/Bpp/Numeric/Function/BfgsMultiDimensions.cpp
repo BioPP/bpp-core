@@ -44,9 +44,9 @@ using namespace bpp;
 
 /******************************************************************************/
 
-BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function, double gtol) :
+BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function) :
   AbstractOptimizer(function),
-  gtol_(gtol),
+  //gtol_(gtol),
   slope_(0),
   Up_(),
   Lo_(),
@@ -153,27 +153,33 @@ double BfgsMultiDimensions::doStep() throw (Exception)
   }
 
   f = getFunction()->f(getParameters());
+  if (f > currentValue_) {
+    printMessage("!!! Function increase !!!");
+    printMessage("!!! Optimization might have failed. Try to reparametrize your function to remove constraints.");
+    tolIsReached_ = true;
+    return f;
+  }
 
   if (tolIsReached_)
   {
     return f;
   }
 
-  double temp, test = 0.0;
-  for (i = 0; i < n; i++)
-  {
-    temp = xi_[i];
-    if (p_[i] > 1.0)
-      temp /= p_[i];
-    if (temp > test)
-      test = temp;
-  }
+  //double temp, test = 0.0;
+  //for (i = 0; i < n; i++)
+  //{
+  //  temp = xi_[i];
+  //  if (p_[i] > 1.0)
+  //    temp /= p_[i];
+  //  if (temp > test)
+  //    test = temp;
+  //}
 
-  if (test < 1e-7)
-  {
-    tolIsReached_ = true;
-    return f;
-  }
+  //if (test < 1e-7)
+  //{
+  //  tolIsReached_ = true;
+  //  return f;
+  //}
 
   for (i = 0; i < n; i++)
   {
@@ -181,25 +187,25 @@ double BfgsMultiDimensions::doStep() throw (Exception)
   }
 
   getGradient(gradient_);
-  test = 0.0;
+  //test = 0.0;
 
-  for (i = 0; i < n; i++)
-  {
-    temp = abs(gradient_[i]);
-    if (abs(p_[i]) > 1.0)
-      temp /= p_[i];
-    if (temp > test)
-      test = temp;
-  }
+  //for (i = 0; i < n; i++)
+  //{
+  //  temp = abs(gradient_[i]);
+  //  if (abs(p_[i]) > 1.0)
+  //    temp /= p_[i];
+  //  if (temp > test)
+  //    test = temp;
+  //}
 
-  if (f > 1.0)
-    test /= f;
+  //if (f > 1.0)
+  //  test /= f;
 
-  if (test < gtol_)
-  {
-    tolIsReached_ = true;
-    return f;
-  }
+  //if (test < gtol_)
+  //{
+  //  tolIsReached_ = true;
+  //  return f;
+  //}
 
   for (i = 0; i < n; i++)
   {

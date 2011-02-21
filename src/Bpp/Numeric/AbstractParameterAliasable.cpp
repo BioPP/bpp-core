@@ -123,7 +123,7 @@ throw (ParameterNotFoundException, Exception)
   if (!param1->hasConstraint())
   {
     if (param2->hasConstraint())
-      throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints aatached to these two parameters are different.");
+      throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
   }
   else
   // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).

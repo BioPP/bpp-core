@@ -418,6 +418,9 @@ public:
    */
   IncludingInterval(double lowerBound, double upperBound) :
     Interval(lowerBound, upperBound, true, true) {}
+
+  IncludingInterval* clone() const { return new IncludingInterval(*this); }
+
   bool isCorrect(double value) const
   {
     return value >= getLowerBound() && value <= getUpperBound();
@@ -438,6 +441,9 @@ public:
    */
   ExcludingInterval(double lowerBound, double upperBound) :
     Interval(lowerBound, upperBound, false, false) {}
+  
+  ExcludingInterval* clone() const { return new ExcludingInterval(*this); }
+  
   bool isCorrect(double value) const
   {
     return value > getLowerBound() && value < getUpperBound();
@@ -458,6 +464,9 @@ public:
    */
   IncludingExcludingInterval(double lowerBound, double upperBound) :
     Interval(lowerBound, upperBound, true, false) {}
+  
+  IncludingExcludingInterval* clone() const { return new IncludingExcludingInterval(*this); }
+  
   bool isCorrect(double value) const
   {
     return value >= getLowerBound() && value < getUpperBound();
@@ -478,6 +487,9 @@ public:
    */
   ExcludingIncludingInterval(double lowerBound, double upperBound) :
     Interval(lowerBound, upperBound, false, true) {}
+  
+  ExcludingIncludingInterval* clone() const { return new ExcludingIncludingInterval(*this); }
+  
   bool isCorrect(double value) const
   {
     return value > getLowerBound() && value <= getUpperBound();
