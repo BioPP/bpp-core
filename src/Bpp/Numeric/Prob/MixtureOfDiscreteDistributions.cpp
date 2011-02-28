@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -55,14 +55,14 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
     throw Exception("MixtureOfDiscreteDistributions. Distributions and probabilities vectors must have the same size (" + TextTools::toString(distributions.size()) + " != " + TextTools::toString(probas.size()) + ").");
   }
 
-  unsigned int size = distributions.size();
-  for (unsigned int i = 0; i < size; i++)
+  size_t size = distributions.size();
+  for (size_t i = 0; i < size; i++)
   {
-    if (distributions[i] == NULL)
+    if (distributions[i] == 0)
       throw Exception("MixtureOfDiscreteDistributions. Null DiscreteDistribution* in argument vector at index " + TextTools::toString(i));
   }
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     probas_.push_back(probas[i]);
   }
@@ -72,21 +72,21 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
     throw Exception("MixtureOfDiscreteDistributions. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
   double y = 1;
-  for (unsigned int i = 0; i < size - 1; i++)
+  for (size_t i = 0; i < size - 1; i++)
   {
     addParameter_(Parameter("Mixture.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
     y -= probas[i];
   }
 
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     vdd_.push_back(distributions[i]->clone());
   }
 
   //  Parameters
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     ParameterList pl = vdd_[i]->getParameters();
     for (unsigned int j = 0; j < pl.size(); j++)
@@ -103,7 +103,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
 
 void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasses)
 {
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     vdd_[i]->setNumberOfCategories(nbClasses);
   }
@@ -116,7 +116,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDi
   vdd_(),
   probas_()
 {
-  for (unsigned int i = 0; i < mdd.vdd_.size(); i++)
+  for (size_t i = 0; i < mdd.vdd_.size(); i++)
   {
     probas_.push_back(mdd.probas_[i]);
     vdd_.push_back(mdd.vdd_[i]->clone());
@@ -125,7 +125,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDi
 
 MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
 {
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     delete vdd_[i];
   }
@@ -135,9 +135,9 @@ MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
 
 void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& parameters)
 {
-  unsigned int size = vdd_.size();
+  size_t size = vdd_.size();
   double x = 1.0;
-  for (unsigned int i = 0; i < size - 1; i++)
+  for (size_t i = 0; i < size - 1; i++)
   {
     probas_[i] = getParameterValue("theta" + TextTools::toString(i + 1)) * x;
     x *= 1 - getParameterValue("theta" + TextTools::toString(i + 1));
@@ -149,13 +149,13 @@ void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& p
   // fireParameterChanged on members Distributions
 
   ParameterList pl;
-  unsigned int pos;
+  size_t pos;
   vector<string> v = getParameters().getParameterNames();
   vector<string> v2;
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     pl.reset();
-    for (unsigned int j = 0; j < v.size(); j++)
+    for (size_t j = 0; j < v.size(); j++)
     {
       pos = v[j].find("Mixture." + TextTools::toString(i + 1));
       if (pos != string::npos)
@@ -170,20 +170,20 @@ void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& p
 
 void MixtureOfDiscreteDistributions::updateDistribution()
 {
-  unsigned int size = vdd_.size();
+  size_t size = vdd_.size();
   distribution_.clear();
   // calculation of distribution
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     vector<double> values = vdd_[i]->getCategories();
-    for (unsigned int j = 0; j < values.size(); j++)
+    for (size_t j = 0; j < values.size(); j++)
     {
       distribution_[values[j]] = 0;
     }
   }
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     vector<double> values = vdd_[i]->getCategories();
     vector<double> probas2 = vdd_[i]->getProbabilities();
@@ -201,7 +201,7 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   uB = -NumConstants::VERY_BIG;
   lB = NumConstants::VERY_BIG;
 
-  for (unsigned int i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
   {
     if (vdd_[i]->getLowerBound() < lB)
       lB = vdd_[i]->getLowerBound();
@@ -217,11 +217,11 @@ Domain MixtureOfDiscreteDistributions::getDomain() const
 {
   // Compute a new arbitray bounderi:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
-  unsigned int n = values.size();
+  size_t n = values.size();
   vector<double> bounderi(n + 1);
 
   // Fill from 1 to n-1 with midpoints:
-  for (unsigned int i = 1; i <= n - 1; i++)
+  for (size_t i = 1; i <= n - 1; i++)
   {
     bounderi[i] = (values[i] + values[i - 1]) / 2.;
   }
@@ -241,7 +241,7 @@ void MixtureOfDiscreteDistributions::setMedian(bool median)
   if (median_ != median)
   {
     median_ = median;
-    for (unsigned int i = 0; i < vdd_.size(); i++)
+    for (size_t i = 0; i < vdd_.size(); i++)
     {
       vdd_[i]->setMedian(median);
     }
@@ -250,7 +250,7 @@ void MixtureOfDiscreteDistributions::setMedian(bool median)
 }
 void MixtureOfDiscreteDistributions::discretize()
 {
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     vdd_[i]->discretize();
   }
@@ -261,7 +261,7 @@ void MixtureOfDiscreteDistributions::discretize()
 double MixtureOfDiscreteDistributions::pProb(double x) const
 {
   double s = 0;
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     s += probas_[i] * vdd_[i]->pProb(x);
   }
@@ -277,7 +277,7 @@ double MixtureOfDiscreteDistributions::qProb(double x) const
 double MixtureOfDiscreteDistributions::Expectation(double a) const
 {
   double s = 0;
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     s += probas_[i] * vdd_[i]->Expectation(a);
   }
@@ -286,7 +286,7 @@ double MixtureOfDiscreteDistributions::Expectation(double a) const
 
 void MixtureOfDiscreteDistributions::restrictToConstraint(const Constraint& c)
 {
-  for (unsigned int i = 0; i < vdd_.size(); i++)
+  for (size_t i = 0; i < vdd_.size(); i++)
   {
     vdd_[i]->restrictToConstraint(c);
   }
