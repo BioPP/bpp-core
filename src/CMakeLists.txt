@@ -25,6 +25,7 @@ set(CPP_FILES
   Bpp/Graphics/Latex/PgfGraphicDevice.cpp
   Bpp/Graphics/Molscript/MolscriptColorSet.cpp
   Bpp/Graphics/Svg/SvgGraphicDevice.cpp
+  Bpp/Graphics/R/RColorSet.cpp
   Bpp/Numeric/NumTools.cpp
   Bpp/Numeric/Parameter.cpp
   Bpp/Numeric/ParameterExceptions.cpp
