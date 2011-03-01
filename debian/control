@@ -9,8 +9,8 @@ Package: libbpp-core-dev
 Section: libdevel
 Architecture: any
 Depends: libbpp-core (= ${binary:Version})
-Description: The Bio++ Sequence library development files.
- Contains the Bio++ classes for sequence analysis.
+Description: The Bio++ Core library development files.
+ Contains the Bio++ core classes.
 
 Package: libbpp-core
 Section: libs
