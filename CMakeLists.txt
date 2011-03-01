@@ -78,7 +78,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "\\\\..*\\\\.swp"
  "src/\\\\..*"
  "src/libbpp*"
- "debian/libbpp*"
  "debian/tmp"
  "html"
  "Core.tag"
