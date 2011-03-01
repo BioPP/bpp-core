@@ -54,7 +54,9 @@ clean:
 	rm -f CMakeCache.txt
 
 	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) clean
+	[ ! -f Makefile ] || $(MAKE) clean;
+	[ ! -f Makefile ] || rm Makefile;
+	[ ! -f Makefile ] || rm src/Makefile;
 	rm -f config.sub config.guess
 
 	dh_clean 

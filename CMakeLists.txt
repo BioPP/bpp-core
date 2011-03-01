@@ -84,6 +84,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "Core.tag"
  "Testing"
  "build-stamp"
+ "genIncludes.py"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
 IF (MACOS)
