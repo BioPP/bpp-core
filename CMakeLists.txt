@@ -84,6 +84,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "debian/libbpp.*\\\\.a"
  "debian/libbpp.*\\\\.substvars"
  "debian/libbpp.*\\\\.debhelper"
+ "debian/debhelper\\\\.log"
  "html"
  "Core.tag"
  "Testing"
