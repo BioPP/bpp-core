@@ -71,7 +71,7 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "_CPack_Packages"
  "CMakeCache.txt"
  ".*\\\\.cmake"
- ".*\\\\.svn"
+ ".*\\\\.git"
  ".*\\\\.gz"
  ".*\\\\.deb"
  ".*\\\\.rpm"
@@ -82,6 +82,8 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "debian/tmp"
  "html"
  "Core.tag"
+ "Testing"
+ "build-stamp"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
 IF (MACOS)
