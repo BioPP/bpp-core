@@ -3,12 +3,12 @@ Section: libs
 Priority: optional
 Maintainer: Julien Dutheil <julien.dutheil@univ-montp2.fr>
 Build-Depends: debhelper (>= 5), cmake (>= 2.6)
-Standards-Version: 3.7.2
+Standards-Version: 3.9.1
 
 Package: libbpp-core-dev
 Section: libdevel
 Architecture: any
-Depends: libbpp-core (= ${binary:Version})
+Depends: libbpp-core (= ${binary:Version}), ${misc:Depends}
 Description: The Bio++ Core library development files.
  Contains the Bio++ core classes.
 
