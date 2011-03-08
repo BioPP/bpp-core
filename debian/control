@@ -1,18 +1,19 @@
 Source: libbpp-core
 Section: libs
 Priority: optional
-Maintainer: Julien Dutheil <julien.dutheil@univ-montp2.fr>
+Maintainer: Loic Dachary <loic@dachary.org>
+Uploaders: Julien Dutheil <julien.dutheil@univ-montp2.fr>
 Build-Depends: debhelper (>= 5), cmake (>= 2.6)
 Standards-Version: 3.9.1
 
 Package: libbpp-core-dev
 Section: libdevel
 Architecture: any
-Depends: libbpp-core (= ${binary:Version}), ${misc:Depends}
+Depends: libbpp-core2 (= ${binary:Version}), ${misc:Depends}
 Description: The Bio++ Core library development files.
  Contains the Bio++ core classes.
 
-Package: libbpp-core
+Package: libbpp-core2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
