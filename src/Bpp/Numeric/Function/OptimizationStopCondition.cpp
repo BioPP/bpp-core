@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -54,7 +54,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(const Optim
   burnin_(0) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   double tolerance):
   optimizer_(optimizer),
   tolerance_(tolerance),
@@ -62,7 +62,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
   burnin_(0) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   int burnin):
   optimizer_(optimizer),
   tolerance_(0.000001),
@@ -70,7 +70,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
   burnin_(burnin) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   double tolerance,
   int burnin):
   optimizer_(optimizer),
@@ -182,8 +182,8 @@ bool ParametersStopCondition::isToleranceReached() const
   callCount_++;
   _lastParametersEstimates = _newParametersEstimates;
   _newParametersEstimates   = optimizer_->getParameters();
-  if(callCount_ <= burnin_) return false;
-  for(unsigned int i = 0; i < _newParametersEstimates.size(); i++)
+  if (callCount_ <= burnin_) return false;
+  for (unsigned int i = 0; i < _newParametersEstimates.size(); i++)
   {
     Parameter& p = _newParametersEstimates[i];
     double lastEstimate = _lastParametersEstimates.getParameter(p.getName()).getValue();
@@ -202,8 +202,8 @@ bool ParametersStopCondition::isToleranceReached() const
 FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -212,8 +212,8 @@ FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -222,8 +222,8 @@ FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -233,8 +233,8 @@ FunctionStopCondition::FunctionStopCondition(
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -245,10 +245,10 @@ FunctionStopCondition::~FunctionStopCondition() {}
 
 void FunctionStopCondition::init()
 {
-  _newFunctionValue = -log(0.);
-  if(optimizer_->getFunction() != 0)
+  newFunctionValue_ = -log(0.);
+  if (optimizer_->getFunction() != 0)
   {
-    _newFunctionValue = optimizer_->getFunctionValue();
+    newFunctionValue_ = optimizer_->getFunctionValue();
   }
 }
 
@@ -257,10 +257,10 @@ void FunctionStopCondition::init()
 bool FunctionStopCondition::isToleranceReached() const
 {
   callCount_++;
-  _lastFunctionValue = _newFunctionValue;
-  _newFunctionValue  = optimizer_->getFunctionValue();
-  if(callCount_ <= burnin_) return false;
-  double tol = NumTools::abs<double>(_newFunctionValue - _lastFunctionValue);
+  lastFunctionValue_ = newFunctionValue_;
+  newFunctionValue_  = optimizer_->getFunctionValue();
+  if (callCount_ <= burnin_) return false;
+  double tol = NumTools::abs<double>(newFunctionValue_ - lastFunctionValue_);
   return tol < tolerance_;
 }
 

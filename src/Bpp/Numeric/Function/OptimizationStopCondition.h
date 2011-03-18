@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -242,20 +242,20 @@ namespace bpp
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable double _lastFunctionValue;
+    mutable double lastFunctionValue_;
 		
     /**
      * @brief The new value of the function.
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable double _newFunctionValue;
+    mutable double newFunctionValue_;
 	
   public:
-    FunctionStopCondition(const Optimizer * optimizer);
-    FunctionStopCondition(const Optimizer * optimizer, double tolerance);
-    FunctionStopCondition(const Optimizer * optimizer, int burnin);
-    FunctionStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
+    FunctionStopCondition(const Optimizer* optimizer);
+    FunctionStopCondition(const Optimizer* optimizer, double tolerance);
+    FunctionStopCondition(const Optimizer* optimizer, int burnin);
+    FunctionStopCondition(const Optimizer* optimizer, double tolerance, int burnin);
 		
     virtual ~FunctionStopCondition();
 

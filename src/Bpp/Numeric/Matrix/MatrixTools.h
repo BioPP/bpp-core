@@ -75,7 +75,7 @@ namespace bpp
         for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
           O(i, j) = A(i, j);
     }
-	
+  
     /**
      * @brief Get a identity matrix of a given size.
      *
@@ -245,8 +245,8 @@ namespace bpp
               A(i, j) += B(i, j);
             }
         }
-    }		
-	
+    }    
+  
     /**
      * @brief Compute the power of a given matrix.
      *
@@ -269,7 +269,7 @@ namespace bpp
           mult(tmp, A, O);
         }
     }
-	
+  
     /**
      * @brief Compute the power of a given matrix, using eigen value decomposition.
      *
@@ -312,7 +312,7 @@ namespace bpp
       inv(rightEV, leftEV);
       mult(rightEV, VectorTools::exp(eigen.getRealEigenValues()), leftEV, O);
     }
-	
+  
     /**
      * @return The position of the maximum value in the matrix.
      * @param m The matrix.
@@ -398,7 +398,7 @@ namespace bpp
         }
       out << "]" << std::endl;
     }
-		
+    
     /**
      * @brief Print a vector to a stream.
      * 
@@ -473,7 +473,7 @@ namespace bpp
             }
         }
     }
-	
+  
     /**
      * @brief Compute the variance-covariance matrix of an input matrix.
      *
@@ -540,6 +540,64 @@ namespace bpp
                 }
             }
         }
+    }
+
+    /**
+     * @brief Compute the Hadamard product of two row matrices with same dimensions.
+     *
+     * @param A [in] The first row matrix.
+     * @param B [in] The second row matrix.
+     * @param O [out] The Hadamard product.
+     */
+    template<class Scalar>
+    static void hadamardMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
+    {
+      unsigned int ncA = A.getNumberOfColumns();
+      unsigned int nrA = A.getNumberOfRows();
+      unsigned int nrB = B.getNumberOfRows();
+      unsigned int ncB = B.getNumberOfColumns();
+      if(nrA != nrB) throw DimensionException("MatrixTools::hadamardMult(). nrows A != nrows B.", nrA, nrB); 
+      if(ncA != ncB) throw DimensionException("MatrixTools::hadamardMult(). ncols A != ncols B.", ncA, ncB);
+      O.resize(nrA, ncA);
+      for (unsigned int i = 0; i < nrA; i++)
+      {
+        for(unsigned int j = 0; j < ncA; j++)
+        {
+          O(i, j) = A(i, j) * B(i, j);  
+        }
+      }
+    }
+  
+    /**
+     * @brief Compute the "Hadamard" product of a row matrix and a vector containing weights, according to rows or columns.
+     *
+     * @param A [in] The row matrix.
+     * @param B [in] The vector of row or column weights.
+     * @param O [out] The 'Hadamard' product.
+     * @param row Boolean. If row is set to 'true', the vector contains weights for rows. Otherwise the vector contains weights for columns.
+     */    
+    template<class Scalar>
+    static void hadamardMult(const Matrix<Scalar>& A, const std::vector<Scalar>& B, Matrix<Scalar>& O, bool row = true)
+    {
+      unsigned int ncA = A.getNumberOfColumns();
+      unsigned int nrA = A.getNumberOfRows();
+      unsigned int sB = B.size();
+      if (row == true && nrA != sB) throw DimensionException("MatrixTools::hadamardMult(). nrows A != size of B.", nrA, sB); 
+      if (row == false && ncA != sB) throw DimensionException("MatrixTools::hadamardMult(). ncols A != size of B.", ncA, sB);
+      O.resize(nrA, ncA);
+      if (row)      {
+        for (unsigned int i = 0; i < nrA; i++) {
+          for (unsigned int j = 0; j < ncA; j++) {
+            O(i, j) = A(i, j) * B[i];  
+          }
+        }
+      } else {
+        for (unsigned int i = 0; i < nrA; i++) {
+          for (unsigned int j = 0; j < ncA; j++) {
+            O(i, j) = A(i, j) * B[j];  
+          }
+        }
+      }
     }
 
     /**
@@ -646,18 +704,18 @@ namespace bpp
       return sum;
     }
 
-	
-	
+  
+  
   };
 
   /* DEPRECATED 
      namespace MatrixOperators {
-	
+  
      MatrixB operator*(const MatrixA & A, const MatrixB & B) throw (DimensionException)
      {
      return MatrixTools::mult<MatrixA, MatrixB>(A, B);
      }
-	
+  
      template<class MatrixA, class MatrixB>
      MatrixA operator+(const MatrixA & A, const MatrixB & B) throw (DimensionException)
      {
@@ -688,24 +746,24 @@ namespace bpp
      template<class MatrixA, class MatrixB>
      MatrixA operator-(const MatrixA & A, const MatrixB & B) throw (DimensionException)
      {
-     //	  unsigned int ncA = A.getNumberOfColumns();
-     //		unsigned int nrA = A.getNumberOfRows();
-     //		unsigned int nrB = B.getNumberOfRows();
-     //		unsigned int ncB = B.getNumberOfColumns();
-     //		if(ncA != ncB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of colums.", ncB, ncA); 
-     //		if(nrA != nrB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of rows.", nrB, nrA); 
-     //		MatrixB C(A.getNumberOfRows(), A.getNumberOfColumns());
-     //		for(unsigned int i = 0; i < A.getNumberOfRows(); i++) {
-     //			for(unsigned int j = 0; j < A.getNumberOfColumns(); j++) {
-     //				C(i, j) = A(i, j) - B(i, j);
-     //			}
-     //		}
-     //		return C;
+     //    unsigned int ncA = A.getNumberOfColumns();
+     //    unsigned int nrA = A.getNumberOfRows();
+     //    unsigned int nrB = B.getNumberOfRows();
+     //    unsigned int ncB = B.getNumberOfColumns();
+     //    if(ncA != ncB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of colums.", ncB, ncA); 
+     //    if(nrA != nrB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of rows.", nrB, nrA); 
+     //    MatrixB C(A.getNumberOfRows(), A.getNumberOfColumns());
+     //    for(unsigned int i = 0; i < A.getNumberOfRows(); i++) {
+     //      for(unsigned int j = 0; j < A.getNumberOfColumns(); j++) {
+     //        C(i, j) = A(i, j) - B(i, j);
+     //      }
+     //    }
+     //    return C;
      MatrixA C = A;
      MatrixTools::add<MatrixA, MatrixB>(C, -B);
      return C;
      }
-	
+  
      template<class MatrixA, class MatrixB>
      MatrixA operator-=(MatrixA & A, const MatrixB & B) throw (DimensionException)
      {
@@ -718,4 +776,4 @@ namespace bpp
 
 } //end of namespace bpp.
 
-#endif	//_MATRIXTOOLS_H_
+#endif  //_MATRIXTOOLS_H_
