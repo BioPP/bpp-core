@@ -81,6 +81,9 @@ set(CPP_FILES
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
   Bpp/Numeric/Stat/ContingencyTableTest.cpp
   Bpp/Numeric/Stat/StatTools.cpp
+  Bpp/Numeric/Stat/Mva/DualityDiagram.cpp 
+  Bpp/Numeric/Stat/Mva/PrincipalComponentAnalysis.cpp 
+  Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.cpp 
   )
 
 set(H_FILES
@@ -198,6 +201,9 @@ set(H_FILES
   Bpp/Numeric/Stat/StatTest.h 
   Bpp/Numeric/Stat/ContingencyTableTest.h 
   Bpp/Numeric/Stat/StatTools.h 
+  Bpp/Numeric/Stat/Mva/DualityDiagram.h 
+  Bpp/Numeric/Stat/Mva/PrincipalComponentAnalysis.h 
+  Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.h 
 )
 
 # Build the static lib
