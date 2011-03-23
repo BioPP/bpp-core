@@ -285,21 +285,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
 
 /******************************************************************************/
 
-DualityDiagram& DualityDiagram::operator=(const DualityDiagram& dudi)
-{
-  rowWeights_ = dudi.rowWeights_;
-  colWeights_ = dudi.colWeights_;
-  nbAxes_ = dudi.nbAxes_;
-  eigenValues_ = dudi.eigenValues_;
-  eigenVectors_ = dudi.eigenVectors_;
-  rowCoord_ = dudi.rowCoord_;
-  colCoord_ = dudi.colCoord_;
-  ppalAxes_ = dudi.ppalAxes_;
-  ppalComponents_ = dudi.ppalComponents_;
-
-  return *this;
-}
+DualityDiagram::~DualityDiagram() {}
 
 /******************************************************************************/
 
-DualityDiagram::~DualityDiagram() {}

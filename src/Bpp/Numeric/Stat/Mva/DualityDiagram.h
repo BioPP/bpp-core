@@ -104,13 +104,6 @@ public:
     double tol = 0.0000001,
     bool verbose = true) throw (Exception);
 
-  /**
-   * @brief Copy constructor.
-   */
-  DualityDiagram(const DualityDiagram& dudi);
-
-  DualityDiagram& operator=(const DualityDiagram& dudi);
-
   virtual ~DualityDiagram();
 
 #ifndef NO_VIRTUAL_COV

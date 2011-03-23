@@ -57,6 +57,9 @@ namespace bpp
 class CorrespondenceAnalysis:
   public DualityDiagram
 {
+private:
+  double n_;
+
 public:
 /**
  * @brief Build a new CorrespondenceAnalysis object.
@@ -74,13 +77,6 @@ public:
     bool verbose = true)
   throw (Exception);
 
-  /**
-   * @brief Copy constructor.
-   */
-  CorrespondenceAnalysis(const CorrespondenceAnalysis& coa);
-
-  CorrespondenceAnalysis& operator=(const CorrespondenceAnalysis& coa);
-
   virtual ~CorrespondenceAnalysis() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -89,9 +85,6 @@ public:
   Clonable*
 #endif
   clone() const { return new CorrespondenceAnalysis(*this); }
-
-private:
-  double n_;
 
 public:
   double getSumOfAllValues() const throw (Exception) { return n_; }

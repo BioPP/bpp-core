@@ -106,13 +106,6 @@ public:
     bool verbose = true)
   throw (Exception);
 
-  /**
-   * @brief Copy constructor.
-   */
-  PrincipalComponentAnalysis(const PrincipalComponentAnalysis& pca);
-
-  PrincipalComponentAnalysis& operator=(const PrincipalComponentAnalysis& pca);
-
   virtual ~PrincipalComponentAnalysis() {}
 
   PrincipalComponentAnalysis* clone() const { return new PrincipalComponentAnalysis(*this); }
