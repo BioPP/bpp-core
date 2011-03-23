@@ -49,6 +49,7 @@ CorrespondenceAnalysis::CorrespondenceAnalysis(
   const Matrix<double>& data,
   unsigned int nbAxes,
   double tol, bool verbose) throw (Exception) :
+  DualityDiagram(),
   n_()
 {
   unsigned int nRow = data.getNumberOfRows();

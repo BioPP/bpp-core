@@ -107,7 +107,7 @@ void DualityDiagram::setData(
   check_(matrix, rowWeights, colWeights, verbose);
   rowWeights_ = rowWeights;
   colWeights_ = colWeights;
-  nbAxes_     = nbAxes_;
+  nbAxes_     = nbAxes;
   compute_(matrix, tol, verbose);
 }
 

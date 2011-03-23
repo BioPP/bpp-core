@@ -56,6 +56,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   bool scaled,
   double tol,
   bool verbose) throw (Exception) :
+  DualityDiagram(),
   columnMeans_(),
   columnSd_()
 {
@@ -85,6 +86,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   bool scaled,
   double tol,
   bool verbose) throw (Exception) :
+  DualityDiagram(),
   columnMeans_(),
   columnSd_()
 {
