@@ -113,9 +113,8 @@ namespace bpp
   };
 
 
-
-
-
+  
+  
 
   /**
    * @brief This is the basal interface for all optimization methods.
@@ -360,6 +359,41 @@ namespace bpp
      */
     virtual void addOptimizationListener(OptimizationListener * listener) = 0; 
 
+  };
+
+
+
+
+
+  /**
+   * @brief Save intermediate optimization results to file.
+   */
+  class BackupListener:
+    public OptimizationListener
+  {
+  private:
+    std::string backupFile_;
+
+  public:
+    BackupListener(const string& backupFile):
+      backupFile_(backupFile) {}
+
+    virtual ~BackupListener() {}
+
+  public:
+    void optimizationInitializationPerformed(const OptimizationEvent& event) {}
+    
+    void optimizationStepPerformed(const OptimizationEvent& event) {
+      std::ofstream bck(backupFile_.c_str(), std::ios::out);
+      bck << "f(x)=" << setprecision(20) << event.getOptimizer()->getFunction()->getValue() << endl;
+      ParameterList pl = event.getOptimizer()->getFunction()->getParameters();
+      for (unsigned int i = 0; i < pl.size(); ++i) {
+        bck << pl[i].getName() << "=" <<  setprecision(20) << pl[i].getValue() << std::endl;
+      }
+      bck.close();
+    }
+    
+    bool listenerModifiesParameters() const { return false; };
   };
 
 } //end of namespace bpp.
