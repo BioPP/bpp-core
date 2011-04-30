@@ -199,14 +199,14 @@ namespace bpp
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable ParameterList _lastParametersEstimates;
+    mutable ParameterList lastParametersEstimates_;
 		
     /**
      * @brief The new estimates of the parameters.
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable ParameterList _newParametersEstimates;
+    mutable ParameterList newParametersEstimates_;
 	
   public:
     ParametersStopCondition(const Optimizer* optimizer);
