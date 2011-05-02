@@ -83,13 +83,13 @@ namespace bpp
     /**
      * @return The optimizer to which this instance belongs to. 
      */
-    virtual const Optimizer * getOptimizer() const = 0;
+    virtual const Optimizer* getOptimizer() const = 0;
     /**
      * @brief Set the optimizer attached to this instance.
      *
      * @param optimizer The optimizer to which this instance belongs to. 
      */
-    virtual void setOptimizer(const Optimizer * optimizer) = 0;
+    virtual void setOptimizer(const Optimizer* optimizer) = 0;
 
     /**
      * @brief Initialize the condition.
