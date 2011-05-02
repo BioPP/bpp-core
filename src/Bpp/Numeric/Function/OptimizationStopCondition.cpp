@@ -110,11 +110,11 @@ int AbstractOptimizationStopCondition::getBurnin() const
 ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -125,11 +125,11 @@ ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -140,11 +140,11 @@ ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -156,11 +156,11 @@ ParametersStopCondition::ParametersStopCondition(
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -172,7 +172,7 @@ ParametersStopCondition::ParametersStopCondition(
 void ParametersStopCondition::init()
 {
   if (optimizer_->getFunction() != 0)
-    _newParametersEstimates = optimizer_->getParameters();
+    newParametersEstimates_ = optimizer_->getParameters();
 }
 
 /******************************************************************************/
@@ -180,16 +180,16 @@ void ParametersStopCondition::init()
 bool ParametersStopCondition::isToleranceReached() const
 {
   callCount_++;
-  _lastParametersEstimates = _newParametersEstimates;
-  _newParametersEstimates   = optimizer_->getParameters();
+  lastParametersEstimates_ = newParametersEstimates_;
+  newParametersEstimates_   = optimizer_->getParameters();
   if (callCount_ <= burnin_) return false;
-  for (unsigned int i = 0; i < _newParametersEstimates.size(); i++)
+  for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
   {
-    Parameter& p = _newParametersEstimates[i];
-    double lastEstimate = _lastParametersEstimates.getParameter(p.getName()).getValue();
+    Parameter& p = newParametersEstimates_[i];
+    double lastEstimate = lastParametersEstimates_.getParameter(p.getName()).getValue();
     double newEstimate = p.getValue();
     double tol = NumTools::abs<double>(newEstimate - lastEstimate);
-    if(tol > tolerance_)
+    if (tol > tolerance_)
     {
       return false;
     }
