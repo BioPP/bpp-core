@@ -447,8 +447,8 @@ bool TextTools::endsWith(const std::string& s, const std::string& pattern)
 
 bool TextTools::hasSubstring(const std::string& s, const std::string& pattern)
 {
-  if(s.size() < pattern.size()) return false;
-  for(unsigned int i = 0; i < s.size() - pattern.size(); i++)
+  if (s.size() < pattern.size()) return false;
+  for(size_t i = 0; i < s.size() - pattern.size() + 1; ++i)
   {
     if (s.substr(i, pattern.size()) == pattern) return true;
   }
