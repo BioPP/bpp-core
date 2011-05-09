@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -83,13 +83,13 @@ namespace bpp
     /**
      * @return The optimizer to which this instance belongs to. 
      */
-    virtual const Optimizer * getOptimizer() const = 0;
+    virtual const Optimizer* getOptimizer() const = 0;
     /**
      * @brief Set the optimizer attached to this instance.
      *
      * @param optimizer The optimizer to which this instance belongs to. 
      */
-    virtual void setOptimizer(const Optimizer * optimizer) = 0;
+    virtual void setOptimizer(const Optimizer* optimizer) = 0;
 
     /**
      * @brief Initialize the condition.
@@ -199,14 +199,14 @@ namespace bpp
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable ParameterList _lastParametersEstimates;
+    mutable ParameterList lastParametersEstimates_;
 		
     /**
      * @brief The new estimates of the parameters.
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable ParameterList _newParametersEstimates;
+    mutable ParameterList newParametersEstimates_;
 	
   public:
     ParametersStopCondition(const Optimizer* optimizer);
@@ -242,20 +242,20 @@ namespace bpp
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable double _lastFunctionValue;
+    mutable double lastFunctionValue_;
 		
     /**
      * @brief The new value of the function.
      *
      * This is used by the isToleranceReached() method.
      */
-    mutable double _newFunctionValue;
+    mutable double newFunctionValue_;
 	
   public:
-    FunctionStopCondition(const Optimizer * optimizer);
-    FunctionStopCondition(const Optimizer * optimizer, double tolerance);
-    FunctionStopCondition(const Optimizer * optimizer, int burnin);
-    FunctionStopCondition(const Optimizer * optimizer, double tolerance, int burnin);
+    FunctionStopCondition(const Optimizer* optimizer);
+    FunctionStopCondition(const Optimizer* optimizer, double tolerance);
+    FunctionStopCondition(const Optimizer* optimizer, int burnin);
+    FunctionStopCondition(const Optimizer* optimizer, double tolerance, int burnin);
 		
     virtual ~FunctionStopCondition();
 

@@ -1,3 +1,14 @@
+22/03/11 Mathieu Groussin
+* Added classes for mutivariate analysis.
+
+18/03/11 Mathieu Groussin
+* Added Hadamard product function in MatrixTools.
+
+28/02/11 -*- Version 2.0.1 -*-
+
+25/02/11 Julien Dutheil
+* Fixed CMakeLists.txt: added RColorSet.cpp file to compilation chain!
+
 07/02/11 -*- Version 2.0.0 -*-
 
 09/11/10 Julien Dutheil

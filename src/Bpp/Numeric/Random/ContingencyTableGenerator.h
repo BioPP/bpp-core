@@ -60,6 +60,9 @@ namespace bpp
  * _Applied Statistics_ *30*, 91-97.
  * This algorithm is the one also used in R function chisq.test for instance.
  *
+ * The code was adpated from file rcont.c, edited by Martin Maechler, Dec 2003,
+ * available in the R software source distribution.
+ *
  * @param nrowt Marginal counts.
  * @param ncolt Marginal counts.
  * @return A random matrix of counts with the same marginals as specified.

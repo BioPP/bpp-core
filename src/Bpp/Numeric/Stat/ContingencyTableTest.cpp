@@ -58,21 +58,21 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
   margin2_(0)
 {
   //Compute marginals:
-  unsigned int n = table.size();
+  size_t n = table.size();
   if (n < 2)
     throw Exception("ContingencyTableTest. Table size should be at least 2x2!");
-  unsigned int m = table[0].size();
+  size_t m = table[0].size();
   if (m < 2)
     throw Exception("ContingencyTableTest. Table size should be at least 2x2!");
   margin2_.resize(m);
-  for (unsigned int j = 0; j < m; ++j)
-    margin2_[j] = 0.;
+  for (size_t j = 0; j < m; ++j)
+    margin2_[j] = 0;
   bool test = false;
   for (size_t i = 0; i < n; ++i) {
     if (table[i].size() != m)
       throw Exception("ContingencyTableTest. Input array has non-homogeneous dimensions!");
     for (size_t j = 0; j < m; ++j) {
-      double c = table[i][j];
+      unsigned int c = table[i][j];
       if (c <= 5) test = true;
       margin1_[i] += c;
       margin2_[j] += c;

@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -54,7 +54,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(const Optim
   burnin_(0) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   double tolerance):
   optimizer_(optimizer),
   tolerance_(tolerance),
@@ -62,7 +62,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
   burnin_(0) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   int burnin):
   optimizer_(optimizer),
   tolerance_(0.000001),
@@ -70,7 +70,7 @@ AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
   burnin_(burnin) {}
 
 AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer * optimizer,
+  const Optimizer* optimizer,
   double tolerance,
   int burnin):
   optimizer_(optimizer),
@@ -110,11 +110,11 @@ int AbstractOptimizationStopCondition::getBurnin() const
 ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -125,11 +125,11 @@ ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -140,11 +140,11 @@ ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -156,11 +156,11 @@ ParametersStopCondition::ParametersStopCondition(
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),
-  _lastParametersEstimates(),
-  _newParametersEstimates()
+  lastParametersEstimates_(),
+  newParametersEstimates_()
 {
   init();
-  if (_newParametersEstimates.size() == 0)
+  if (newParametersEstimates_.size() == 0)
   {
     cout << "DEBUG: WARNING!!! No parameter passed to ParametersStopCondition constructor. "
          << "Be sure to have initialized the Optimizer first!" << endl; 
@@ -172,7 +172,7 @@ ParametersStopCondition::ParametersStopCondition(
 void ParametersStopCondition::init()
 {
   if (optimizer_->getFunction() != 0)
-    _newParametersEstimates = optimizer_->getParameters();
+    newParametersEstimates_ = optimizer_->getParameters();
 }
 
 /******************************************************************************/
@@ -180,16 +180,16 @@ void ParametersStopCondition::init()
 bool ParametersStopCondition::isToleranceReached() const
 {
   callCount_++;
-  _lastParametersEstimates = _newParametersEstimates;
-  _newParametersEstimates   = optimizer_->getParameters();
-  if(callCount_ <= burnin_) return false;
-  for(unsigned int i = 0; i < _newParametersEstimates.size(); i++)
+  lastParametersEstimates_ = newParametersEstimates_;
+  newParametersEstimates_   = optimizer_->getParameters();
+  if (callCount_ <= burnin_) return false;
+  for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
   {
-    Parameter& p = _newParametersEstimates[i];
-    double lastEstimate = _lastParametersEstimates.getParameter(p.getName()).getValue();
+    Parameter& p = newParametersEstimates_[i];
+    double lastEstimate = lastParametersEstimates_.getParameter(p.getName()).getValue();
     double newEstimate = p.getValue();
     double tol = NumTools::abs<double>(newEstimate - lastEstimate);
-    if(tol > tolerance_)
+    if (tol > tolerance_)
     {
       return false;
     }
@@ -202,8 +202,8 @@ bool ParametersStopCondition::isToleranceReached() const
 FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -212,8 +212,8 @@ FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -222,8 +222,8 @@ FunctionStopCondition::FunctionStopCondition(
   const Optimizer* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -233,8 +233,8 @@ FunctionStopCondition::FunctionStopCondition(
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),
-  _lastFunctionValue(-log(0.)),
-  _newFunctionValue(-log(0.))
+  lastFunctionValue_(-log(0.)),
+  newFunctionValue_(-log(0.))
 {
   init();
 }
@@ -245,10 +245,10 @@ FunctionStopCondition::~FunctionStopCondition() {}
 
 void FunctionStopCondition::init()
 {
-  _newFunctionValue = -log(0.);
-  if(optimizer_->getFunction() != 0)
+  newFunctionValue_ = -log(0.);
+  if (optimizer_->getFunction() != 0)
   {
-    _newFunctionValue = optimizer_->getFunctionValue();
+    newFunctionValue_ = optimizer_->getFunctionValue();
   }
 }
 
@@ -257,10 +257,10 @@ void FunctionStopCondition::init()
 bool FunctionStopCondition::isToleranceReached() const
 {
   callCount_++;
-  _lastFunctionValue = _newFunctionValue;
-  _newFunctionValue  = optimizer_->getFunctionValue();
-  if(callCount_ <= burnin_) return false;
-  double tol = NumTools::abs<double>(_newFunctionValue - _lastFunctionValue);
+  lastFunctionValue_ = newFunctionValue_;
+  newFunctionValue_  = optimizer_->getFunctionValue();
+  if (callCount_ <= burnin_) return false;
+  double tol = NumTools::abs<double>(newFunctionValue_ - lastFunctionValue_);
   return tol < tolerance_;
 }
 

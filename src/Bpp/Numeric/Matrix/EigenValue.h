@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus. This file is part of the Bio++ project.
@@ -106,33 +106,33 @@ class EigenValue
    /** 
     * @brief Row and column dimension (square matrix).
     */
-   int _n;
+   int n_;
 
    /**
     * @brief Tell if the matrix is symmetric.
     */
-   bool _issymmetric;
+   bool isSymmetric_;
 
    /**
     * @name Arrays for internal storage of eigenvalues.
     *
     * @{
     */
-   std::vector<Real> _d;         /* real part */
-   std::vector<Real> _e;         /* img part */
+   std::vector<Real> d_;         /* real part */
+   std::vector<Real> e_;         /* img part */
    /** @} */
    
    /**
     * @brief Array for internal storage of eigenvectors.
     */
-   RowMatrix<Real> _V;
+   RowMatrix<Real> V_;
 
    /**
     * @brief Matrix for internal storage of nonsymmetric Hessenberg form.
     *
     * Internal storage of nonsymmetric Hessenberg form.
     */
-   RowMatrix<Real> _H;
+   RowMatrix<Real> H_;
    
 
    /**
@@ -140,7 +140,7 @@ class EigenValue
     *
     * Internal storage of eigen values in a matrix form.
     */
-   mutable RowMatrix<Real> _D;
+   mutable RowMatrix<Real> D_;
 
    /**
     * @brief Working storage for nonsymmetric algorithm.
@@ -160,14 +160,14 @@ class EigenValue
     */
    void tred2()
    {
-     for (int j = 0; j < _n; j++)
+     for (int j = 0; j < n_; j++)
      {
-       _d[j] = _V(_n-1,j);
+       d_[j] = V_(n_-1,j);
      }
 
      // Householder reduction to tridiagonal form.
    
-     for (int i = _n-1; i > 0; i--)
+     for (int i = n_-1; i > 0; i--)
      {
        // Scale to avoid under/overflow.
    
@@ -175,16 +175,16 @@ class EigenValue
        Real h = 0.0;
        for (int k = 0; k < i; k++)
        {
-         scale = scale + NumTools::abs<Real>(_d[k]);
+         scale = scale + NumTools::abs<Real>(d_[k]);
        }
        if (scale == 0.0)
        {
-         _e[i] = _d[i-1];
+         e_[i] = d_[i-1];
          for (int j = 0; j < i; j++)
          {
-           _d[j] = _V(i-1,j);
-           _V(i,j) = 0.0;
-           _V(j,i) = 0.0;
+           d_[j] = V_(i-1,j);
+           V_(i,j) = 0.0;
+           V_(j,i) = 0.0;
          }
        }
        else
@@ -193,101 +193,101 @@ class EigenValue
    
          for (int k = 0; k < i; k++)
          {
-           _d[k] /= scale;
-           h += _d[k] * _d[k];
+           d_[k] /= scale;
+           h += d_[k] * d_[k];
          }
-         Real f = _d[i-1];
+         Real f = d_[i-1];
          Real g = sqrt(h);
          if (f > 0)
          {
            g = -g;
          }
-         _e[i] = scale * g;
+         e_[i] = scale * g;
          h = h - f * g;
-         _d[i-1] = f - g;
+         d_[i-1] = f - g;
          for (int j = 0; j < i; j++)
          {
-           _e[j] = 0.0;
+           e_[j] = 0.0;
          }
    
          // Apply similarity transformation to remaining columns.
    
          for (int j = 0; j < i; j++)
          {
-           f = _d[j];
-           _V(j,i) = f;
-           g = _e[j] + _V(j,j) * f;
+           f = d_[j];
+           V_(j,i) = f;
+           g = e_[j] + V_(j,j) * f;
            for (int k = j+1; k <= i-1; k++)
            {
-             g += _V(k,j) * _d[k];
-             _e[k] += _V(k,j) * f;
+             g += V_(k,j) * d_[k];
+             e_[k] += V_(k,j) * f;
            }
-           _e[j] = g;
+           e_[j] = g;
          }
          f = 0.0;
          for (int j = 0; j < i; j++)
          {
-           _e[j] /= h;
-           f += _e[j] * _d[j];
+           e_[j] /= h;
+           f += e_[j] * d_[j];
          }
          Real hh = f / (h + h);
          for (int j = 0; j < i; j++)
          {
-           _e[j] -= hh * _d[j];
+           e_[j] -= hh * d_[j];
          }
          for (int j = 0; j < i; j++)
          {
-           f = _d[j];
-           g = _e[j];
+           f = d_[j];
+           g = e_[j];
            for (int k = j; k <= i-1; k++)
            {
-             _V(k,j) -= (f * _e[k] + g * _d[k]);
+             V_(k,j) -= (f * e_[k] + g * d_[k]);
            }
-           _d[j] = _V(i-1,j);
-           _V(i,j) = 0.0;
+           d_[j] = V_(i-1,j);
+           V_(i,j) = 0.0;
          }
        }
-       _d[i] = h;
+       d_[i] = h;
      }
    
      // Accumulate transformations.
    
-     for (int i = 0; i < _n-1; i++)
+     for (int i = 0; i < n_-1; i++)
      {
-       _V(_n-1,i) = _V(i,i);
-       _V(i,i) = 1.0;
-       Real h = _d[i+1];
+       V_(n_-1,i) = V_(i,i);
+       V_(i,i) = 1.0;
+       Real h = d_[i+1];
        if (h != 0.0)
        {
          for (int k = 0; k <= i; k++)
          {
-           _d[k] = _V(k,i+1) / h;
+           d_[k] = V_(k,i+1) / h;
          }
          for (int j = 0; j <= i; j++)
          {
            Real g = 0.0;
            for (int k = 0; k <= i; k++)
            {
-             g += _V(k,i+1) * _V(k,j);
+             g += V_(k,i+1) * V_(k,j);
            }
            for (int k = 0; k <= i; k++)
            {
-             _V(k,j) -= g * _d[k];
+             V_(k,j) -= g * d_[k];
            }
          }
        }
        for (int k = 0; k <= i; k++)
        {
-         _V(k,i+1) = 0.0;
+         V_(k,i+1) = 0.0;
        }
      }
-     for (int j = 0; j < _n; j++)
+     for (int j = 0; j < n_; j++)
      {
-       _d[j] = _V(_n-1,j);
-       _V(_n-1,j) = 0.0;
+       d_[j] = V_(n_-1,j);
+       V_(n_-1,j) = 0.0;
      }
-     _V(_n-1,_n-1) = 1.0;
-     _e[0] = 0.0;
+     V_(n_-1,n_-1) = 1.0;
+     e_[0] = 0.0;
    } 
 
    /**
@@ -300,33 +300,33 @@ class EigenValue
     */
    void tql2 ()
    {
-     for (int i = 1; i < _n; i++)
+     for (int i = 1; i < n_; i++)
      {
-       _e[i-1] = _e[i];
+       e_[i-1] = e_[i];
      }
-     _e[_n-1] = 0.0;
+     e_[n_-1] = 0.0;
    
      Real f = 0.0;
      Real tst1 = 0.0;
      Real eps = pow(2.0,-52.0);
-     for (int l = 0; l < _n; l++)
+     for (int l = 0; l < n_; l++)
      {
        // Find small subdiagonal element
    
-       tst1 = std::max(tst1, NumTools::abs<Real>(_d[l]) + NumTools::abs<Real>(_e[l]));
+       tst1 = std::max(tst1, NumTools::abs<Real>(d_[l]) + NumTools::abs<Real>(e_[l]));
        int m = l;
 
        // Original while-loop from Java code
-       while (m < _n)
+       while (m < n_)
        {
-         if (NumTools::abs<Real>(_e[m]) <= eps*tst1)
+         if (NumTools::abs<Real>(e_[m]) <= eps*tst1)
          {
            break;
          }
          m++;
        }
 
-       // If m == l, _d[l] is an eigenvalue,
+       // If m == l, d_[l] is an eigenvalue,
        // otherwise, iterate.
    
        if (m > l)
@@ -338,30 +338,30 @@ class EigenValue
    
            // Compute implicit shift
    
-           Real g = _d[l];
-           Real p = (_d[l+1] - g) / (2.0 * _e[l]);
+           Real g = d_[l];
+           Real p = (d_[l+1] - g) / (2.0 * e_[l]);
            Real r = hypot(p,1.0);
            if (p < 0)
            {
              r = -r;
            }
-           _d[l] = _e[l] / (p + r);
-           _d[l+1] = _e[l] * (p + r);
-           Real dl1 = _d[l+1];
-           Real h = g - _d[l];
-           for (int i = l+2; i < _n; i++)
+           d_[l] = e_[l] / (p + r);
+           d_[l+1] = e_[l] * (p + r);
+           Real dl1 = d_[l+1];
+           Real h = g - d_[l];
+           for (int i = l+2; i < n_; i++)
            {
-             _d[i] -= h;
+             d_[i] -= h;
            }
            f = f + h;
    
            // Implicit QL transformation.
    
-           p = _d[m];
+           p = d_[m];
            Real c = 1.0;
            Real c2 = c;
            Real c3 = c;
-           Real el1 = _e[l+1];
+           Real el1 = e_[l+1];
            Real s = 0.0;
            Real s2 = 0.0;
            for (int i = m-1; i >= l; i--)
@@ -369,59 +369,59 @@ class EigenValue
              c3 = c2;
              c2 = c;
              s2 = s;
-             g = c * _e[i];
+             g = c * e_[i];
              h = c * p;
-             r = hypot(p,_e[i]);
-             _e[i+1] = s * r;
-             s = _e[i] / r;
+             r = hypot(p,e_[i]);
+             e_[i+1] = s * r;
+             s = e_[i] / r;
              c = p / r;
-             p = c * _d[i] - s * g;
-             _d[i+1] = h + s * (c * g + s * _d[i]);
+             p = c * d_[i] - s * g;
+             d_[i+1] = h + s * (c * g + s * d_[i]);
    
              // Accumulate transformation.
    
-             for (int k = 0; k < _n; k++)
+             for (int k = 0; k < n_; k++)
              {
-               h = _V(k,i+1);
-               _V(k,i+1) = s * _V(k,i) + c * h;
-               _V(k,i) = c * _V(k,i) - s * h;
+               h = V_(k,i+1);
+               V_(k,i+1) = s * V_(k,i) + c * h;
+               V_(k,i) = c * V_(k,i) - s * h;
              }
            }
-           p = -s * s2 * c3 * el1 * _e[l] / dl1;
-           _e[l] = s * p;
-           _d[l] = c * p;
+           p = -s * s2 * c3 * el1 * e_[l] / dl1;
+           e_[l] = s * p;
+           d_[l] = c * p;
    
            // Check for convergence.
    
-         } while (NumTools::abs<Real>(_e[l]) > eps*tst1);
+         } while (NumTools::abs<Real>(e_[l]) > eps*tst1);
        }
-       _d[l] = _d[l] + f;
-       _e[l] = 0.0;
+       d_[l] = d_[l] + f;
+       e_[l] = 0.0;
      }
      
      // Sort eigenvalues and corresponding vectors.
    
-     for (int i = 0; i < _n-1; i++)
+     for (int i = 0; i < n_-1; i++)
      {
        int k = i;
-       Real p = _d[i];
-       for (int j = i+1; j < _n; j++)
+       Real p = d_[i];
+       for (int j = i+1; j < n_; j++)
        {
-         if (_d[j] < p)
+         if (d_[j] < p)
          {
            k = j;
-           p = _d[j];
+           p = d_[j];
          }
        }
        if (k != i)
        {
-         _d[k] = _d[i];
-         _d[i] = p;
-         for (int j = 0; j < _n; j++)
+         d_[k] = d_[i];
+         d_[i] = p;
+         for (int j = 0; j < n_; j++)
          {
-           p = _V(j,i);
-           _V(j,i) = _V(j,k);
-           _V(j,k) = p;
+           p = V_(j,i);
+           V_(j,i) = V_(j,k);
+           V_(j,k) = p;
          }
        }
      }
@@ -438,7 +438,7 @@ class EigenValue
    void orthes ()
    {
      int low = 0;
-     int high = _n-1;
+     int high = n_-1;
    
      for (int m = low+1; m <= high-1; m++)
      {
@@ -447,7 +447,7 @@ class EigenValue
        Real scale = 0.0;
        for (int i = m; i <= high; i++)
        {
-         scale = scale + NumTools::abs<Real>(_H(i,m-1));
+         scale = scale + NumTools::abs<Real>(H_(i,m-1));
        }
        if (scale != 0.0)
        {
@@ -456,7 +456,7 @@ class EigenValue
          Real h = 0.0;
          for (int i = high; i >= m; i--)
          {
-           ort_[i] = _H(i,m-1)/scale;
+           ort_[i] = H_(i,m-1)/scale;
            h += ort_[i] * ort_[i];
          }
          Real g = sqrt(h);
@@ -470,17 +470,17 @@ class EigenValue
          // Apply Householder similarity transformation
          // H = (I-u*u'/h)*H*(I-u*u')/h)
    
-         for (int j = m; j < _n; j++)
+         for (int j = m; j < n_; j++)
          {
            Real f = 0.0;
            for (int i = high; i >= m; i--)
            {
-             f += ort_[i]*_H(i,j);
+             f += ort_[i]*H_(i,j);
            }
            f = f/h;
            for (int i = m; i <= high; i++)
            {
-             _H(i,j) -= f*ort_[i];
+             H_(i,j) -= f*ort_[i];
            }
          }
    
@@ -489,49 +489,49 @@ class EigenValue
            Real f = 0.0;
            for (int j = high; j >= m; j--)
            {
-             f += ort_[j]*_H(i,j);
+             f += ort_[j]*H_(i,j);
            }
            f = f/h;
            for (int j = m; j <= high; j++)
            {
-             _H(i,j) -= f*ort_[j];
+             H_(i,j) -= f*ort_[j];
            }
          }
          ort_[m] = scale*ort_[m];
-         _H(m,m-1) = scale*g;
+         H_(m,m-1) = scale*g;
        }
      }
    
      // Accumulate transformations (Algol's ortran).
 
-     for (int i = 0; i < _n; i++)
+     for (int i = 0; i < n_; i++)
      {
-       for (int j = 0; j < _n; j++)
+       for (int j = 0; j < n_; j++)
        {
-         _V(i,j) = (i == j ? 1.0 : 0.0);
+         V_(i,j) = (i == j ? 1.0 : 0.0);
        }
      }
 
      for (int m = high-1; m >= low+1; m--)
      {
-       if (_H(m,m-1) != 0.0)
+       if (H_(m,m-1) != 0.0)
        {
          for (int i = m+1; i <= high; i++)
          {
-           ort_[i] = _H(i,m-1);
+           ort_[i] = H_(i,m-1);
          }
          for (int j = m; j <= high; j++)
          {
            Real g = 0.0;
            for (int i = m; i <= high; i++)
            {
-             g += ort_[i] * _V(i,j);
+             g += ort_[i] * V_(i,j);
            }
            // Double division avoids possible underflow
-           g = (g / ort_[m]) / _H(m,m-1);
+           g = (g / ort_[m]) / H_(m,m-1);
            for (int i = m; i <= high; i++)
            {
-             _V(i,j) += g * ort_[i];
+             V_(i,j) += g * ort_[i];
            }
          }
        }
@@ -573,7 +573,7 @@ class EigenValue
   
     // Initialize
    
-    int nn = this->_n;
+    int nn = this->n_;
     int n = nn-1;
     int low = 0;
     int high = nn-1;
@@ -588,12 +588,12 @@ class EigenValue
     {
       if ((i < low) || (i > high))
       {
-        _d[i] = _H(i,i);
-        _e[i] = 0.0;
+        d_[i] = H_(i,i);
+        e_[i] = 0.0;
       }
       for (int j = std::max(i-1,0); j < nn; j++)
       {
-        norm = norm + NumTools::abs<Real>(_H(i,j));
+        norm = norm + NumTools::abs<Real>(H_(i,j));
       }
     }
    
@@ -607,12 +607,12 @@ class EigenValue
       int l = n;
       while (l > low)
       {
-        s = NumTools::abs<Real>(_H(l-1,l-1)) + NumTools::abs<Real>(_H(l,l));
+        s = NumTools::abs<Real>(H_(l-1,l-1)) + NumTools::abs<Real>(H_(l,l));
         if (s == 0.0)
         {
           s = norm;
         }
-        if (NumTools::abs<Real>(_H(l,l-1)) < eps * s)
+        if (NumTools::abs<Real>(H_(l,l-1)) < eps * s)
         {
           break;
         }
@@ -624,9 +624,9 @@ class EigenValue
   
       if (l == n)
       {
-        _H(n,n) = _H(n,n) + exshift;
-        _d[n] = _H(n,n);
-        _e[n] = 0.0;
+        H_(n,n) = H_(n,n) + exshift;
+        d_[n] = H_(n,n);
+        e_[n] = 0.0;
         n--;
         iter = 0;
   
@@ -635,13 +635,13 @@ class EigenValue
       }
       else if (l == n-1)
       {
-        w = _H(n,n-1) * _H(n-1,n);
-        p = (_H(n-1,n-1) - _H(n,n)) / 2.0;
+        w = H_(n,n-1) * H_(n-1,n);
+        p = (H_(n-1,n-1) - H_(n,n)) / 2.0;
         q = p * p + w;
         z = sqrt(NumTools::abs<Real>(q));
-        _H(n,n) = _H(n,n) + exshift;
-        _H(n-1,n-1) = _H(n-1,n-1) + exshift;
-        x = _H(n,n);
+        H_(n,n) = H_(n,n) + exshift;
+        H_(n-1,n-1) = H_(n-1,n-1) + exshift;
+        x = H_(n,n);
   
         // Real pair
   
@@ -655,15 +655,15 @@ class EigenValue
           {
             z = p - z;
           }
-          _d[n-1] = x + z;
-          _d[n] = _d[n-1];
+          d_[n-1] = x + z;
+          d_[n] = d_[n-1];
           if (z != 0.0)
           {
-            _d[n] = x - w / z;
+            d_[n] = x - w / z;
           }
-          _e[n-1] = 0.0;
-          _e[n] = 0.0;
-          x = _H(n,n-1);
+          e_[n-1] = 0.0;
+          e_[n] = 0.0;
+          x = H_(n,n-1);
           s = NumTools::abs<Real>(x) + NumTools::abs<Real>(z);
           p = x / s;
           q = z / s;
@@ -675,27 +675,27 @@ class EigenValue
   
           for (int j = n-1; j < nn; j++)
           {
-            z = _H(n-1,j);
-            _H(n-1,j) = q * z + p * _H(n,j);
-            _H(n,j) = q * _H(n,j) - p * z;
+            z = H_(n-1,j);
+            H_(n-1,j) = q * z + p * H_(n,j);
+            H_(n,j) = q * H_(n,j) - p * z;
           }
   
           // Column modification
   
           for (int i = 0; i <= n; i++)
           {
-            z = _H(i,n-1);
-            _H(i,n-1) = q * z + p * _H(i,n);
-            _H(i,n) = q * _H(i,n) - p * z;
+            z = H_(i,n-1);
+            H_(i,n-1) = q * z + p * H_(i,n);
+            H_(i,n) = q * H_(i,n) - p * z;
           }
   
           // Accumulate transformations
   
           for (int i = low; i <= high; i++)
           {
-            z = _V(i,n-1);
-            _V(i,n-1) = q * z + p * _V(i,n);
-            _V(i,n) = q * _V(i,n) - p * z;
+            z = V_(i,n-1);
+            V_(i,n-1) = q * z + p * V_(i,n);
+            V_(i,n) = q * V_(i,n) - p * z;
           }
    
           // Complex pair
@@ -703,10 +703,10 @@ class EigenValue
         }
         else
         {
-          _d[n-1] = x + p;
-          _d[n] = x + p;
-          _e[n-1] = z;
-          _e[n] = -z;
+          d_[n-1] = x + p;
+          d_[n] = x + p;
+          e_[n-1] = z;
+          e_[n] = -z;
         }
         n = n - 2;
         iter = 0;
@@ -718,13 +718,13 @@ class EigenValue
       {
         // Form shift
   
-        x = _H(n,n);
+        x = H_(n,n);
         y = 0.0;
         w = 0.0;
         if (l < n)
         {
-          y = _H(n-1,n-1);
-          w = _H(n,n-1) * _H(n-1,n);
+          y = H_(n-1,n-1);
+          w = H_(n,n-1) * H_(n-1,n);
         }
   
         // Wilkinson's original ad hoc shift
@@ -734,9 +734,9 @@ class EigenValue
           exshift += x;
           for (int i = low; i <= n; i++)
           {
-            _H(i,i) -= x;
+            H_(i,i) -= x;
           }
-          s = NumTools::abs<Real>(_H(n,n-1)) + NumTools::abs<Real>(_H(n-1,n-2));
+          s = NumTools::abs<Real>(H_(n,n-1)) + NumTools::abs<Real>(H_(n-1,n-2));
           x = y = 0.75 * s;
           w = -0.4375 * s * s;
         }
@@ -756,7 +756,7 @@ class EigenValue
             s = x - w / ((y - x) / 2.0 + s);
             for (int i = low; i <= n; i++)
             {
-              _H(i,i) -= s;
+              H_(i,i) -= s;
             }
             exshift += s;
             x = y = w = 0.964;
@@ -770,12 +770,12 @@ class EigenValue
         int m = n-2;
         while (m >= l)
         {
-          z = _H(m,m);
+          z = H_(m,m);
           r = x - z;
           s = y - z;
-          p = (r * s - w) / _H(m+1,m) + _H(m,m+1);
-          q = _H(m+1,m+1) - z - r - s;
-          r = _H(m+2,m+1);
+          p = (r * s - w) / H_(m+1,m) + H_(m,m+1);
+          q = H_(m+1,m+1) - z - r - s;
+          r = H_(m+2,m+1);
           s = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
           p = p / s;
           q = q / s;
@@ -784,9 +784,9 @@ class EigenValue
           {
             break;
           }
-          if (NumTools::abs<Real>(_H(m,m-1)) * (NumTools::abs<Real>(q) + NumTools::abs<Real>(r)) <
-               eps * (NumTools::abs<Real>(p) * (NumTools::abs<Real>(_H(m-1,m-1)) + NumTools::abs<Real>(z) +
-               NumTools::abs<Real>(_H(m+1,m+1)))))
+          if (NumTools::abs<Real>(H_(m,m-1)) * (NumTools::abs<Real>(q) + NumTools::abs<Real>(r)) <
+               eps * (NumTools::abs<Real>(p) * (NumTools::abs<Real>(H_(m-1,m-1)) + NumTools::abs<Real>(z) +
+               NumTools::abs<Real>(H_(m+1,m+1)))))
           {
             break;
           }
@@ -795,10 +795,10 @@ class EigenValue
   
         for (int i = m+2; i <= n; i++)
         {
-          _H(i,i-2) = 0.0;
+          H_(i,i-2) = 0.0;
           if (i > m+2)
           {
-            _H(i,i-3) = 0.0;
+            H_(i,i-3) = 0.0;
           }
         }
  
@@ -809,9 +809,9 @@ class EigenValue
           int notlast = (k != n-1);
           if (k != m)
           {
-            p = _H(k,k-1);
-            q = _H(k+1,k-1);
-            r = (notlast ? _H(k+2,k-1) : 0.0);
+            p = H_(k,k-1);
+            q = H_(k+1,k-1);
+            r = (notlast ? H_(k+2,k-1) : 0.0);
             x = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
             if (x != 0.0)
             {
@@ -833,11 +833,11 @@ class EigenValue
           {
             if (k != m)
             {
-              _H(k,k-1) = -s * x;
+              H_(k,k-1) = -s * x;
             }
             else if (l != m)
             {
-              _H(k,k-1) = -_H(k,k-1);
+              H_(k,k-1) = -H_(k,k-1);
             }
             p = p + s;
             x = p / s;
@@ -850,42 +850,42 @@ class EigenValue
    
             for (int j = k; j < nn; j++)
             {
-              p = _H(k,j) + q * _H(k+1,j);
+              p = H_(k,j) + q * H_(k+1,j);
               if (notlast)
               {
-                p = p + r * _H(k+2,j);
-                _H(k+2,j) = _H(k+2,j) - p * z;
+                p = p + r * H_(k+2,j);
+                H_(k+2,j) = H_(k+2,j) - p * z;
               }
-              _H(k,j) = _H(k,j) - p * x;
-              _H(k+1,j) = _H(k+1,j) - p * y;
+              H_(k,j) = H_(k,j) - p * x;
+              H_(k+1,j) = H_(k+1,j) - p * y;
             }
    
             // Column modification
    
             for (int i = 0; i <= std::min(n,k+3); i++)
             {
-              p = x * _H(i,k) + y * _H(i,k+1);
+              p = x * H_(i,k) + y * H_(i,k+1);
               if (notlast)
               {
-                p = p + z * _H(i,k+2);
-                _H(i,k+2) = _H(i,k+2) - p * r;
+                p = p + z * H_(i,k+2);
+                H_(i,k+2) = H_(i,k+2) - p * r;
               }
-              _H(i,k) = _H(i,k) - p;
-              _H(i,k+1) = _H(i,k+1) - p * q;
+              H_(i,k) = H_(i,k) - p;
+              H_(i,k+1) = H_(i,k+1) - p * q;
             }
    
             // Accumulate transformations
    
             for (int i = low; i <= high; i++)
             {
-              p = x * _V(i,k) + y * _V(i,k+1);
+              p = x * V_(i,k) + y * V_(i,k+1);
               if (notlast)
               {
-                p = p + z * _V(i,k+2);
-                _V(i,k+2) = _V(i,k+2) - p * r;
+                p = p + z * V_(i,k+2);
+                V_(i,k+2) = V_(i,k+2) - p * r;
               }
-              _V(i,k) = _V(i,k) - p;
-              _V(i,k+1) = _V(i,k+1) - p * q;
+              V_(i,k) = V_(i,k) - p;
+              V_(i,k+1) = V_(i,k+1) - p * q;
             }
           }  // (s != 0)
         }  // k loop
@@ -901,24 +901,24 @@ class EigenValue
    
     for (n = nn-1; n >= 0; n--)
     {
-      p = _d[n];
-      q = _e[n];
+      p = d_[n];
+      q = e_[n];
    
       // Real vector
    
       if (q == 0)
       {
         int l = n;
-        _H(n,n) = 1.0;
+        H_(n,n) = 1.0;
         for (int i = n-1; i >= 0; i--)
         {
-          w = _H(i,i) - p;
+          w = H_(i,i) - p;
           r = 0.0;
           for (int j = l; j <= n; j++)
           {
-            r = r + _H(i,j) * _H(j,n);
+            r = r + H_(i,j) * H_(j,n);
           }
-          if (_e[i] < 0.0)
+          if (e_[i] < 0.0)
           {
             z = w;
             s = r;
@@ -926,15 +926,15 @@ class EigenValue
           else
           {
             l = i;
-            if (_e[i] == 0.0)
+            if (e_[i] == 0.0)
             {
               if (w != 0.0)
               {
-                _H(i,n) = -r / w;
+                H_(i,n) = -r / w;
               }
               else
               {
-                _H(i,n) = -r / (eps * norm);
+                H_(i,n) = -r / (eps * norm);
               }
    
               // Solve real equations
@@ -942,29 +942,29 @@ class EigenValue
             }
             else
             {
-              x = _H(i,i+1);
-              y = _H(i+1,i);
-              q = (_d[i] - p) * (_d[i] - p) + _e[i] * _e[i];
+              x = H_(i,i+1);
+              y = H_(i+1,i);
+              q = (d_[i] - p) * (d_[i] - p) + e_[i] * e_[i];
               t = (x * s - z * r) / q;
-              _H(i,n) = t;
+              H_(i,n) = t;
               if (NumTools::abs<Real>(x) > NumTools::abs<Real>(z))
               {
-                _H(i+1,n) = (-r - w * t) / x;
+                H_(i+1,n) = (-r - w * t) / x;
               }
               else
               {
-                _H(i+1,n) = (-s - y * t) / z;
+                H_(i+1,n) = (-s - y * t) / z;
               }
             }
    
             // Overflow control
    
-            t = NumTools::abs<Real>(_H(i,n));
+            t = NumTools::abs<Real>(H_(i,n));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
               {
-                _H(j,n) = _H(j,n) / t;
+                H_(j,n) = H_(j,n) / t;
               }
             }
           }
@@ -979,19 +979,19 @@ class EigenValue
 
         // Last vector component imaginary so matrix is triangular
    
-        if (NumTools::abs<Real>(_H(n,n-1)) > NumTools::abs<Real>(_H(n-1,n)))
+        if (NumTools::abs<Real>(H_(n,n-1)) > NumTools::abs<Real>(H_(n-1,n)))
         {
-          _H(n-1,n-1) = q / _H(n,n-1);
-          _H(n-1,n) = -(_H(n,n) - p) / _H(n,n-1);
+          H_(n-1,n-1) = q / H_(n,n-1);
+          H_(n-1,n) = -(H_(n,n) - p) / H_(n,n-1);
         }
         else
         {
-          cdiv(0.0,-_H(n-1,n),_H(n-1,n-1)-p,q);
-          _H(n-1,n-1) = cdivr;
-          _H(n-1,n) = cdivi;
+          cdiv(0.0,-H_(n-1,n),H_(n-1,n-1)-p,q);
+          H_(n-1,n-1) = cdivr;
+          H_(n-1,n) = cdivi;
         }
-        _H(n,n-1) = 0.0;
-        _H(n,n) = 1.0;
+        H_(n,n-1) = 0.0;
+        H_(n,n) = 1.0;
         for (int i = n-2; i >= 0; i--)
         {
           Real ra,sa,vr,vi;
@@ -999,12 +999,12 @@ class EigenValue
           sa = 0.0;
           for (int j = l; j <= n; j++)
           {
-            ra = ra + _H(i,j) * _H(j,n-1);
-            sa = sa + _H(i,j) * _H(j,n);
+            ra = ra + H_(i,j) * H_(j,n-1);
+            sa = sa + H_(i,j) * H_(j,n);
           }
-          w = _H(i,i) - p;
+          w = H_(i,i) - p;
    
-          if (_e[i] < 0.0)
+          if (e_[i] < 0.0)
           {
             z = w;
             r = ra;
@@ -1013,49 +1013,49 @@ class EigenValue
           else
           {
             l = i;
-            if (_e[i] == 0)
+            if (e_[i] == 0)
             {
               cdiv(-ra,-sa,w,q);
-              _H(i,n-1) = cdivr;
-              _H(i,n) = cdivi;
+              H_(i,n-1) = cdivr;
+              H_(i,n) = cdivi;
             }
             else
             {
               // Solve complex equations
  
-              x = _H(i,i+1);
-              y = _H(i+1,i);
-              vr = (_d[i] - p) * (_d[i] - p) + _e[i] * _e[i] - q * q;
-              vi = (_d[i] - p) * 2.0 * q;
+              x = H_(i,i+1);
+              y = H_(i+1,i);
+              vr = (d_[i] - p) * (d_[i] - p) + e_[i] * e_[i] - q * q;
+              vi = (d_[i] - p) * 2.0 * q;
               if ((vr == 0.0) && (vi == 0.0))
               {
                 vr = eps * norm * (NumTools::abs<Real>(w) + NumTools::abs<Real>(q) +
                 NumTools::abs<Real>(x) + NumTools::abs<Real>(y) + NumTools::abs<Real>(z));
               }
               cdiv(x*r-z*ra+q*sa,x*s-z*sa-q*ra,vr,vi);
-              _H(i,n-1) = cdivr;
-              _H(i,n) = cdivi;
+              H_(i,n-1) = cdivr;
+              H_(i,n) = cdivi;
               if (NumTools::abs<Real>(x) > (NumTools::abs<Real>(z) + NumTools::abs<Real>(q)))
               {
-                _H(i+1,n-1) = (-ra - w * _H(i,n-1) + q * _H(i,n)) / x;
-                _H(i+1,n) = (-sa - w * _H(i,n) - q * _H(i,n-1)) / x;
+                H_(i+1,n-1) = (-ra - w * H_(i,n-1) + q * H_(i,n)) / x;
+                H_(i+1,n) = (-sa - w * H_(i,n) - q * H_(i,n-1)) / x;
               }
               else
               {
-                cdiv(-r-y*_H(i,n-1),-s-y*_H(i,n),z,q);
-                _H(i+1,n-1) = cdivr;
-                _H(i+1,n) = cdivi;
+                cdiv(-r-y*H_(i,n-1),-s-y*H_(i,n),z,q);
+                H_(i+1,n-1) = cdivr;
+                H_(i+1,n) = cdivi;
               }
             }
  
             // Overflow control
-            t = std::max(NumTools::abs<Real>(_H(i,n-1)),NumTools::abs<Real>(_H(i,n)));
+            t = std::max(NumTools::abs<Real>(H_(i,n-1)),NumTools::abs<Real>(H_(i,n)));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
               {
-                _H(j,n-1) = _H(j,n-1) / t;
-                _H(j,n) = _H(j,n) / t;
+                H_(j,n-1) = H_(j,n-1) / t;
+                H_(j,n) = H_(j,n) / t;
               }
             }
           }
@@ -1071,7 +1071,7 @@ class EigenValue
       {
         for (int j = i; j < nn; j++)
         {
-          _V(i,j) = _H(i,j);
+          V_(i,j) = H_(i,j);
         }
       }
     }
@@ -1085,9 +1085,9 @@ class EigenValue
         z = 0.0;
         for (int k = low; k <= std::min(j,high); k++)
         {
-          z = z + _V(i,k) * _H(k,j);
+          z = z + V_(i,k) * H_(k,j);
         }
-        _V(i,j) = z;
+        V_(i,j) = z;
       }
     }
   }
@@ -1101,31 +1101,31 @@ class EigenValue
      * @param A    Square real (non-complex) matrix
      */
     EigenValue(const Matrix<Real>& A) :
-      _n(A.getNumberOfColumns()),
-      _issymmetric(true),
-      _d(_n),
-      _e(_n),
-      _V(_n,_n),
-      _H(),
-      _D(_n, _n),
+      n_(A.getNumberOfColumns()),
+      isSymmetric_(true),
+      d_(n_),
+      e_(n_),
+      V_(n_,n_),
+      H_(),
+      D_(n_, n_),
       ort_(),
       cdivr(), cdivi()
     {
-      for (int j = 0; (j < _n) && _issymmetric; j++)
+      for (int j = 0; (j < n_) && isSymmetric_; j++)
       {
-        for (int i = 0; (i < _n) && _issymmetric; i++)
+        for (int i = 0; (i < n_) && isSymmetric_; i++)
         {
-          _issymmetric = (A(i,j) == A(j,i));
+          isSymmetric_ = (A(i,j) == A(j,i));
         }
       }
 
-      if (_issymmetric)
+      if (isSymmetric_)
       {
-        for (int i = 0; i < _n; i++)
+        for (int i = 0; i < n_; i++)
         {
-          for (int j = 0; j < _n; j++)
+          for (int j = 0; j < n_; j++)
           {
-            _V(i,j) = A(i,j);
+            V_(i,j) = A(i,j);
           }
         }
    
@@ -1137,14 +1137,14 @@ class EigenValue
       }
       else
       {
-        _H.resize(_n,_n);
-        ort_.resize(_n);
+        H_.resize(n_,n_);
+        ort_.resize(n_);
          
-        for (int j = 0; j < _n; j++)
+        for (int j = 0; j < n_; j++)
         {
-          for (int i = 0; i < _n; i++)
+          for (int i = 0; i < n_; i++)
           {
-            _H(i,j) = A(i,j);
+            H_(i,j) = A(i,j);
           }
         }
    
@@ -1162,21 +1162,21 @@ class EigenValue
      *
      * @return V
      */
-    const RowMatrix<Real>& getV() const { return _V; }
+    const RowMatrix<Real>& getV() const { return V_; }
 
     /**
      * @brief Return the real parts of the eigenvalues
      *
      * @return real(diag(D))
      */
-    const std::vector<Real>& getRealEigenValues() const { return _d; }
+    const std::vector<Real>& getRealEigenValues() const { return d_; }
 
     /**
      * @brief Return the imaginary parts of the eigenvalues in parameter e.
      *
      * @return e: new matrix with imaginary parts of the eigenvalues.
      */
-    const std::vector<Real>& getImagEigenValues() const { return _e; }
+    const std::vector<Real>& getImagEigenValues() const { return e_; }
    
     /**
      * @brief Computes the block diagonal eigenvalue matrix.
@@ -1213,24 +1213,31 @@ class EigenValue
      */
     const RowMatrix<Real>& getD() const
     {
-      for (int i = 0; i < _n; i++)
+      for (int i = 0; i < n_; i++)
       {
-        for (int j = 0; j < _n; j++)
+        for (int j = 0; j < n_; j++)
         {
-          _D(i,j) = 0.0;
+          D_(i,j) = 0.0;
         }
-        _D(i,i) = _d[i];
-        if (_e[i] > 0)
+        D_(i,i) = d_[i];
+        if (e_[i] > 0)
         {
-          _D(i,i+1) = _e[i];
+          D_(i,i+1) = e_[i];
         }
-        else if (_e[i] < 0)
+        else if (e_[i] < 0)
         {
-          _D(i,i-1) = _e[i];
+          D_(i,i-1) = e_[i];
         }
       }
-      return _D;
+      return D_;
     }
+
+    /**
+     * @brief Tells is the input matrix is symmetric.
+     *
+     * @return true is the input matrix is symmetric.
+     */
+    bool isSymmetric() const { return isSymmetric_; }
 };
 
 } //end of namespace bpp.

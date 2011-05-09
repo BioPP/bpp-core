@@ -27,6 +27,7 @@ set(CPP_FILES
   Bpp/Graphics/Latex/PgfGraphicDevice.cpp
   Bpp/Graphics/Molscript/MolscriptColorSet.cpp
   Bpp/Graphics/Svg/SvgGraphicDevice.cpp
+  Bpp/Graphics/R/RColorSet.cpp
   Bpp/Numeric/NumTools.cpp
   Bpp/Numeric/Parameter.cpp
   Bpp/Numeric/ParameterExceptions.cpp
@@ -82,6 +83,9 @@ set(CPP_FILES
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
   Bpp/Numeric/Stat/ContingencyTableTest.cpp
   Bpp/Numeric/Stat/StatTools.cpp
+  Bpp/Numeric/Stat/Mva/DualityDiagram.cpp 
+  Bpp/Numeric/Stat/Mva/PrincipalComponentAnalysis.cpp 
+  Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.cpp 
   )
 
 set(H_FILES
@@ -204,6 +208,9 @@ set(H_FILES
   Bpp/Numeric/Stat/StatTest.h 
   Bpp/Numeric/Stat/ContingencyTableTest.h 
   Bpp/Numeric/Stat/StatTools.h 
+  Bpp/Numeric/Stat/Mva/DualityDiagram.h 
+  Bpp/Numeric/Stat/Mva/PrincipalComponentAnalysis.h 
+  Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.h 
 )
 
 # Build the static lib
@@ -223,8 +230,8 @@ set_target_properties(bppcore-shared
   )
 
 # Install libs
-install(TARGETS bppcore-static bppcore-shared DESTINATION lib)
+install(TARGETS bppcore-static bppcore-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN ".svn" EXCLUDE PATTERN "*.h" PATTERN "*.all")
+install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
 
