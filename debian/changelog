@@ -3,7 +3,7 @@ libbpp-core (2.0.2-1) unstable; urgency=low
   * Packages are now non-native.
   * More MatrixTools, multivariate analysis classes and several bugs fixed.
 
- -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 28 Feb 2011 09:00:00 +0100
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Jun 2011 11:00:00 +0100
 
 libbpp-core (2.0.1) unstable; urgency=low
 
