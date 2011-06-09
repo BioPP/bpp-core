@@ -104,7 +104,7 @@ IF (UNIX)
 #This creates deb packages:
 ADD_CUSTOM_TARGET(origdist COMMAND cp ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz ../${CPACK_DEBSOURCE_PACKAGE_FILE_NAME}.tar.gz)
 ADD_DEPENDENCIES(origdist dist)
-ADD_CUSTOM_TARGET(deb dpkg-buildpackage -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
+ADD_CUSTOM_TARGET(deb dpkg-buildpackage -uc -us -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
 ADD_DEPENDENCIES(deb origdist)
 
 #This creates rpm packages:
