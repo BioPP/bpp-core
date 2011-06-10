@@ -113,8 +113,6 @@ ADD_CUSTOM_TARGET(origdist COMMAND cp ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz .
 ADD_DEPENDENCIES(origdist dist)
 ADD_CUSTOM_TARGET(deb dpkg-buildpackage -uc -us -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
 ADD_DEPENDENCIES(deb origdist)
-ADD_CUSTOM_TARGET(debsrc dpkg-buildpackage -d -S -uc -us -i${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
-ADD_DEPENDENCIES(debsrc origdist)
 
 #This creates rpm packages:
 ADD_CUSTOM_TARGET(rpm rpmbuild -ta ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
