@@ -128,7 +128,7 @@ throw (ParameterNotFoundException, Exception)
   else
   // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
   if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-    throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints aatached to these two parameters are different.");
+    throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
 
   // Every thing seems ok, let's create the listener and register it:
   AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_());
