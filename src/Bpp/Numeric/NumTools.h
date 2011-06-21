@@ -154,7 +154,11 @@ public:
   template<class T> static T fact(T n) { return (n == 0) ? 1 : n * fact(n - 1); }
 
   /**************************************************************************/
-  
+
+  template<class T> static T logFact(T n) { return (n == 0) ? 0 : (log(n) + logFact(n - 1)); }
+
+  /**************************************************************************/
+   
   /**
    * @brief Find one root of the given function.
    *

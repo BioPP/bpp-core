@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <vector>
+#include <cstddef>
 
 namespace bpp {
 
