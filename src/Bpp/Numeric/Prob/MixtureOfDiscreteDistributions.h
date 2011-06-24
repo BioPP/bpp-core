@@ -75,7 +75,9 @@ protected:
   std::vector<DiscreteDistribution*> vdd_;
 
   std::vector<double> probas_;
-  
+
+  std::vector<std::string> vNestedPrefix_;
+
 public:
   /**
    * @brief Builds a new MixtureOfDiscreteDistributions object from a
@@ -128,6 +130,8 @@ public:
 
   void discretize();
 
+  void setNamespace(const std::string& prefix);
+  
 protected:
 
   void updateDistribution();
