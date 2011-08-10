@@ -10,5 +10,6 @@
 #include "Prob/MixtureOfDiscreteDistributions.h"
 #include "Prob/MultipleDiscreteDistribution.h"
 #include "Prob/SimpleDiscreteDistribution.h"
+#include "Prob/Simplex.h"
 #include "Prob/TruncatedExponentialDiscreteDistribution.h"
 #include "Prob/UniformDiscreteDistribution.h"
