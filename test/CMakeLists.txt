@@ -65,6 +65,6 @@ IF(APPLE)
 ENDIF()
 
 IF(WIN32)
-  SET(ENV{PATH} "$ENV{PATH}:../src")
+  SET(ENV{PATH} "$ENV{PATH};..\\src")
 ENDIF()
 
