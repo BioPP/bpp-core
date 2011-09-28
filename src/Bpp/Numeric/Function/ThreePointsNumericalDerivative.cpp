@@ -52,6 +52,7 @@ throw (ParameterNotFoundException, ConstraintException)
     function_->setParameters(parameters);
     f2_ = function_->getValue();
     string lastVar;
+    bool functionChanged = false;
     ParameterList p;
     bool start = true;
     for (unsigned int i = 0; i < variables_.size(); i++)
@@ -71,6 +72,7 @@ throw (ParameterNotFoundException, ConstraintException)
         start = false;
       }
       lastVar = var;
+      functionChanged = true;
       double value = function_->getParameterValue(var);
       double h = (1. + std::abs(value)) * h_;
       //Compute one other point:
@@ -189,7 +191,8 @@ throw (ParameterNotFoundException, ConstraintException)
     //Reset last parameter and compute analytical derivatives if any.
     if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
     if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
-    function_->setParameters(parameters.subList(lastVar));
+    if (functionChanged)
+      function_->setParameters(parameters.subList(lastVar));
   }
   else
   {

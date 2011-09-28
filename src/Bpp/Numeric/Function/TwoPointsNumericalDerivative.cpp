@@ -52,6 +52,7 @@ throw (ParameterNotFoundException, ConstraintException)
     function_->setParameters(parameters);
     f1_ = function_->getValue();
     string lastVar;
+    bool functionChanged = false;
     bool start = true;
     for (unsigned int i = 0; i < variables_.size(); i++)
     {
@@ -64,12 +65,14 @@ throw (ParameterNotFoundException, ConstraintException)
         vars[0] = var;
         vars[1] = lastVar;
         lastVar = var;
+        functionChanged = true;
         p = parameters.subList(vars);
       }
       else
       {
         p = parameters.subList(var);
         lastVar = var;
+        functionChanged = true;
         start = false;
       }
       double value = function_->getParameterValue(var);
@@ -102,7 +105,8 @@ throw (ParameterNotFoundException, ConstraintException)
     }
     //Reset last parameter and compute analytical derivatives if any:
     if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    function_->setParameters(parameters.subList(lastVar));
+    if (functionChanged)
+      function_->setParameters(parameters.subList(lastVar));
   }
   else
   {

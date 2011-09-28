@@ -45,12 +45,12 @@ using namespace std;
 
 /******************************************************************************/
 
-bool DownhillSimplexMethod::DSMStopCondition::isToleranceReached() const
+double DownhillSimplexMethod::DSMStopCondition::getCurrentTolerance() const
 {
 	const DownhillSimplexMethod* dsm = dynamic_cast<const DownhillSimplexMethod *>(optimizer_);
 	double rTol = 2.0 * NumTools::abs(dsm->_y[dsm->_iHighest] - dsm->_y[dsm->_iLowest]) /
 		(NumTools::abs(dsm->_y[dsm->_iHighest]) + NumTools::abs(dsm->_y[dsm->_iLowest]));
-	return rTol < tolerance_;
+	return rTol;
 }
 	
 /******************************************************************************/

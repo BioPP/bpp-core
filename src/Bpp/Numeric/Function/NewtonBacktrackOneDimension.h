@@ -56,7 +56,7 @@ namespace bpp
    *  Search a 'sufficiently low' value for a function in a given
    *  direction.
    *
-   * This function stands for the lnsrch function defined at page 385 of
+   * This function implements the algorithm described for example in page 385 of
    *
    * <pre>
    * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
@@ -80,7 +80,8 @@ namespace bpp
       
     public:
       void init() {}
-      bool isToleranceReached() const;
+      bool isToleranceReached() const { return false; }
+      double getCurrentTolerance() const { return 0; }
     };
     
     friend class NBODStopCondition;

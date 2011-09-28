@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -60,7 +60,8 @@ NewtonOneDimension::NewtonOneDimension(DerivableSecondOrder* function) :
 void NewtonOneDimension::doInit(const ParameterList& params) throw (Exception)
 {
   // Set the initial value (no use here! Use setInitialValues() instead).
-  if(params.size() != 1) throw Exception("NewtonOneDimension::init(). This optimizer only deals with one parameter.");
+  if (params.size() != 1)
+    throw Exception("NewtonOneDimension::init(). This optimizer only deals with one parameter.");
   _param = params[0].getName();
   currentValue_ = getFunction()->f(getParameters());  
   getStopCondition()->init();

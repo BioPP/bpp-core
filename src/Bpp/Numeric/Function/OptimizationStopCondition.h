@@ -120,6 +120,16 @@ namespace bpp
      * @return The tolerance parameter.
      */	
     virtual double getTolerance() const = 0;
+    
+    /**
+     * @brief Get the current tolerance.
+     *
+     * This is computed from the last check performed.
+     * Initially, it is equal to the tolerance parameter.
+     *
+     * @return The current tolerance achieved.
+     */	
+    virtual double getCurrentTolerance() const = 0;
   };
 
   /******************************************************************************/
@@ -147,16 +157,37 @@ namespace bpp
     mutable double callCount_;
 	
     int burnin_;
-
 	
   public:
-    AbstractOptimizationStopCondition(const Optimizer* optimizer);
-    AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance);
-    AbstractOptimizationStopCondition(const Optimizer* optimizer, int burnin);
-    AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance, int burnin);
-		
+    AbstractOptimizationStopCondition(const Optimizer* optimizer):
+        optimizer_(optimizer),
+        tolerance_(0.000001),
+        callCount_(0),
+        burnin_(0) {}
+    
+    AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance):
+        optimizer_(optimizer),
+        tolerance_(tolerance),
+        callCount_(0),
+        burnin_(0) {}
+
+    AbstractOptimizationStopCondition(const Optimizer* optimizer, int burnin):
+        optimizer_(optimizer),
+        tolerance_(0.000001),
+        callCount_(0),
+        burnin_(burnin) {}
+
+    AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance, int burnin):
+        optimizer_(optimizer),
+        tolerance_(tolerance),
+        callCount_(0),
+        burnin_(burnin) {}
+
     AbstractOptimizationStopCondition(const AbstractOptimizationStopCondition& aosc):
-      optimizer_(aosc.optimizer_), tolerance_(aosc.tolerance_), callCount_(aosc.callCount_), burnin_(aosc.burnin_) {}
+        optimizer_(aosc.optimizer_),
+        tolerance_(aosc.tolerance_),
+        callCount_(aosc.callCount_),
+        burnin_(aosc.burnin_) {}
 	
     AbstractOptimizationStopCondition& operator=(const AbstractOptimizationStopCondition& aosc)
     {
@@ -167,16 +198,17 @@ namespace bpp
       return *this;
     }
 
-    virtual ~AbstractOptimizationStopCondition();
+    virtual ~AbstractOptimizationStopCondition() {}
 
   public:
     const Optimizer* getOptimizer() const { return optimizer_; }
     void setOptimizer(const Optimizer* optimizer) { optimizer_ = optimizer; }
-    void setTolerance(double tolerance);
-    double getTolerance() const;
-    virtual void resetCounter();
-    virtual void setBurnin(int burnin);
-    virtual int getBurnin() const;
+    void setTolerance(double tolerance) { tolerance_ = tolerance; }
+    double getTolerance() const { return tolerance_; }
+    void init() { resetCounter(); }
+    virtual void resetCounter() { callCount_ = 0; }
+    virtual void setBurnin(int burnin) { burnin_ = burnin; }
+    virtual int getBurnin() const { return burnin_; }
 
   };
 	
@@ -222,6 +254,8 @@ namespace bpp
     void init();
 
     bool isToleranceReached() const;
+    
+    double getCurrentTolerance() const;
   };
 
   /******************************************************************************/
@@ -269,6 +303,7 @@ namespace bpp
   public:
     void init();
     bool isToleranceReached() const;
+    double getCurrentTolerance() const;
 
   };
 

@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _POWELLMULTIDIMENSIONS_H_
-#define _POWELLMULTIDIMENSIONS_H_
+#ifndef POWELLMULTIDIMENSIONS_H__
+#define POWELLMULTIDIMENSIONS_H__
 
 #include "DirectionFunction.h"
 #include "AbstractOptimizer.h"
@@ -50,7 +50,7 @@ namespace bpp
 /**
  * @brief Powell's multi-dimensions optimization algorithm for one parameter.
  *
- * A description of the algorithm can be found in:
+ * A description of the algorithm can be found for example in:
  * <pre>
  * NUMERICAL RECIPES IN C: THE ART OF SCIENTIFIC COMPUTING
  * (ISBN 0-521-43108-5)
@@ -64,28 +64,28 @@ class PowellMultiDimensions:
       public AbstractOptimizationStopCondition
 		{
 			public:
-				PMDStopCondition(PowellMultiDimensions * pmd):
+				PMDStopCondition(PowellMultiDimensions* pmd):
           AbstractOptimizationStopCondition(pmd) {}
 				virtual ~PMDStopCondition() {}
 
         PMDStopCondition* clone() const { return new PMDStopCondition(*this); }
 			
 			public:
-				void init() {}
 				bool isToleranceReached() const;
+        double getCurrentTolerance() const;
 		};
 	
 	friend class PMDStopCondition;
 		
 	protected:
-		double _fp;
-		double _fret;
-		ParameterList _pt;
-		VVdouble _xi;
+		double fp_;
+		double fret_;
+		ParameterList pt_;
+		VVdouble xi_;
 		
-		unsigned int _ncom;
-		ParameterList _pcom, _xicom;
-		DirectionFunction _f1dim;
+		unsigned int ncom_;
+		ParameterList pcom_, xicom_;
+		DirectionFunction f1dim_;
 		
 	public:
 		PowellMultiDimensions(Function* function);
@@ -102,6 +102,7 @@ class PowellMultiDimensions:
 		 */		
 		double optimize() throw (Exception);
 		/** @} */
+
 		void doInit(const ParameterList & params) throw (Exception);
 		
     double doStep() throw (Exception);	

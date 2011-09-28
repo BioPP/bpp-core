@@ -49,16 +49,21 @@ using namespace bpp;
 
 bool BrentOneDimension::BODStopCondition::isToleranceReached() const
 {
-  // NRC Test for done:
-  const BrentOneDimension * bod = dynamic_cast<const BrentOneDimension *>(optimizer_);
-  double x    = bod->x;
-  double xm   = bod->xm;
-  double tol2 = bod->tol2;
-  double b    = bod->b;
-  double a    = bod->a;
-  return NumTools::abs(x - xm) <= (tol2 - 0.5 * (b - a));
+  callCount_++;
+  if (callCount_ <= burnin_) return false;
+  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension *>(optimizer_);
+  return getCurrentTolerance() <= (bod->tol2 - 0.5 * (bod->b - bod->a));
 }
     
+/******************************************************************************/
+
+double BrentOneDimension::BODStopCondition::getCurrentTolerance() const
+{
+  // NRC Test for done:
+  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension *>(optimizer_);
+  return NumTools::abs(bod->x - bod->xm);
+}
+ 
 /******************************************************************************/
 
 BrentOneDimension::BrentOneDimension(Function* function) :
@@ -79,7 +84,8 @@ double BrentOneDimension::ZEPS  = 1.0e-10;
   
 void BrentOneDimension::doInit(const ParameterList& params) throw (Exception)
 {
-  if(params.size() != 1) throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
+  if (params.size() != 1)
+    throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
   Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters());
@@ -99,7 +105,7 @@ void BrentOneDimension::doInit(const ParameterList& params) throw (Exception)
   b = (bracket.a.x > bracket.c.x ? bracket.a.x : bracket.c.x);
   // Initializations...
   fw = fv = fx = getFunction()->f(getParameters());
-  if(fx < bracket.b.f)
+  if (fx < bracket.b.f)
   {
     //We don't want to lose our initial guess!
     x = w = v = bracket.b.x = getParameters()[0].getValue();

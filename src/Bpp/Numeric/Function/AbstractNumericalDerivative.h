@@ -162,7 +162,7 @@ class AbstractNumericalDerivative:
     double getFirstOrderDerivative(const std::string& variable) const
       throw (Exception)
     {
-      if(function1_ != NULL)
+      if (function1_)
       {
         try
         {
