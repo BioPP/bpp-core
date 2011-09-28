@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -578,7 +578,22 @@ public:
   static T prod(const std::vector<T>& v1)
   {
     T p = 1;
-    for (unsigned int i = 0; i < v1.size(); i++) { p *= v1[i]; }
+    for (size_t i = 0; i < v1.size(); i++) { p *= v1[i]; }
+    return p;
+  }
+
+  /**
+   * @return The cumulative product of all elements in a std::vector.
+   * @param v1 A std::vector.
+   * @author Julien Dutheil
+   */
+  template<class T>
+  static std::vector<T> cumProd(const std::vector<T>& v1)
+  {
+    std::vector<T> p(v1.size());
+    if (v1.size() == 0) return p;
+    p[0] = v1[0];
+    for (size_t i = 1; i < v1.size(); i++) { p[i] = v1[i] * p[i - 1]; }
     return p;
   }
 
@@ -589,9 +604,24 @@ public:
   template<class T>
   static T sum(const std::vector<T>& v1)
   {
-    T p = 0;
-    for (unsigned int i = 0; i < v1.size(); i++) { p += v1[i]; }
-    return p;
+    T s = 0;
+    for (size_t i = 0; i < v1.size(); i++) { s += v1[i]; }
+    return s;
+  }
+
+  /**
+   * @return The cumulative sum of all elements in a std::vector.
+   * @param v1 A std::vector.
+   * @author Julien Dutheil
+   */
+  template<class T>
+  static std::vector<T> cumSum(const std::vector<T>& v1)
+  {
+    std::vector<T> s(v1.size());
+    if (v1.size() == 0) return s;
+    s[0] = v1[0];
+    for (size_t i = 1; i < v1.size(); i++) { s[i] = v1[i] + s[i - 1]; }
+    return s;
   }
 
   /**
@@ -600,14 +630,13 @@ public:
    * @param v1 A std::vector.
    * @param v2 another std::vector of same size.
    */
-
   template<class T>
   static T sum(const std::vector<T>& v1, const std::vector<T>& v2)
   {
     if (v1.size() != v2.size())
       throw DimensionException("VectorTools::sum", v1.size(), v2.size());
     T p = 0;
-    for (unsigned int i = 0; i < v1.size(); i++) {p += v1[i] * v2[i]; }
+    for (size_t i = 0; i < v1.size(); i++) { p += v1[i] * v2[i]; }
     return p;
   }
 
@@ -842,7 +871,7 @@ public:
       throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
     }
     OutputType result = 0;
-    for (unsigned int i = 0; i < v1.size(); i++)
+    for (size_t i = 0; i < v1.size(); i++)
     {
       result += v1[i] * v2[i];
     }
@@ -876,7 +905,7 @@ public:
       throw DimensionException("VectorFunctions::scalar", v2.size(), w.size());
     }
     OutputType result = 0;
-    for (unsigned int i = 0; i < v1.size(); i++)
+    for (size_t i = 0; i < v1.size(); i++)
     {
       result += v1[i] * v2[i] * w[i];
     }
@@ -892,13 +921,13 @@ public:
   template<class T>
   static std::vector<T> kroneckerMult(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
   {
-    unsigned int n1 = v1.size();
-    unsigned int n2 = v2.size();
+    size_t n1 = v1.size();
+    size_t n2 = v2.size();
     std::vector<T> v3(n1 * n2);
-    for (unsigned int i = 0; i < n1; i++)
+    for (size_t i = 0; i < n1; i++)
     {
       T v1i = v1[i];
-      for (unsigned int j = 0; j < n2; j++)
+      for (size_t j = 0; j < n2; j++)
       {
         v3[i * n2 + j] = v1i * v2[j];
       }
@@ -914,7 +943,7 @@ public:
   static OutputType norm(const std::vector<InputType>& v1)
   {
     OutputType result = 0;
-    for (unsigned int i = 0; i < v1.size(); i++)
+    for (size_t i = 0; i < v1.size(); i++)
     {
       result += v1[i] * v1[i];
     }
@@ -936,7 +965,7 @@ public:
       throw DimensionException("VectorFunctions::norm", v1.size(), w.size());
     }
     OutputType result = 0;
-    for (unsigned int i = 0; i < v1.size(); i++)
+    for (size_t i = 0; i < v1.size(); i++)
     {
       result += v1[i] * v1[i] * w[i];
     }

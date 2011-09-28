@@ -43,6 +43,7 @@
 
 #include "RandomFactory.h"
 #include "../VectorExceptions.h"
+#include "../VectorTools.h"
 #include "../../Exceptions.h"
 
 // From the STL:
@@ -182,7 +183,7 @@ namespace bpp
     static T pickOne(std::vector<T>& v, bool replace = false) throw (EmptyVectorException<T>) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne: input vector is empty", &v);
-      unsigned int pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry(v.size());
+      size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(v.size()));
       if (replace)
         return v[pos];
       else {
@@ -220,6 +221,85 @@ namespace bpp
         hat[i] = i;
       for (unsigned int i = 0 ; i < vout.size() ; i++)
         vout[i] = vin[pickOne(hat, replace)];
+    }
+
+    /**
+     * @brief Pick one element in a vector, with associated probability weights
+     *
+     * Pick one element randomly in a vector and return it.
+     * If you choose to make the picking without replacement the element is
+     * removed from the vector, and so is the corresponding weight
+     *
+     * @param v The vector of elements.
+     * @param replace Should pick with replacement? (default: false)
+     * @return On element of the vector.
+     * @throw EmptyVectorException if the vector is empty.
+     *
+     * @author Julien Dutheil
+     */
+    template<class T>
+    static T pickOne(std::vector<T>& v, std::vector<double>& w, bool replace = false) throw (EmptyVectorException<T>) {
+      if (v.empty())
+        throw EmptyVectorException<T>("RandomTools::pickOne (with weight): input vector is empty", &v);
+      //Compute cumulative sum of weights:
+      std::vector<double> sumw = VectorTools::cumSum(w);
+      //Convert to cumulative distribution:
+      sumw /= sumw.back();
+      //Get random positions:
+      double prob = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+      size_t pos = v.size() - 1;
+      for (size_t i = 0; i < v.size(); ++i) {
+        if (prob < sumw[i]) {
+          pos = i;
+          break;
+        }
+      }
+      if (replace)
+        return v[pos];
+      else {
+        T e = v[pos];
+        v[pos] = v.back();
+        v.pop_back();
+        w[pos] = w.back();
+        w.pop_back();
+        return e;
+      }
+    }
+
+    /**
+     * @brief Sample a vector, with associated probability weights.
+     *
+     * The sample is a new vector of the specified size.
+     * If the size of the sample is identical to the original vector,
+     * the result is a shuffle of the original vector.
+     *
+     * It has to be noted that in case of sampling without replacement,
+     * the effect of the weighting scheme will be lower as the sampe size becomes
+     * close to the population size. In case the two are equal (pure permutations),
+     * the weigths have no effect at all.
+     *
+     * @param vin The vector to sample.
+     * @param w The vector of weights.
+     * @param vout [out] The output vector to fill, with the appropriate size.
+     * @param replace Should sampling be with replacement?
+     * @return A vector which is a sample of v.
+     * @throw IndexOutOfBoundException if the sample size exceeds the original
+     * size when sampling without replacement.
+     * @throw EmptyVectorException if the vector is empty.
+     *
+     * @author Julien Dutheil
+     */
+   template<class T> 
+    static void getSample(const std::vector<T>& vin, const std::vector<double>& w, std::vector<T>& vout, bool replace = false) throw (EmptyVectorException<T>, IndexOutOfBoundsException)
+    {
+      if (vout.size() > vin.size() && !replace)
+        throw IndexOutOfBoundsException("RandomTools::getSample (with weights): size exceeded v.size.", vout.size(), 0, vin.size());
+      std::vector<unsigned int> hat(vin.size());
+      for (unsigned int i = 0 ; i < vin.size() ; i++)
+        hat[i] = i;
+      std::vector<double> w2(w); //non const copy
+      for (unsigned int i = 0 ; i < vout.size() ; i++)
+        vout[i] = vin[pickOne(hat, w2, replace)];
     }
 
     /**
@@ -280,7 +360,6 @@ namespace bpp
      * @param sigma The standard deviation of the distribution
      * @return The quantile corresponding to prob.
      */
-
     static double qNorm(double prob, double mu, double sigma);
 
     /**
@@ -294,7 +373,6 @@ namespace bpp
      * @param alpha Alpha parameter.
      * @return \f$ln\left(\Gamma\left(\alpha\right)\right)\f$
      */
-    
     static double lnGamma (double alpha);
 
     /**
