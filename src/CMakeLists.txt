@@ -67,6 +67,7 @@ set(CPP_FILES
   Bpp/Numeric/Hmm/LogsumHmmLikelihood.cpp
   Bpp/Numeric/Hmm/LowMemoryRescaledHmmLikelihood.cpp
   Bpp/Numeric/Hmm/RescaledHmmLikelihood.cpp
+  Bpp/Numeric/Prob/Simplex.cpp
   Bpp/Numeric/Prob/AbstractDiscreteDistribution.cpp
   Bpp/Numeric/Prob/BetaDiscreteDistribution.cpp
   Bpp/Numeric/Prob/ConstantDistribution.cpp
@@ -184,6 +185,7 @@ set(H_FILES
   Bpp/Numeric/Matrix/LUDecomposition.h
   Bpp/Numeric/Matrix/Matrix.h
   Bpp/Numeric/Matrix/MatrixTools.h
+  Bpp/Numeric/Prob/Simplex.h
   Bpp/Numeric/Prob/AbstractDiscreteDistribution.h
   Bpp/Numeric/Prob/BetaDiscreteDistribution.h
   Bpp/Numeric/Prob/ConstantDistribution.h

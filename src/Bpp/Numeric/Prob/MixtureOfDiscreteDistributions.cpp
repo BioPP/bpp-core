@@ -47,8 +47,9 @@ using namespace std;
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<DiscreteDistribution*>& distributions,
                                                                const vector<double>& probas ) : AbstractDiscreteDistribution(1, "Mixture."),
-  vdd_(),
-  probas_()
+                                                                                                vdd_(),
+                                                                                                probas_(),
+                                                                                                vNestedPrefix_()
 {
   if (distributions.size() != probas.size())
   {
@@ -86,16 +87,15 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
 
   //  Parameters
 
+  for (size_t i = 0; i < size; i++){
+    vNestedPrefix_.push_back(TextTools::toString(i+1)+"_"+distributions[i]->getNamespace());
+  }
+
   for (size_t i = 0; i < size; i++)
-  {
-    ParameterList pl = vdd_[i]->getParameters();
-    for (unsigned int j = 0; j < pl.size(); j++)
-    {
-      if (pl[j].hasConstraint())
-        addParameter_(Parameter("Mixture." + TextTools::toString(i + 1) + "_" + pl[j].getName(), pl[j].getValue(), pl[j].getConstraint()->clone(), true));
-      else
-        addParameter_(Parameter("Mixture." + TextTools::toString(i + 1) + "_" + pl[j].getName(), pl[j].getValue()));
-    }
+    vdd_[i]->setNamespace("Mixture."+vNestedPrefix_[i]);
+  
+  for (size_t i = 0; i < size; i++){
+    addParameters_(vdd_[i]->getParameters());
   }
 
   updateDistribution();
@@ -113,13 +113,15 @@ void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasse
 
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd) : AbstractDiscreteDistribution(mdd),
-  vdd_(),
-  probas_()
+                                                                                                            vdd_(),
+                                                                                                            probas_(),
+                                                                                                            vNestedPrefix_()
 {
   for (size_t i = 0; i < mdd.vdd_.size(); i++)
   {
     probas_.push_back(mdd.probas_[i]);
     vdd_.push_back(mdd.vdd_[i]->clone());
+    vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
   }
 }
 
@@ -148,21 +150,21 @@ void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& p
 
   // fireParameterChanged on members Distributions
 
-  ParameterList pl;
-  size_t pos;
-  vector<string> v = getParameters().getParameterNames();
-  vector<string> v2;
+//  ParameterList pl;
+//  size_t pos;
+//  vector<string> v = getParameters().getParameterNames();
+//  vector<string> v2;
   for (size_t i = 0; i < size; i++)
   {
-    pl.reset();
-    for (size_t j = 0; j < v.size(); j++)
-    {
-      pos = v[j].find("Mixture." + TextTools::toString(i + 1));
-      if (pos != string::npos)
-        pl.addParameter(Parameter(v[j].substr(v[j].find("_", pos) + 1),
-                                  getParameterValue(getParameterNameWithoutNamespace(v[j]))));
-    }
-    vdd_[i]->matchParametersValues(pl);
+//    pl.reset();
+//    for (size_t j = 0; j < v.size(); j++)
+//    {
+//      pos = v[j].find("Mixture." + TextTools::toString(i + 1));
+//      if (pos != string::npos)
+//        pl.addParameter(Parameter(v[j].substr(v[j].find("_", pos) + 1),
+//                                  getParameterValue(getParameterNameWithoutNamespace(v[j]))));
+//    }
+    vdd_[i]->matchParametersValues(parameters);
   }
 
   updateDistribution();
@@ -292,5 +294,17 @@ void MixtureOfDiscreteDistributions::restrictToConstraint(const Constraint& c)
   }
 
   updateDistribution();
+}
+
+/******************************************************************************/
+
+void MixtureOfDiscreteDistributions::setNamespace(const string& prefix)
+{
+  AbstractDiscreteDistribution::setNamespace(prefix);
+  //We also need to update the namespace of the nested distributions:
+  for (size_t i = 0; i < vdd_.size(); i++)
+    {
+      vdd_[i]->setNamespace(prefix+ vNestedPrefix_[i]);
+    }
 }
 
