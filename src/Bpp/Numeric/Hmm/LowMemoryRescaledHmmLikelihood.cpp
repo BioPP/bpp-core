@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 16, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for phylogenetic data analysis.
@@ -139,7 +139,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   }
   lScales[0] = log(scale);
 
-  vector<double>* previousLikelihood, * currentLikelihood = &likelihood1_, * tmpLikelihood;
+  vector<double>* previousLikelihood = &likelihood2_, * currentLikelihood = &likelihood1_, * tmpLikelihood;
 
   // Recursion:
   unsigned int nextBrkPt = nbSites_; // next break point
@@ -155,7 +155,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
     //Swap pointers:
     tmpLikelihood = previousLikelihood;
     previousLikelihood = currentLikelihood;
-    currentLikelihood = previousLikelihood;
+    currentLikelihood = tmpLikelihood;
 
     scale = 0;
     emissions = &(*emissionProbabilities_)(i);
