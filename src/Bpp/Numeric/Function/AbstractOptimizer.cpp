@@ -118,17 +118,17 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
   constraintPolicy_       = opt.constraintPolicy_;
   tolIsReached_           = opt.tolIsReached_;
   if (opt.stopCondition_)
-    {
-      stopCondition_        = dynamic_cast<OptimizationStopCondition *>(opt.stopCondition_->clone());
-      stopCondition_->setOptimizer(this);
-    }
+  {
+    stopCondition_        = dynamic_cast<OptimizationStopCondition *>(opt.stopCondition_->clone());
+    stopCondition_->setOptimizer(this);
+  }
   else
     stopCondition_        = 0;
   if (opt.defaultStopCondition_)
-    {
-      defaultStopCondition_ = dynamic_cast<OptimizationStopCondition *>(opt.defaultStopCondition_->clone());
-      defaultStopCondition_->setOptimizer(this);
-    }
+  {
+    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition *>(opt.defaultStopCondition_->clone());
+    defaultStopCondition_->setOptimizer(this);
+  }
   else
     defaultStopCondition_ = 0;
   nbEvalMax_              = opt.nbEvalMax_;
@@ -137,10 +137,10 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
   isInitialized_          = opt.isInitialized_;
   //In case of AutoParameter instances, we must actualize the pointers toward messageHandler_:
   if (isInitialized_)
-    {
-      if(constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
-      else if(constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
-    }
+  {
+    if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+    else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+  }
   startTime_              = opt.startTime_;
   listeners_.resize(0); //Reset listener list, do not copy it!
   updateParameters_       = opt.updateParameters_;
@@ -158,7 +158,7 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
   //More secure, but too slow:
   //parameters_ = function_->getParameters().subList(params.getParameterNames());
   //parameters_.matchParametersValues(params);
-  if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+  if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO) autoParameter();
   else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
   doInit(params);
   nbEval_ = 0;
@@ -166,9 +166,9 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
   isInitialized_ = true;
   time(&startTime_);
   for (unsigned int i = 0; i < parameters_.size(); i++)
-    {
-      profile(parameters_[i].getName() + "\t"); 
-    }
+  {
+    profile(parameters_[i].getName() + "\t"); 
+  }
   profileln("Function\tTime");
 
   //Parameters must be assigned by doInit:
@@ -234,7 +234,7 @@ void AbstractOptimizer::profileln(double v)
 
 void AbstractOptimizer::profile(const std::string& s)
 {
-  if(profiler_) *profiler_ << s;
+  if (profiler_) *profiler_ << s;
 }	
 
 /******************************************************************************/
@@ -252,10 +252,10 @@ void AbstractOptimizer::printPoint(const ParameterList& params, double value)
   profile(nbEval_);
   profile("\t");
   for (unsigned int j = 0; j < ndim; j++)
-    {
-      profile(TextTools::toString(params[j].getValue()));
-      profile("\t"); 
-    }
+  {
+    profile(TextTools::toString(params[j].getValue()));
+    profile("\t"); 
+  }
   profile(value);
   profile("\t");
   time_t seconds;
@@ -267,60 +267,60 @@ void AbstractOptimizer::printPoint(const ParameterList& params, double value)
 
 void AbstractOptimizer::printMessage(const std::string& message)
 {
-  if(messageHandler_) (*messageHandler_ << message).endLine();
+  if (messageHandler_) (*messageHandler_ << message).endLine();
 }
 
 /******************************************************************************/
 
 void AbstractOptimizer::autoParameter()
 {
-  for(unsigned int i = 0; i < parameters_.size(); i++)
-    {
-      AutoParameter ap(parameters_[i]);
-      ap.setMessageHandler(messageHandler_);
-      parameters_.setParameter(i, ap);
-    }
+  for (unsigned int i = 0; i < parameters_.size(); i++)
+  {
+    AutoParameter ap(parameters_[i]);
+    ap.setMessageHandler(messageHandler_);
+    parameters_.setParameter(i, ap);
+  }
 }
 
 /******************************************************************************/
 
 void AbstractOptimizer::ignoreConstraints()
 {
-  for(unsigned int i = 0; i < parameters_.size(); i++)
-    {
-      parameters_[i].removeConstraint();
-    }
+  for (unsigned int i = 0; i < parameters_.size(); i++)
+  {
+    parameters_[i].removeConstraint();
+  }
 }
 
 /******************************************************************************/
 
 void AbstractOptimizer::fireOptimizationInitializationPerformed(const OptimizationEvent& event)
 {
-  for(unsigned int i = 0; i < listeners_.size(); i++)
-    {
-      listeners_[i]->optimizationInitializationPerformed(event);
-    }
+  for (unsigned int i = 0; i < listeners_.size(); i++)
+  {
+    listeners_[i]->optimizationInitializationPerformed(event);
+  }
 }
 
 /******************************************************************************/
 
 void AbstractOptimizer::fireOptimizationStepPerformed(const OptimizationEvent& event)
 {
-  for(unsigned int i = 0; i < listeners_.size(); i++)
-    {
-      listeners_[i]->optimizationStepPerformed(event);
-    }
+  for (unsigned int i = 0; i < listeners_.size(); i++)
+  {
+    listeners_[i]->optimizationStepPerformed(event);
+  }
 }
 
 /******************************************************************************/
 
 bool AbstractOptimizer::listenerModifiesParameters() const
 {
-  for(unsigned int i = 0; i < listeners_.size(); i++)
-    {
-      if(listeners_[i]->listenerModifiesParameters())
-        return true;
-    }
+  for (unsigned int i = 0; i < listeners_.size(); i++)
+  {
+    if (listeners_[i]->listenerModifiesParameters())
+      return true;
+  }
   return false;
 }
 

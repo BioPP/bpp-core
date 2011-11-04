@@ -64,14 +64,17 @@ class BrentOneDimension:
 		{
       public:
 				BODStopCondition(BrentOneDimension* bod):
-          AbstractOptimizationStopCondition(bod) { burnin_ = 3; }
+          AbstractOptimizationStopCondition(bod) {
+            tolerance_ = bod->tol2;
+            burnin_ = 3;
+          }
 				virtual ~BODStopCondition() {}
 
         BODStopCondition* clone() const { return new BODStopCondition(*this); } 
 			
 			public:
-				void init() {}
 				bool isToleranceReached() const;
+				double getCurrentTolerance() const;
 		};
 	
 	friend class BODStopCondition;

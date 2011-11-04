@@ -56,6 +56,10 @@ ADD_EXECUTABLE(test_mva test_mva.cpp)
 TARGET_LINK_LIBRARIES(test_mva ${LIBS})
 ADD_TEST(test_mva "test_mva")
 
+ADD_EXECUTABLE(test_sample test_sample.cpp)
+TARGET_LINK_LIBRARIES(test_sample ${LIBS})
+ADD_TEST(test_sample "test_sample")
+
 IF(UNIX)
   SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient test_bfgs test_stats test_mva PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
@@ -65,6 +69,6 @@ IF(APPLE)
 ENDIF()
 
 IF(WIN32)
-  SET(ENV{PATH} "$ENV{PATH}:../src")
+  SET(ENV{PATH} "$ENV{PATH};..\\src")
 ENDIF()
 

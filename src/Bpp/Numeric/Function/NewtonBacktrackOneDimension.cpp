@@ -43,11 +43,6 @@
 
 using namespace bpp;
 
-bool NewtonBacktrackOneDimension::NBODStopCondition::isToleranceReached() const
-{
-  return false;
-}
-
 /******************************************************************************/
 
 NewtonBacktrackOneDimension::NewtonBacktrackOneDimension(Function* function, double slope, double test) :

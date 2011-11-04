@@ -93,7 +93,7 @@ const Parameter& ParameterList::getParameter(const std::string& name) const thro
 		const Parameter* p = parameters_[i];
 		if (p->getName() == name) return *p;
 	}
-	throw ParameterNotFoundException("ParameterList::getParameter().", name);
+	throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
 
 /******************************************************************************/
@@ -101,11 +101,11 @@ const Parameter& ParameterList::getParameter(const std::string& name) const thro
 double ParameterList::getParameterValue(const std::string& name) const throw (ParameterNotFoundException)
 {
   for (unsigned int i = 0; i < size(); i++)
-    {
-      const Parameter* p = parameters_[i];
-      if (p->getName() == name) return p->getValue();
-    }
-  throw ParameterNotFoundException("ParameterList::getParameter().", name);
+  {
+    const Parameter* p = parameters_[i];
+    if (p->getName() == name) return p->getValue();
+  }
+  throw ParameterNotFoundException("ParameterList::getParameterValue('name').", name);
 }
 
 /******************************************************************************/
@@ -117,7 +117,7 @@ Parameter& ParameterList::getParameter(const std::string& name) throw (Parameter
 		Parameter* p = parameters_[i];
 		if (p->getName() == name) return *p;
 	}
-	throw ParameterNotFoundException("ParameterList::getParameter().", name);
+	throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
 
 /******************************************************************************/

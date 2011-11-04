@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -113,8 +113,9 @@ void RescaledHmmLikelihood::computeForward_()
   for (unsigned int i = 0; i < nbStates_; i++)
   {
     unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
+    for (unsigned int j = 0; j < nbStates_; j++) {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
+    }
   }
 
   //Initialisation:
@@ -127,8 +128,10 @@ void RescaledHmmLikelihood::computeForward_()
     for (unsigned int k = 0; k < nbStates_; k++)
     {
       x += trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k];
+      //cerr << j << "\t" << k << "\t" << trans[k + jj] << "\t" << transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << x << endl;  
     }
     tmp[j] = (*emissions)[j] * x;
+    //cerr << "e[j]=" << (*emissions)[j] << "\t" << tmp[j] << endl;
     scales_[0] += tmp[j];
   }
   for (unsigned int j = 0; j < nbStates_; j++)

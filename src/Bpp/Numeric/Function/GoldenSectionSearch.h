@@ -71,15 +71,15 @@ class GoldenSectionSearch:
         GSSStopCondition* clone() const { return new GSSStopCondition(*this); }
 			
 			public:
-				void init() {}
 				bool isToleranceReached() const;
+        double getCurrentTolerance() const;
 		};
 	
 	friend class GSSStopCondition;
 
 	private:
 		double f1, f2, x0, x1, x2, x3;
-		double _xinf, _xsup;
+		double xinf_, xsup_;
     bool isInitialIntervalSet_;
 	
 	public:

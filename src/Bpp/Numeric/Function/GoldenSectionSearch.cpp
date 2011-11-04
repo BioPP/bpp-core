@@ -49,20 +49,29 @@ using namespace bpp;
 
 bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const
 {
-  // NRC Test for done:
-  const GoldenSectionSearch* gss = dynamic_cast<const GoldenSectionSearch *>(optimizer_);
-  double x0 = gss -> x0;
-  double x1 = gss -> x1;
-  double x2 = gss -> x2;
-  double x3 = gss -> x3;
-  return NumTools::abs(x3 - x0) <= tolerance_ * (NumTools::abs(x1) + NumTools::abs(x2));
+  callCount_++;
+  if (callCount_ <= burnin_) return false;
+  return getTolerance() <= tolerance_;
 }
     
 /******************************************************************************/
 
+double GoldenSectionSearch::GSSStopCondition::getCurrentTolerance() const
+{
+  // NRC Test for done:
+  const GoldenSectionSearch* gss = dynamic_cast<const GoldenSectionSearch*>(optimizer_);
+  double x0 = gss->x0;
+  double x1 = gss->x1;
+  double x2 = gss->x2;
+  double x3 = gss->x3;
+  return NumTools::abs(x3 - x0) / (NumTools::abs(x1) + NumTools::abs(x2));
+}
+  
+/******************************************************************************/
+
 GoldenSectionSearch::GoldenSectionSearch(Function* function) :
   AbstractOptimizer(function),
-  f1(0), f2(0), x0(0), x1(0), x2(0), x3(0), _xinf(0), _xsup(0), isInitialIntervalSet_(false)
+  f1(0), f2(0), x0(0), x1(0), x2(0), x3(0), xinf_(0), xsup_(0), isInitialIntervalSet_(false)
 {
   nbEvalMax_ = 10000;
   setDefaultStopCondition_(new GSSStopCondition(this));
@@ -77,7 +86,7 @@ void GoldenSectionSearch::doInit(const ParameterList& params) throw (Exception)
   if(params.size() != 1) throw Exception("GoldenSectionSearch::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
-  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters());
+  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(xinf_, xsup_, getFunction(), getParameters());
   if (getVerbose() > 0)
   {
     printMessage("Initial bracketing:");
@@ -114,11 +123,11 @@ void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 {
   if(sup > inf)
   {
-    _xinf = inf; _xsup = sup;
+    xinf_ = inf; xsup_ = sup;
   }
   else
   {
-    _xinf = sup; _xsup = inf;
+    xinf_ = sup; xsup_ = inf;
   }
   isInitialIntervalSet_ = true;
 }

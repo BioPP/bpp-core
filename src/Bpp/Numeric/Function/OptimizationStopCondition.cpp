@@ -47,66 +47,6 @@ using namespace std;
 
 /******************************************************************************/
 
-AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(const Optimizer * optimizer):
-  optimizer_(optimizer),
-  tolerance_(0.000001),
-  callCount_(0),
-  burnin_(0) {}
-
-AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer* optimizer,
-  double tolerance):
-  optimizer_(optimizer),
-  tolerance_(tolerance),
-  callCount_(0),
-  burnin_(0) {}
-
-AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer* optimizer,
-  int burnin):
-  optimizer_(optimizer),
-  tolerance_(0.000001),
-  callCount_(0),
-  burnin_(burnin) {}
-
-AbstractOptimizationStopCondition::AbstractOptimizationStopCondition(
-  const Optimizer* optimizer,
-  double tolerance,
-  int burnin):
-  optimizer_(optimizer),
-  tolerance_(tolerance),
-  callCount_(0),
-  burnin_(burnin) {}
-
-AbstractOptimizationStopCondition::~AbstractOptimizationStopCondition() {}
-
-void AbstractOptimizationStopCondition::setTolerance(double tolerance)
-{
-  tolerance_ = tolerance;
-}
-
-double AbstractOptimizationStopCondition::getTolerance() const
-{
-  return tolerance_;
-}
-
-void AbstractOptimizationStopCondition::resetCounter()
-{
-  callCount_ = 0;
-}
-
-void AbstractOptimizationStopCondition::setBurnin(int burnin)
-{
-  burnin_ = burnin;
-}
-
-int AbstractOptimizationStopCondition::getBurnin() const
-{
-  return burnin_;
-}
-
-/******************************************************************************/
-
 ParametersStopCondition::ParametersStopCondition(
   const Optimizer* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
@@ -171,6 +111,7 @@ ParametersStopCondition::ParametersStopCondition(
 
 void ParametersStopCondition::init()
 {
+  AbstractOptimizationStopCondition::init();
   if (optimizer_->getFunction() != 0)
     newParametersEstimates_ = optimizer_->getParameters();
 }
@@ -181,7 +122,7 @@ bool ParametersStopCondition::isToleranceReached() const
 {
   callCount_++;
   lastParametersEstimates_ = newParametersEstimates_;
-  newParametersEstimates_   = optimizer_->getParameters();
+  newParametersEstimates_  = optimizer_->getParameters();
   if (callCount_ <= burnin_) return false;
   for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
   {
@@ -195,6 +136,27 @@ bool ParametersStopCondition::isToleranceReached() const
     }
   }
   return true;
+}
+
+/******************************************************************************/
+
+double ParametersStopCondition::getCurrentTolerance() const
+{
+  if (callCount_ > burnin_) {
+    double maxTol = 0.;
+    for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
+    {
+      Parameter& p = newParametersEstimates_[i];
+      double lastEstimate = lastParametersEstimates_.getParameter(p.getName()).getValue();
+      double newEstimate = p.getValue();
+      double tol = NumTools::abs<double>(newEstimate - lastEstimate);
+      if (tol > maxTol)
+        maxTol = tol;
+    }
+    return maxTol;
+  } else {
+    return std::max(tolerance_, 1.);
+  }
 }
 
 /******************************************************************************/
@@ -245,6 +207,7 @@ FunctionStopCondition::~FunctionStopCondition() {}
 
 void FunctionStopCondition::init()
 {
+  AbstractOptimizationStopCondition::init();
   newFunctionValue_ = -log(0.);
   if (optimizer_->getFunction() != 0)
   {
@@ -262,6 +225,16 @@ bool FunctionStopCondition::isToleranceReached() const
   if (callCount_ <= burnin_) return false;
   double tol = NumTools::abs<double>(newFunctionValue_ - lastFunctionValue_);
   return tol < tolerance_;
+}
+
+/******************************************************************************/
+
+double FunctionStopCondition::getCurrentTolerance() const
+{
+  if (callCount_ > burnin_)
+    return NumTools::abs<double>(newFunctionValue_ - lastFunctionValue_);
+  else
+    return std::max(tolerance_, 1.);
 }
 
 /******************************************************************************/

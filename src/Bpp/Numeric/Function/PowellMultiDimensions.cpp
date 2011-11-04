@@ -46,19 +46,25 @@ using namespace bpp;
 
 /******************************************************************************/
 
-bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const
+bool PowellMultiDimensions::PMDStopCondition::isToleranceReached() const {
+  callCount_++;
+  if (callCount_ <= burnin_) return false;
+  return getCurrentTolerance() < tolerance_;
+}
+
+double PowellMultiDimensions::PMDStopCondition::getCurrentTolerance() const
 {
   // NRC Test for done:
-  const PowellMultiDimensions * pmd = dynamic_cast<const PowellMultiDimensions *>(optimizer_);
-  double fp   = pmd->_fp;
-  double fret = pmd->_fret;
-  return 2.0 * NumTools::abs(fp - fret) <= tolerance_ * (NumTools::abs(fp) + NumTools::abs(fret));
+  const PowellMultiDimensions* pmd = dynamic_cast<const PowellMultiDimensions*>(optimizer_);
+  double fp   = pmd->fp_;
+  double fret = pmd->fret_;
+  return 2.0 * NumTools::abs(fp - fret) / (NumTools::abs(fp) + NumTools::abs(fret));
 }
     
 /******************************************************************************/
 
 PowellMultiDimensions::PowellMultiDimensions(Function* function) :
-AbstractOptimizer(function), _fp(0), _fret(0), _pt(), _xi(), _ncom(0), _pcom(), _xicom(), _f1dim(function)
+AbstractOptimizer(function), fp_(0), fret_(0), pt_(), xi_(), ncom_(0), pcom_(), xicom_(), f1dim_(function)
 {
   setDefaultStopCondition_(new PMDStopCondition(this));
   setStopCondition(*getDefaultStopCondition());
@@ -70,21 +76,21 @@ void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception
 {
   // Build the initial matrix:
   unsigned int n = params.size();
-  _xi.resize(n);
+  xi_.resize(n);
   for(unsigned int i = 0; i < n; i++)
   {
     // Copy the parameter list:
-    _xi[i].resize(n);
+    xi_[i].resize(n);
     for(unsigned int j = 0; j < n; j++)
     {
       // Set the directions to unit vectors:
-      _xi[i][j] = (j == i) ? 1 : 0;
+      xi_[i][j] = (j == i) ? 1 : 0;
     }
   }
   
   // Starting point:
-  _fret = getFunction()->f(getParameters());
-  _pt   = getParameters();
+  fret_ = getFunction()->f(getParameters());
+  pt_   = getParameters();
 }
   
 /******************************************************************************/
@@ -92,7 +98,7 @@ void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception
 double PowellMultiDimensions::doStep() throw (Exception)
 {
   unsigned int n = getParameters().size();
-  _fp = _fret;
+  fp_ = fret_;
   unsigned int ibig = 0;
   double del = 0.0; // Will be the biggest function decrease
   Vdouble xit(n);
@@ -104,18 +110,18 @@ double PowellMultiDimensions::doStep() throw (Exception)
     // Copy the direction:
     for(unsigned int j = 0; j < n; j++)
     {
-      xit[j] = _xi[j][i];
+      xit[j] = xi_[j][i];
     }
-    fptt = _fret;
-    nbEval_ += OneDimensionOptimizationTools::lineMinimization(_f1dim,
+    fptt = fret_;
+    nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
         getParameters_(), xit, getStopCondition()->getTolerance(),
         0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
-    _fret = getFunction()->f(getParameters());
-    if (getVerbose() > 2) printPoint(getParameters(), _fret);
-    if (_fret > _fp) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
-    if (fptt - _fret > del)
+    fret_ = getFunction()->f(getParameters());
+    if (getVerbose() > 2) printPoint(getParameters(), fret_);
+    if (fret_ > fp_) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
+    if (fptt - fret_ > del)
     {
-      del = fptt - _fret;
+      del = fptt - fret_;
       ibig = i;
     }
   }
@@ -123,32 +129,32 @@ double PowellMultiDimensions::doStep() throw (Exception)
   ParameterList ptt = getParameters();
   for (unsigned int j = 0; j < n; j++)
   {
-    ptt[j].setValue(2.0 * getParameters()[j].getValue() - _pt[j].getValue());
-    xit[j] = getParameters()[j].getValue() - _pt[j].getValue();
-    _pt[j].setValue(getParameters()[j].getValue());
+    ptt[j].setValue(2.0 * getParameters()[j].getValue() - pt_[j].getValue());
+    xit[j] = getParameters()[j].getValue() - pt_[j].getValue();
+    pt_[j].setValue(getParameters()[j].getValue());
   }
   fptt = getFunction()->f(ptt);
-  if (fptt < _fp)
+  if (fptt < fp_)
   {
-    double t = 2.0 * (_fp - 2.0 * _fret + fptt) * NumTools::sqr(_fp - _fret - del) - del * NumTools::sqr(_fp - fptt);
+    double t = 2.0 * (fp_ - 2.0 * fret_ + fptt) * NumTools::sqr(fp_ - fret_ - del) - del * NumTools::sqr(fp_ - fptt);
     if (t < 0.0)
     {
       //cout << endl << "New direction: drection " << ibig << " removed." << endl;
-      nbEval_ += OneDimensionOptimizationTools::lineMinimization(_f1dim,
+      nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
           getParameters_(), xit, getStopCondition()->getTolerance(),
           0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
-      _fret = getFunction()->f(getParameters());
-      if (_fret > _fp) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
+      fret_ = getFunction()->f(getParameters());
+      if (fret_ > fp_) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
       for (unsigned int j = 0; j < n; j++)
       {
-        _xi[j][ibig]  = _xi[j][n - 1];
-        _xi[j][n - 1] = xit[j];
+        xi_[j][ibig]  = xi_[j][n - 1];
+        xi_[j][n - 1] = xit[j];
       }
     }
   }
   else getFunction()->setParameters(getParameters());
 
-  return _fret;
+  return fret_;
 }
 
 /******************************************************************************/

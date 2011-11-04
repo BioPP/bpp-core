@@ -75,8 +75,8 @@ class DownhillSimplexMethod:
         DSMStopCondition* clone() const { return new DSMStopCondition(*this); }
       
       public:
-        void init() {}
-        bool isToleranceReached() const;
+        bool isToleranceReached() const { return (getCurrentTolerance() < tolerance_); }
+        double getCurrentTolerance() const;
     };
   
   friend class DSMStopCondition;
