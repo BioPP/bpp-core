@@ -626,28 +626,12 @@ public:
 
   /**
    * @author Laurent Gueguen
-   * @return From std::vector v1 and v2, return @f$\sum_i(v2_i * v1_i)@f$.
-   * @param v1 A std::vector.
-   * @param v2 another std::vector of same size.
-   */
-  template<class T>
-  static T sum(const std::vector<T>& v1, const std::vector<T>& v2)
-  {
-    if (v1.size() != v2.size())
-      throw DimensionException("VectorTools::sum", v1.size(), v2.size());
-    T p = 0;
-    for (size_t i = 0; i < v1.size(); i++) { p += v1[i] * v2[i]; }
-    return p;
-  }
-
-  /**
-   * @author Laurent Gueguen
    * @return Log-normalize std::vector v1, ie add a constant to the elements of v
    *  such that @f$\sum_i(\exp(v_i)) = 1@f$.
    * @param v std::vector.
    */
   template<class T>
-  static void lognorm(std::vector<T>& v)
+  static void logNorm(std::vector<T>& v)
   {
     T M = max(v);
     T x = std::exp(v[0] - M);
@@ -664,7 +648,7 @@ public:
    * @param v1 a std::vector.
    */
   template<class T>
-  static T logsumexp(const std::vector<T>& v1)
+  static T logSumExp(const std::vector<T>& v1)
   {
     T M = max(v1);
     T x = std::exp(v1[0] - M);
@@ -682,7 +666,7 @@ public:
    * @param v2 another std::vector.
    */
   template<class T>
-  static T logsumexp(const std::vector<T>& v1, const std::vector<T>& v2)
+  static T logSumExp(const std::vector<T>& v1, const std::vector<T>& v2)
   {
     unsigned int size;
     if (v1.size() != v2.size())
@@ -705,7 +689,7 @@ public:
    * @param v1 a std::vector.
    */
   template<class T>
-  static T logmeanexp(const std::vector<T>& v1)
+  static T logMeanExp(const std::vector<T>& v1)
   {
     T M = max(v1);
     T x = std::exp(v1[0] - M);
@@ -723,7 +707,7 @@ public:
    * @param v1 a std::vector.
    */
   template<class T>
-  static T sumexp(const std::vector<T>& v1)
+  static T sumExp(const std::vector<T>& v1)
   {
     T M = max(v1);
     T x = std::exp(v1[0] - M);
@@ -741,7 +725,7 @@ public:
    * @param v2 another std::vector.
    */
   template<class T>
-  static T sumexp(const std::vector<T>& v1, const std::vector<T>& v2)
+  static T sumExp(const std::vector<T>& v1, const std::vector<T>& v2)
   {
     unsigned int size;
     if (v1.size() != v2.size())
