@@ -28,6 +28,10 @@ ADD_EXECUTABLE(test_eigen test_eigen.cpp)
 TARGET_LINK_LIBRARIES(test_eigen ${LIBS})
 ADD_TEST(test_eigen "test_eigen")
 
+ADD_EXECUTABLE(test_matrices test_matrices.cpp)
+TARGET_LINK_LIBRARIES(test_matrices ${LIBS})
+ADD_TEST(test_matrices "test_matrices")
+
 ADD_EXECUTABLE(test_derivative1 test_derivative1.cpp)
 TARGET_LINK_LIBRARIES(test_derivative1 ${LIBS})
 ADD_TEST(test_derivative1 "test_derivative1")
