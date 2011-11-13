@@ -60,5 +60,5 @@ int main() {
   MatrixTools::mult(m, n, o);
   MatrixTools::print(o);
   
-  return (m.equals(m2) ? 0 : 1);
+  return (m.equals(m2, 0.000001) ? 0 : 1);
 }
