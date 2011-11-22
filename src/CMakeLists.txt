@@ -141,6 +141,7 @@ set(H_FILES
   Bpp/Numeric/Random/Uniform01WH.h
   Bpp/Numeric/VectorExceptions.h
   Bpp/Numeric/VectorTools.h
+  Bpp/Numeric/Range.h
   Bpp/Text/KeyvalTools.h
   Bpp/Text/NestedStringTokenizer.h
   Bpp/Text/StringTokenizer.h

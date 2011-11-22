@@ -115,6 +115,10 @@ void RescaledHmmLikelihood::computeForward_()
     unsigned int ii = i * nbStates_;
     for (unsigned int j = 0; j < nbStates_; j++) {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
+      if (isnan(trans[ii + j]))
+        throw Exception("RescaledHmmLikelihood::computeForward_. NaN transition probability");
+      if (trans[ii + j] < 0)
+        throw Exception("RescaledHmmLikelihood::computeForward_. Negative transition probability: " + TextTools::toString(trans[ii + j]));
     }
   }
 
@@ -171,7 +175,7 @@ void RescaledHmmLikelihood::computeForward_()
         tmp[j] = (*emissions)[j] * x;
         if (tmp[j] < 0)
         {
-          (*ApplicationTools::warning << "Negative emission probability at " << i << ", state " << j << ": " << (*emissions)[j]).endLine();
+          (*ApplicationTools::warning << "Negative probability at " << i << ", state " << j << ": " << (*emissions)[j] << "\t" << x).endLine();
           tmp[j] = 0;
         }
         scales_[i] += tmp[j];

@@ -28,6 +28,10 @@ ADD_EXECUTABLE(test_eigen test_eigen.cpp)
 TARGET_LINK_LIBRARIES(test_eigen ${LIBS})
 ADD_TEST(test_eigen "test_eigen")
 
+ADD_EXECUTABLE(test_matrices test_matrices.cpp)
+TARGET_LINK_LIBRARIES(test_matrices ${LIBS})
+ADD_TEST(test_matrices "test_matrices")
+
 ADD_EXECUTABLE(test_derivative1 test_derivative1.cpp)
 TARGET_LINK_LIBRARIES(test_derivative1 ${LIBS})
 ADD_TEST(test_derivative1 "test_derivative1")
@@ -60,12 +64,16 @@ ADD_EXECUTABLE(test_sample test_sample.cpp)
 TARGET_LINK_LIBRARIES(test_sample ${LIBS})
 ADD_TEST(test_sample "test_sample")
 
+ADD_EXECUTABLE(test_range test_range.cpp)
+TARGET_LINK_LIBRARIES(test_range ${LIBS})
+ADD_TEST(test_range "test_range")
+
 IF(UNIX)
-  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient test_bfgs test_stats test_mva PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient test_bfgs test_stats test_mva test_range PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(APPLE)
-  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient test_bfgs test_stats test_mva PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_eigen test_derivative1 test_downhill test_powell test_gradient test_bfgs test_stats test_mva test_range PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(WIN32)
