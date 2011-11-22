@@ -118,15 +118,20 @@ template<class T> class Range
     /**
      * @brief Restrict the current interval to the intersection with the given one.
      *
-     * If the two intervals do not overlap, then the interval is not modified.
+     * If the two intervals do not overlap, then the interval is set to empty.
      * @param r input interval.
      */
     void sliceWith(const Range& r)
     {
-      if (r.begin_ > begin_ && r.begin_ <= end_)
-        begin_ = r.begin_;
-      if (r.end_ < end_ && r.end_ >= begin_)
-        end_ = r.end_;
+      if (!overlap(r)) {
+        begin_ = 0;
+        end_   = 0;
+      } else {
+        if (r.begin_ > begin_ && r.begin_ <= end_)
+          begin_ = r.begin_;
+        if (r.end_ < end_ && r.end_ >= begin_)
+          end_ = r.end_;
+      }
     }
 
     std::string toString() const {
