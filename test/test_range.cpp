@@ -77,7 +77,7 @@ int main() {
 
   Range<unsigned int> r;
 
-  cout << endl << "..:: Unions ::.." << endl;
+  cout << endl << "..:: Expand ::.." << endl;
   r = r1; r.expandWith(r2); cout << "r1 \\/ r2: " << r.toString() << endl;
   if (r != r1) return 1;
   r = r1; r.expandWith(r3); cout << "r1 \\/ r3: " << r.toString() << endl;
@@ -91,11 +91,11 @@ int main() {
   r = r1; r.expandWith(r7); cout << "r1 \\/ r7: "  << r.toString() << endl;
   if (r != r7) return 1;
 
-  cout << endl << "..:: Intersections ::.." << endl;
+  cout << endl << "..:: Slice ::.." << endl;
   r = r1; r.sliceWith(r2); cout << "r1 /\\ r2: " << r.toString() << endl;
-  if (r != r1) return 1;
+  if (r != Range<unsigned int>(0, 0)) return 1;
   r = r1; r.sliceWith(r3); cout << "r1 /\\ r3: " << r.toString() << endl;
-  if (r != r1) return 1;
+  if (r != Range<unsigned int>(0, 0)) return 1;
   r = r1; r.sliceWith(r4); cout << "r1 /\\ r4: " << r.toString() << endl;
   if (r != Range<unsigned int>(3, 5)) return 1;
   r = r1; r.sliceWith(r5); cout << "r1 /\\ r5: "  << r.toString() << endl;
