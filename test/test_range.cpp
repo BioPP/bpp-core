@@ -129,6 +129,16 @@ int main() {
   mr.addRange(r);
   cout << mr.toString() << endl;
 
+  r = Range<unsigned int>(9, 24);
+  cout << "Restricting to " << r.toString() << endl;
+  mr.restrictTo(r);
+  cout << mr.toString() << endl;
+
+  r = Range<unsigned int>(5, 23);
+  cout << "Restricting to " << r.toString() << endl;
+  mr.restrictTo(r);
+  cout << mr.toString() << endl;
+
   r = Range<unsigned int>(19, 24);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);

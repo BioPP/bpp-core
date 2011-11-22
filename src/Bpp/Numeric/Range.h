@@ -134,6 +134,11 @@ template<class T> class Range
       }
     }
 
+    /**
+     * @return True if then begining position equals the ending one.
+     */
+    bool isEmpty() const { return begin_ == end_; }
+
     std::string toString() const {
       return ("[" + TextTools::toString(begin_) + "," + TextTools::toString(end_) + "[");
     }
@@ -178,7 +183,21 @@ template<class T> class MultiRange
           ranges_.erase(ranges_.begin() + overlappingPositions[i]);
         }
       }
-      sort(ranges_.begin(), ranges_.end());
+      clean_();
+    }
+
+    /**
+     * @brief Get the intersection with a given range.
+     *
+     * The new multirange is the union of all ranges intersections with the given range.
+     *
+     * @param r Restriction range.
+     */
+    void restrictTo(const Range<T>& r) {
+      for (typename std::vector< Range<T> >::iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        it->sliceWith(r);
+      }
+      clean_();
     }
 
     /**
@@ -193,6 +212,16 @@ template<class T> class MultiRange
       return s;
     }
 
+  private:
+    void clean_() {
+      //Reorder
+      std::sort(ranges_.begin(), ranges_.end());
+      //Remove empty intervals:
+      for (size_t i = ranges_.size(); i > 0; --i) {
+        if (ranges_[i - 1].isEmpty())
+          ranges_.erase(ranges_.begin() + i - 1);
+      }
+    }
 };
 
 } //end of namespace bpp
