@@ -1,3 +1,7 @@
+22/11/11 Julien Dutheil
+* Added unit testing for matrices
+* Added new Range and MultiRange classes + unit test.
+
 09/06/11 -*- Version 2.0.2 -*-
 
 22/03/11 Mathieu Groussin
