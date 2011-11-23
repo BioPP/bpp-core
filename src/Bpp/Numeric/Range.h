@@ -69,8 +69,8 @@ template<class T> class Range
      * @param end   Stop position
      */
     Range(const T& begin = 0, const T& end = 0):
-      begin_(min(begin, end)),
-      end_(max(begin, end))
+      begin_(std::min(begin, end)),
+      end_(std::max(begin, end))
     {}
 
   public:
