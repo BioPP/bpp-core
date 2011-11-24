@@ -189,7 +189,7 @@ template<class T> class RangeCollection {
 /**
  * @brief This class implements a data structure describing a set of intervales.
  *
- * Intervales can be overlapping.
+ * Intervales can be overlapping, but empty intervales will be ignored/removed.
  */
 template<class T> class RangeSet:
   public RangeCollection<T>
@@ -204,7 +204,8 @@ template<class T> class RangeSet:
 
   public:
     void addRange(const Range<T>& r) {
-      ranges_.insert(r);
+      if (!r.isEmpty())
+        ranges_.insert(r);
     }
 
     void restrictTo(const Range<T>& r) {
@@ -213,7 +214,9 @@ template<class T> class RangeSet:
       for (typename std::set< Range<T> >::iterator it = bck.begin(); it != bck.end(); ++it) {
         Range<T> rc = *it;
         rc.sliceWith(r);
-        ranges_.insert(rc);
+        if (!rc.isEmpty()) {
+          ranges_.insert(rc);
+        }
       }
     }
 
