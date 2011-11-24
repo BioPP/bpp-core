@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Range.h>
+#include <Bpp/Numeric/VectorTools.h>
 #include <iostream>
 
 using namespace bpp;
@@ -108,46 +109,55 @@ int main() {
   cout << endl << "..:: Multi-ranges ::.." << endl;
   MultiRange<unsigned int> mr;
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
  
   r = Range<unsigned int>(10, 13);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(18, 21);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(25, 23);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(7, 11);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(9, 24);
   cout << "Restricting to " << r.toString() << endl;
   mr.restrictTo(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(5, 23);
   cout << "Restricting to " << r.toString() << endl;
   mr.restrictTo(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(19, 24);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   r = Range<unsigned int>(0, 50);
   cout << "Adding " << r.toString() << endl;
   mr.addRange(r);
   cout << mr.toString() << endl;
+  VectorTools::print<unsigned int>(mr.getBounds());
 
   return 0;
 }

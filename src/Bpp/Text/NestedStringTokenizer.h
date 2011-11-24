@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to map data onto
 a sequence or a phylogenetic tree.
@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <deque>
 #include <string>
 
+#include "StringTokenizer.h"
 #include "../Exceptions.h"
 
 namespace bpp
@@ -55,16 +56,9 @@ namespace bpp
  * Splits a string according to a given (set of) delimiter(s).
  * Delimiters in certains blocks ({}, [], etc) are ignored.
  */
-class NestedStringTokenizer
+class NestedStringTokenizer:
+  public StringTokenizer
 {
-	protected:
-
-		/** @brief Where the tokens are stored. */
-    std::deque<std::string> tokens_;
-		
-		/** @brief the current position in the token list. */
-		unsigned int currentPosition_;
-
 	public:
 		
 		/**
@@ -90,36 +84,6 @@ class NestedStringTokenizer
 		 */
 		const std::string& nextToken() throw (Exception);
 	
-		/**
-		 * @brief Tell if some token are still available.
-		 * @return True if some token are still available.
-		 */
-		bool hasMoreToken() const { return currentPosition_ < tokens_.size(); }
-
-		/**
-		 * @brief Tell how many tokens are available.
-		 *
-		 * @return the number of tokens available.
-		 */
-		unsigned int numberOfRemainingTokens() const { return tokens_.size() - currentPosition_; }
-
-		/**
-		 * @brief Get a particular token.
-		 *
-		 * Do not move the iterator.
-		 *
-		 * @param pos The index of the token.
-		 * @return the token at position 'pos'.
-		 */
-		const std::string& getToken(unsigned int pos) const { return tokens_[pos]; }
-
-		/**
-		 * @brief Retrieve all tokens.
-		 *
-		 * @return A reference toward the vector of tokens.
-		 */
-		const std::deque<std::string>& getTokens() const { return tokens_; }
-
 };
 
 } //end of namespace bpp;

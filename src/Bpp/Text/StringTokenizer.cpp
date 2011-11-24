@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -93,7 +93,7 @@ StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimi
 
 const std::string& StringTokenizer::nextToken() throw (Exception)
 {
-	if(!hasMoreToken()) throw Exception("No more token in tokenizer.");
+	if (!hasMoreToken()) throw Exception("No more token in tokenizer.");
 	return tokens_[currentPosition_++];
 }
 

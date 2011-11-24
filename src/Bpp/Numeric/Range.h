@@ -62,15 +62,15 @@ template<class T> class Range
     /**
      * @brief Creates a new interval.
      *
-     * If begin > end, then the positions are swapped.
-     * If begin == end, the interval is considered empty.
+     * If a > b, then the positions are swapped.
+     * If a == b, the interval is considered empty.
      *
-     * @param begin Start position
-     * @param end   Stop position
+     * @param a First position
+     * @param b Second position
      */
-    Range(const T& begin = 0, const T& end = 0):
-      begin_(std::min(begin, end)),
-      end_(std::max(begin, end))
+    Range(const T& a = 0, const T& b = 0):
+      begin_(std::min(a, b)),
+      end_(std::max(a, b))
     {}
 
   public:
@@ -84,6 +84,9 @@ template<class T> class Range
       return begin_ < r.begin_ || end_ < r.end_;
     }
 
+    T begin() const { return begin_; }
+    
+    T end() const { return end_; }
 
     /**
      * @param r Range to compare with.
@@ -139,6 +142,9 @@ template<class T> class Range
      */
     bool isEmpty() const { return begin_ == end_; }
 
+    /**
+     * @return A string describing the range.
+     */
     std::string toString() const {
       return ("[" + TextTools::toString(begin_) + "," + TextTools::toString(end_) + "[");
     }
@@ -211,6 +217,25 @@ template<class T> class MultiRange
       s += "}";
       return s;
     }
+
+    /**
+     * @return A vector with all interval bounds.
+     */
+    std::vector<T> getBounds() const {
+      std::vector<T> bounds;
+      for (typename std::vector< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        bounds.push_back(it->begin());
+        bounds.push_back(it->end());
+      }
+      return bounds;
+    }
+
+    /**
+     * @return True if the set does not contain any range.
+     */
+    bool isEmpty() const { return ranges_.size() == 0; }
+
+
 
   private:
     void clean_() {

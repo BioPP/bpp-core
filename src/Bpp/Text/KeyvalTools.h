@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (2009)
+Copyright or © or Copr. Bio++ Development Tools, (2009)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -94,9 +94,10 @@ class KeyvalTools
      * @param desc [in]  A string descibing the keyval, with format key1=val1,key2=val2,etc (space are considered normal character, that's up to you to deal with that afterward!).
      * @param keyvals [out] Will contain the text of the keys and their corresponding values.
      * @param split [in] The keyval delimiter.the default is a coma, but a space character can be used for instance.
+     * @param nested [in] Tell if nested keyval procedures are expected.
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
-    static void multipleKeyvals(const std::string& desc, std::map<std::string, std::string>& keyvals, const std::string& split = ",") throw (KeyvalException);
+    static void multipleKeyvals(const std::string& desc, std::map<std::string, std::string>& keyvals, const std::string& split = ",", bool nested = true) throw (KeyvalException);
 
     /**
      * @brief Parse (not recursively) a procedure string.
