@@ -1,3 +1,6 @@
+24/11/11 Julien Dutheil
+* NestedStringTokenizer now inherits from StringTokenizer.
+
 22/11/11 Julien Dutheil
 * Added unit testing for matrices
 * Added new Range and MultiRange classes + unit test.
