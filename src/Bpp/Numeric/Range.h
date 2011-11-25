@@ -66,6 +66,9 @@ template<class T> class Range
      *
      * If a > b, then the positions are swapped.
      * If a == b, the interval is considered empty.
+     * Coordinates are 0-based and of type [a, b[,
+     * so that the length of the interval is computed as
+     * b - a.
      *
      * @param a First position
      * @param b Second position
@@ -89,6 +92,8 @@ template<class T> class Range
     T begin() const { return begin_; }
     
     T end() const { return end_; }
+    
+    T length() const { return end_ - begin_; }
 
     /**
      * @param r Range to compare with.
@@ -231,6 +236,9 @@ template<class T> class RangeSet:
 
     bool isEmpty() const { return ranges_.size() == 0; }
 
+    const std::set< Range<T> >& getSet() const { return ranges_; }
+
+    std::set< Range<T> >& getSet() { return ranges_; }
 };
 
 
