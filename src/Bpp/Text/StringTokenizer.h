@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <deque>
 #include <string>
+#include <iostream>
 
 #include "../Exceptions.h"
 
@@ -75,8 +76,11 @@ class StringTokenizer
      * @param allowEmptyTokens Tell if empty tokens are allowed or should be ignored.
 		 */
 		StringTokenizer(const std::string& s, const std::string& delimiters = " \t\n\f\r", bool solid = false, bool allowEmptyTokens = false);
-		
+	
 		virtual ~StringTokenizer() {}
+
+  public:
+    StringTokenizer(): tokens_(), currentPosition_(0) {}
 	
 	public:
 		
@@ -92,7 +96,9 @@ class StringTokenizer
 		 * @brief Tell if some token are still available.
 		 * @return True if some token are still available.
 		 */
-		bool hasMoreToken() const { return currentPosition_ < tokens_.size(); }
+		bool hasMoreToken() const {
+      return currentPosition_ < tokens_.size();
+    }
 	
 		/**
 		 * @brief Tell how many tokens are available.

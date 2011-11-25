@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (2009)
+Copyright or © or Copr. Bio++ Development Team, (2009)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -40,36 +40,43 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "KeyvalTools.h"
 #include "NestedStringTokenizer.h"
 
+//From the STL:
+#include <memory>
+
 using namespace bpp;
 using namespace std;
 
 void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::string& val) throw (KeyvalException)
 {
   string::size_type i = desc.find("=");
-  if(i == string::npos)
+  if (i == string::npos)
     throw KeyvalException("Bad syntax! keyval should be of the form 'key=value', found '" + desc + "'.");
   key = desc.substr(0, i);
   val = desc.substr(i+1);
 }
 
-void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,std::string>& keyvals, const std::string & split) throw (KeyvalException)
+void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,std::string>& keyvals, const std::string& split, bool nested) throw (KeyvalException)
 {
-  NestedStringTokenizer st(desc, "(", ")", split);
+  auto_ptr<StringTokenizer> st;
+  if (nested)
+    st.reset(new NestedStringTokenizer(desc, "(", ")", split));
+  else
+    st.reset(new StringTokenizer(desc, split));
   string key, val;
   vector<string> tokens;
   //Check tokens:
   string token;
-  while(st.hasMoreToken())
+  while (st->hasMoreToken())
   {
-    token = st.nextToken();
+    token = st->nextToken();
     if (token == "=")
     {
       //We need to merge the next token with the last one:
       if (tokens.size() == 0)
         throw KeyvalException("Invalid syntax, found '=' without argument name.");
-      if (!st.hasMoreToken())
+      if (!st->hasMoreToken())
         throw KeyvalException("Invalid syntax, found '=' without argument value.");
-      string nextToken = st.nextToken();
+      string nextToken = st->nextToken();
       if (nextToken == "=")
         throw KeyvalException("Invalid syntax, found a double '='.");
       tokens[tokens.size() - 1] += "=" + nextToken;

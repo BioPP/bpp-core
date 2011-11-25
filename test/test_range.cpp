@@ -38,10 +38,55 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Range.h>
+#include <Bpp/Numeric/VectorTools.h>
 #include <iostream>
 
 using namespace bpp;
 using namespace std;
+
+template<class T> void test_range(RangeCollection<T>& collection) {
+  cout << collection.toString() << endl;
+ 
+  Range<unsigned int> r(10, 13);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(18, 21);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(25, 23);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(7, 11);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(9, 24);
+  cout << "Restricting to " << r.toString() << endl;
+  collection.restrictTo(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(5, 23);
+  cout << "Restricting to " << r.toString() << endl;
+  collection.restrictTo(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(19, 24);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+
+  r = Range<unsigned int>(0, 50);
+  cout << "Adding " << r.toString() << endl;
+  collection.addRange(r);
+  cout << collection.toString() << endl;
+}
 
 int main() {
   
@@ -105,39 +150,13 @@ int main() {
   r = r1; r.sliceWith(r7); cout << "r1 /\\ r7: "  << r.toString() << endl;
   if (r != r1) return 1;
 
-  cout << endl << "..:: Multi-ranges ::.." << endl;
+  cout << endl << "..:: MultiRange ::.." << endl;
   MultiRange<unsigned int> mr;
-  cout << mr.toString() << endl;
- 
-  r = Range<unsigned int>(10, 13);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
+  test_range(mr);
 
-  r = Range<unsigned int>(18, 21);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
-
-  r = Range<unsigned int>(25, 23);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
-
-  r = Range<unsigned int>(7, 11);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
-
-  r = Range<unsigned int>(19, 24);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
-
-  r = Range<unsigned int>(0, 50);
-  cout << "Adding " << r.toString() << endl;
-  mr.addRange(r);
-  cout << mr.toString() << endl;
+  cout << endl << "..:: RangeSet ::.." << endl;
+  RangeSet<unsigned int> rs;
+  test_range(rs);
 
   return 0;
 }

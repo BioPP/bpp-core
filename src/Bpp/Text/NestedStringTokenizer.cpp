@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to map data onto
 a sequence or a phylogenetic tree.
@@ -49,8 +49,7 @@ using namespace std;
 
 NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::string& open, const std::string& end, const std::string& delimiters, bool solid)
   throw (Exception):
-    tokens_(),
-    currentPosition_(0)
+    StringTokenizer()
 {
   int blocks = 0;
   string cache = "";
@@ -66,7 +65,7 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
 			  if (newIndex != s.npos)
         {
 			    string token(s.begin() + index, s.begin() + newIndex);
-          blocks += (int)TextTools::count(token, open) - (int)TextTools::count(token, end);
+          blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
         
 				  if (blocks == 0)
           {

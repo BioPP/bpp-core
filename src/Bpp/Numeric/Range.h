@@ -51,6 +51,8 @@ namespace bpp {
 
 /**
  * @brief The Range class, defining an interval.
+ *
+ * Methods are provided for extending the range, get union and intersection.
  */
 template<class T> class Range
 {
@@ -62,16 +64,21 @@ template<class T> class Range
     /**
      * @brief Creates a new interval.
      *
-     * If begin > end, then the positions are swapped.
-     * If begin == end, the interval is considered empty.
+     * If a > b, then the positions are swapped.
+     * If a == b, the interval is considered empty.
+     * Coordinates are 0-based and of type [a, b[,
+     * so that the length of the interval is computed as
+     * b - a.
      *
-     * @param begin Start position
-     * @param end   Stop position
+     * @param a First position
+     * @param b Second position
      */
-    Range(const T& begin = 0, const T& end = 0):
-      begin_(min(begin, end)),
-      end_(max(begin, end))
+    Range(const T& a = 0, const T& b = 0):
+      begin_(std::min(a, b)),
+      end_(std::max(a, b))
     {}
+
+    virtual ~Range() {}
 
   public:
     bool operator==(const Range<T>& r) const {
@@ -84,6 +91,11 @@ template<class T> class Range
       return begin_ < r.begin_ || end_ < r.end_;
     }
 
+    T begin() const { return begin_; }
+    
+    T end() const { return end_; }
+    
+    T length() const { return end_ - begin_; }
 
     /**
      * @param r Range to compare with.
@@ -134,6 +146,14 @@ template<class T> class Range
       }
     }
 
+    /**
+     * @return True if then begining position equals the ending one.
+     */
+    bool isEmpty() const { return begin_ == end_; }
+
+    /**
+     * @return A string describing the range.
+     */
     std::string toString() const {
       return ("[" + TextTools::toString(begin_) + "," + TextTools::toString(end_) + "[");
     }
@@ -141,14 +161,95 @@ template<class T> class Range
 };
 
 /**
- * @brief This class implements a data structure describing a set of non-overlapping intervales.
- *
- * Methods are provided for extending the range, get union and intersections.
+ * @brief Interface discribing a collection of Range objects.
  */
-template<class T> class MultiRange
+template<class T> class RangeCollection {
+  public:
+    virtual ~RangeCollection() {}
+    /**
+     * @brief Add a new range to the collection.
+     *
+     * @param r The range to add to the collection.
+     */
+    virtual void addRange(const Range<T>& r) = 0;
+
+    /**
+     * @brief Get the intersection with a given range.
+     *
+     * The new multirange is the union of all ranges intersections with the given range.
+     *
+     * @param r Restriction range.
+     */
+    virtual void restrictTo(const Range<T>& r) = 0;
+
+    /**
+     * @return A string representation of the set of intervals.
+     */
+    virtual std::string toString() const = 0;
+
+    /**
+     * @return True if the set does not contain any range.
+     */
+    virtual bool isEmpty() const = 0;
+};
+
+/**
+ * @brief This class implements a data structure describing a set of intervales.
+ *
+ * Intervales can be overlapping, but empty intervales will be ignored/removed.
+ */
+template<class T> class RangeSet:
+  public RangeCollection<T>
 {
   public:
 
+  private:
+    std::set< Range<T> > ranges_;
+
+  public:
+    RangeSet(): ranges_() {}
+
+  public:
+    void addRange(const Range<T>& r) {
+      if (!r.isEmpty())
+        ranges_.insert(r);
+    }
+
+    void restrictTo(const Range<T>& r) {
+      std::set < Range<T> > bck = ranges_;
+      ranges_.clear();
+      for (typename std::set< Range<T> >::iterator it = bck.begin(); it != bck.end(); ++it) {
+        Range<T> rc = *it;
+        rc.sliceWith(r);
+        if (!rc.isEmpty()) {
+          ranges_.insert(rc);
+        }
+      }
+    }
+
+    std::string toString() const {
+      std::string s = "{ ";
+      for (typename std::set< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        s += it->toString() + " ";
+      }
+      s += "}";
+      return s;
+    }
+
+    bool isEmpty() const { return ranges_.size() == 0; }
+
+    const std::set< Range<T> >& getSet() const { return ranges_; }
+
+    std::set< Range<T> >& getSet() { return ranges_; }
+};
+
+
+/**
+ * @brief This class implements a data structure describing a set of non-overlapping intervales.
+ */
+template<class T> class MultiRange:
+  public RangeCollection<T>
+{
   private:
     std::vector< Range<T> > ranges_;
 
@@ -178,7 +279,21 @@ template<class T> class MultiRange
           ranges_.erase(ranges_.begin() + overlappingPositions[i]);
         }
       }
-      sort(ranges_.begin(), ranges_.end());
+      clean_();
+    }
+
+    /**
+     * @brief Get the intersection with a given range.
+     *
+     * The new multirange is the union of all ranges intersections with the given range.
+     *
+     * @param r Restriction range.
+     */
+    void restrictTo(const Range<T>& r) {
+      for (typename std::vector< Range<T> >::iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        it->sliceWith(r);
+      }
+      clean_();
     }
 
     /**
@@ -193,6 +308,35 @@ template<class T> class MultiRange
       return s;
     }
 
+    /**
+     * @return A vector with all interval bounds.
+     */
+    std::vector<T> getBounds() const {
+      std::vector<T> bounds;
+      for (typename std::vector< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        bounds.push_back(it->begin());
+        bounds.push_back(it->end());
+      }
+      return bounds;
+    }
+
+    /**
+     * @return True if the set does not contain any range.
+     */
+    bool isEmpty() const { return ranges_.size() == 0; }
+
+
+
+  private:
+    void clean_() {
+      //Reorder
+      std::sort(ranges_.begin(), ranges_.end());
+      //Remove empty intervals:
+      for (size_t i = ranges_.size(); i > 0; --i) {
+        if (ranges_[i - 1].isEmpty())
+          ranges_.erase(ranges_.begin() + i - 1);
+      }
+    }
 };
 
 } //end of namespace bpp
