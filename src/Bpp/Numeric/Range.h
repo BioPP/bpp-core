@@ -78,6 +78,8 @@ template<class T> class Range
       end_(std::max(a, b))
     {}
 
+    virtual ~Range() {}
+
   public:
     bool operator==(const Range<T>& r) const {
       return begin_ == r.begin_ && end_ == r.end_;
