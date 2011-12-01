@@ -41,6 +41,7 @@
 #define _RANGE_H_
 
 #include "../Text/TextTools.h"
+#include "../Clonable.h"
 
 //From the STL:
 #include <string>
@@ -54,7 +55,8 @@ namespace bpp {
  *
  * Methods are provided for extending the range, get union and intersection.
  */
-template<class T> class Range
+template<class T> class Range:
+  public virtual Clonable
 {
   private:
     T begin_;
@@ -77,6 +79,8 @@ template<class T> class Range
       begin_(std::min(a, b)),
       end_(std::max(a, b))
     {}
+
+    Range<T>* clone() const { return new Range<T>(*this); }
 
     virtual ~Range() {}
 
@@ -194,6 +198,16 @@ template<class T> class RangeCollection {
 };
 
 /**
+ * @brief A special class used inside RangeCollection.
+ */
+template<class T> class rangeComp_ {
+  public:
+    bool operator() (const Range<T>* a, const Range<T>* b) const {
+      return ((*a) < (*b));
+    }
+};
+
+/**
  * @brief This class implements a data structure describing a set of intervales.
  *
  * Intervales can be overlapping, but empty intervales will be ignored/removed.
@@ -204,33 +218,58 @@ template<class T> class RangeSet:
   public:
 
   private:
-    std::set< Range<T> > ranges_;
+    std::set< Range<T>*, rangeComp_<T> > ranges_;
 
   public:
     RangeSet(): ranges_() {}
 
+    RangeSet(const RangeSet<T>& set): ranges_()
+    {
+      for (typename std::set< Range<T>* >::iterator it = set.ranges_.begin(); it != set.ranges_.end(); ++it) {
+        ranges_.insert(ranges_.end(), (**it).clone());
+      }
+    }
+
+    RangeSet& operator()(const RangeSet<T>& set)
+    {
+      clear_();
+      for (typename std::set< Range<T>* >::iterator it = set.ranges_.begin(); it != set.ranges_.end(); ++it) {
+        ranges_.insert(ranges_.end(), (**it).clone());
+      }
+      return *this;
+    }
+
+    virtual ~RangeSet() {
+      clear_();
+    }
+
   public:
     void addRange(const Range<T>& r) {
       if (!r.isEmpty())
-        ranges_.insert(r);
+        ranges_.insert(r.clone());
     }
 
     void restrictTo(const Range<T>& r) {
-      std::set < Range<T> > bck = ranges_;
+      std::set < Range<T>*, rangeComp_<T> > bck = ranges_;
+      std::vector < Range<T>* > trash;
       ranges_.clear();
-      for (typename std::set< Range<T> >::iterator it = bck.begin(); it != bck.end(); ++it) {
-        Range<T> rc = *it;
-        rc.sliceWith(r);
-        if (!rc.isEmpty()) {
+      for (typename std::set< Range<T>* >::iterator it = bck.begin(); it != bck.end(); ++it) {
+        Range<T>* rc = *it;
+        rc->sliceWith(r);
+        if (!rc->isEmpty()) {
           ranges_.insert(rc);
+        } else {
+          trash.push_back(rc);
         }
       }
+      for (size_t i = 0; i < trash.size(); ++i)
+        delete trash[i];
     }
 
     std::string toString() const {
       std::string s = "{ ";
-      for (typename std::set< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
-        s += it->toString() + " ";
+      for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        s += (**it).toString() + " ";
       }
       s += "}";
       return s;
@@ -238,9 +277,17 @@ template<class T> class RangeSet:
 
     bool isEmpty() const { return ranges_.size() == 0; }
 
-    const std::set< Range<T> >& getSet() const { return ranges_; }
+    const std::set< Range<T>*, rangeComp_<T> >& getSet() const { return ranges_; }
 
-    std::set< Range<T> >& getSet() { return ranges_; }
+    std::set< Range<T>*, rangeComp_<T> >& getSet() { return ranges_; }
+
+  private:
+    void clear_() {
+      for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
+        delete *it;
+      }
+      ranges_.clear();
+    }
 };
 
 
@@ -251,31 +298,51 @@ template<class T> class MultiRange:
   public RangeCollection<T>
 {
   private:
-    std::vector< Range<T> > ranges_;
+    std::vector<Range<T>*> ranges_;
 
   public:
     MultiRange(): ranges_() {}
+
+    MultiRange(const MultiRange<T>& mr): ranges_()
+    {
+      for (size_t i = 0; i < mr.ranges_.size(); ++i)
+        ranges_.push_back(mr.ranges_[i]->clone());
+    }
+
+    MultiRange& operator()(const MultiRange<T>& mr)
+    {
+      clear_();
+      for (size_t i = 0; i < mr.ranges_.size(); ++i)
+        ranges_.push_back(mr.ranges_[i]->clone());
+      return *this;
+    }
+
+    virtual ~MultiRange() {
+      clear_();
+    }
+
 
   public:
     void addRange(const Range<T>& r) {
       //this is a bit tricky, as many cases can happen. we have to check how many ranges overlap with the new one:
       std::vector<size_t> overlappingPositions;
       for (size_t i = 0; i < ranges_.size(); ++i) {
-        if (ranges_[i].overlap(r))
+        if (ranges_[i]->overlap(r))
           overlappingPositions.push_back(i);
       }
       //check if not overlap:
       if (overlappingPositions.size() == 0) {
         //We simply add the new range to the list:
-        ranges_.push_back(r);
+        ranges_.push_back(r.clone());
       } else {
         //We extand the first overlapping element:
-        ranges_[overlappingPositions[0]].expandWith(r);
+        ranges_[overlappingPositions[0]]->expandWith(r);
         //Now we merge all other overlapping ranges, if any:
         for (size_t i = overlappingPositions.size() - 1; i > 0; --i) {
           //Expand first range:
-          ranges_[overlappingPositions[0]].expandWith(ranges_[overlappingPositions[i]]);
+          ranges_[overlappingPositions[0]]->expandWith(*ranges_[overlappingPositions[i]]);
           //Then removes this range:
+          delete ranges_[overlappingPositions[i]];
           ranges_.erase(ranges_.begin() + overlappingPositions[i]);
         }
       }
@@ -290,9 +357,8 @@ template<class T> class MultiRange:
      * @param r Restriction range.
      */
     void restrictTo(const Range<T>& r) {
-      for (typename std::vector< Range<T> >::iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
-        it->sliceWith(r);
-      }
+      for (size_t i = 0; i < ranges_.size(); ++i)
+        ranges_[i]->sliceWith(r);
       clean_();
     }
 
@@ -301,9 +367,8 @@ template<class T> class MultiRange:
      */
     std::string toString() const {
       std::string s = "{ ";
-      for (typename std::vector< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
-        s += it->toString() + " ";
-      }
+      for (size_t i = 0; i < ranges_.size(); ++i)
+        s += ranges_[i]->toString() + " ";
       s += "}";
       return s;
     }
@@ -313,9 +378,9 @@ template<class T> class MultiRange:
      */
     std::vector<T> getBounds() const {
       std::vector<T> bounds;
-      for (typename std::vector< Range<T> >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
-        bounds.push_back(it->begin());
-        bounds.push_back(it->end());
+      for (size_t i = 0; i < ranges_.size(); ++i) {
+        bounds.push_back(ranges_[i]->begin());
+        bounds.push_back(ranges_[i]->end());
       }
       return bounds;
     }
@@ -326,17 +391,26 @@ template<class T> class MultiRange:
     bool isEmpty() const { return ranges_.size() == 0; }
 
 
-
   private:
     void clean_() {
       //Reorder
-      std::sort(ranges_.begin(), ranges_.end());
+      rangeComp_<T> comp;
+      std::sort(ranges_.begin(), ranges_.end(), comp);
       //Remove empty intervals:
       for (size_t i = ranges_.size(); i > 0; --i) {
-        if (ranges_[i - 1].isEmpty())
+        if (ranges_[i - 1]->isEmpty()) {
+          delete ranges_[i - 1];
           ranges_.erase(ranges_.begin() + i - 1);
+        }
       }
     }
+  private:
+    void clear_() {
+      for (size_t i = 0; i < ranges_.size(); ++i)
+        delete ranges_[i];
+      ranges_.clear();
+    }
+
 };
 
 } //end of namespace bpp
