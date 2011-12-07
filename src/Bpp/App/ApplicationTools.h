@@ -449,7 +449,7 @@ class ApplicationTools
      * @param symbol The character to display in the gauge.
      * @param mes    A message to print before the gauge.
      */
-    static void displayGauge(unsigned int iter, unsigned int total, char symbol='>', const std::string& mes="");
+    static void displayGauge(size_t iter, size_t total, char symbol='>', const std::string& mes="");
 
     /**
      * @brief Display a gauge for unefined amount of iterations.
@@ -458,7 +458,7 @@ class ApplicationTools
      * @code
      * for(unsigned int i = 0; i < 1000; i++)
      * {
-     *   ApplicationTools::displayGaugeUnlimited(i);
+     *   ApplicationTools::displayUnlimitedGauge(i);
      *   //Perform time consuming task...
      * }
      * @endcode
@@ -475,7 +475,7 @@ class ApplicationTools
      * @param iter   The current iteration number.
      * @param mes    A message to print before the gauge.
      */
-    static void displayUnlimitedGauge(unsigned int iter, const std::string& mes="");
+    static void displayUnlimitedGauge(size_t iter, const std::string& mes="");
 
 
     /** @} */

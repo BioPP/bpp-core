@@ -223,19 +223,19 @@ void ApplicationTools::displayTaskDone() { if(message) (*message << "Done.").end
 
 /******************************************************************************/
 
-void ApplicationTools::displayGauge(unsigned int iter, unsigned int total, char symbol, const std::string& mes)
+void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, const std::string& mes)
 {
   if (!message) return;
   if (total == 0) return;//We do not display anything in that case.
-  unsigned int width = static_cast<unsigned int>(terminalWidth * terminalSplit - 2);
-  string gauge = string(static_cast<unsigned int>(width * iter / total), symbol);
+  size_t width = static_cast<size_t>(terminalWidth * terminalSplit - 2);
+  string gauge = string(static_cast<unsigned int>((1. * iter / total) * width), symbol);
   string info = mes;
   if (interactive)
   {
     string fill = string(width - gauge.length(), ' ');
     gauge = "[" + gauge + fill + "] " + TextTools::resizeLeft(TextTools::toString(100 * iter / total), 3) + "%";
-    if (mes.size() > 80 - gauge.size())
-      info = TextTools::resizeRight(mes, 80 - gauge.size());
+    if (mes.size() > terminalWidth - gauge.size())
+      info = TextTools::resizeRight(mes, terminalWidth - gauge.size());
     *message << '\r' + info + gauge;
     message->flush();
   }
@@ -247,22 +247,22 @@ void ApplicationTools::displayGauge(unsigned int iter, unsigned int total, char 
       message->flush();
       return;
     }
-    unsigned int step = static_cast<unsigned int>(ceil((double)total / width));
+    size_t step = static_cast<size_t>(ceil(1. * total / width));
     if (iter >= total)
     {
-      unsigned int fill = static_cast<unsigned int>(terminalWidth * terminalSplit) - (total - 1) / step - 1;
+      size_t fill = static_cast<size_t>(terminalWidth * terminalSplit) - (total - 1) / step - 1;
       *message << TextTools::resizeLeft("]", fill, symbol);
       message->flush();
       return;
     }
-    unsigned int x = iter % step;
+    size_t x = iter % step;
     if (x == 0) { *message << symbol; message->flush(); }
   }
 }
 
 /******************************************************************************/
 
-void ApplicationTools::displayUnlimitedGauge(unsigned int iter, const std::string& mes)
+void ApplicationTools::displayUnlimitedGauge(size_t iter, const std::string& mes)
 {
   if (!message) return;
   string chars = "-/-\\";
