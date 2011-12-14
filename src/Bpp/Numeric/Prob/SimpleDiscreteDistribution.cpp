@@ -46,7 +46,8 @@ using namespace bpp;
 using namespace std;
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
-                                                       const map<double, double>& distribution) throw(Exception) :
+                                                       const map<double, double>& distribution) :
+  AbstractParameterAliasable("Simple."),
   AbstractDiscreteDistribution(distribution.size(),"Simple.")
 {
   double sum=0;
@@ -65,7 +66,9 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const vector<double>& values,
                                                        const vector<double>& probas,
                                                        bool fixed
-                                                       ) throw(Exception)  : AbstractDiscreteDistribution(values.size(),"Simple.")
+                                                       ) :
+  AbstractParameterAliasable("Simple."),
+  AbstractDiscreteDistribution(values.size(),"Simple.")
 {
   if (values.size() != probas.size()) {
     throw Exception("SimpleDiscreteDistribution. Values and probabilities vectors must have the same size (" + TextTools::toString(values.size()) + " != " + TextTools::toString(probas.size()) + ").");
@@ -96,6 +99,20 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
 
 }
 
+SimpleDiscreteDistribution::SimpleDiscreteDistribution(const SimpleDiscreteDistribution& sdd) :
+  AbstractParameterAliasable(sdd),
+  AbstractDiscreteDistribution(sdd)
+{  
+}
+
+SimpleDiscreteDistribution& SimpleDiscreteDistribution::operator=(const SimpleDiscreteDistribution& sdd)
+{
+  AbstractParameterAliasable::operator=(sdd);
+  AbstractDiscreteDistribution::operator=(sdd);
+
+  return *this;
+}
+  
 void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
   if (getNumberOfParameters() != 0) {
@@ -216,6 +233,6 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
 
   unsigned int size=distribution_.size();
   for (unsigned int i = 0; i< size; i++)
-    getParameter_("V" + TextTools::toString(i + 1)).setConstraint(&intMinMax_);
+    getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(),true);
 }
 

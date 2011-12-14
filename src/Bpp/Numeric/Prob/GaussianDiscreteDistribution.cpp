@@ -52,6 +52,7 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 GaussianDiscreteDistribution::GaussianDiscreteDistribution(unsigned int n, double mu, double sigma) :
+  AbstractParameterAliasable("Gaussian."),
   AbstractDiscreteDistribution(n,"Gaussian."), mu_(mu), sigma_(sigma)
 {
   Parameter p1("Gaussian.mu", mu);
@@ -59,6 +60,24 @@ GaussianDiscreteDistribution::GaussianDiscreteDistribution(unsigned int n, doubl
   Parameter p2("Gaussian.sigma", sigma, &Parameter::R_PLUS_STAR);
   addParameter_(p2);
   discretize();
+}
+
+GaussianDiscreteDistribution::GaussianDiscreteDistribution(const GaussianDiscreteDistribution& gdd) :
+  AbstractParameterAliasable(gdd),
+  AbstractDiscreteDistribution(gdd),
+  mu_(gdd.mu_),
+  sigma_(gdd.sigma_)
+{
+}
+
+GaussianDiscreteDistribution& GaussianDiscreteDistribution::operator=(const GaussianDiscreteDistribution& gdd) 
+{
+  AbstractParameterAliasable::operator=(gdd);
+  AbstractDiscreteDistribution::operator=(gdd);
+  mu_=gdd.mu_;
+  sigma_=gdd.sigma_;
+
+  return *this;
 }
 
 GaussianDiscreteDistribution::~GaussianDiscreteDistribution() {}

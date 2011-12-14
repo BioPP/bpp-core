@@ -52,12 +52,33 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 UniformDiscreteDistribution::UniformDiscreteDistribution(unsigned int n, double min, double max) :
-  AbstractDiscreteDistribution(n,"Uniform."), min_((min<max)?min:max), max_((min<max)?max:min) 
+  AbstractParameterAliasable("Uniform."),
+  AbstractDiscreteDistribution(n,"Uniform."),
+  min_((min<max)?min:max),
+  max_((min<max)?max:min) 
 {
   intMinMax_.setLowerBound(min_,false);
   intMinMax_.setUpperBound(max_,false);
 
   discretize();
+}
+
+UniformDiscreteDistribution::UniformDiscreteDistribution(const UniformDiscreteDistribution& udd) : 
+  AbstractParameterAliasable(udd),
+  AbstractDiscreteDistribution(udd),
+  min_(udd.min_),
+  max_(udd.max_)
+{
+}
+
+UniformDiscreteDistribution& UniformDiscreteDistribution::operator=(const UniformDiscreteDistribution& udd) 
+{
+  AbstractParameterAliasable::operator=(udd);
+  AbstractDiscreteDistribution::operator=(udd);
+  min_=udd.min_;
+  max_=udd.max_;
+
+  return *this;
 }
 
 UniformDiscreteDistribution::~UniformDiscreteDistribution() {}

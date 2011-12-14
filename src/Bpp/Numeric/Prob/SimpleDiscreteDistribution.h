@@ -73,8 +73,8 @@ class SimpleDiscreteDistribution:
      *
      * @param distribution The map object to use.
      */
-  SimpleDiscreteDistribution(const std::map<double, double>& distribution) throw(Exception);
-
+  
+  SimpleDiscreteDistribution(const std::map<double, double>& distribution);
   
   /**
    * @brief Builds a new SimpleDiscreteDistribution object from a
@@ -86,10 +86,14 @@ class SimpleDiscreteDistribution:
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, bool fixed=false) throw(Exception);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, bool fixed=false);
   
   virtual ~SimpleDiscreteDistribution() {}
 
+  SimpleDiscreteDistribution(const SimpleDiscreteDistribution&);
+
+  SimpleDiscreteDistribution& operator=(const SimpleDiscreteDistribution&);
+  
 #if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new SimpleDiscreteDistribution(*this); }
 #else

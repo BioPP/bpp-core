@@ -44,12 +44,29 @@ using namespace bpp;
 /******************************************************************************/
 
 ConstantDistribution::ConstantDistribution(double value, bool fixed):
+  AbstractParameterAliasable("Constant."),
   AbstractDiscreteDistribution(1, "Constant."),
   value_(value)
 {
   if (! fixed)
     addParameter_(Parameter("Constant.value", value));
   distribution_[value_] = 1; //One single class  with probability 1.
+}
+
+ConstantDistribution::ConstantDistribution(const ConstantDistribution& cd) :
+  AbstractParameterAliasable(cd),
+  AbstractDiscreteDistribution(cd),
+  value_(cd.value_)
+{
+}
+
+ConstantDistribution& ConstantDistribution::operator=(const ConstantDistribution& cd)
+{
+  AbstractParameterAliasable::operator=(cd);
+  AbstractDiscreteDistribution::operator=(cd);
+  value_=cd.value_;
+
+  return *this;
 }
 
 /******************************************************************************/
@@ -61,7 +78,7 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
   if (hasParameter("value")) {
     value_=getParameterValue("value");
     distribution_.clear();
-    distribution_[getParameterValue("value")] = 1; //One single class of rate 1 with probability 1.
+    distribution_[value_] = 1; //One single class of rate 1 with probability 1.
   }
 }
 
@@ -91,9 +108,10 @@ void ConstantDistribution::restrictToConstraint(const Constraint& c)
     throw Exception("ConstantDistribution::restrictToConstraint: Non-interval exception");
 
   if (! pi->isCorrect(getParameterValue("value")))
-    throw ConstraintException("Impossible to restrict to Constraint", &getParameter_("value"), getParameterValue("value_"));
+    throw ConstraintException("Impossible to restrict to Constraint", &getParameter_("value"), getParameterValue("value"));
 
   AbstractDiscreteDistribution::restrictToConstraint(c);
-  
-  getParameter_("value").setConstraint(&intMinMax_);
+
+  Parameter& p=getParameter_("value");
+  p.setConstraint(intMinMax_.clone(),true);
 }

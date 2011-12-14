@@ -51,6 +51,7 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint) :
+  AbstractParameterAliasable("TruncExponential."),
   ExponentialDiscreteDistribution(n, lambda, "TruncExponential."),
   tp_(truncationPoint)
 {
@@ -81,5 +82,5 @@ void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const Constr
 {
   ExponentialDiscreteDistribution::restrictToConstraint(c);
 
-  getParameter_("tp").setConstraint(&intMinMax_);
+  getParameter_("tp").setConstraint(intMinMax_.clone(),true);
 }

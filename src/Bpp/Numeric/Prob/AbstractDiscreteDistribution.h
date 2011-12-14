@@ -56,9 +56,9 @@ namespace bpp
    * It uses its own comparator class to deal with double precision.
    * By default, category values that differ less than 10E-9 will be considered identical.
    */
-  class AbstractDiscreteDistribution:
-    public DiscreteDistribution,
-    public AbstractParameterAliasable
+  class AbstractDiscreteDistribution :
+    public virtual DiscreteDistribution,
+    public virtual AbstractParameterAliasable
   {
 
   public:
@@ -78,7 +78,7 @@ namespace bpp
   protected:
 
     /*
-     * The numbre of categories
+     * The number of categories
      */
 
     unsigned int numberOfCategories_;
@@ -87,7 +87,7 @@ namespace bpp
      * These fields must be initialized in the constructor of the derived classes.
      */
     std::map<double, double, Order> distribution_;
-
+    
     std::vector<double> bounds_;
 
     /**
@@ -105,11 +105,14 @@ namespace bpp
     bool median_;
     
   public:
-    AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix = "") :
-      AbstractParameterAliasable(prefix), numberOfCategories_(nbClasses), distribution_(), bounds_(), intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true), median_(false) {}
+    AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix = ""); 
+    AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde);
 
+    AbstractDiscreteDistribution& operator=(const AbstractDiscreteDistribution& adde);
+    
     virtual ~AbstractDiscreteDistribution() {}
 
+    
   public:
 
     /**

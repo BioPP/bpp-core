@@ -46,10 +46,12 @@ using namespace bpp;
 using namespace std;
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<DiscreteDistribution*>& distributions,
-                                                               const vector<double>& probas ) : AbstractDiscreteDistribution(1, "Mixture."),
-                                                                                                vdd_(),
-                                                                                                probas_(),
-                                                                                                vNestedPrefix_()
+                                                               const vector<double>& probas ) :
+  AbstractParameterAliasable("Mixture."),
+  AbstractDiscreteDistribution(1, "Mixture."),
+  vdd_(),
+  probas_(),
+  vNestedPrefix_()
 {
   if (distributions.size() != probas.size())
   {
@@ -101,6 +103,49 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
   updateDistribution();
 }
 
+MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd) :
+  AbstractParameterAliasable(mdd),
+  AbstractDiscreteDistribution(mdd),
+  vdd_(),
+  probas_(),
+  vNestedPrefix_()
+{
+  for (size_t i = 0; i < mdd.vdd_.size(); i++)
+    {
+      probas_.push_back(mdd.probas_[i]);
+      vdd_.push_back(mdd.vdd_[i]->clone());
+      vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
+    }
+}
+
+MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const MixtureOfDiscreteDistributions& mdd) 
+{
+  AbstractParameterAliasable::operator=(mdd);
+  AbstractDiscreteDistribution::operator=(mdd);
+  vdd_.clear();
+  probas_.clear();
+  vNestedPrefix_.clear();
+  
+  for (size_t i = 0; i < mdd.vdd_.size(); i++)
+    {
+      probas_.push_back(mdd.probas_[i]);
+      vdd_.push_back(mdd.vdd_[i]->clone());
+      vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
+    }
+
+  return *this;
+}
+
+MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
+{
+  for (size_t i = 0; i < vdd_.size(); i++)
+    {
+      delete vdd_[i];
+    }
+
+  vdd_.clear();
+}
+
 void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasses)
 {
   for (size_t i = 0; i < vdd_.size(); i++)
@@ -111,29 +156,6 @@ void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasse
   updateDistribution();
 }
 
-
-MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd) : AbstractDiscreteDistribution(mdd),
-                                                                                                            vdd_(),
-                                                                                                            probas_(),
-                                                                                                            vNestedPrefix_()
-{
-  for (size_t i = 0; i < mdd.vdd_.size(); i++)
-  {
-    probas_.push_back(mdd.probas_[i]);
-    vdd_.push_back(mdd.vdd_[i]->clone());
-    vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
-  }
-}
-
-MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
-{
-  for (size_t i = 0; i < vdd_.size(); i++)
-  {
-    delete vdd_[i];
-  }
-
-  vdd_.clear();
-}
 
 void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& parameters)
 {

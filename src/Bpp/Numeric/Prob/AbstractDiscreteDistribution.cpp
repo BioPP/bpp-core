@@ -45,6 +45,38 @@
 using namespace bpp;
 using namespace std;
 
+
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix) :
+  AbstractParameterAliasable(prefix),
+  numberOfCategories_(nbClasses),
+  distribution_(),
+  bounds_(),
+  intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true),
+  median_(false)
+{}
+
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde) :
+  AbstractParameterAliasable(adde),
+  numberOfCategories_(adde.numberOfCategories_),
+  distribution_(adde.distribution_),
+  bounds_(adde.bounds_),
+  intMinMax_(adde.intMinMax_),
+  median_(adde.median_)
+{
+}
+
+AbstractDiscreteDistribution& AbstractDiscreteDistribution::operator=(const AbstractDiscreteDistribution& adde) 
+{
+  AbstractParameterAliasable::operator=(adde);
+  numberOfCategories_=adde.numberOfCategories_;
+  distribution_=adde.distribution_;
+  bounds_=adde.bounds_;
+  intMinMax_=adde.intMinMax_;
+  median_=adde.median_;
+
+  return *this;
+}
+
 /******************************************************************************/
 
 unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const

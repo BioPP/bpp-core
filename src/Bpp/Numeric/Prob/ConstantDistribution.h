@@ -66,6 +66,11 @@ namespace bpp
      *
      */
     ConstantDistribution(double value, bool fixed=false);
+
+    ConstantDistribution(const ConstantDistribution&);
+
+    ConstantDistribution& operator=(const ConstantDistribution&);
+    
     virtual ~ConstantDistribution() {}
   
 #if defined(NO_VIRTUAL_COV)

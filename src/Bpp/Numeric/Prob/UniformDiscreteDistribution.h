@@ -69,6 +69,10 @@ namespace bpp
      */
     UniformDiscreteDistribution(unsigned int n, double min = 0., double max = 1.);
 
+    UniformDiscreteDistribution(const UniformDiscreteDistribution&);
+
+    UniformDiscreteDistribution& operator=(const UniformDiscreteDistribution&);
+    
     virtual ~UniformDiscreteDistribution();
 
     UniformDiscreteDistribution* clone() const { return new UniformDiscreteDistribution(*this); }

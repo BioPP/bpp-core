@@ -52,6 +52,7 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
+  AbstractParameterAliasable("Gamma."),
   AbstractDiscreteDistribution(n, "Gamma."),
   alpha_(alpha),
   beta_(beta),
@@ -70,6 +71,26 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alph
 
   intMinMax_.setLowerBound(0, true);
   discretize();
+}
+
+GammaDiscreteDistribution::GammaDiscreteDistribution(const GammaDiscreteDistribution& gdd) :
+  AbstractParameterAliasable(gdd),
+  AbstractDiscreteDistribution(gdd),
+  alpha_(gdd.alpha_),
+  beta_(gdd.beta_),
+  ga1_(gdd.ga1_)
+{
+}
+
+GammaDiscreteDistribution& GammaDiscreteDistribution::operator=(const GammaDiscreteDistribution& gdd)
+{
+  AbstractParameterAliasable::operator=(gdd);
+  AbstractDiscreteDistribution::operator=(gdd);
+  alpha_=gdd.alpha_;
+  beta_=gdd.beta_;
+  ga1_=gdd.ga1_;
+
+  return *this;
 }
 
 GammaDiscreteDistribution::~GammaDiscreteDistribution() {}

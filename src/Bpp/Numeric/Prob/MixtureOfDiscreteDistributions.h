@@ -96,7 +96,9 @@ public:
   ~MixtureOfDiscreteDistributions();
 
   MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd);
-  
+
+  MixtureOfDiscreteDistributions& operator=(const MixtureOfDiscreteDistributions& mdd);
+
 #if defined(NO_VIRTUAL_COV)
     Clonable * clone() const { return new MixtureOfDiscreteDistributions(*this); }
 #else

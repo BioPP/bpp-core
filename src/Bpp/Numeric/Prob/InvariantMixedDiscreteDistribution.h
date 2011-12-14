@@ -77,6 +77,7 @@ namespace bpp
     }
     
     InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd):
+      AbstractParameterAliasable(imdd),
       AbstractDiscreteDistribution(imdd),
       dist_(dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone())),
       invariant_(imdd.invariant_), p_(imdd.p_),
@@ -85,6 +86,7 @@ namespace bpp
     
     InvariantMixedDiscreteDistribution& operator=(const InvariantMixedDiscreteDistribution& imdd)
     {
+      AbstractParameterAliasable::operator=(imdd);
       AbstractDiscreteDistribution::operator=(imdd);
       dist_         = dynamic_cast<DiscreteDistribution *>(imdd.dist_->clone());
       invariant_    = imdd.invariant_;

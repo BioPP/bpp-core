@@ -73,6 +73,7 @@ public:
   ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., std::string prefix = "Exponential.");
 
   ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist) :
+    AbstractParameterAliasable(dist),
     AbstractDiscreteDistribution(dist),
     lambdaConstraint_(dynamic_cast<IncludingPositiveReal*>(dist.lambdaConstraint_->clone())),
     lambda_(dist.lambda_)
@@ -80,6 +81,7 @@ public:
 
   ExponentialDiscreteDistribution& operator=(const ExponentialDiscreteDistribution& dist)
   {
+    AbstractParameterAliasable::operator=(dist);    
     AbstractDiscreteDistribution::operator=(dist);
     lambdaConstraint_ = dynamic_cast<IncludingPositiveReal*>(dist.lambdaConstraint_->clone());
     lambda_ = dist.lambda_;

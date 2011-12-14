@@ -71,6 +71,10 @@ class GaussianDiscreteDistribution:
      */
   GaussianDiscreteDistribution(unsigned int n, double mu=0., double sigma = 1.);
 
+  GaussianDiscreteDistribution(const GaussianDiscreteDistribution&);
+
+  GaussianDiscreteDistribution& operator=(const GaussianDiscreteDistribution&);
+  
   virtual ~GaussianDiscreteDistribution();
 
   GaussianDiscreteDistribution* clone() const { return new GaussianDiscreteDistribution(*this); }

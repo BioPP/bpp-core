@@ -80,9 +80,14 @@ namespace bpp
      */
     GammaDiscreteDistribution(unsigned int n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05);
 
+    GammaDiscreteDistribution(const GammaDiscreteDistribution&);
+
+    GammaDiscreteDistribution& operator=(const GammaDiscreteDistribution&);
+
     virtual ~GammaDiscreteDistribution();
 
     GammaDiscreteDistribution* clone() const { return new GammaDiscreteDistribution(*this); }
+
   
   public:
     Domain getDomain() const;
