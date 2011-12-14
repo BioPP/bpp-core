@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _PARAMETER_H_
@@ -52,11 +52,11 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-class Parameter;
+  class Parameter;
 
-class ParameterEvent:
-  public virtual Clonable
-{
+  class ParameterEvent:
+    public virtual Clonable
+  {
   protected:
     Parameter* parameter_;
 
@@ -80,18 +80,18 @@ class ParameterEvent:
   public:
     const Parameter* getParameter() const { return parameter_; }
     Parameter* getParameter() { return parameter_; }
-};
+  };
 
-/**
- * @brief The parameter listener interface.
- *
- * Imlementing this interface allows to catch events associated to parameters modifications.
- * Listeners must have an identifier that will be used to pinpoint it when attached to a list.
- * This identifier needs not be unique though, but listeners with identical id will be undistinguishable.
- */
-class ParameterListener:
-  public virtual Clonable
-{
+  /**
+   * @brief The parameter listener interface.
+   *
+   * Imlementing this interface allows to catch events associated to parameters modifications.
+   * Listeners must have an identifier that will be used to pinpoint it when attached to a list.
+   * This identifier needs not be unique though, but listeners with identical id will be undistinguishable.
+   */
+  class ParameterListener:
+    public virtual Clonable
+  {
   public:
 #ifndef NO_VIRTUAL_COV
     ParameterListener*
@@ -120,26 +120,26 @@ class ParameterListener:
      * @param event Event associated to the acion.
      */
     virtual void parameterValueChanged(ParameterEvent& event) = 0;
-};
+  };
 
-/**
- * @brief This class is designed to facilitate the manipulation of parameters.
- *
- * A parameter object contains a <i>value</i> stored as a double.
- * It also contains a <i>name</i> and optionaly a constraint.
- * Constraint objects allows to apply restriction on the value of the parameter,
- * for instance positive number, or a particular interval and so on.
- *
- * @see ParameterList, Parametrizable, Constraint.
- */
-class Parameter:
-  public virtual Clonable
-{
+  /**
+   * @brief This class is designed to facilitate the manipulation of parameters.
+   *
+   * A parameter object contains a <i>value</i> stored as a double.
+   * It also contains a <i>name</i> and optionaly a constraint.
+   * Constraint objects allows to apply restriction on the value of the parameter,
+   * for instance positive number, or a particular interval and so on.
+   *
+   * @see ParameterList, Parametrizable, Constraint.
+   */
+  class Parameter:
+    public virtual Clonable
+  {
   protected:
     std::string name_;             //Parameter name
     double value_;            //Parameter value
     Constraint* constraint_; //A constraint on the value
-    bool attach_;
+    bool attach_;   // Tells if the constraint is attached to the Parameter
     std::vector<ParameterListener*> listeners_;
     std::vector<bool> listenerAttach_;
   
@@ -158,7 +158,7 @@ class Parameter:
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
     Parameter(const std::string& name = "", double value = 0, Constraint* constraint = 0, bool attachConstraint = false)
-    throw (ConstraintException);
+      throw (ConstraintException);
 
     /**
      * @brief Copy constructor.
@@ -244,15 +244,15 @@ class Parameter:
      */
     virtual const Constraint* removeConstraint();
 
-    virtual void setConstraint(Constraint* constraint) throw (ConstraintException)
-    {
-      if (constraint && constraint->isCorrect(value_))
-      {
-        if (constraint_ && attach_) delete constraint_;
-        constraint_ = constraint;
-      }
-      else throw ConstraintException("Parameter::setConstraint", this, value_);
-    }
+    /**
+     * @brief Set a constraint to this parameter.
+     *
+     * @param constraint a pointer to the constraint (may be null)
+     * @param attach says if the constraint is attached to the Parameter (default: false).
+     * @return A pointer toward the formerly used contraint.
+     */
+    
+    virtual void setConstraint(Constraint* constraint, bool attach = false);
 
     /**
      * @brief Add a new listener to this parameter.
@@ -303,7 +303,7 @@ class Parameter:
     static ExcludingNegativeReal R_MINUS_STAR;
     static IncludingInterval PROP_CONSTRAINT_IN;
     static ExcludingInterval PROP_CONSTRAINT_EX;
-};
+  };
 
 } //end of namespace bpp.
 
