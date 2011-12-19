@@ -195,6 +195,11 @@ template<class T> class RangeCollection {
      * @return True if the set does not contain any range.
      */
     virtual bool isEmpty() const = 0;
+
+    /**
+     * @return The number of ranges in the collection.
+     */
+    virtual unsigned int size() const = 0;
 };
 
 /**
@@ -276,6 +281,8 @@ template<class T> class RangeSet:
     }
 
     bool isEmpty() const { return ranges_.size() == 0; }
+    
+    unsigned int size() const { return ranges_.size(); }
 
     const std::set< Range<T>*, rangeComp_<T> >& getSet() const { return ranges_; }
 
@@ -390,6 +397,7 @@ template<class T> class MultiRange:
      */
     bool isEmpty() const { return ranges_.size() == 0; }
 
+    unsigned int size() const { return ranges_.size(); }
 
   private:
     void clean_() {
