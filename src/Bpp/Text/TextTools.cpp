@@ -215,18 +215,32 @@ bool TextTools::isDecimalNumber(char c)
 
 bool TextTools::isDecimalNumber(const std::string& s, char dec)
 {
-  unsigned int sepCount = 0;
-  unsigned int minCount = 0;
-  for (unsigned int i = 0; i < s.size(); i++)
+  size_t sepCount = 0;
+  size_t i = 0;
+  if (s[0] == '-') i = 1;
+  for (; i < s.size(); ++i)
   {
     char c = s[i];
     if (c == dec)
       sepCount++;
-    else if (c == '-')
-      minCount++;
     else if (!isDecimalNumber(c))
       return false;
-    if (sepCount > 1 || minCount > 1)
+    if (sepCount > 1)
+      return false;
+  }
+  return true;
+}
+
+/******************************************************************************/
+
+bool TextTools::isDecimalInteger(const std::string& s)
+{
+  size_t i = 0;
+  if (s[0] == '-') i = 1;
+  for (; i < s.size(); ++i)
+  {
+    char c = s[i];
+    if (!isDecimalNumber(c))
       return false;
   }
   return true;

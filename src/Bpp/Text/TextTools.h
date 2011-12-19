@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide basal and
    utilitary classes. This file belongs to the Bio++ Project.
@@ -162,12 +162,21 @@ namespace bpp
       /**
        * @brief Tell is a given character string describes a decimal number.
        *
-       * NB: for now, this parser will not recognize thosands delimiters, and not the scientific notation neither.
+       * NB: for now, this parser will not recognize thousands delimiters, and not the scientific notation neither.
        * @param s The string to parse.
        * @param dec The decimal separator.
        * @return true if the given string is the representation of a decimal number.
        */
       static bool isDecimalNumber(const std::string& s, char dec = '.');
+
+      /**
+       * @brief Tell is a given character string describes a decimal integer.
+       *
+       * NB: for now, this parser will not recognize thousands delimiters, and not the scientific notation neither.
+       * @param s The string to parse.
+       * @return true if the given string is the representation of a decimal integer.
+       */
+      static bool isDecimalInteger(const std::string& s);
 
       /**
        * @brief General template method to convert to a string.

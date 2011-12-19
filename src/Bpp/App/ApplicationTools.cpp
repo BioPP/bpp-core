@@ -77,10 +77,10 @@ std::string ApplicationTools::getAFilePath(
   bool suffixIsOptional) throw (Exception)
 {
   string filePath = getStringParameter(parameter, params, "none", suffix, suffixIsOptional, false);
-  if(filePath == "") filePath = "none";
-  if(filePath == "none" && isRequired)
+  if (filePath == "") filePath = "none";
+  if (filePath == "none" && isRequired)
   {
-    throw Exception("You must specify a file for this parameter: " + parameter);
+    throw Exception("You must specify a file for this parameter: " + parameter + (suffixIsOptional ? "" : suffix));
   }
   if(filePath == "none") return filePath;
   if(mustExist && !FileTools::fileExists(filePath))
@@ -101,11 +101,11 @@ double ApplicationTools::getDoubleParameter(
   bool warn)
 {
   double dParam = defaultValue;
-  if(parameterExists(parameterName + suffix, params))
+  if (parameterExists(parameterName + suffix, params))
   {
     dParam = TextTools::toDouble(params[parameterName + suffix]);
   }
-  else if(suffixIsOptional && parameterExists(parameterName, params))
+  else if (suffixIsOptional && parameterExists(parameterName, params))
   {
     dParam = TextTools::toDouble(params[parameterName]);
   }
@@ -127,11 +127,11 @@ int ApplicationTools::getIntParameter(
   bool warn)
 {
   int iParam = defaultValue;
-  if(parameterExists(parameterName + suffix, params)) {
+  if (parameterExists(parameterName + suffix, params)) {
     iParam = TextTools::toInt(params[parameterName + suffix]);
   } else if(suffixIsOptional && parameterExists(parameterName, params)) {
     iParam = TextTools::toInt(params[parameterName]);
-  } else if(warn) {
+  } else if (warn) {
     displayWarning("Parameter " + parameterName + suffix + " not specified. Default used instead: " + TextTools::toString(defaultValue));
   }
   return iParam;
@@ -150,9 +150,9 @@ std::string ApplicationTools::getStringParameter(
   string sParam = defaultValue;
   if (parameterExists(parameterName + suffix, params)) {
     sParam = params[parameterName + suffix];
-  } else if(suffixIsOptional && parameterExists(parameterName, params)) {
+  } else if (suffixIsOptional && parameterExists(parameterName, params)) {
     sParam = params[parameterName];
-  } else if(warn) {
+  } else if (warn) {
     displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + defaultValue);
   }
   return sParam;
@@ -182,7 +182,7 @@ bool ApplicationTools::getBooleanParameter(
         || (sParam == "Y")
         || (sParam == "1");
   }
-  else if(suffixIsOptional && parameterExists(parameterName, params)) {
+  else if (suffixIsOptional && parameterExists(parameterName, params)) {
     string sParam = params[parameterName];
     bParam = (sParam == "true") 
         || (sParam == "TRUE")
@@ -194,7 +194,7 @@ bool ApplicationTools::getBooleanParameter(
         || (sParam == "Y")
           || (sParam == "1");
   }
-  else if(warn)
+  else if (warn)
   {
     displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + TextTools::toString(defaultValue));
   }
