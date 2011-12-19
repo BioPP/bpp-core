@@ -200,6 +200,11 @@ template<class T> class RangeCollection {
      * @return The number of ranges in the collection.
      */
     virtual unsigned int size() const = 0;
+
+    /**
+     * @return The ith range in the collection.
+     */
+    virtual const Range<T>& getRange(unsigned int i) const = 0;
 };
 
 /**
@@ -284,6 +289,13 @@ template<class T> class RangeSet:
     
     unsigned int size() const { return ranges_.size(); }
 
+    const Range<T>& getRange(unsigned int i) const {
+      typename std::set< Range<T>* >::const_iterator it = ranges_.begin();
+      for (unsigned int c = 0; c < i; ++c)
+        it = it++;
+      return **it;
+    }
+    
     const std::set< Range<T>*, rangeComp_<T> >& getSet() const { return ranges_; }
 
     std::set< Range<T>*, rangeComp_<T> >& getSet() { return ranges_; }
@@ -398,6 +410,8 @@ template<class T> class MultiRange:
     bool isEmpty() const { return ranges_.size() == 0; }
 
     unsigned int size() const { return ranges_.size(); }
+
+    const Range<T>& getRange(unsigned int i) const { return *ranges_[i]; }
 
   private:
     void clean_() {
