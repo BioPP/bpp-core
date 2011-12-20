@@ -48,6 +48,8 @@
 #include <set>
 #include <algorithm>
 
+#include <iostream>
+
 namespace bpp {
 
 /**
@@ -309,7 +311,6 @@ template<class T> class RangeSet:
     }
 };
 
-
 /**
  * @brief This class implements a data structure describing a set of non-overlapping intervales.
  */
@@ -354,7 +355,7 @@ template<class T> class MultiRange:
         //We simply add the new range to the list:
         ranges_.push_back(r.clone());
       } else {
-        //We extand the first overlapping element:
+        //We extend the first overlapping element:
         ranges_[overlappingPositions[0]]->expandWith(r);
         //Now we merge all other overlapping ranges, if any:
         for (size_t i = overlappingPositions.size() - 1; i > 0; --i) {
@@ -428,8 +429,9 @@ template<class T> class MultiRange:
     }
   private:
     void clear_() {
-      for (size_t i = 0; i < ranges_.size(); ++i)
+      for (size_t i = 0; i < ranges_.size(); ++i) {
         delete ranges_[i];
+      }
       ranges_.clear();
     }
 
