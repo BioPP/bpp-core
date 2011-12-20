@@ -45,6 +45,7 @@ using namespace std;
 
 StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimiters, bool solid, bool allowEmptyTokens):
   tokens_(),
+  splits_(),
   currentPosition_(0)
 {
 	if (!solid)
@@ -55,13 +56,14 @@ StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimi
       string::size_type newIndex = s.find_first_of(delimiters, index);
 			if (newIndex != s.npos)
       {
-				tokens_.push_back(string(s.begin() + index, s.begin() + newIndex));
+				tokens_.push_back(s.substr(index, newIndex - index));
 				if (!allowEmptyTokens) index = s.find_first_not_of(delimiters, newIndex);
         else                   index = newIndex + 1;
+        splits_.push_back(s.substr(newIndex, index - newIndex));
 			}
       else
       {
-				tokens_.push_back(string(s.begin() + index, s.end()));
+				tokens_.push_back(s.substr(index));
 				index = newIndex;
 			}
 		}
@@ -74,17 +76,19 @@ StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimi
       string::size_type newIndex = s.find(delimiters, index);
 			if (newIndex != s.npos)
       {
-				tokens_.push_back(string(s.begin() + index, s.begin() + newIndex));
+				tokens_.push_back(s.substr(index, newIndex - index));
 				if (!allowEmptyTokens)
         {
           index = newIndex + delimiters.size();
-          while (index != string::npos && s.substr(index, delimiters.size()) == delimiters) index++;
+          while (index != string::npos && s.substr(index, delimiters.size()) == delimiters)
+            index += delimiters.size();
         }
         else index = newIndex + delimiters.size();
+				splits_.push_back(s.substr(newIndex, index - newIndex));
 			}
       else
       {
-				tokens_.push_back(string(s.begin() + index, s.end()));
+				tokens_.push_back(s.substr(index));
 				index = newIndex;
 			}
 		}
@@ -103,5 +107,16 @@ void StringTokenizer::removeEmptyTokens()
   {
     if (tokens_[i-1] == "") tokens_.erase(tokens_.begin() + i - 1);
   }
+}
+
+std::string StringTokenizer::unparseRemainingTokens() const
+{
+  string s;
+  for (unsigned int i = currentPosition_ + 1; i < tokens_.size() - 1; ++i) {
+    s += tokens_[i] + splits_[i];
+  }
+  if (numberOfRemainingTokens() > 1)
+    s += tokens_.back();
+  return s;
 }
 

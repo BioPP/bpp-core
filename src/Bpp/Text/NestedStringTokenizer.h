@@ -83,7 +83,14 @@ class NestedStringTokenizer:
 		 * @return The next token if there is one.
 		 */
 		const std::string& nextToken() throw (Exception);
-	
+
+
+    /**
+     * @brief This function is not supported for nested tokenizers.
+     *
+     * @return An empty string.
+     */
+    std::string unparseRemainingTokens() const { return ""; }
 };
 
 } //end of namespace bpp;

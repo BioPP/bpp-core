@@ -61,6 +61,7 @@ class StringTokenizer
 
 		/** @brief Where the tokens are stored. */
     std::deque<std::string> tokens_;
+    std::deque<std::string> splits_;
 		
 		/** @brief the current position in the token list. */
 		unsigned int currentPosition_;
@@ -80,7 +81,7 @@ class StringTokenizer
 		virtual ~StringTokenizer() {}
 
   public:
-    StringTokenizer(): tokens_(), currentPosition_(0) {}
+    StringTokenizer(): tokens_(), splits_(), currentPosition_(0) {}
 	
 	public:
 		
@@ -93,8 +94,8 @@ class StringTokenizer
     const std::string& nextToken() throw (Exception);
 	
 		/**
-		 * @brief Tell if some token are still available.
-		 * @return True if some token are still available.
+		 * @brief Tell if some tokens are still available.
+		 * @return True if some tokens are still available.
 		 */
 		bool hasMoreToken() const {
       return currentPosition_ < tokens_.size();
@@ -129,6 +130,10 @@ class StringTokenizer
      */
     void removeEmptyTokens();
 
+    /**
+     * @return The remaining tokens as if the original corresponding string was not parsed.
+     */
+    std::string unparseRemainingTokens() const;
 };
 
 } //end of namespace bpp.

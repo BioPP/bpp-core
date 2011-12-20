@@ -64,7 +64,7 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
       {
 			  if (newIndex != s.npos)
         {
-			    string token(s.begin() + index, s.begin() + newIndex);
+			    string token = s.substr(index, newIndex - index);
           blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
         
 				  if (blocks == 0)
@@ -77,15 +77,15 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           else
           {
             // Ignore this token untill closing block is found
-            cache += string(s.begin() + index, s.begin() + newIndex + 1);
+            cache += s.substr(index, newIndex - index + 1);
             index = newIndex + 1;
             newIndex = s.find_first_of(delimiters, index);
           }
 			  }
         else
         {
-			    string token(s.begin() + index, s.end());
-          blocks += (int)TextTools::count(token, open) - (int)TextTools::count(token, end);
+			    string token = s.substr(index);
+          blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
 			    if (blocks == 0)
           {
 				    tokens_.push_back(cache + token);
@@ -109,8 +109,8 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
       {
 			  if (newIndex != s.npos)
         {
-			    string token(s.begin() + index, s.begin() + newIndex);
-          blocks += (int)TextTools::count(token, open) - (int)TextTools::count(token, end);
+			    string token = s.substr(index, newIndex - index);
+          blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
 				  
           if (blocks == 0)
           {
@@ -122,15 +122,15 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           else
           {
             // Ignore this token untill closing block is found
-            cache += string(s.begin() + index, s.begin() + newIndex + 1);
+            cache += s.substr(index, newIndex - index + 1);
             index = newIndex+1;
             newIndex = s.find(delimiters, index);
           }
 			  }
         else
         {
-  		    string token(s.begin() + index, s.end());
-          blocks += (int)TextTools::count(token, open) - (int)TextTools::count(token, end);
+  		    string token = s.substr(index);
+          blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
 	  	    if (blocks == 0)
           {
 				    tokens_.push_back(cache + token);
