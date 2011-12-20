@@ -82,6 +82,14 @@ template<class T> class Range:
       end_(std::max(a, b))
     {}
 
+    Range(const Range<T>& range): begin_(range.begin_), end_(range.end_) {}
+    
+    Range<T>& operator=(const Range<T>& range) {
+      begin_ = range.begin_;
+      end_   = range.end_;
+      return *this;
+    }
+
     Range<T>* clone() const { return new Range<T>(*this); }
 
     virtual ~Range() {}
@@ -242,7 +250,7 @@ template<class T> class RangeSet:
       }
     }
 
-    RangeSet& operator()(const RangeSet<T>& set)
+    RangeSet& operator=(const RangeSet<T>& set)
     {
       clear_();
       for (typename std::set< Range<T>* >::iterator it = set.ranges_.begin(); it != set.ranges_.end(); ++it) {
@@ -329,7 +337,7 @@ template<class T> class MultiRange:
         ranges_.push_back(mr.ranges_[i]->clone());
     }
 
-    MultiRange& operator()(const MultiRange<T>& mr)
+    MultiRange& operator=(const MultiRange<T>& mr)
     {
       clear_();
       for (size_t i = 0; i < mr.ranges_.size(); ++i)
