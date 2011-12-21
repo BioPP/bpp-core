@@ -94,9 +94,13 @@ int main()
   if (t != " aaazzer  aeerd a    eer") return 1;
 
   StringTokenizer st4(" aaazzer  aeerd a    eer", " \t", false, false);
-  cout << st4.nextToken() << "+" << st4.unparseRemainingTokens() << endl;
-  cout << st4.nextToken() << "+" << st4.unparseRemainingTokens() << endl;
-  cout << st4.nextToken() << "+" << st4.unparseRemainingTokens() << endl;
-  cout << st4.nextToken() << "+" << st4.unparseRemainingTokens() << endl;
+  cout << st4.nextToken() << "+";
+  cout << st4.unparseRemainingTokens() << endl;
+  cout << st4.nextToken() << "+";
+  cout << st4.unparseRemainingTokens() << endl;
+  cout << st4.nextToken() << "+";
+  cout << st4.unparseRemainingTokens() << endl;
+  cout << st4.nextToken() << "+";
+  cout << st4.unparseRemainingTokens() << endl;
   return 0;
 }

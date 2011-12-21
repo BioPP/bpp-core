@@ -112,10 +112,10 @@ void StringTokenizer::removeEmptyTokens()
 std::string StringTokenizer::unparseRemainingTokens() const
 {
   string s;
-  for (unsigned int i = currentPosition_ + 1; i < tokens_.size() - 1; ++i) {
+  for (unsigned int i = currentPosition_; i < tokens_.size() - 1; ++i) {
     s += tokens_[i] + splits_[i];
   }
-  if (numberOfRemainingTokens() > 1)
+  if (numberOfRemainingTokens() > 0)
     s += tokens_.back();
   return s;
 }
