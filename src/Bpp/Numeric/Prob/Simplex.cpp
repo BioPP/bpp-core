@@ -38,6 +38,8 @@
 */
 
 #include "Simplex.h"
+#include "../NumConstants.h"
+
 #include "../VectorTools.h"
 
 using namespace bpp;
