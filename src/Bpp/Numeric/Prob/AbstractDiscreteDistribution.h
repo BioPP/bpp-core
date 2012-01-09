@@ -68,11 +68,38 @@ namespace bpp
      */
     class Order
     {
+    private:
+      double precision_;
+      
     public:
+
+      Order(double prec=NumConstants::TINY):
+        precision_(prec)
+      {}
+
+      Order(const Order& ord) :
+        precision_(ord.precision_)
+      {}
+
+      Order& operator=(const Order& ord)
+      {
+        precision_=ord.precision_;
+        return *this;
+      }
+
+      double precision() const {
+        return precision_;
+      }
+
+      void setPrecision(double prec) {
+        precision_=prec;
+      }
+      
       bool operator() (double l1, double l2) const
       {
-        return (l1 < l2 - NumConstants::TINY); //precision of E12
+        return (l1 < l2 - precision_); 
       }
+
     };
 
   protected:
@@ -106,6 +133,14 @@ namespace bpp
     
   public:
     AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix = ""); 
+
+    /*
+    * With additional precision value to discriminate categories (default 1e-12)
+    *
+    */
+    
+    AbstractDiscreteDistribution(unsigned int nbClasses, double precision, const std::string& prefix = "");
+    
     AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde);
 
     AbstractDiscreteDistribution& operator=(const AbstractDiscreteDistribution& adde);
@@ -141,6 +176,8 @@ namespace bpp
 
     void print(OutputStream& out) const;
 
+    double precision() const { return distribution_.key_comp().precision();}
+      
     void setMedian(bool median) {
       if (median_ != median) {
         median_ = median;

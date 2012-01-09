@@ -53,7 +53,7 @@ using namespace std;
 
 BetaDiscreteDistribution::BetaDiscreteDistribution(unsigned int n, double alpha, double beta) :
   AbstractParameterAliasable("Beta."),
-  AbstractDiscreteDistribution(n,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
+  AbstractDiscreteDistribution(n,NumConstants::VERY_TINY,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
   Parameter p1("Beta.alpha", alpha, new IncludingPositiveReal(0.0001), true);
   addParameter_(p1);
@@ -93,10 +93,10 @@ void BetaDiscreteDistribution::fireParameterChanged(const ParameterList& paramet
   beta_=getParameterValue("beta");
 
   if (alpha_<=1 && intMinMax_.getLowerBound()==0)
-    intMinMax_.setLowerBound(NumConstants::VERY_TINY,false);
+    intMinMax_.setLowerBound(precision(),false);
 
   if (beta_<=1 && intMinMax_.getUpperBound()==1)
-    intMinMax_.setUpperBound(1-NumConstants::VERY_TINY,false);
+    intMinMax_.setUpperBound(1-precision(),false);
 
   diffln_=exp(RandomTools::lnBeta(alpha_+1,beta_)-RandomTools::lnBeta(alpha_,beta_));
   discretize();

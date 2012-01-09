@@ -46,16 +46,17 @@ using namespace bpp;
 using namespace std;
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
-                                                       const map<double, double>& distribution) :
+                                                       const map<double, double>& distribution,
+                                                       double prec) :
   AbstractParameterAliasable("Simple."),
-  AbstractDiscreteDistribution(distribution.size(),"Simple.")
+  AbstractDiscreteDistribution(distribution.size(),prec,"Simple.")
 {
   double sum=0;
   for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++) {
     distribution_[i->first] = i->second;
     sum += i->second;
   }
-  if (fabs(1. - sum) > NumConstants::SMALL)
+  if (fabs(1. - sum) > precision())
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
   intMinMax_.setLowerBound(distribution_.begin()->first,false);
@@ -65,10 +66,11 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const vector<double>& values,
                                                        const vector<double>& probas,
+                                                       double prec,
                                                        bool fixed
                                                        ) :
   AbstractParameterAliasable("Simple."),
-  AbstractDiscreteDistribution(values.size(),"Simple.")
+  AbstractDiscreteDistribution(values.size(),prec,"Simple.")
 {
   if (values.size() != probas.size()) {
     throw Exception("SimpleDiscreteDistribution. Values and probabilities vectors must have the same size (" + TextTools::toString(values.size()) + " != " + TextTools::toString(probas.size()) + ").");
@@ -83,7 +85,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   }
   
   double sum = VectorTools::sum(probas);
-  if (fabs(1. - sum) > NumConstants::SMALL)
+  if (fabs(1. - sum) > precision())
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
   
   if (! fixed){
@@ -126,12 +128,12 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
       v=getParameterValue("V"+TextTools::toString(i+1));
       if (distribution_.find(v)!=distribution_.end()){
         unsigned int j=1;
-        int f=((v+NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
-        while (distribution_.find(v+f*j*NumConstants::TINY)!=distribution_.end()){
+        int f=((v+precision())>=intMinMax_.getUpperBound())?-1:1;
+        while (distribution_.find(v+f*j*precision())!=distribution_.end()){
           j++;
-          f=((v+f*j*NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+          f=((v+f*j*precision())>=intMinMax_.getUpperBound())?-1:1;
         }
-        v+=f*j*NumConstants::TINY;
+        v+=f*j*precision();
         // approximation to avoid useless computings:
         // setParameterValue("V"+TextTools::toString(i+1),v);
       }
@@ -142,12 +144,12 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     v=getParameterValue("V" + TextTools::toString(size));
     if (distribution_.find(v)!=distribution_.end()){
       unsigned int j=1;
-      int f=((v+NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
-      while (distribution_.find(v+f*j*NumConstants::TINY)!=distribution_.end()){
+      int f=((v+precision())>=intMinMax_.getUpperBound())?-1:1;
+      while (distribution_.find(v+f*j*precision())!=distribution_.end()){
         j++;
-        f=((v+f*j*NumConstants::TINY)>=intMinMax_.getUpperBound())?-1:1;
+        f=((v+f*j*precision())>=intMinMax_.getUpperBound())?-1:1;
       }
-      v+=f*j*NumConstants::TINY;
+      v+=f*j*precision();
       // approximation to avoid useless computings:
       // setParameterValue("V"+TextTools::toString(size),v);
     }

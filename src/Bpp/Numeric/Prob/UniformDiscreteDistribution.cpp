@@ -39,7 +39,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "UniformDiscreteDistribution.h"
 #include "../Random/RandomTools.h"
-#include "../NumConstants.h"
 #include "../../Utils/MapTools.h"
 
 using namespace bpp;
