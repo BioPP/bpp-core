@@ -8,7 +8,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -129,9 +129,9 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
   }
 
   // Initialize optimizers:
-  for(unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
+  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
   {
-    if(nbParameters_[i] > 0)
+    if (nbParameters_[i] > 0)
     {
       Optimizer * opt = optDesc_->getOptimizer(i);
       dynamic_cast<AbstractOptimizer*>(opt)->updateParameters(updateParameters());
