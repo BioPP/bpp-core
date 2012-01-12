@@ -72,21 +72,23 @@ class SimpleDiscreteDistribution:
      * Keys are taken to be interval values, and map values to be the corresponding probabilities.
      *
      * @param distribution The map object to use.
+     * @param precision to discriminate the categories
      */
   
-  SimpleDiscreteDistribution(const std::map<double, double>& distribution);
-  
+  SimpleDiscreteDistribution(const std::map<double, double>& distribution, double precision=NumConstants::TINY);
+
   /**
    * @brief Builds a new SimpleDiscreteDistribution object from a
    * vector of values and a vector of probabilities
    *
    * @param values The vector of values.
    * @param probas The vector of probabilities.
+   * @param precision to discriminate the categories
    * @param fixed tells if there are parameters (default false means there are parameters).
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, bool fixed=false);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, double precision=NumConstants::TINY, bool fixed=false);
   
   virtual ~SimpleDiscreteDistribution() {}
 

@@ -71,7 +71,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
   }
 
   double sum = VectorTools::sum(probas);
-  if (fabs(1. - sum) > NumConstants::SMALL)
+  if (fabs(1. - sum) > precision())
     throw Exception("MixtureOfDiscreteDistributions. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
   double y = 1;

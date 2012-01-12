@@ -55,6 +55,15 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasse
   median_(false)
 {}
 
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasses, double delta, const std::string& prefix) :
+  AbstractParameterAliasable(prefix),
+  numberOfCategories_(nbClasses),
+  distribution_(Order(delta)),
+  bounds_(),
+  intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true),
+  median_(false)
+{}
+
 AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde) :
   AbstractParameterAliasable(adde),
   numberOfCategories_(adde.numberOfCategories_),
@@ -302,8 +311,8 @@ void AbstractDiscreteDistribution::discretize()
 
   distribution_.clear();
   bounds_.resize(numberOfCategories_ + 1);
-  bounds_[0] = intMinMax_.getLowerBound() + (intMinMax_.strictLowerBound() ? NumConstants::TINY : 0);
-  bounds_[numberOfCategories_] = intMinMax_.getUpperBound() - (intMinMax_.strictUpperBound() ? NumConstants::TINY : 0);
+  bounds_[0] = intMinMax_.getLowerBound() + (intMinMax_.strictLowerBound() ? precision() : 0);
+  bounds_[numberOfCategories_] = intMinMax_.getUpperBound() - (intMinMax_.strictUpperBound() ? precision() : 0);
 
   double minX = pProb(bounds_[0]);
   double maxX = pProb(bounds_[numberOfCategories_]);
@@ -368,8 +377,8 @@ void AbstractDiscreteDistribution::discretize()
   {
     for (i = 0; i < numberOfCategories_; i++)
     {
-      if (values[i] < intMinMax_.getLowerBound() + NumConstants::TINY)
-        values[i] = intMinMax_.getLowerBound() + NumConstants::TINY;
+      if (values[i] < intMinMax_.getLowerBound() + precision())
+        values[i] = intMinMax_.getLowerBound() + precision();
     }
   }
   else
@@ -377,7 +386,7 @@ void AbstractDiscreteDistribution::discretize()
     for (i = 0; i < numberOfCategories_; i++)
     {
       if (values[i] < intMinMax_.getLowerBound())
-        values[i] = intMinMax_.getLowerBound() + NumConstants::TINY;
+        values[i] = intMinMax_.getLowerBound() + precision();
     }
   }
 
@@ -385,8 +394,8 @@ void AbstractDiscreteDistribution::discretize()
   {
     for (i = 0; i < numberOfCategories_; i++)
     {
-      if (values[i] > intMinMax_.getUpperBound() - NumConstants::TINY)
-        values[i] = intMinMax_.getUpperBound() - NumConstants::TINY;
+      if (values[i] > intMinMax_.getUpperBound() - precision())
+        values[i] = intMinMax_.getUpperBound() - precision();
     }
   }
   else
@@ -394,7 +403,7 @@ void AbstractDiscreteDistribution::discretize()
     for (i = 0; i < numberOfCategories_; i++)
     {
       if (values[i] > intMinMax_.getUpperBound())
-        values[i] = intMinMax_.getUpperBound() - NumConstants::TINY;
+        values[i] = intMinMax_.getUpperBound() - precision();
     }
   }
   double p = 1. / static_cast<double>(numberOfCategories_);
@@ -404,12 +413,12 @@ void AbstractDiscreteDistribution::discretize()
     {
       unsigned int j = 1;
       int f = ((values[i] + NumConstants::TINY) >= intMinMax_.getUpperBound()) ? -1 : 1;
-      while (distribution_.find(values[i] + f * j * NumConstants::TINY) != distribution_.end())
+      while (distribution_.find(values[i] + f * j * precision()) != distribution_.end())
       {
         j++;
-        f = ((values[i] + f * j * NumConstants::TINY) >= intMinMax_.getUpperBound()) ? -1 : 1;
+        f = ((values[i] + f * j * precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
       }
-      distribution_[values[i] + f * j * NumConstants::TINY] = p;
+      distribution_[values[i] + f * j * precision()] = p;
     }
     else
       distribution_[values[i]] = p;
