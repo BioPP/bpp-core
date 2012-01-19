@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. CNRS, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 
@@ -51,13 +51,13 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief The matrix template interface.
- */
-template<class Scalar>
-class Matrix:
-  public Clonable
-{
+  /**
+   * @brief The matrix template interface.
+   */
+  template<class Scalar>
+  class Matrix:
+    public Clonable
+  {
 
   public:
     Matrix() {}
@@ -82,6 +82,12 @@ class Matrix:
      * @param i row index.
      * @param j column index.
      */
+    virtual const Scalar& operator()(unsigned int i, int j) const {
+      return (*this)(i, static_cast<unsigned int>(j));
+    }
+    virtual const Scalar& operator()(int i, unsigned int j) const {
+      return (*this)(static_cast<unsigned int>(i), j);
+    }
     virtual const Scalar& operator()(int i, int j) const {
       return (*this)(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
     }
@@ -90,6 +96,12 @@ class Matrix:
      * @param i row index.
      * @param j column index.
      */
+    virtual Scalar& operator()(unsigned int i, int j)  {
+      return (*this)(i, static_cast<unsigned int>(j));
+    }
+    virtual Scalar& operator()(int i, unsigned int j)  {
+      return (*this)(static_cast<unsigned int>(i), j);
+    }
     virtual Scalar& operator()(int i, int j)  {
       return (*this)(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
     }
@@ -127,18 +139,18 @@ class Matrix:
      * @param nCols The new number of columns.
      */
     virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
-};
+  };
 
-/**
- * @brief Matrix storage by row.
- *
- * This matrix is a vector of vector of Scalar.
- * Row access is in \f$O(1)\f$ while column access is in \f$O(nRow)\f$.
- */
-template<class Scalar>
-class RowMatrix :
-  public Matrix<Scalar>
-{
+  /**
+   * @brief Matrix storage by row.
+   *
+   * This matrix is a vector of vector of Scalar.
+   * Row access is in \f$O(1)\f$ while column access is in \f$O(nRow)\f$.
+   */
+  template<class Scalar>
+  class RowMatrix :
+    public Matrix<Scalar>
+  {
   private:
     std::vector< std::vector<Scalar> > m_;
 
@@ -148,9 +160,9 @@ class RowMatrix :
     RowMatrix(unsigned int nRow, unsigned int nCol): m_(nRow)
     {
       for(unsigned int i = 0; i < nRow; i++)
-      {
-        m_[i].resize(nCol);
-      }
+        {
+          m_[i].resize(nCol);
+        }
     }
 
     RowMatrix(const Matrix<Scalar>& m): m_(m.getNumberOfRows())
@@ -158,11 +170,11 @@ class RowMatrix :
       unsigned int nr = m.getNumberOfRows();
       unsigned int nc = m.getNumberOfColumns();
       for(unsigned int i = 0; i < nr; i++)
-      {
-        m_[i].resize(nc);
-        for(unsigned int j = 0; j < nc; j++)
-          m_[i][j] = m(i, j);
-      }
+        {
+          m_[i].resize(nc);
+          for(unsigned int j = 0; j < nc; j++)
+            m_[i][j] = m(i, j);
+        }
     }
 
     RowMatrix& operator=(const Matrix<Scalar>& m)
@@ -171,11 +183,11 @@ class RowMatrix :
       m_.resize(nr);
       unsigned int nc = m.getNumberOfColumns();
       for(unsigned int i = 0; i < nr; i++)
-      {
-        m_[i].resize(nc);
-        for(unsigned int j = 0; j < nc; j++)
-          m_[i][j] = m(i, j);
-      }
+        {
+          m_[i].resize(nc);
+          for(unsigned int j = 0; j < nc; j++)
+            m_[i][j] = m(i, j);
+        }
       return *this;
     }
 
@@ -211,33 +223,33 @@ class RowMatrix :
     {
       m_.resize(nRows);
       for(unsigned int i = 0; i < nRows; i++)
-      {
-        m_[i].resize(nCols);
-      }
+        {
+          m_[i].resize(nCols);
+        }
     }
 
-};
+  };
 
-/**
- * @brief Matrix storage in one vector.
- *
- * This Matrix is a simple vector of Scalar of size n x m.
- * Element access is in \f$O(1)\f$ but resizing the matrix while keeping the
- * old values is in \f$O(nm)\f$.
- *
- * Basic usage:
- * @code
- * LinearMatrix<int> m(3, 2); // Create a 3x2 matrix of int
- * m(1, 2) = 5; // Set the value of element at row = 1, col = 2 to 5
- * int x = m(0, 1); // Get the value of element at row = 0, col = 1;
- * @endcode
- *
- * @author Sylvain Gaillard
- */
-template<class Scalar>
-class LinearMatrix :
-  public Matrix<Scalar>
-{
+  /**
+   * @brief Matrix storage in one vector.
+   *
+   * This Matrix is a simple vector of Scalar of size n x m.
+   * Element access is in \f$O(1)\f$ but resizing the matrix while keeping the
+   * old values is in \f$O(nm)\f$.
+   *
+   * Basic usage:
+   * @code
+   * LinearMatrix<int> m(3, 2); // Create a 3x2 matrix of int
+   * m(1, 2) = 5; // Set the value of element at row = 1, col = 2 to 5
+   * int x = m(0, 1); // Get the value of element at row = 0, col = 1;
+   * @endcode
+   *
+   * @author Sylvain Gaillard
+   */
+  template<class Scalar>
+  class LinearMatrix :
+    public Matrix<Scalar>
+  {
   private:
     std::vector<Scalar> m_;
     unsigned int rows_;
@@ -259,10 +271,10 @@ class LinearMatrix :
       unsigned int nr = m.getNumberOfRows();
       unsigned int nc = m.getNumberOfColumns();
       for(unsigned int i = 0; i < nr; i++)
-      {
-        for(unsigned int j = 0; j < nc; j++)
-          m_[i * cols_ + j] = m(i, j);
-      }
+        {
+          for(unsigned int j = 0; j < nc; j++)
+            m_[i * cols_ + j] = m(i, j);
+        }
     }
 
     LinearMatrix& operator=(const Matrix<Scalar>& m)
@@ -271,11 +283,11 @@ class LinearMatrix :
       unsigned int nc = m.getNumberOfColumns();
       m_.resize(nr * nc);
       for(unsigned int i = 0; i < nr; i++)
-      {
-        m_[i].resize(nc);
-        for(unsigned int j = 0; j < nc; j++)
-          m_[i * cols_ + j] = m(i, j);
-      }
+        {
+          m_[i].resize(nc);
+          for(unsigned int j = 0; j < nc; j++)
+            m_[i * cols_ + j] = m(i, j);
+        }
       return *this;
     }
 
@@ -391,18 +403,18 @@ class LinearMatrix :
       rows_ = nRows;
       cols_ = nCols;
     }
-};
+  };
 
-template<class Scalar>
-bool operator==(const Matrix<Scalar>& m1, const Matrix<Scalar>& m2)
-{
-  if (m1.getNumberOfRows() != m2.getNumberOfRows() || m1.getNumberOfColumns() != m2.getNumberOfColumns())
-    return false;
-  for (unsigned int i = 0; i < m1.getNumberOfRows(); i++)
-    for (unsigned int j = 0; j < m1.getNumberOfColumns(); j++)
-      if (m1(i, j) != m2(i, j)) return false;
-  return true;
-}
+  template<class Scalar>
+  bool operator==(const Matrix<Scalar>& m1, const Matrix<Scalar>& m2)
+  {
+    if (m1.getNumberOfRows() != m2.getNumberOfRows() || m1.getNumberOfColumns() != m2.getNumberOfColumns())
+      return false;
+    for (unsigned int i = 0; i < m1.getNumberOfRows(); i++)
+      for (unsigned int j = 0; j < m1.getNumberOfColumns(); j++)
+        if (m1(i, j) != m2(i, j)) return false;
+    return true;
+  }
 
 
 } //end of namespace bpp.
