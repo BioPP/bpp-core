@@ -772,6 +772,22 @@ public:
   }
 
   template<class T>
+  static std::vector<double> cos(const std::vector<T>& v1)
+  {
+    std::vector<double> v2(v1.size());
+    for (unsigned int i = 0; i < v2.size(); i++) { v2[i] = std::cos(v1[i]); }
+    return v2;
+  }
+
+  template<class T>
+  static std::vector<double> sin(const std::vector<T>& v1)
+  {
+    std::vector<double> v2(v1.size());
+    for (unsigned int i = 0; i < v2.size(); i++) { v2[i] = std::sin(v1[i]); }
+    return v2;
+  }
+
+  template<class T>
   static std::vector<double> log10(const std::vector<T>& v1)
   {
     std::vector<double> v2(v1.size());
