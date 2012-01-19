@@ -210,7 +210,7 @@ public:
     unsigned int nrB = B.getNumberOfRows();
     unsigned int ncB = B.getNumberOfColumns();
     if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
-    if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not eual to matrix size.", D.size(), ncA);
+    if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size.", D.size(), ncA);
     O.resize(nrA, ncB);
     for (unsigned int i = 0; i < nrA; i++)
     {
@@ -223,6 +223,52 @@ public:
         }
       }
     }
+  }
+
+  /**
+   * @brief Compute A . (U+D+L) . B where D is a diagonal matrix, U
+   * (resp. L) is a matrix in which the only non-zero terms are on the
+   * diagonal that is over (resp. under) the main diagonal, in O(n^3).
+   *
+   * Since D is a diagonal matrix, this function is more efficient than doing
+   * mult(mult(A, diag(D)), B), which involves two 0(n^3) operations.
+   *
+   * @param A [in] The first matrix.
+   * @param D [in] The diagonal matrix (only diagonal elements in a vector)
+   * @param U [in] The upper diagonal matrix (only upper diagonal elements in a vector)
+   * @param L [in] The lower diagonal matrix (only lower diagonal elements in a vector)
+   * @param B [in] The second matrix.
+   * @param O [out] The result matrix.
+   * @throw DimensionException If matrices have not the appropriate size.
+   */
+  template<class Scalar>
+  static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const std::vector<Scalar>& U, const std::vector<Scalar>& L, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
+  {
+    unsigned int ncA = A.getNumberOfColumns();
+    unsigned int nrA = A.getNumberOfRows();
+    unsigned int nrB = B.getNumberOfRows();
+    unsigned int ncB = B.getNumberOfColumns();
+    if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
+    if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size.", D.size(), ncA);
+    if (ncA != U.size()+1) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size-1.", U.size(), ncA);
+    if (ncA != L.size()+1) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size-1.", L.size(), ncA);
+    O.resize(nrA, ncB);
+    for (unsigned int i = 0; i < nrA; i++)
+      {
+        for (unsigned int j = 0; j < ncB; j++)
+          {
+            O(i, j) = A(i, 0) * D[0] * B(0, j);
+            if (nrB>1)
+              O(i, j) += A(i,0) * U[0] * B(1,j);
+            for (unsigned int k = 1; k < ncA-1; k++)
+              {
+                O(i, j) += A(i, k) * (L[k-1] * B(k-1, j) + D[k] * B(k, j) + U[k] * B(k+1,j));
+              }
+            if (ncA>=2)
+              O(i, j) += A(i, ncA-1) * L[ncA-2] * B(ncA-2, j);
+            O(i,j) += A(i, ncA-1) * D[ncA-1] * B(ncA-1, j);
+          }
+      }
   }
 
   /**
