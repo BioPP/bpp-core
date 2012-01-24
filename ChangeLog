@@ -1,3 +1,6 @@
+24/01/12 Julien Dutheil and Ania Pawelczyk
+* Added Linear Assignment Problem function in MatrixTools.
+
 24/11/11 Julien Dutheil
 * NestedStringTokenizer now inherits from StringTokenizer.
 
