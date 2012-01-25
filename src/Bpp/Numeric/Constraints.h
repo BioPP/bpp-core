@@ -134,17 +134,28 @@ protected:
    *
    **/
   bool inclLowerBound_, inclUpperBound_;
+  /**
+   *
+   * @brief the accepted precision on the boundary (default: 1e-12)
+   **/
+
+  double precision_;
+  
 
 public:
   Interval() :  lowerBound_(-NumConstants::VERY_BIG),
-    upperBound_(NumConstants::VERY_BIG),
-    inclLowerBound_(true),
-    inclUpperBound_(true) {}
+                upperBound_(NumConstants::VERY_BIG),
+                inclLowerBound_(true),
+                inclUpperBound_(true),
+                precision_(NumConstants::TINY) {}
 
-  Interval(double lowerBound, double upperBound, bool inclLower, bool inclUpper) :  lowerBound_(lowerBound),
+  Interval(double lowerBound, double upperBound, bool inclLower, bool inclUpper, double precision=NumConstants::TINY) :
+    lowerBound_(lowerBound),
     upperBound_(upperBound),
     inclLowerBound_(inclLower),
-    inclUpperBound_(inclUpper) {}
+    inclUpperBound_(inclUpper),
+    precision_(precision){}
+  
   virtual ~Interval() {}
 
   Interval* clone() const { return new Interval(*this); }
@@ -201,10 +212,15 @@ public:
   {
     return isCorrect(value) ? value :
            (*this >= value ?
-            strictLowerBound() ? lowerBound_ + NumConstants::TINY : lowerBound_ :
-            strictUpperBound() ? upperBound_ - NumConstants::TINY : upperBound_);
+            strictLowerBound() ? lowerBound_ + precision_ : lowerBound_ :
+            strictUpperBound() ? upperBound_ - precision_ : upperBound_);
   }
 
+  double getPrecision() const
+  {
+    return precision_;
+  }
+  
   std::string getDescription() const
   {
     return (inclLowerBound_ ? "[ " : "]")
@@ -218,7 +234,8 @@ public:
    * @brief Intersect this Interval with another one
    *
    * @param c the intersected Interval
-   * @return the intersection, or NULL if c is not an Interval
+   * @return the intersection, or NULL if c is not an Interval. The
+   * resulting precision is the maximum of both precisions.
    */
   Constraint* operator&(const Constraint& c) const
   {
@@ -250,7 +267,7 @@ public:
         upperBound = upperBound_;
         inclUpperBound = inclUpperBound_;
       }
-      return new Interval(lowerBound, upperBound, inclLowerBound, inclUpperBound);
+      return new Interval(lowerBound, upperBound, inclLowerBound, inclUpperBound, (precision_>pi->getPrecision())?precision_:pi->getPrecision());
     }
     else
       return 0;
@@ -260,8 +277,10 @@ public:
    * @brief Intersect this Interval with another one
    *
    * @param c the intersected Interval
-   * @return this Interval modified, or not modified if c is not an Interval
+   * @return this Interval modified, or not modified if c is not an
+   * Interval. The precision is set to the maximum of bith precisions.
    */
+  
   Interval& operator&=(const Constraint& c)
   {
     const Interval* pi = dynamic_cast<const Interval*>(&c);
@@ -289,6 +308,8 @@ public:
         upperBound_ = upperBound_;
         inclUpperBound_ = inclUpperBound_;
       }
+      if (pi->getPrecision()>precision_)
+        precision_=pi->getPrecision();
     }
 
     return *this;
@@ -302,10 +323,9 @@ public:
   bool operator==(const Interval& i) const
   {
     return lowerBound_ == i.lowerBound_
-           && inclLowerBound_ == i.inclLowerBound_
-           && upperBound_ == i.upperBound_
-           && inclUpperBound_ == i.inclUpperBound_
-    ;
+      && inclLowerBound_ == i.inclLowerBound_
+      && upperBound_ == i.upperBound_
+      && inclUpperBound_ == i.inclUpperBound_;
   }
 
   /**
@@ -316,10 +336,9 @@ public:
   bool operator!=(const Interval& i) const
   {
     return lowerBound_ != i.lowerBound_
-           || inclLowerBound_ != i.inclLowerBound_
-           || upperBound_ != i.upperBound_
-           || inclUpperBound_ != i.inclUpperBound_
-    ;
+      || inclLowerBound_ != i.inclLowerBound_
+      || upperBound_ != i.upperBound_
+      || inclUpperBound_ != i.inclUpperBound_;
   }
 
   /**
@@ -341,8 +360,8 @@ public:
 class IncludingPositiveReal : public Interval
 {
 public:
-  IncludingPositiveReal(double lowerBound) :
-    Interval(lowerBound, NumConstants::VERY_BIG, true, false) {}
+  IncludingPositiveReal(double lowerBound, double precision=NumConstants::TINY) :
+    Interval(lowerBound, NumConstants::VERY_BIG, true, false, precision) {}
 
   IncludingPositiveReal* clone() const { return new IncludingPositiveReal(*this); }
 
@@ -358,8 +377,8 @@ public:
 class ExcludingPositiveReal : public Interval
 {
 public:
-  ExcludingPositiveReal(double lowerBound) :
-    Interval (lowerBound, NumConstants::VERY_BIG, false, false) {}
+  ExcludingPositiveReal(double lowerBound, double precision=NumConstants::TINY) :
+    Interval (lowerBound, NumConstants::VERY_BIG, false, false, precision) {}
   
   ExcludingPositiveReal* clone() const { return new ExcludingPositiveReal(*this); }
   
@@ -375,8 +394,8 @@ public:
 class IncludingNegativeReal : public Interval
 {
 public:
-  IncludingNegativeReal(double upperBound) :
-    Interval(-NumConstants::VERY_BIG, upperBound, false, true) {}
+  IncludingNegativeReal(double upperBound, double precision=NumConstants::TINY) :
+    Interval(-NumConstants::VERY_BIG, upperBound, false, true, precision) {}
   
   IncludingNegativeReal* clone() const { return new IncludingNegativeReal(*this); }
   
@@ -392,8 +411,8 @@ public:
 class ExcludingNegativeReal : public Interval
 {
 public:
-  ExcludingNegativeReal(double upperBound) :
-    Interval(-NumConstants::VERY_BIG, upperBound, false, false) {}
+  ExcludingNegativeReal(double upperBound, double precision=NumConstants::TINY) :
+    Interval(-NumConstants::VERY_BIG, upperBound, false, false, precision) {}
   
   ExcludingNegativeReal* clone() const { return new ExcludingNegativeReal(*this); }
 
@@ -416,8 +435,8 @@ public:
    * @param lowerBound The lower bound of the interval.
    * @param upperBound The upper bound of the interval.
    */
-  IncludingInterval(double lowerBound, double upperBound) :
-    Interval(lowerBound, upperBound, true, true) {}
+  IncludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
+    Interval(lowerBound, upperBound, true, true, precision) {}
 
   IncludingInterval* clone() const { return new IncludingInterval(*this); }
 
@@ -439,8 +458,8 @@ public:
    * @param lowerBound The lower bound of the interval.
    * @param upperBound The upper bound of the interval.
    */
-  ExcludingInterval(double lowerBound, double upperBound) :
-    Interval(lowerBound, upperBound, false, false) {}
+  ExcludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
+    Interval(lowerBound, upperBound, false, false, precision) {}
   
   ExcludingInterval* clone() const { return new ExcludingInterval(*this); }
   
@@ -462,8 +481,8 @@ public:
    * @param lowerBound The lower bound of the interval.
    * @param upperBound The upper bound of the interval.
    */
-  IncludingExcludingInterval(double lowerBound, double upperBound) :
-    Interval(lowerBound, upperBound, true, false) {}
+  IncludingExcludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
+    Interval(lowerBound, upperBound, true, false, precision) {}
   
   IncludingExcludingInterval* clone() const { return new IncludingExcludingInterval(*this); }
   
@@ -485,8 +504,8 @@ public:
    * @param lowerBound The lower bound of the interval.
    * @param upperBound The upper bound of the interval.
    */
-  ExcludingIncludingInterval(double lowerBound, double upperBound) :
-    Interval(lowerBound, upperBound, false, true) {}
+  ExcludingIncludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
+    Interval(lowerBound, upperBound, false, true, precision) {}
   
   ExcludingIncludingInterval* clone() const { return new ExcludingIncludingInterval(*this); }
   
