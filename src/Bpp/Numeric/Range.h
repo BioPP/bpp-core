@@ -117,11 +117,7 @@ template<class T> class Range:
      */
     bool overlap(const Range& r) const
     {
-      if (r.begin_ <= begin_ && r.end_ >= end_)
-        return true;
-      else if (r.begin_ >= begin_ && r.begin_ <= end_)
-        return true;
-      else if (r.end_ >= begin_ && r.end_ <= end_)
+      if (r.begin_ <= end_ && r.end >= begin_)
         return true;
       else
         return false;
