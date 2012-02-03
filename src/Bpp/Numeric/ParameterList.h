@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _PARAMETERLIST_H_
@@ -52,16 +52,16 @@ knowledge of the CeCILL license and that you accept its terms.
 namespace bpp
 {
 
-/**
- * @brief The parameter list object.
- * 
- * @author Julien Dutheil, Laurent Gueguen
- * This is a vector of Parameter with a few additional methods, mainly for giving
- * name access.
- */
-class ParameterList:
-  public Clonable
-{
+  /**
+   * @brief The parameter list object.
+   * 
+   * @author Julien Dutheil, Laurent Gueguen
+   * This is a vector of Parameter with a few additional methods, mainly for giving
+   * name access.
+   */
+  class ParameterList:
+    public Clonable
+  {
   private:
     std::vector<Parameter*> parameters_;
 
@@ -107,15 +107,15 @@ class ParameterList:
      */
     virtual const Parameter& getParameter(const std::string& name) const throw (ParameterNotFoundException);
   
-  /**
-   * @brief Get the value of the parameter with name <i>name</i>.
-   *
-   * @param name The name of the parameter to look for.
-   * @return A value of the parameter with name <i>name</i>.
-   * @throw ParameterNotFoundException If no parameter with the given name is found.
-   */
+    /**
+     * @brief Get the value of the parameter with name <i>name</i>.
+     *
+     * @param name The name of the parameter to look for.
+     * @return A value of the parameter with name <i>name</i>.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
+     */
   
-  virtual double getParameterValue(const std::string& name) const throw (ParameterNotFoundException);
+    virtual double getParameterValue(const std::string& name) const throw (ParameterNotFoundException);
   
     /**
      * @brief Get the parameter with name <i>name</i>.
@@ -198,14 +198,14 @@ class ParameterList:
      */
     virtual void addParameters(const ParameterList& params) throw (ParameterException);
     
-  /**
-   * @brief Add parameters to the list. If the parameter already
-   * exists, only the value is updated, otherwise the new parameter is
-   * added at the end of the list.
-   *
-   * @param params The parameter list containing the new paramters to add to the list.
-   */
-  virtual void includeParameters(const ParameterList& params);
+    /**
+     * @brief Add parameters to the list. If the parameter already
+     * exists, only the value is updated, otherwise the new parameter is
+     * added at the end of the list.
+     *
+     * @param params The parameter list containing the new paramters to add to the list.
+     */
+    virtual void includeParameters(const ParameterList& params);
     
     /**
      * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
@@ -233,17 +233,14 @@ class ParameterList:
       throw (ParameterNotFoundException, ConstraintException);
 
     /**
-     * @brief Update the parameters from <i>params</i>.
-     *
-     * <i>params</i> must be a subset of all parameters available.
+     * @brief Update the parameters from the ones in <i>params</i>
+     * that have matching names.
      *
      * @param params A list containing all parameters to update.
      * @see setAllParameters(), matchParameters()
-     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
      * @throw ConstraintException If one value is incorrect (and the two parameter list do not have the same constraints).
      */
-    virtual void setParametersValues(const ParameterList& params)
-      throw (ParameterNotFoundException, ConstraintException);
+    virtual void setParametersValues(const ParameterList& params);
 
     /**
      * @brief Returns true if the Parameter of the given name exists.
@@ -251,6 +248,17 @@ class ParameterList:
      * @name A string name
      */
     virtual bool hasParameter(const std::string& name) const;
+
+  /**
+   * @brief Tests the parameters from <i>params</i>.
+   *
+   * Only common parameters with <i>params</i> will be updated.
+   *
+   * @param params A list of parameters.
+   * @return true iff a least one parameter value is different.
+   */
+  
+  virtual bool testParametersValues(const ParameterList& params) const;
 
     /**
      * @brief Update the parameters from <i>params</i>.
