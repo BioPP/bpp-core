@@ -211,6 +211,11 @@ template<class T> class RangeCollection {
      * @return The ith range in the collection.
      */
     virtual const Range<T>& getRange(unsigned int i) const = 0;
+
+    /**
+     * @brief Clear the collection.
+     */
+    virtual void clear() = 0;
 };
 
 /**
@@ -305,6 +310,10 @@ template<class T> class RangeSet:
     const std::set< Range<T>*, rangeComp_<T> >& getSet() const { return ranges_; }
 
     std::set< Range<T>*, rangeComp_<T> >& getSet() { return ranges_; }
+
+    void clear() {
+      clear_();
+    }
 
   private:
     void clear_() {
