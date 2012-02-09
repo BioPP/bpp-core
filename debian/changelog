@@ -4,7 +4,7 @@ libbpp-core (2.0.3-1) unstable; urgency=low
   * Linear assigment method
   * Improved string tokenizer and text tools.
 
- -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Feb 2012 13:00:00 +0200
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Thu, 09 Feb 2012 13:00:00 +0100
 
 libbpp-core (2.0.2-1) unstable; urgency=low
 
