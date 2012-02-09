@@ -112,7 +112,8 @@ class AbstractParametrizable:
       throw (ConstraintException)
     {
       bool test = parameters_.matchParametersValues(parameters);
-      if (test) fireParameterChanged(parameters);
+      if (test) 
+        fireParameterChanged(parameters);
       return test;
     }
 

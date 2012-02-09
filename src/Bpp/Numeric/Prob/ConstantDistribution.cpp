@@ -1,11 +1,11 @@
 //
 // File: ConstantDistribution.cpp
-// Created by: jdutheil <Julien.Dutheil@univ-montp2.fr>
+// Created by: jdutheil 
 // Created on: Fri Oct 24 08:48:03 2003
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ConstantDistribution.h"
 
 using namespace bpp;
+#include <iostream>
+using namespace std;
 
 /******************************************************************************/
 

@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus. This file is part of the Bio++ project.
@@ -190,7 +190,7 @@ public:
    * @param parameters The set of parameters for which to compute the hessian matrix.
    * @return A matrix with size equal to the number of parameters.
    */
-  static RowMatrix<double> * computeHessianMatrix(DerivableSecondOrder & function, const ParameterList & parameters);
+  static RowMatrix<double>* computeHessianMatrix(DerivableSecondOrder& function, const ParameterList & parameters);
  
   /**************************************************************************/
 
