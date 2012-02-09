@@ -418,6 +418,10 @@ template<class T> class MultiRange:
 
     const Range<T>& getRange(unsigned int i) const { return *ranges_[i]; }
 
+    void clear() {
+      clear_();
+    }
+
   private:
     void clean_() {
       //Reorder
