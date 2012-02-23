@@ -1,9 +1,9 @@
 %define name bpp-core
-%define version 2.0.2
+%define version 2.0.3
 %define release 1
 %define _prefix /usr
 
-Summary: The Bio++ Core library.
+Summary: Bio++ Core library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
@@ -64,6 +64,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Thu Feb 09 2012 Julien Dutheil <julien.dutheil@univ-montp2.fr>
+- Version 2.0.3. More matrix and text tools.
 * Thu Jun 09 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>
 - Version 2.0.2. New MVA classes + more numerical tools.
 * Mon Feb 28 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr>

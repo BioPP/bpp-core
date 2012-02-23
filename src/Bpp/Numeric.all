@@ -15,6 +15,7 @@
 #include "Numeric/ParameterExceptions.h"
 #include "Numeric/ParameterList.h"
 #include "Numeric/Parametrizable.h"
+#include "Numeric/Range.h"
 #include "Numeric/TransformedParameter.h"
 #include "Numeric/VectorExceptions.h"
 #include "Numeric/VectorTools.h"
