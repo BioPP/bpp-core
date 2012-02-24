@@ -98,6 +98,8 @@ int main() {
   Range<unsigned int> r5(4, 25);
   Range<unsigned int> r6(4, 5);
   Range<unsigned int> r7(1, 50);
+  Range<unsigned int> r8(1, 3);
+  Range<unsigned int> r9(6, 8);
   cout << "r1: " << r1.toString() << endl;
   cout << "r2: " << r2.toString() << endl;
   cout << "r3: " << r3.toString() << endl;
@@ -105,6 +107,8 @@ int main() {
   cout << "r5: " << r5.toString() << endl;
   cout << "r6: " << r6.toString() << endl;
   cout << "r7: " << r7.toString() << endl;
+  cout << "r8: " << r8.toString() << endl;
+  cout << "r9: " << r9.toString() << endl;
   
   cout << endl << "..:: Overlaps ::.." << endl;
   cout << r1.overlap(r2) << endl;
@@ -119,6 +123,10 @@ int main() {
   if (!r1.overlap(r6)) return 1;
   cout << r1.overlap(r7) << endl;
   if (!r1.overlap(r7)) return 1;
+  cout << r1.overlap(r8) << endl;
+  if (r1.overlap(r8)) return 1;
+  cout << r1.overlap(r9) << endl;
+  if (r1.overlap(r9)) return 1;
 
   Range<unsigned int> r;
 
