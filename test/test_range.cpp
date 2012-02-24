@@ -128,6 +128,24 @@ int main() {
   cout << r1.overlap(r9) << endl;
   if (r1.overlap(r9)) return 1;
 
+  cout << endl << "..:: Contiguous ::.." << endl;
+  cout << r1.isContiguous(r2) << endl;
+  if (r1.isContiguous(r2)) return 1;
+  cout << r1.isContiguous(r3) << endl;
+  if (r1.isContiguous(r3)) return 1;
+  cout << r1.isContiguous(r4) << endl;
+  if (r1.isContiguous(r4)) return 1;
+  cout << r1.isContiguous(r5) << endl;
+  if (r1.isContiguous(r5)) return 1;
+  cout << r1.isContiguous(r6) << endl;
+  if (r1.isContiguous(r6)) return 1;
+  cout << r1.isContiguous(r7) << endl;
+  if (r1.isContiguous(r7)) return 1;
+  cout << r1.isContiguous(r8) << endl;
+  if (!r1.isContiguous(r8)) return 1;
+  cout << r1.isContiguous(r9) << endl;
+  if (!r1.isContiguous(r9)) return 1;
+
   Range<unsigned int> r;
 
   cout << endl << "..:: Expand ::.." << endl;

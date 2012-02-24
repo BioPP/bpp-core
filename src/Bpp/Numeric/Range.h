@@ -128,7 +128,7 @@ template<class T> class Range:
      * @return True if the two intervals are contiguous (i.e. the two intervals
      * are adjacent and share one bound).
      */
-    bool isContiguous(const Rang& r) const
+    bool isContiguous(const Range& r) const
     {
       if (r.begin_ == end_ || r.end_ == begin_)
         return true;
