@@ -124,6 +124,19 @@ template<class T> class Range:
     }
 
     /**
+     * @param r Range to compar with.
+     * @return True if the two intervals are contiguous (i.e. the two intervals
+     * are adjacent and share one bound).
+     */
+    bool isContiguous(const Rang& r) const
+    {
+      if (r.begin_ == end_ || r.end_ == begin_)
+        return true;
+      else
+        return false;
+    }
+
+    /**
      * @brief Expand the current interval with the given one.
      *
      * If the two intervals do not overlap, then the interval is not modified.
