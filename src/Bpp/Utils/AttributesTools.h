@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Tools, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide basal and 
 utilitary classes. This file belongs to the Bio++ Project.
@@ -229,8 +229,9 @@ class AttributesTools
      * @param args Number of arguments, as passed to the main function.
      * @param argv Array of values, as passed to the main function.
      * @return An attributes map.
+     * @throw Exception in case an option file is not found.
      */
-    static std::map<std::string, std::string> parseOptions(int args, char ** argv);
+    static std::map<std::string, std::string> parseOptions(int args, char ** argv) throw (Exception);
 
   private:
     

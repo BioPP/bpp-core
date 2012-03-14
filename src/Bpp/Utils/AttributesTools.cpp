@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide basal and 
 utilitary classes. This file belongs to the Bio++ Project.
@@ -231,7 +231,7 @@ std::string AttributesTools::removeComments(
 
 /******************************************************************************/
 
-std::map<std::string, std::string> AttributesTools::parseOptions(int args, char ** argv)
+std::map<std::string, std::string> AttributesTools::parseOptions(int args, char ** argv) throw (Exception)
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
@@ -244,8 +244,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
     string file = cmdParams["param"];
     if(!FileTools::fileExists(file))
     {
-      cerr << "Parameter file not found." << endl;
-      exit(-1);
+      throw Exception("AttributesTools::parseOptions(). Parameter file not found.");
     }
     else
     {
