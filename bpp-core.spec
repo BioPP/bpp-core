@@ -33,10 +33,10 @@ This library contains the core classes and utilitary functions of the Bio++ proj
 %package -n libbpp-core-devel
 Summary: Libraries, includes to develop applications with %{_basename}
 Group: Development/Libraries/C and C++
-Requires: %{_basename} = %{_version}
+Requires: libbpp-core2 = %{_version}
 
 %description -n libbpp-core-devel
-The %{_basename}-devel package contains the header files and static libraries for
+The libbpp-core-devel package contains the header files and static libraries for
 building applications which use %{_basename}.
 
 %prep
