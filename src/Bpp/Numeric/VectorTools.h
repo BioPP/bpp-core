@@ -505,10 +505,10 @@ public:
 
   /**
    * @author Laurent Gueguen
-   * @return the std::vector of the selected elements, in the order of the
-   *  required positions
    * @param v1 the std::vector of elements,
    * @param v2 the std::vector of the selected positions
+   * @return the std::vector of the selected elements, in the order of the
+   *  required positions
    */
   template<class T>
   static std::vector<T> extract(const std::vector<T>& v1, const std::vector<int>& v2)
@@ -855,6 +855,27 @@ public:
         out << delim;
     }
     out.endLine();
+  }
+
+  /**
+   * @brief Print a std::vector to a stream in R format
+   * @param v1 A std::vector.
+   * @param variableName the variable name (default "x").
+   * @param out A stream (default cout).
+   * @param delim A string which is used to separate the values (default is " ").
+   */
+  template<class T>
+  static void printForR(const std::vector<T>& v1, std::string variableName="x", std::ostream& out = std::cout)
+  {
+    out.precision(12);
+    out << variableName << "<-c(";
+    for (unsigned int i = 0; i < v1.size(); i++)
+      {
+        out << v1[i];
+        if (i < v1.size() - 1)
+          out << ", ";
+      }
+    out << ")" << std::endl;
   }
 
   /**
