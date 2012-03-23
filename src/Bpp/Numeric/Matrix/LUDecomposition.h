@@ -347,7 +347,7 @@ namespace bpp
             minD = currentValue;
         }
 
-      if (minD<NumConstants::TINY){
+      if (minD<NumConstants::SMALL){
       	throw ZeroDivisionException("Singular matrix in LU::solve.");
       }
 
@@ -414,7 +414,7 @@ namespace bpp
             minD = currentValue;
         }
 
-      if (minD<NumConstants::TINY){
+      if (minD<NumConstants::SMALL){
       	throw ZeroDivisionException("Singular matrix in LU::solve.");
       }
 
