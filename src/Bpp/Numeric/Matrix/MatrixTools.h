@@ -111,6 +111,21 @@ public:
   }
 
   /**
+   * @param x [in] A scalar
+   * @param n [in] the dimension of the output matrix
+   * @param O [out] A diagonal matrix with diagonal elements equal to x
+   */
+  template<class Scalar>
+  static void diag(const Scalar x, unsigned int n, Matrix<Scalar>& O)
+  {
+    O.resize(n, n);
+    for (unsigned int i = 0; i < n; i++)
+      {
+        for (unsigned int j = 0; j < n; j++) { O(i, j) = (i == j) ? x : 0;}
+      }
+  }
+
+  /**
    * @param M [in] The matrix.
    * @param O [out] The diagonal elements of a square matrix as a vector.
    * @throw DimensionException If M is not a square matrix.
@@ -297,11 +312,39 @@ public:
   }
 
   /**
+   * @brief Add matrix x.B to matrix A.
+   *
+   * @param A [in,out] Matrix A
+   * @param [in] Scalar x
+   * @param B [in] Matrix B
+   * @throw DimensionException If A and B have note the same size.
+   */
+  template<class MatrixA, class MatrixB, class Scalar>
+  static void add(MatrixA& A, Scalar& x, const MatrixB& B) throw (DimensionException)
+  {
+    unsigned int ncA = A.getNumberOfColumns();
+    unsigned int nrA = A.getNumberOfRows();
+    unsigned int nrB = B.getNumberOfRows();
+    unsigned int ncB = B.getNumberOfColumns();
+    if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
+    if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
+    for (unsigned int i = 0; i < A.getNumberOfRows(); i++)
+      {
+        for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
+          {
+            A(i, j) += x*B(i, j);
+          }
+      }
+  }
+
+  /**
    * @brief Compute the power of a given matrix.
    *
    * @param A [in] The matrix.
    * @param p The number of multiplications.
-   * @param O [out]\f$\prod_{i=1}^p m\f$.
+   * @param O [out]\f$  A^p \f$ computed recursively:
+   *               \f$ A^{2n} = (A^n)^2 \f$
+   *               \f$ A^{2n+1} = A*(A^n)^2 \f$   
    * If p = 0, sends the identity matrix.
    * @throw DimensionException If m is not a square matrix.
    */
@@ -310,12 +353,28 @@ public:
   {
     unsigned int n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
-    getId<Matrix>(n, O);
-    Matrix tmp;
-    for (unsigned int i = 0; i < p; i++)
-    {
-      tmp = O;
-      mult(tmp, A, O);
+    switch(p){
+    case 0:
+      getId<Matrix>(n, O);
+      break;
+    case 1:
+      copy(A,O);
+      break;
+    case 2:
+      mult(A,A,O);
+      break;
+    default:
+      Matrix tmp;
+      if (p%2){
+        pow(A,p/2,tmp);
+        pow(tmp,2,O);
+      }
+      else{
+        pow(A,(p-1)/2,tmp);
+        pow(tmp,2,O);
+        mult(A,O,tmp);
+        copy(tmp,O);
+      }
     }
   }
 
@@ -341,7 +400,7 @@ public:
   }
 
   /**
-   * @brief Perform matrix exponentiation.
+   * @brief Perform matrix exponentiation using diagonalization.
    *
    * @warning This method currently relies only on diagonalization, so it won't work if your matrix is not diagonalizable.
    * The function may be extended later to deal with other cases.
@@ -360,6 +419,32 @@ public:
     rightEV = eigen.getV();
     inv(rightEV, leftEV);
     mult(rightEV, VectorTools::exp(eigen.getRealEigenValues()), leftEV, O);
+  }
+
+  /**
+   * @brief Compute a vector of the first powers of a given matrix.
+   *
+   * @param A [in] The matrix.
+   * @param p The number of powers.
+   * @param vO [out] the vector of the powers (from 0 to p)
+   *
+   * @throw DimensionException If m is not a square matrix.
+   */
+  
+  template<class Matrix, class Scalar>
+  static void Taylor(const Matrix& A, unsigned int p, std::vector< RowMatrix<Scalar> > & vO) throw (DimensionException)
+  {
+    unsigned int n = A.getNumberOfRows();
+    if (n != A.getNumberOfColumns())
+      throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
+    vO.resize(p+1);
+    getId<Matrix>(n, vO[0]);
+    copy(A,vO[1]);
+    
+    for (unsigned int i = 1; i < p; i++)
+      {
+        mult(vO[i], A, vO[i+1]);
+      }
   }
 
   /**
@@ -507,7 +592,7 @@ public:
   template<class Matrix>
   static void printForR(const Matrix& m, const std::string& variableName = "x", std::ostream& out = std::cout)
   {
-    out << m.getNumberOfRows() << "x" << m.getNumberOfColumns() << std::endl;
+    out.precision(12);
     out << variableName << "<-matrix(c(";
     for (unsigned int i = 0; i < m.getNumberOfRows(); i++)
     {
@@ -551,16 +636,17 @@ public:
   /**
    * @param A [in] The matrix to inverse.
    * @param O [out] The inverse matrix of A.
+   * @return x the minimum absolute value of the diagonal of the LU decomposition
    * @throw DimensionException If A is not a square matrix.
    */
   template<class Scalar>
-  static void inv(const Matrix<Scalar>& A, Matrix<Scalar>& O) throw (DimensionException)
+  static Scalar inv(const Matrix<Scalar>& A, Matrix<Scalar>& O) throw (DimensionException, ZeroDivisionException)
   {
     if (!isSquare(A)) throw DimensionException("MatrixTools::inv(). Matrix A is not a square matrix.", A.getNumberOfRows(), A.getNumberOfColumns());
     LUDecomposition<Scalar> lu(A);
     RowMatrix<Scalar> I;
     getId(A.getNumberOfRows(), I);
-    copy(lu.solve(I), O);
+    return lu.solve(I,O);
   }
 
   /**
@@ -568,7 +654,7 @@ public:
    *
    * This implementation is in @f$o(n^3)@f$ and uses the LU decomposition method.
    *
-   * @param A [in] The inputm atrix.
+   * @param A [in] The input matrix.
    * @return The determinant of A.
    * @throw DimensionException If A is not a square matrix.
    */
