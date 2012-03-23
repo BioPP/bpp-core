@@ -42,6 +42,7 @@
 
 #include "Matrix.h"
 #include "../NumTools.h"
+#include "../../Exceptions.h"
 
 //From the STL:
 #include <algorithm>
@@ -81,31 +82,27 @@ namespace bpp
 
   private:
 
-    static RowMatrix<Real> permuteCopy(const Matrix<Real>& A, const std::vector<unsigned int>& piv, unsigned int j0, unsigned int j1)
+    static void permuteCopy(const Matrix<Real>& A, const std::vector<unsigned int>& piv, unsigned int j0, unsigned int j1, Matrix<Real>& X)
     {
       unsigned int piv_length = piv.size();
 
-      RowMatrix<Real> X(piv_length, j1-j0+1);
+      X.resize(piv_length, j1-j0+1);
 
       for (unsigned int i = 0; i < piv_length; i++) 
       	for (unsigned int j = j0; j <= j1; j++) 
           X(i,j-j0) = A(piv[i],j);
-
-      return X;
     }
 
-    static std::vector<Real> permuteCopy(const std::vector<Real>& A, const std::vector<unsigned int>& piv)
+    static void permuteCopy(const std::vector<Real>& A, const std::vector<unsigned int>& piv, std::vector<Real>& X)
     {
       unsigned int piv_length = piv.size();
       if (piv_length != A.size())
-        return std::vector<Real>();
-
-      std::vector<Real> x(piv_length);
+        X.clean();
+      
+      X.resize(piv_length);
 
       for (unsigned int i = 0; i < piv_length; i++) 
-        x[i] = A[piv[i]];
-
-      return x;
+        X[i] = A[piv[i]];
     }
 
 
@@ -145,7 +142,7 @@ namespace bpp
      	  //  LUcolj[i] = LU(i,j);
      	  //}
 
-     	  // Apply previous transformations.
+    	  // Apply previous transformations.
 
      	  for (unsigned int i = 0; i < m; i++) {
           //LUrowi = LU[i];
@@ -241,27 +238,12 @@ namespace bpp
         }
     }
 
-
-    /**
-     * @brief Is the matrix nonsingular?
-     *
-     * @return True if upper triangular factor U (and hence A) is nonsingular, 0 otherwise.
-     */
-    bool isNonsingular () const
-    {
-      for (unsigned int j = 0; j < n; j++) {
-        if (LU(j,j) == 0)
-      	  return false;
-      }
-      return true;
-    }
-
     /**
      * @brief Return lower triangular factor
      * 
      * @return L
      */
-    const RowMatrix<Real>& getL() const
+    const RowMatrix<Real>& getL() 
     {
       for (unsigned int i = 0; i < m; i++)
         {
@@ -289,7 +271,7 @@ namespace bpp
      * 
      * @return U portion of LU factorization.
      */
-    const RowMatrix<Real>& getU () const
+    const RowMatrix<Real>& getU ()
     {
       for (unsigned int i = 0; i < n; i++)
         {
@@ -341,25 +323,39 @@ namespace bpp
     /** 
      * @brief Solve A*X = B
      *
-     * @param  B   A Matrix with as many rows as A and any number of columns.
-     * @return     X so that L*U*X = B(piv,:), if B is nonconformant, returns 0x0 (null) array.
+     * @param  const B [in]  A Matrix with as many rows as A and any number of columns.
+     * @param  X [out]  A RowMatrix that will be changed such that L*U*X = B(piv,:).
+     * @return  the lowest diagonal term (in absolute value), for further checkings
+     *             of non-singularity of LU.
+     *
+     * If B is nonconformant or LU is singular, an Exception is raised.
+     *
      */
-    RowMatrix<Real> solve (const Matrix<Real>& B) const 
+    Real solve (const Matrix<Real>& B, Matrix<Real>& X) const throw (BadIntegerException, ZeroDivisionException)
     {
       /* Dimensions: A is mxn, X is nxk, B is mxk */
       
       if (B.getNumberOfRows() != m) {
-        return RowMatrix<Real>(0,0);
+        throw BadIntegerException("Wrong dimension in LU::solve", B.getNumberOfRows());
       }
-      if (!isNonsingular()) {
-      	return RowMatrix<Real>(0,0);
+
+      Real minD = NumTools::abs<Real>(LU(0,0));
+      for (unsigned int i = 1; i < m; i++)
+        {
+          Real currentValue = NumTools::abs<Real>(LU(i, i));
+          if (currentValue < minD)
+            minD = currentValue;
+        }
+
+      if (minD<NumConstants::TINY){
+      	throw ZeroDivisionException("Singular matrix in LU::solve.");
       }
 
       // Copy right hand side with pivoting
       //int nx = B.dim2();
       unsigned int nx = B.getNumberOfColumns();
 
-      RowMatrix<Real> X = permuteCopy(B, piv, 0, nx-1);
+      permuteCopy(B, piv, 0, nx-1, X);
 
       // Solve L*Y = B(piv,:)
       for (unsigned int k = 0; k < n; k++) {
@@ -373,6 +369,7 @@ namespace bpp
       // !!! Do not use unsigned int with -- loop!!!
       //for (int k = n-1; k >= 0; k--) {
       unsigned int k = n;
+      
       do {
         k--;
         for (unsigned int j = 0; j < nx; j++) {
@@ -384,29 +381,44 @@ namespace bpp
           }
         }
       } while(k > 0);
-      return X;
+
+      return minD;
     }
 
 
     /** 
      * @brief Solve A*x = b, where x and b are vectors of length equal	to the number of rows in A.
      *
-     * @param  b   a vector (Array1D> of length equal to the first dimension	of A.
-     * @return x a vector (Array1D> so that L*U*x = b(piv), if B is nonconformant, returns 0x0 (null) array.
+     * @param  b [in] a vector (Array1D> of length equal to the first dimension	of A.
+     * @param  x [out] a vector that will be changed so that so that L*U*x = b(piv).
+     * @return  the lowest diagonal term (in absolute value), for further checkings
+     *             of non-singularity of LU.
+     *
+     * If B is nonconformant or LU is singular, an Exception is raised.
      */
-    std::vector<Real> solve (const std::vector<Real> &b) const 
+
+    Real solve (const std::vector<Real> &b, std::vector<Real>& x)  const throw (BadIntegerException, ZeroDivisionException)
     {
 
       /* Dimensions: A is mxn, X is nxk, B is mxk */
       
       if (b.dim1() != m) {
-        return std::vector<Real>();
-      }
-      if (!isNonsingular()) {
-        return std::vector<Real>();
+        throw BadIntegerException("Wrong dimension in LU::solve", b.dim1());
       }
 
-      std::vector<Real> x = permuteCopy(b, piv);
+      Real minD = NumTools::abs<Real>(LU(0,0));
+      for (unsigned int i = 1; i < m; i++)
+        {
+          Real currentValue = NumTools::abs<Real>(LU(i, i));
+          if (currentValue < minD)
+            minD = currentValue;
+        }
+
+      if (minD<NumConstants::TINY){
+      	throw ZeroDivisionException("Singular matrix in LU::solve.");
+      }
+
+      permuteCopy(b, piv, x);
 
       // Solve L*Y = B(piv)
       for (unsigned int k = 0; k < n; k++) {
@@ -426,7 +438,7 @@ namespace bpp
         }
       } while(k > 0);
      
-      return x;
+      return minD;
     }
 
   }; /* class LU */
