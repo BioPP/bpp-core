@@ -430,7 +430,7 @@ void AbstractDiscreteDistribution::discretize()
 
 void AbstractDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {
-  const Interval* pi = dynamic_cast<const Interval*>(&c);
+  const IntervalConstraint* pi = dynamic_cast<const IntervalConstraint*>(&c);
 
   if (!pi)
     throw Exception("AbstractDiscreteDistribution::restrictToConstraint: the constraint is not an interval");

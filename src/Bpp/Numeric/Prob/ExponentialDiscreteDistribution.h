@@ -55,7 +55,7 @@ class ExponentialDiscreteDistribution :
   public AbstractDiscreteDistribution
 {
 protected:
-  IncludingPositiveReal* lambdaConstraint_;
+  IntervalConstraint* lambdaConstraint_;
 
   double lambda_;
 
@@ -75,7 +75,7 @@ public:
   ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist) :
     AbstractParameterAliasable(dist),
     AbstractDiscreteDistribution(dist),
-    lambdaConstraint_(dynamic_cast<IncludingPositiveReal*>(dist.lambdaConstraint_->clone())),
+    lambdaConstraint_(dynamic_cast<IntervalConstraint*>(dist.lambdaConstraint_->clone())),
     lambda_(dist.lambda_)
   {}
 
@@ -83,7 +83,7 @@ public:
   {
     AbstractParameterAliasable::operator=(dist);    
     AbstractDiscreteDistribution::operator=(dist);
-    lambdaConstraint_ = dynamic_cast<IncludingPositiveReal*>(dist.lambdaConstraint_->clone());
+    lambdaConstraint_ = dynamic_cast<IntervalConstraint*>(dist.lambdaConstraint_->clone());
     lambda_ = dist.lambda_;
     return *this;
   }

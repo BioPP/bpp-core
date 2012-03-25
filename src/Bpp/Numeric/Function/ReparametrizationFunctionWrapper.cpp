@@ -60,101 +60,103 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
     }
     else
     {
-      Interval* iInterval = dynamic_cast<IncludingInterval*>(constraint);
-      Interval* eInterval = dynamic_cast<ExcludingInterval*>(constraint);
-      Interval* ieInterval = dynamic_cast<IncludingExcludingInterval*>(constraint);
-      Interval* eiInterval = dynamic_cast<ExcludingIncludingInterval*>(constraint);
-      ExcludingPositiveReal* epr = dynamic_cast<ExcludingPositiveReal*>(constraint);
-      IncludingPositiveReal* ipr = dynamic_cast<IncludingPositiveReal*>(constraint);
-      ExcludingNegativeReal* enr = dynamic_cast<ExcludingNegativeReal*>(constraint);
-      IncludingNegativeReal* inr = dynamic_cast<IncludingNegativeReal*>(constraint);
-      if (iInterval)
-      {
-        // Case 1: [a,b]
-        // This solve an issue if the original value is at the bound.
-        double correctedValue = value;
-        if (abs(value - iInterval->getLowerBound()) < NumConstants::TINY)
-          correctedValue = iInterval->getLowerBound() + NumConstants::TINY;
-        if (abs(value - iInterval->getUpperBound()) < NumConstants::TINY)
-          correctedValue = iInterval->getUpperBound() - NumConstants::TINY;
-        IntervalTransformedParameter pp(name, correctedValue, iInterval->getLowerBound(), iInterval->getUpperBound());
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (eInterval)
-      {
-        // Case 2: ]a,b[
-        // We have to correct the bound in order to prevent numerical issues.
-        // It can happens that the original bound is matched because of rounding errors.
-        IntervalTransformedParameter pp(name, value, eInterval->getLowerBound() + NumConstants::TINY, eInterval->getUpperBound() - NumConstants::TINY);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (ieInterval)
-      {
-        // Case 3: [a,b[
-        // This solve an issue if the original value is at the bound.
-        double correctedValue = value;
-        if (abs(value - ieInterval->getLowerBound()) < NumConstants::TINY)
-          correctedValue = ieInterval->getLowerBound() + NumConstants::TINY;
-        IntervalTransformedParameter pp(name, correctedValue, ieInterval->getLowerBound(), ieInterval->getUpperBound() - NumConstants::TINY);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (eiInterval)
-      {
-        // Case 4: ]a,b]
-        // This solve an issue if the original value is at the bound.
-        double correctedValue = value;
-        if (abs(value - eiInterval->getUpperBound()) < NumConstants::TINY)
-          correctedValue = eiInterval->getUpperBound() - NumConstants::TINY;
-        IntervalTransformedParameter pp(name, correctedValue, eiInterval->getLowerBound() + NumConstants::TINY, eiInterval->getUpperBound());
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (epr)
-      {
-        // Case 5: ]a, +inf[
-        RTransformedParameter pp(name, value, epr->getLowerBound() + NumConstants::TINY, true);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (ipr)
-      {
-        // Case 6: [a, +inf[
-        // This solve an issue if the original value is at the bound.
-        double correctedValue = value;
-        if (abs(value - ipr->getLowerBound()) < NumConstants::TINY)
-          correctedValue = ipr->getLowerBound() + NumConstants::TINY;
-        RTransformedParameter pp(name, correctedValue, ipr->getLowerBound(), true);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (enr)
-      {
-        // Case 7: ]-inf, a[
-        RTransformedParameter pp(name, value, enr->getUpperBound() - NumConstants::TINY, false);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
-      }
-      else if (inr)
-      {
-        // Case 8: ]-inf, a]
-        // This solve an issue if the original value is at the bound.
-        double correctedValue = value;
-        if (abs(value - inr->getUpperBound()) < NumConstants::TINY)
-          correctedValue = inr->getUpperBound() - NumConstants::TINY;
-        RTransformedParameter pp(name, correctedValue, inr->getUpperBound(), false);
-        addParameter_(pp);
-        if (verbose)
-          ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+      IntervalConstraint* interval = dynamic_cast<IntervalConstraint*>(constraint);
+      if (interval) {
+        bool isInfinite = (!interval->finiteLowerBound()) || (!interval->finiteUpperBound());
+        if (!isInfinite)
+        {
+          if (!interval->strictLowerBound() && !interval->strictUpperBound())
+          {
+            // Case 1: [a,b]
+            // This solves an issue if the original value is at the bound.
+            double correctedValue = value;
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
+              correctedValue = interval->getLowerBound() + NumConstants::TINY;
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
+              correctedValue = interval->getUpperBound() - NumConstants::TINY;
+            IntervalTransformedParameter pp(name, correctedValue, interval->getLowerBound(), interval->getUpperBound());
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (interval->strictLowerBound() && interval->strictUpperBound())
+          {
+            // Case 2: ]a,b[
+            // We have to correct the bound in order to prevent numerical issues.
+            // It can happens that the original bound is matched because of rounding errors.
+            IntervalTransformedParameter pp(name, value, interval->getLowerBound() + NumConstants::TINY, interval->getUpperBound() - NumConstants::TINY);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (!interval->strictLowerBound() && interval->strictUpperBound())
+          {
+            // Case 3: [a,b[
+            // This solves an issue if the original value is at the bound.
+            double correctedValue = value;
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
+              correctedValue = interval->getLowerBound() + NumConstants::TINY;
+            IntervalTransformedParameter pp(name, correctedValue, interval->getLowerBound(), interval->getUpperBound() - NumConstants::TINY);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (interval->strictLowerBound() && !interval->strictUpperBound())
+          {
+            // Case 4: ]a,b]
+            // This solve an issue if the original value is at the bound.
+            double correctedValue = value;
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
+              correctedValue = interval->getUpperBound() - NumConstants::TINY;
+            IntervalTransformedParameter pp(name, correctedValue, interval->getLowerBound() + NumConstants::TINY, interval->getUpperBound());
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+        }
+        else
+        {
+          if (interval->strictLowerBound() && !interval->finiteUpperBound())
+          {
+            // Case 5: ]a, +inf[
+            RTransformedParameter pp(name, value, interval->getLowerBound() + NumConstants::TINY, true);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (!interval->strictLowerBound() && !interval->finiteUpperBound())
+          {
+            // Case 6: [a, +inf[
+            // This solve an issue if the original value is at the bound.
+            double correctedValue = value;
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
+              correctedValue = interval->getLowerBound() + NumConstants::TINY;
+            RTransformedParameter pp(name, correctedValue, interval->getLowerBound(), true);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (!interval->finiteLowerBound() && interval->strictUpperBound())
+          {
+            // Case 7: ]-inf, a[
+            RTransformedParameter pp(name, value, interval->getUpperBound() - NumConstants::TINY, false);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+          else if (!interval->finiteLowerBound() && !interval->strictUpperBound())
+          {
+            // Case 8: ]-inf, a]
+            // This solve an issue if the original value is at the bound.
+            double correctedValue = value;
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
+              correctedValue = interval->getUpperBound() - NumConstants::TINY;
+            RTransformedParameter pp(name, correctedValue, interval->getUpperBound(), false);
+            addParameter_(pp);
+            if (verbose)
+              ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp.getValue()));
+          }
+        }
       }
       else
       {

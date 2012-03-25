@@ -61,6 +61,14 @@ Parameter::Parameter(const std::string& name, double value, Constraint* constrai
   setValue(value);
 }
 
+Parameter::Parameter(const std::string& name, double value, const Constraint* constraint)
+  throw (ConstraintException) :
+  name_(name), value_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
+{
+  // This may throw a ConstraintException:
+  setValue(value);
+}
+
 Parameter::Parameter(const Parameter& p) :
   name_(p.name_),
   value_(p.value_),
@@ -172,17 +180,17 @@ bool Parameter::hasParameterListener(const std::string& listenerId)
 
 /******************************************************************************/
 
-IncludingPositiveReal Parameter::R_PLUS(0);
+const IntervalConstraint Parameter::R_PLUS(1, 0, true);
 
-ExcludingPositiveReal Parameter::R_PLUS_STAR(0);
+const IntervalConstraint Parameter::R_PLUS_STAR(1, 0, false);
 
-IncludingNegativeReal Parameter::R_MINUS(0);
+const IntervalConstraint Parameter::R_MINUS(-1, 0, true);
 
-ExcludingNegativeReal Parameter::R_MINUS_STAR(0);
+const IntervalConstraint Parameter::R_MINUS_STAR(-1, 0, false);
 
-IncludingInterval Parameter::PROP_CONSTRAINT_IN(0, 1);
+const IntervalConstraint Parameter::PROP_CONSTRAINT_IN(0, 1, true, true);
 
-ExcludingInterval Parameter::PROP_CONSTRAINT_EX(0, 1);
+const IntervalConstraint Parameter::PROP_CONSTRAINT_EX(0, 1, false, false);
 
 /******************************************************************************/
 

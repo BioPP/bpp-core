@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus. This file is part of the Bio++ project.
@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 
 #include <cmath>
+#include <limits>
 
 using namespace std;
 
@@ -63,6 +64,7 @@ const double NumConstants::SMALL = 1e-6;
 const double NumConstants::TINY =  1e-12;
 const double NumConstants::VERY_TINY = 1e-20;
 const double NumConstants::VERY_BIG = static_cast<double>(1.7E+23);
+const double NumConstants::INF = numeric_limits<double>::infinity();
 
 const double NumConstants::PI = 3.141593;
 

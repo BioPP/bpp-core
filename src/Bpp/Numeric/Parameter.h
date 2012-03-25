@@ -144,7 +144,11 @@ namespace bpp
     std::vector<bool> listenerAttach_;
   
   public: // Class constructors and destructors:
-    
+
+    /**
+     * @brief Default contructor. Creates a parameter with no name, no constraint, and a value of 0.
+     */
+    Parameter(): name_(""), value_(0), constraint_(0), attach_(true), listeners_(), listenerAttach_() {}
     /**
      * @brief Build a new parameter.
      *
@@ -154,11 +158,23 @@ namespace bpp
      * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
      * between different objects (the default behavior, for backward compatibility).
      * If the first case, the constraint object will be destroyed when the parameter is destroyed,
-     * and duplicated whe the parameter is copied.
+     * and duplicated when the parameter is copied.
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name = "", double value = 0, Constraint* constraint = 0, bool attachConstraint = false)
+    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint)
       throw (ConstraintException);
+
+    /**
+     * @brief Build a new parameter.
+     *
+     * @param name       The parameter name.
+     * @param value      The parameter value.
+     * @param constraint An optional pointer toward a constraint Object. The constraint will be copied and attached to this instance.
+     * @throw ConstraintException If the parameter value does not match the contraint.
+     */
+    Parameter(const std::string& name, double value, const Constraint* constraint = 0)
+      throw (ConstraintException);
+
 
     /**
      * @brief Copy constructor.
@@ -297,12 +313,12 @@ namespace bpp
     }
   
   public:
-    static IncludingPositiveReal R_PLUS;
-    static ExcludingPositiveReal R_PLUS_STAR;
-    static IncludingNegativeReal R_MINUS;
-    static ExcludingNegativeReal R_MINUS_STAR;
-    static IncludingInterval PROP_CONSTRAINT_IN;
-    static ExcludingInterval PROP_CONSTRAINT_EX;
+    static const IntervalConstraint R_PLUS;
+    static const IntervalConstraint R_PLUS_STAR;
+    static const IntervalConstraint R_MINUS;
+    static const IntervalConstraint R_MINUS_STAR;
+    static const IntervalConstraint PROP_CONSTRAINT_IN;
+    static const IntervalConstraint PROP_CONSTRAINT_EX;
   };
 
 } //end of namespace bpp.

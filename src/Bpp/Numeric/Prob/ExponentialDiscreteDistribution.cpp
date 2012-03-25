@@ -56,7 +56,7 @@ ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n,
   lambdaConstraint_(0),
   lambda_(lambda)
 {
-  lambdaConstraint_ = new IncludingPositiveReal(0.0);
+  lambdaConstraint_ = new IntervalConstraint(1, 0.0, true);
   Parameter p(prefix + "lambda", lambda, dynamic_cast<Constraint*>(lambdaConstraint_->clone()), true);
   addParameter_(p);
 

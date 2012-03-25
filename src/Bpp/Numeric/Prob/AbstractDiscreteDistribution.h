@@ -122,7 +122,7 @@ namespace bpp
      *
      */
     
-    Interval intMinMax_;    
+    IntervalConstraint intMinMax_;    
 
     /**
      * Tells if the values in the classes is associated to the median or not (default: false)

@@ -105,7 +105,7 @@ void ConstantDistribution::restrictToConstraint(const Constraint& c)
   if (getNumberOfParameters()==0)
     return;
   
-  const Interval* pi=dynamic_cast<const Interval*>(&c);
+  const IntervalConstraint* pi=dynamic_cast<const IntervalConstraint*>(&c);
   if (!pi)
     throw Exception("ConstantDistribution::restrictToConstraint: Non-interval exception");
 

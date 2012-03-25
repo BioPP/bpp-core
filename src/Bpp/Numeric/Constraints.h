@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -117,10 +117,13 @@ public:
 };
 
 /**
- * @brief An interval, either bounded or not
+ * @brief An interval, either bounded or not, which can also have infinite bounds.
+ *
+ * The upper and lower bound can be included or not (strict bound), finite or infinite (in that case, equal to a very large value).
+ * Despite the mathematical non-sense, and infinite bound can be either excluded or included.
  */
 
-class Interval : public Constraint
+class IntervalConstraint : public Constraint
 {
 protected:
   /**
@@ -143,22 +146,39 @@ protected:
   
 
 public:
-  Interval() :  lowerBound_(-NumConstants::VERY_BIG),
+  IntervalConstraint() :  lowerBound_(-NumConstants::VERY_BIG),
                 upperBound_(NumConstants::VERY_BIG),
                 inclLowerBound_(true),
                 inclUpperBound_(true),
                 precision_(NumConstants::TINY) {}
 
-  Interval(double lowerBound, double upperBound, bool inclLower, bool inclUpper, double precision=NumConstants::TINY) :
+  IntervalConstraint(double lowerBound, double upperBound, bool inclLower, bool inclUpper, double precision = NumConstants::TINY) :
     lowerBound_(lowerBound),
     upperBound_(upperBound),
     inclLowerBound_(inclLower),
     inclUpperBound_(inclUpper),
-    precision_(precision){}
-  
-  virtual ~Interval() {}
+    precision_(precision) {}
+ 
+  /**
+   * @brief Create an interval with an infinite lower/upper bound.
+   *
+   * The infinite bound will not be included, following mathematical conventions.
+   *
+   * @param sign Tell if the infinite bound is positive or negative.
+   * @param bound The finite bound.
+   * @param incl Tell if the finite bound is included or not.
+   * @param precision Parameter precision.
+   */
+  IntervalConstraint(short sign, double bound, bool incl, double precision = NumConstants::TINY) :
+    lowerBound_(sign > 0 ? bound : -NumConstants::VERY_BIG),
+    upperBound_(sign > 0 ? NumConstants::VERY_BIG : bound),
+    inclLowerBound_(sign > 0 ? incl : false),
+    inclUpperBound_(sign > 0 ? false : incl),
+    precision_(precision) {}
+ 
+  virtual ~IntervalConstraint() {}
 
-  Interval* clone() const { return new Interval(*this); }
+  IntervalConstraint* clone() const { return new IntervalConstraint(*this); }
 
 public:
   void setLowerBound(double lowerBound, bool strict) { lowerBound_ = lowerBound; inclLowerBound_ = !strict; }
@@ -167,8 +187,11 @@ public:
   double getLowerBound() const { return lowerBound_; }
   double getUpperBound() const { return upperBound_; }
 
-  bool strictLowerBound() const {return !inclLowerBound_; }
-  bool strictUpperBound() const {return !inclUpperBound_; }
+  bool strictLowerBound() const { return !inclLowerBound_; }
+  bool strictUpperBound() const { return !inclUpperBound_; }
+
+  bool finiteLowerBound() const { return lowerBound_ > -NumConstants::VERY_BIG; }
+  bool finiteUpperBound() const { return upperBound_ < NumConstants::VERY_BIG; }
 
   bool includes(double min, double max) const
   {
@@ -224,17 +247,17 @@ public:
   std::string getDescription() const
   {
     return (inclLowerBound_ ? "[ " : "]")
-           + (lowerBound_ == -NumConstants::VERY_BIG ? "-inf" : TextTools::toString(lowerBound_))
+           + (finiteLowerBound() ? TextTools::toString(lowerBound_) : "-inf")
            + ", "
-           + (upperBound_ == NumConstants::VERY_BIG ? "+inf" : TextTools::toString(upperBound_))
+           + (finiteUpperBound() ? TextTools::toString(upperBound_) : "+inf")
            + (inclUpperBound_ ? "] " : "[");
   }
 
   /**
-   * @brief Intersect this Interval with another one
+   * @brief Intersect this IntervalConstraint with another one
    *
-   * @param c the intersected Interval
-   * @return the intersection, or NULL if c is not an Interval. The
+   * @param c the intersected IntervalConstraint
+   * @return the intersection, or NULL if c is not an IntervalConstraint. The
    * resulting precision is the maximum of both precisions.
    */
   Constraint* operator&(const Constraint& c) const
@@ -242,7 +265,7 @@ public:
     double lowerBound, upperBound;
     bool inclLowerBound, inclUpperBound;
 
-    const Interval* pi = dynamic_cast<const Interval*>(&c);
+    const IntervalConstraint* pi = dynamic_cast<const IntervalConstraint*>(&c);
 
     if (pi)
     {
@@ -267,23 +290,23 @@ public:
         upperBound = upperBound_;
         inclUpperBound = inclUpperBound_;
       }
-      return new Interval(lowerBound, upperBound, inclLowerBound, inclUpperBound, (precision_>pi->getPrecision())?precision_:pi->getPrecision());
+      return new IntervalConstraint(lowerBound, upperBound, inclLowerBound, inclUpperBound, (precision_>pi->getPrecision())?precision_:pi->getPrecision());
     }
     else
       return 0;
   }
 
   /**
-   * @brief Intersect this Interval with another one
+   * @brief Intersect this IntervalConstraint with another one
    *
-   * @param c the intersected Interval
-   * @return this Interval modified, or not modified if c is not an
-   * Interval. The precision is set to the maximum of bith precisions.
+   * @param c the intersected IntervalConstraint
+   * @return this IntervalConstraint modified, or not modified if c is not an
+   * IntervalConstraint. The precision is set to the maximum of bith precisions.
    */
   
-  Interval& operator&=(const Constraint& c)
+  IntervalConstraint& operator&=(const Constraint& c)
   {
-    const Interval* pi = dynamic_cast<const Interval*>(&c);
+    const IntervalConstraint* pi = dynamic_cast<const IntervalConstraint*>(&c);
 
     if (pi)
     {
@@ -318,9 +341,9 @@ public:
   /**
    * @brief Tells if this interval equals another one
    *
-   * @param i the compared Interval
+   * @param i the compared IntervalConstraint
    */
-  bool operator==(const Interval& i) const
+  bool operator==(const IntervalConstraint& i) const
   {
     return lowerBound_ == i.lowerBound_
       && inclLowerBound_ == i.inclLowerBound_
@@ -331,9 +354,9 @@ public:
   /**
    * @brief Tells if this interval is different from another one
    *
-   * @param i the compared Interval
+   * @param i the compared IntervalConstraint
    */
-  bool operator!=(const Interval& i) const
+  bool operator!=(const IntervalConstraint& i) const
   {
     return lowerBound_ != i.lowerBound_
       || inclLowerBound_ != i.inclLowerBound_
@@ -344,9 +367,9 @@ public:
   /**
    * @brief Tells if this interval is included or equal in another one
    *
-   * @param i the compared Interval
+   * @param i the compared IntervalConstraint
    */
-  bool operator<=(const Interval& i) const
+  bool operator<=(const IntervalConstraint& i) const
   {
     return lowerBound_ >= i.lowerBound_
            && upperBound_ <= i.upperBound_;
@@ -354,166 +377,6 @@ public:
 };
 
 
-/**
- * @brief Including positive real constraint.
- */
-class IncludingPositiveReal : public Interval
-{
-public:
-  IncludingPositiveReal(double lowerBound, double precision=NumConstants::TINY) :
-    Interval(lowerBound, NumConstants::VERY_BIG, true, false, precision) {}
-
-  IncludingPositiveReal* clone() const { return new IncludingPositiveReal(*this); }
-
-  bool isCorrect(double value) const
-  {
-    return value >= getLowerBound() && value <= NumConstants::VERY_BIG;
-  }
-};
-
-/**
- * @brief Excluding positive real constraint.
- */
-class ExcludingPositiveReal : public Interval
-{
-public:
-  ExcludingPositiveReal(double lowerBound, double precision=NumConstants::TINY) :
-    Interval (lowerBound, NumConstants::VERY_BIG, false, false, precision) {}
-  
-  ExcludingPositiveReal* clone() const { return new ExcludingPositiveReal(*this); }
-  
-  bool isCorrect(double value) const
-  {
-    return value > getLowerBound()  && value <= NumConstants::VERY_BIG;
-  }
-};
-
-/**
- * @brief Including neg tive real constraint.
- */
-class IncludingNegativeReal : public Interval
-{
-public:
-  IncludingNegativeReal(double upperBound, double precision=NumConstants::TINY) :
-    Interval(-NumConstants::VERY_BIG, upperBound, false, true, precision) {}
-  
-  IncludingNegativeReal* clone() const { return new IncludingNegativeReal(*this); }
-  
-  bool isCorrect(double value) const
-  {
-    return value <= getUpperBound() && value >= -NumConstants::VERY_BIG;
-  }
-};
-
-/**
- * @brief Excluding positive real constraint.
- */
-class ExcludingNegativeReal : public Interval
-{
-public:
-  ExcludingNegativeReal(double upperBound, double precision=NumConstants::TINY) :
-    Interval(-NumConstants::VERY_BIG, upperBound, false, false, precision) {}
-  
-  ExcludingNegativeReal* clone() const { return new ExcludingNegativeReal(*this); }
-
-  bool isCorrect(double value) const
-  {
-    return value < getUpperBound()  && value >= -NumConstants::VERY_BIG;
-  }
-};
-
-
-/**
- * @brief Including interval.
- */
-class IncludingInterval : public Interval
-{
-public:
-  /**
-   * @brief Build a new including interval constraint.
-   *
-   * @param lowerBound The lower bound of the interval.
-   * @param upperBound The upper bound of the interval.
-   */
-  IncludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
-    Interval(lowerBound, upperBound, true, true, precision) {}
-
-  IncludingInterval* clone() const { return new IncludingInterval(*this); }
-
-  bool isCorrect(double value) const
-  {
-    return value >= getLowerBound() && value <= getUpperBound();
-  }
-};
-
-/**
- * @brief Excluding interval.
- */
-class ExcludingInterval : public Interval
-{
-public:
-  /**
-   * @brief Build a new excluding interval constraint.
-   *
-   * @param lowerBound The lower bound of the interval.
-   * @param upperBound The upper bound of the interval.
-   */
-  ExcludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
-    Interval(lowerBound, upperBound, false, false, precision) {}
-  
-  ExcludingInterval* clone() const { return new ExcludingInterval(*this); }
-  
-  bool isCorrect(double value) const
-  {
-    return value > getLowerBound() && value < getUpperBound();
-  }
-};
-
-/**
- * @brief Left-including, right-excluding interval.
- */
-class IncludingExcludingInterval : public Interval
-{
-public:
-  /**
-   * @brief Build a new left-including, right-excluding interval constraint.
-   *
-   * @param lowerBound The lower bound of the interval.
-   * @param upperBound The upper bound of the interval.
-   */
-  IncludingExcludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
-    Interval(lowerBound, upperBound, true, false, precision) {}
-  
-  IncludingExcludingInterval* clone() const { return new IncludingExcludingInterval(*this); }
-  
-  bool isCorrect(double value) const
-  {
-    return value >= getLowerBound() && value < getUpperBound();
-  }
-};
-
-/**
- * @brief Left-excluding, right-including interval.
- */
-class ExcludingIncludingInterval : public Interval
-{
-public:
-  /**
-   * @brief Build a new left-excluding, right-including interval constraint.
-   *
-   * @param lowerBound The lower bound of the interval.
-   * @param upperBound The upper bound of the interval.
-   */
-  ExcludingIncludingInterval(double lowerBound, double upperBound, double precision=NumConstants::TINY) :
-    Interval(lowerBound, upperBound, false, true, precision) {}
-  
-  ExcludingIncludingInterval* clone() const { return new ExcludingIncludingInterval(*this); }
-  
-  bool isCorrect(double value) const
-  {
-    return value > getLowerBound() && value <= getUpperBound();
-  }
-};
 } // end of namespace bpp.
 
 #endif  // _CONSTRAINTS_H_
