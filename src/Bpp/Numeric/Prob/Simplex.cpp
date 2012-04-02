@@ -45,7 +45,7 @@
 using namespace bpp;
 using namespace std;
 
-Simplex::Simplex(const std::vector<double>& probas, unsigned int method) : AbstractParameterAliasable("Simplex."),
+Simplex::Simplex(const std::vector<double>& probas, unsigned int method, const std::string& name) : AbstractParameterAliasable(name),
   dim_(probas.size()),
   method_(method),
   vProb_(),
@@ -65,7 +65,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned int method) : Abstr
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter("Simplex.theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), &Parameter::PROP_CONSTRAINT_IN));
     }
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -76,13 +76,14 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned int method) : Abstr
     double y = 1;
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter("Simplex.theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y -= vProb_[i];
     }
+    break;
   }
 }
 
-Simplex::Simplex(unsigned int dim, unsigned int method)  : AbstractParameterAliasable("Simplex."),
+Simplex::Simplex(unsigned int dim, unsigned int method, const std::string& name)  : AbstractParameterAliasable(name),
   dim_(dim),
   method_(method),
   vProb_(),
@@ -98,7 +99,7 @@ Simplex::Simplex(unsigned int dim, unsigned int method)  : AbstractParameterAlia
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter("Simplex.theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
     }
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -109,14 +110,16 @@ Simplex::Simplex(unsigned int dim, unsigned int method)  : AbstractParameterAlia
     double y = 1;
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter("Simplex.theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y -= vProb_[i];
     }
+    break;
   }
 }
 
 void Simplex::fireParameterChanged(const ParameterList& parameters)
 {
+  cerr << "Si::fP" << endl;
   AbstractParameterAliasable::fireParameterChanged(parameters);
 
   double x = 1.0;
@@ -148,9 +151,40 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
       x += vProb_[i + 1];
     }
     for (unsigned int i = 0; i < dim_; i++)
-    {
       vProb_[i] /= x;
-    }
+
+    break;
   }
+}
+
+
+void Simplex::setFrequencies(const std::vector<double>& probas)
+{
+  double sum = VectorTools::sum(probas);
+  if (fabs(1. - sum) > NumConstants::SMALL)
+    throw Exception("Simplex::setFrequencies. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
+
+  double y = 1;
+
+  ParameterList pl;
+  switch (method_)
+    {
+    case 1:
+      for (unsigned int i = 0; i < dim_ - 1; i++)
+        {
+          pl.addParameter(Parameter(getNamespace()+"theta" + TextTools::toString(i + 1), probas[i] / y));
+          y -= probas[i];
+        }
+      break;
+    case 2:
+      for (unsigned int i = 0; i < dim_ - 1; i++)
+        {
+          pl.addParameter(Parameter(getNamespace()+"theta" + TextTools::toString(i + 1), probas[i] / (probas[i] + probas[i + 1])));
+          valpha_[i]=probas[i + 1] / probas[i];
+        }
+      break;
+    }
+
+  matchParametersValues(pl);
 }
 

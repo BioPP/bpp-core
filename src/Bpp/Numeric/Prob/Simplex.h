@@ -102,6 +102,11 @@ private:
   
   std::vector<double> vProb_;
 
+  /*
+   *@brief just used with local ratio (method 2)
+   *
+   */
+  
   std::vector<double> valpha_;
   
   
@@ -119,7 +124,7 @@ public:
    *
    */
   
-  Simplex(unsigned int dim, unsigned int method=0);
+  Simplex(unsigned int dim, unsigned int method=0, const std::string& name="Simplex.");
 
   /**
    * @brief Builds a new Simplex object from a vector of probabilities
@@ -132,7 +137,7 @@ public:
    *
    */
 
-  Simplex(const std::vector<double>& probas, unsigned int method=0);
+  Simplex(const std::vector<double>& probas, unsigned int method=0, const std::string& name="Simplex.");
   
   virtual ~Simplex() {}
 
@@ -147,6 +152,8 @@ public:
 
   unsigned int dimension() const {return dim_;}
 
+  void setFrequencies(const std::vector<double>&);
+  
   double prob(unsigned int i) const { return vProb_[i];}
 };
 
