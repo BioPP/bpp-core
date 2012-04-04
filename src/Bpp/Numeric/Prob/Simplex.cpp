@@ -119,7 +119,6 @@ Simplex::Simplex(unsigned int dim, unsigned int method, const std::string& name)
 
 void Simplex::fireParameterChanged(const ParameterList& parameters)
 {
-  cerr << "Si::fP" << endl;
   AbstractParameterAliasable::fireParameterChanged(parameters);
 
   double x = 1.0;
