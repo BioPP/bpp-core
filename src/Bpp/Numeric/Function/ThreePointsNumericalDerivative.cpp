@@ -51,6 +51,14 @@ throw (ParameterNotFoundException, ConstraintException)
     if (function2_) function2_->enableSecondOrderDerivatives(false);
     function_->setParameters(parameters);
     f2_ = function_->getValue();
+    if ((abs(f2_) >= NumConstants::VERY_BIG) || isnan(f2_)){
+      for (unsigned int i = 0; i < variables_.size(); i++){
+        der1_[i]=log(-1);
+        der2_[i]=log(-1);
+      }
+      return;
+    }
+      
     string lastVar;
     bool functionChanged = false;
     ParameterList p;
@@ -74,51 +82,80 @@ throw (ParameterNotFoundException, ConstraintException)
       lastVar = var;
       functionChanged = true;
       double value = function_->getParameterValue(var);
-      double h = (1. + std::abs(value)) * h_;
-      //Compute one other point:
-      try
-      {
-        p[0].setValue(value - h);
-        function_->setParameters(p); //also reset previous parameter...
-
-        p = p.subList(0);
-        f1_ = function_->getValue();
+      double h = -(1. + std::abs(value)) * h_;
+      double hf1(0), hf3(0);
+      unsigned int nbtry=0;
+      
+      //Compute f1_
+      while (hf1==0){
         try
-        {
-          p[0].setValue(value + h);
-          function_->setParameters(p);
-          f3_ = function_->getValue();
-          //No limit raised, use central approximation:
-          der1_[i] = (-f1_ + f3_) / (2. * h);
-          der2_[i] = (f1_ - 2 * f2_ + f3_) / (h * h);
-        }
+          {
+            p[0].setValue(value + h);
+            function_->setParameters(p); //also reset previous parameter...
+            
+            p = p.subList(0);
+            f1_ = function_->getValue();
+            if ((abs(f1_) >= NumConstants::VERY_BIG) || isnan(f1_))
+              throw ConstraintException("f1_ too large", &p[0], f1_);
+            else
+              hf1=h;
+          }
         catch (ConstraintException& ce)
-        {
-          //Right limit raised, use backward approximation:
-          p[0].setValue(value - h);
-          function_->setParameters(p);
-          f1_ = function_->getValue();
-          p[0].setValue(value - 2 * h);
-          function_->setParameters(p);
-          f3_ = function_->getValue();
-          der1_[i] = (f2_ - f1_) / h;
-          der2_[i] = (f2_ - 2. * f1_ + f3_) / (h * h);
+          {
+            if (++nbtry==10) // no possibility to compute derivatives
+              break;
+            else
+              if (h<0)
+                h=-h;  // try on the right
+              else
+                h/=-2; // try again on the left with smaller interval
+          }
+      }
+
+      if (hf1!=0){
+        //Compute f3_ 
+        if (h<0)
+          h=-h;  // on the right 
+        else
+          h/=2; //  on the left with smaller interval
+
+        nbtry=0;
+        while (hf3==0){
+          try
+            {
+              p[0].setValue(value + h);
+              function_->setParameters(p); //also reset previous parameter...
+            
+              p = p.subList(0);
+              f3_ = function_->getValue();
+              if ((abs(f3_) >= NumConstants::VERY_BIG) || isnan(f3_))
+                throw ConstraintException("f3_ too large", &p[0], f3_);
+              else
+                hf3=h;
+            }
+          catch (ConstraintException& ce)
+            {
+              if (++nbtry==10) // no possibility to compute derivatives
+                break;
+              else
+                if (h<0)
+                  h=-h;  // try on the right
+                else
+                  h/=-2; // try again on the left with smaller interval
+            }
         }
       }
-      catch (ConstraintException& ce)
-      {
-        //Left limit raised, use forward approximation:
-        p[0].setValue(value + h);
-        function_->setParameters(p);
-        f3_ = function_->getValue();
-        p[0].setValue(value + 2 * h);
-        function_->setParameters(p);
-        f1_ = function_->getValue();
-        der1_[i] = (f3_ - f2_) / h;
-        der2_[i] = (f1_ - 2. * f3_ + f2_) / (h * h);
+      
+      if (hf3==0){
+          der1_[i]=log(-1);
+          der2_[i]=log(-1);
+      }
+      else {
+        der1_[i] = (f1_ - f3_) / (hf1-hf3);
+        der2_[i] = ((f1_ - f2_)/hf1 - (f3_ - f2_)/hf3)*2/(hf1-hf3);
       }
     }
-
+    
     if (computeCrossD2_)
     {
       string lastVar1, lastVar2;
