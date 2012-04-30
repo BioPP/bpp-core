@@ -38,6 +38,7 @@
 */
 
 #include "Parameter.h"
+#include <cmath>
 
 //From Utils:
 #include "../Text/TextTools.h"
@@ -53,25 +54,28 @@ ParameterEvent::ParameterEvent(Parameter* parameter): parameter_(parameter) {}
 
 /** Constructors: *************************************************************/
 
-Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint)
+Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision)
   throw (ConstraintException) :
-  name_(name), value_(0), constraint_(constraint), attach_(attachConstraint), listeners_(), listenerAttach_()
+  name_(name), value_(0), precision_(0), constraint_(constraint), attach_(attachConstraint), listeners_(), listenerAttach_()
 {
   // This may throw a ConstraintException:
   setValue(value);
+  setPrecision(precision);
 }
 
-Parameter::Parameter(const std::string& name, double value, const Constraint* constraint)
+Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision)
   throw (ConstraintException) :
-  name_(name), value_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
+  name_(name), value_(0), precision_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
 {
   // This may throw a ConstraintException:
   setValue(value);
+  setPrecision(precision);
 }
 
 Parameter::Parameter(const Parameter& p) :
   name_(p.name_),
   value_(p.value_),
+  precision_(p.precision_),
   constraint_(0),
   attach_(p.attach_),
   listeners_(p.listeners_),
@@ -90,6 +94,7 @@ Parameter& Parameter::operator=(const Parameter& p)
 {
   name_           = p.name_;
   value_          = p.value_;
+  precision_      = p.precision_;
   attach_         = p.attach_;
   if (p.attach_ && p.constraint_)
     constraint_   = p.constraint_->clone();
@@ -117,11 +122,20 @@ Parameter::~Parameter()
 
 void Parameter::setValue(double value) throw (ConstraintException)
 {
-  if (constraint_ && !constraint_->isCorrect(value)) 
-    throw ConstraintException("Parameter::setValue", this, value);
-  value_ = value;
-  ParameterEvent event(this);
-  fireParameterValueChanged(event);
+  if (std::abs(value-value_)>precision_/2){
+    if (constraint_ && !constraint_->isCorrect(value)) 
+      throw ConstraintException("Parameter::setValue", this, value);
+    value_ = value;
+    ParameterEvent event(this);
+    fireParameterValueChanged(event);
+  }
+}
+
+/** Precision: ********************************************************************/
+
+void Parameter::setPrecision(double precision)
+{
+  precision_=(precision<0)?0:precision;
 }
 
 /** Constraint: ***************************************************************/

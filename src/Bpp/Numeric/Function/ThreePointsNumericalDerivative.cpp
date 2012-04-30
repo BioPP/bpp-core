@@ -83,6 +83,8 @@ throw (ParameterNotFoundException, ConstraintException)
       functionChanged = true;
       double value = function_->getParameterValue(var);
       double h = -(1. + std::abs(value)) * h_;
+      if (abs(h)<p[0].getPrecision())
+        h=h<0?-p[0].getPrecision():p[0].getPrecision();
       double hf1(0), hf3(0);
       unsigned int nbtry=0;
       
@@ -155,6 +157,9 @@ throw (ParameterNotFoundException, ConstraintException)
         der2_[i] = ((f1_ - f2_)/hf1 - (f3_ - f2_)/hf3)*2/(hf1-hf3);
       }
     }
+
+
+    
     
     if (computeCrossD2_)
     {
