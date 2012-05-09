@@ -118,8 +118,6 @@ public:
 
   void fireParameterChanged(const ParameterList & parameters);
 
-  Domain getDomain() const;
-
   double qProb(double x) const;
      
   double pProb(double x) const;

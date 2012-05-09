@@ -78,11 +78,5 @@ void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList& 
   discretize();
 }
 
-/******************************************************************************/
-
-Domain ExponentialDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
 
 

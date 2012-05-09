@@ -78,7 +78,6 @@ namespace bpp
     UniformDiscreteDistribution* clone() const { return new UniformDiscreteDistribution(*this); }
   
   public:
-    Domain getDomain() const;
     void fireParameterChanged(const ParameterList & parameters);
 
     double randC() const throw (Exception)

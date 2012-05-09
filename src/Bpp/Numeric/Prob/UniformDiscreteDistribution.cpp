@@ -88,12 +88,6 @@ void UniformDiscreteDistribution::fireParameterChanged(const ParameterList& para
 {
 }
 
-/******************************************************************************/
-
-Domain UniformDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
 
 
 

@@ -103,7 +103,6 @@ namespace bpp
     clone() const { return new InvariantMixedDiscreteDistribution(*this); }
 
   public:
-    Domain getDomain() const;
     void fireParameterChanged(const ParameterList & parameters);
 
     void setNamespace(const std::string& prefix);

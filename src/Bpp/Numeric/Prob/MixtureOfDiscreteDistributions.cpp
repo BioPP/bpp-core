@@ -170,24 +170,8 @@ void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& p
   probas_[size - 1] = x;
 
 
-  // fireParameterChanged on members Distributions
-
-//  ParameterList pl;
-//  size_t pos;
-//  vector<string> v = getParameters().getParameterNames();
-//  vector<string> v2;
   for (size_t i = 0; i < size; i++)
-  {
-//    pl.reset();
-//    for (size_t j = 0; j < v.size(); j++)
-//    {
-//      pos = v[j].find("Mixture." + TextTools::toString(i + 1));
-//      if (pos != string::npos)
-//        pl.addParameter(Parameter(v[j].substr(v[j].find("_", pos) + 1),
-//                                  getParameterValue(getParameterNameWithoutNamespace(v[j]))));
-//    }
     vdd_[i]->matchParametersValues(parameters);
-  }
 
   updateDistribution();
 }
@@ -225,39 +209,32 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   uB = -NumConstants::VERY_BIG;
   lB = NumConstants::VERY_BIG;
 
+  bool suB=true, slB=true;
+  
   for (size_t i = 0; i < size; i++)
   {
-    if (vdd_[i]->getLowerBound() < lB)
+    if (vdd_[i]->getLowerBound() <= lB){
       lB = vdd_[i]->getLowerBound();
-    if (vdd_[i]->getUpperBound() > uB)
+      slB= vdd_[i]->strictLowerBound();
+    }
+    if (vdd_[i]->getUpperBound() >= uB){
       uB = vdd_[i]->getUpperBound();
+      suB= vdd_[i]->strictUpperBound();
+    }
   }
 
-  intMinMax_.setLowerBound(lB, false);
-  intMinMax_.setUpperBound(uB, false);
-}
+  intMinMax_.setLowerBound(lB, slB);
+  intMinMax_.setUpperBound(uB, suB);
 
-Domain MixtureOfDiscreteDistributions::getDomain() const
-{
-  // Compute a new arbitray bounderi:
+  // Compute midpoint bounds_:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
-  size_t n = values.size();
-  vector<double> bounderi(n + 1);
 
-  // Fill from 1 to n-1 with midpoints:
-  for (size_t i = 1; i <= n - 1; i++)
-  {
-    bounderi[i] = (values[i] + values[i - 1]) / 2.;
-  }
+  bounds_.resize(numberOfCategories_-1);
+  
+  // Fill from 0 to numberOfCategories_-1 with midpoints:
+  for (size_t i = 0; i < numberOfCategories_ - 1; i++)
+    bounds_[i] = (values[i] + values[i + 1]) / 2.;
 
-  // Fill 0 with the values[0] - (midpoint[0] - values[0]):
-  bounderi[0] = 2 * values[0] - bounderi[1];
-
-  // Fill n with values[n - 1] + (values[n - 1] - midpoint[n - 1]):
-  bounderi[n] = 2 * values[n - 1] - bounderi[n - 1];
-
-  // Build a domain and return it
-  return Domain(bounderi, values);
 }
 
 void MixtureOfDiscreteDistributions::setMedian(bool median)

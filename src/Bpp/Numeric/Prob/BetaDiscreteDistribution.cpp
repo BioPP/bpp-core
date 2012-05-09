@@ -104,13 +104,6 @@ void BetaDiscreteDistribution::fireParameterChanged(const ParameterList& paramet
 
 /******************************************************************************/
 
-Domain BetaDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
-
-/******************************************************************************/
-
 double BetaDiscreteDistribution::qProb(double x) const
 {
   return RandomTools::qBeta(x, alpha_, beta_);

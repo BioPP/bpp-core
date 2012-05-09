@@ -286,22 +286,23 @@ void AbstractDiscreteDistribution::print(OutputStream& out) const
 
 /******************************************************************************/
 
-double AbstractDiscreteDistribution::getValueCategory(double value) const throw (OutOfRangeException)
+double AbstractDiscreteDistribution::getValueCategory(double value) const
 {
-  return getDomain().getNearestValue(value);
+  if (!(intMinMax_.isCorrect(value)))
+    throw Exception("AbstractDiscreteDistribution::getValueCategory out of bounds:" + TextTools::toString(value));
+
+  map<double, double>::const_iterator it = distribution_.begin();
+  for (unsigned int i=1;i<bounds_.size();i++)
+    if (value<bounds_[i])
+      break;
+    else
+      it++;
+
+  return it->first;
 }
 
 /***********************************************************************/
 
-double AbstractDiscreteDistribution::getLowerBound() const
-{
-  return bounds_[0];
-}
-
-double AbstractDiscreteDistribution::getUpperBound() const
-{
-  return bounds_[getNumberOfCategories()];
-}
 
 void AbstractDiscreteDistribution::discretize()
 {
@@ -310,12 +311,10 @@ void AbstractDiscreteDistribution::discretize()
    */
 
   distribution_.clear();
-  bounds_.resize(numberOfCategories_ + 1);
-  bounds_[0] = intMinMax_.getLowerBound() + (intMinMax_.strictLowerBound() ? precision() : 0);
-  bounds_[numberOfCategories_] = intMinMax_.getUpperBound() - (intMinMax_.strictUpperBound() ? precision() : 0);
+  bounds_.resize(numberOfCategories_ - 1);
 
-  double minX = pProb(bounds_[0]);
-  double maxX = pProb(bounds_[numberOfCategories_]);
+  double minX = pProb(intMinMax_.getLowerBound());
+  double maxX = pProb(intMinMax_.getUpperBound());
 
   double ec;
   unsigned int i;
@@ -328,49 +327,47 @@ void AbstractDiscreteDistribution::discretize()
 
     for (i = 1; i < numberOfCategories_; i++)
     {
-      bounds_[i] = qProb(minX + i * ec);
+      bounds_[i-1] = qProb(minX + i * ec);
     }
 
     if (median_)
     {
-      double t;
+      double t=0;
       for (i = 0; i < numberOfCategories_; i++)
         values[i] = qProb(minX + (i + 0.5) * ec);
 
       for (i = 0, t = 0; i < numberOfCategories_; i++)
         t += values[i];
-      double mean = Expectation(bounds_[numberOfCategories_]) - Expectation(bounds_[0]);
+
+      double mean = Expectation(intMinMax_.getUpperBound()) - Expectation(intMinMax_.getLowerBound());
+
       for (i = 0; i < numberOfCategories_; i++)
-        values[i] *= mean / t * numberOfCategories_ / (maxX - minX);
+        values[i] *= mean / t / ec;
     }
     else
     {
-      if (numberOfCategories_ == 1)
-        values[0] = Expectation(bounds_[1]) - Expectation(bounds_[0]);
-      else
-      {
-        double a = Expectation(bounds_[0]), b;
-        for (i = 0; i < numberOfCategories_; i++)
+      double a = Expectation(intMinMax_.getLowerBound()), b;
+      for (i = 0; i < numberOfCategories_-1; i++)
         {
-          b = Expectation(bounds_[i + 1]);
-          values[i] = (b - a) * numberOfCategories_ / (maxX - minX);
+          b = Expectation(bounds_[i]);
+          values[i] = (b - a) / ec;
           a = b;
         }
-      }
+      values[numberOfCategories_-1]=(Expectation(intMinMax_.getUpperBound())-a) / ec;
     }
   }
   else
   {
-    ec = (bounds_[numberOfCategories_] - bounds_[0]) / numberOfCategories_;
+    ec = (intMinMax_.getUpperBound() - intMinMax_.getLowerBound()) / numberOfCategories_;
     for (i = 1; i < numberOfCategories_; i++)
-    {
-      bounds_[i] = bounds_[0] + i * ec;
-    }
+      bounds_[i-1] = intMinMax_.getLowerBound() + i * ec;
 
-    for (i = 0; i < numberOfCategories_; i++)
-    {
-      values[i] = (bounds_[i] + bounds_[i + 1]) / 2;
-    }
+    values[0]=(intMinMax_.getLowerBound()+bounds_[0])/2;
+    
+    for (i = 1; i < numberOfCategories_-1; i++)
+      values[i] = (bounds_[i-1] + bounds_[i]) / 2;
+
+    values[numberOfCategories_-1]=(intMinMax_.getUpperBound()+bounds_[numberOfCategories_-1])/2;
   }
 
   if (intMinMax_.strictLowerBound())
@@ -379,6 +376,8 @@ void AbstractDiscreteDistribution::discretize()
     {
       if (values[i] < intMinMax_.getLowerBound() + precision())
         values[i] = intMinMax_.getLowerBound() + precision();
+      else
+        break;
     }
   }
   else
@@ -387,25 +386,34 @@ void AbstractDiscreteDistribution::discretize()
     {
       if (values[i] < intMinMax_.getLowerBound())
         values[i] = intMinMax_.getLowerBound() + precision();
+      else
+        break;
     }
   }
 
   if (intMinMax_.strictUpperBound())
   {
-    for (i = 0; i < numberOfCategories_; i++)
+    for (i = numberOfCategories_; i > 0; i--)
     {
-      if (values[i] > intMinMax_.getUpperBound() - precision())
-        values[i] = intMinMax_.getUpperBound() - precision();
+      if (values[i-1] > intMinMax_.getUpperBound() - precision())
+        values[i-1] = intMinMax_.getUpperBound() - precision();
+      else
+        break;
     }
   }
   else
   {
-    for (i = 0; i < numberOfCategories_; i++)
+    for (i = numberOfCategories_; i > 0; i--)
     {
-      if (values[i] > intMinMax_.getUpperBound())
-        values[i] = intMinMax_.getUpperBound() - precision();
+      if (values[i-1] > intMinMax_.getUpperBound())
+        values[i-1] = intMinMax_.getUpperBound() - precision();
+      else
+        break;
     }
   }
+
+  // now the distribution_ map
+  
   double p = 1. / static_cast<double>(numberOfCategories_);
   for (i = 0; i < numberOfCategories_; i++)
   {

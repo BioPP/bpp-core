@@ -162,7 +162,7 @@ namespace bpp
     double getProbability(double category) const;
     Vdouble getCategories() const;
     Vdouble getProbabilities() const;
-    double getValueCategory(double value) const throw (OutOfRangeException);
+    double getValueCategory(double value) const;
     void set(double category, double probability);
     void add(double category, double probability);
     double getInfCumulativeProbability(double category) const;
@@ -171,9 +171,45 @@ namespace bpp
     double getSSupCumulativeProbability(double category) const;
     double rand() const;
     double randC() const throw (Exception) { throw Exception("AbstractDiscreteDistribution::randC. No continuous version available for this distribution."); }
-    virtual double getLowerBound() const;
-    virtual double getUpperBound() const;
 
+    /*
+     *@return value of the internal bound
+     *
+     */
+    
+    double getBound(unsigned int i) const
+    {
+      return bounds_[i];
+    }  
+
+
+    /*
+     *@brief Information about the range of the distribution
+     *
+     */
+     
+
+    double getLowerBound() const
+    {
+      return intMinMax_.getLowerBound();
+    }
+
+    double getUpperBound() const
+    {
+      return intMinMax_.getUpperBound();
+    }
+
+    bool strictLowerBound() const
+    {
+      return intMinMax_.strictLowerBound();
+    }
+
+    bool strictUpperBound() const
+    {
+      return intMinMax_.strictUpperBound();
+    }
+
+    
     void print(OutputStream& out) const;
 
     double precision() const { return distribution_.key_comp().precision();}

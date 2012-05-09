@@ -94,13 +94,6 @@ void GaussianDiscreteDistribution::fireParameterChanged(const ParameterList& par
 
 /******************************************************************************/
 
-Domain GaussianDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
-
-/******************************************************************************/
-
 double GaussianDiscreteDistribution::qProb(double x) const
 {
   return RandomTools::qNorm(x, mu_, sigma_);

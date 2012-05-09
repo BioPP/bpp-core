@@ -74,45 +74,66 @@ void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterLis
 
 /******************************************************************************/
 
-
-Domain InvariantMixedDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
-
-/******************************************************************************/
-
 void InvariantMixedDiscreteDistribution::updateDistribution()
 {
   distribution_.clear();
-  distribution_[invariant_] = p_;
   
   unsigned int distNCat = dist_->getNumberOfCategories();
-  bounds_.clear();
-  bounds_.push_back(0.);
   vector<double> probs = dist_->getProbabilities();
   vector<double> cats  = dist_->getCategories();
-  Domain d = dist_->getDomain();
+
+  distribution_[invariant_] = p_;
   for(unsigned int i = 0; i < distNCat; i++)
     {
-      if (cats[i]!=invariant_)
-        distribution_[cats[i]] = (1. - p_) * probs[i];
-      else
+      if (cats[i]==invariant_)
         distribution_[invariant_] += (1. - p_) * probs[i];
-      
-      bounds_.push_back(d.getBound(i));
+      else 
+        distribution_[cats[i]] = (1. - p_) * probs[i];
     }
-  bounds_.push_back(d.getBound(distNCat));
 
-  intMinMax_.setLowerBound(dist_->getLowerBound(),false);
-  intMinMax_.setUpperBound(dist_->getUpperBound(),false);
+  intMinMax_.setLowerBound(dist_->getLowerBound(),!dist_->strictLowerBound());
+  intMinMax_.setUpperBound(dist_->getUpperBound(),!dist_->strictUpperBound());
 
   if (invariant_<=intMinMax_.getLowerBound())
-    intMinMax_.setLowerBound(invariant_,false);
+    intMinMax_.setLowerBound(invariant_,true);
   if (invariant_>=intMinMax_.getUpperBound())
-    intMinMax_.setUpperBound(invariant_,false);
+    intMinMax_.setUpperBound(invariant_,true);
 
   numberOfCategories_=distribution_.size();
+
+  // bounds_
+
+  // if invariant_ is between 2 values of dist_, bounds_ are set in the
+  // middle of the 3 values
+
+  bool nv=true;
+  map<double, double>::const_iterator it = distribution_.begin();
+  unsigned int i=0;
+
+  double a= it->first, b;
+  if  (nv && (invariant_< a)){
+    bounds_.push_back((a+invariant_)/2);
+    nv=false;
+  }
+
+
+  it++;
+  while (it != distribution_.end()){
+    b=it->first;
+    if (nv && (invariant_< b)){
+      bounds_.push_back((a+invariant_)/2);
+      bounds_.push_back((invariant_+b)/2);
+      nv=false;
+    }
+    else
+      bounds_.push_back(dist_->getBound(i));
+    a=b;
+    i++;
+  }
+
+  if (nv)
+    bounds_.push_back((a+invariant_)/2);
+  
 }
 
 /******************************************************************************/

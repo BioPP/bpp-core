@@ -80,7 +80,6 @@ class GaussianDiscreteDistribution:
   GaussianDiscreteDistribution* clone() const { return new GaussianDiscreteDistribution(*this); }
   
 public:
-  Domain getDomain() const;
   void fireParameterChanged(const ParameterList & parameters);
   
   double randC() const throw (Exception)
