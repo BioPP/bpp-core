@@ -45,6 +45,7 @@
 using namespace bpp;
 using namespace std;
 
+
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const map<double, double>& distribution,
                                                        double prec,
@@ -60,9 +61,6 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   if (fabs(1. - sum) > precision())
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
-  intMinMax_.setLowerBound(distribution_.begin()->first,false);
-  intMinMax_.setUpperBound(distribution_.rbegin()->first,false);
-
   if (! fixed){
     unsigned int n=1;
     double x,y=1;
@@ -77,7 +75,6 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
       n++;
     }
   }
-  
   discretize();
 }
 
@@ -218,16 +215,13 @@ void SimpleDiscreteDistribution::discretize()
 {
   // Compute a new arbitray bounderi:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
-	
-  // Fill from 1 to numberOfCategories_-1 with midpoints:
-  for (unsigned int i = 1; i <= numberOfCategories_ - 1; i++)
-    bounds_[i] = (values[i] + values[i - 1]) / 2.;
-	
-  // Fill 0 with the values[0] - (midpoint[0] - values[0]):
-  bounds_[0] = 2 * values[0] - bounds_[1];
-	
-  // Fill numberOfCategories_ with values[numberOfCategories_ - 1] + (values[numberOfCategories_ - 1] - midpoint[numberOfCategories_ - 1]):
-  bounds_[numberOfCategories_] = 2 * values[numberOfCategories_ - 1] - bounds_[numberOfCategories_ - 1];
+
+  intMinMax_.setLowerBound(values[0],true);
+  intMinMax_.setUpperBound(values[numberOfCategories_ - 1],true);
+  
+  // Fill from 0 to numberOfCategories_-2 with midpoints:
+  for (unsigned int i = 0; i < numberOfCategories_ - 1; i++)
+    bounds_[i] = (values[i] + values[i + 1]) / 2.;
 }
 
 void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
