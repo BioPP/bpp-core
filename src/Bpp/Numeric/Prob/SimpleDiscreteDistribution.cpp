@@ -216,9 +216,6 @@ void SimpleDiscreteDistribution::discretize()
   // Compute a new arbitray bounderi:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
 
-  intMinMax_.setLowerBound(values[0],true);
-  intMinMax_.setUpperBound(values[numberOfCategories_ - 1],true);
-  
   // Fill from 0 to numberOfCategories_-2 with midpoints:
   for (unsigned int i = 0; i < numberOfCategories_ - 1; i++)
     bounds_[i] = (values[i] + values[i + 1]) / 2.;
@@ -245,5 +242,6 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
   unsigned int size=distribution_.size();
   for (unsigned int i = 0; i< size; i++)
     getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(),true);
+
 }
 
