@@ -50,7 +50,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasse
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(),
-  bounds_(),
+  bounds_(nbClasses-1),
   intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG, true, true),
   median_(false)
 {}
@@ -59,7 +59,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasse
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(Order(delta)),
-  bounds_(),
+  bounds_(nbClasses-1),
   intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true),
   median_(false)
 {}
