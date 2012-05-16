@@ -109,13 +109,6 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parame
 
 /******************************************************************************/
 
-Domain GammaDiscreteDistribution::getDomain() const
-{
-  return Domain(bounds_, MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_));
-}
-
-/******************************************************************************/
-
 // Adapted from function DiscreteGamma of Yang
 
 double GammaDiscreteDistribution::qProb(double x) const

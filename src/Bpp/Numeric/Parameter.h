@@ -138,6 +138,7 @@ namespace bpp
   protected:
     std::string name_;             //Parameter name
     double value_;            //Parameter value
+    double precision_;  // Precision needed for Parameter value
     Constraint* constraint_; //A constraint on the value
     bool attach_;   // Tells if the constraint is attached to the Parameter
     std::vector<ParameterListener*> listeners_;
@@ -148,20 +149,21 @@ namespace bpp
     /**
      * @brief Default contructor. Creates a parameter with no name, no constraint, and a value of 0.
      */
-    Parameter(): name_(""), value_(0), constraint_(0), attach_(true), listeners_(), listenerAttach_() {}
+    Parameter(): name_(""), value_(0), precision_(0), constraint_(0), attach_(true), listeners_(), listenerAttach_() {}
     /**
      * @brief Build a new parameter.
      *
      * @param name       The parameter name.
      * @param value      The parameter value.
-     * @param constraint An optional pointer toward a constraint Object.
+     * @param constraint A  pointer toward a constraint Object.
      * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
+     * @param precision An optional parameter precision (default 0)
      * between different objects (the default behavior, for backward compatibility).
      * If the first case, the constraint object will be destroyed when the parameter is destroyed,
      * and duplicated when the parameter is copied.
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint)
+    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision=0)
       throw (ConstraintException);
 
     /**
@@ -170,9 +172,10 @@ namespace bpp
      * @param name       The parameter name.
      * @param value      The parameter value.
      * @param constraint An optional pointer toward a constraint Object. The constraint will be copied and attached to this instance.
+     * @param precision An optional parameter precision (default 0)
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name, double value, const Constraint* constraint = 0)
+    Parameter(const std::string& name, double value, const Constraint* constraint = 0, double precision=0)
       throw (ConstraintException);
 
 
@@ -217,6 +220,13 @@ namespace bpp
     virtual void setValue(double value) throw (ConstraintException);
   
     /**
+     * @brief Set the precision of this parameter.
+     *
+     * @param precision the new parameter precision.
+     */
+    void setPrecision(double precision);
+    
+    /**
      * @brief Get the name of this parameter.
      *
      * @return The parameter name.
@@ -229,6 +239,13 @@ namespace bpp
      * @return The parameter value.
      */
     virtual double getValue() const { return value_; }
+    
+    /**
+     * @brief Get the precision of this parameter.
+     *
+     * @return The precision value.
+     */
+    virtual double getPrecision() const { return precision_; }
     
     /**
      * @brief Return the constraint associated to this parameter if there is one.

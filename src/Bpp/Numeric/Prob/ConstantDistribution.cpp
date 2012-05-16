@@ -86,13 +86,6 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
 
 /******************************************************************************/
 
-Domain ConstantDistribution::getDomain() const
-{
-  return Domain(value_, value_, 1);
-}
-
-/******************************************************************************/
-
 std::string ConstantDistribution::getName() const
 {
   return("ConstantDistribution");

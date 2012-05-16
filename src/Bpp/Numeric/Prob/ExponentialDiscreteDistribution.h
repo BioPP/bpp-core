@@ -93,10 +93,8 @@ public:
   ExponentialDiscreteDistribution* clone() const { return new ExponentialDiscreteDistribution(*this); }
 
 public:
-  Domain getDomain() const;
   void fireParameterChanged(const ParameterList& parameters);
 
-public:
   double randC() const throw (Exception)
   {
     double x = RandomTools::randExponential(1. / getParameterValue("lambda"));

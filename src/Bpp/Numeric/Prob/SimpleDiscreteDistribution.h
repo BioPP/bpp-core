@@ -73,9 +73,10 @@ class SimpleDiscreteDistribution:
      *
      * @param distribution The map object to use.
      * @param precision to discriminate the categories
+     * @param fixed tells if there are parameters (default false means there are parameters).
      */
   
-  SimpleDiscreteDistribution(const std::map<double, double>& distribution, double precision=NumConstants::TINY);
+  SimpleDiscreteDistribution(const std::map<double, double>& distribution, double precision=NumConstants::TINY, bool fixed=false);
 
   /**
    * @brief Builds a new SimpleDiscreteDistribution object from a
@@ -103,8 +104,9 @@ class SimpleDiscreteDistribution:
 #endif
 
 public:
+  void discretize();
+  
   void fireParameterChanged(const ParameterList & parameters);
-  Domain getDomain() const;
 
   double getLowerBound() const {
     return distribution_.begin()->first;
@@ -121,8 +123,6 @@ public:
   double Expectation(double a) const;
 
   void restrictToConstraint(const Constraint& c);
-
-  void discretize() {};
 };
 
 } //end of namespace bpp.

@@ -42,7 +42,6 @@
 
 #include "../VectorTools.h"
 #include "../ParameterAliasable.h"
-#include "../Domain.h"
 #include "../NumConstants.h"
 #include "../../Exceptions.h"
 #include "../../Io/OutputStream.h"
@@ -95,16 +94,18 @@ namespace bpp
 		
     /**
      * @param value 
-     * @param value The value to check.
-     * @return The categoryIndex of the class the value is in. Throws a
-     * ConstraintException if the value is off the domain of the
+     * @return The value of the category the value is in. Throws a
+     * OutOfRangeException if the value is off the domain of the
      * DiscreteDistribution.
      */
-    virtual double getValueCategory(double value) const throw (OutOfRangeException) = 0 ;
+    
+    virtual double getValueCategory(double value) const = 0 ;
+    
     /**
      * @param categoryIndex Class index.
      * @return The value associated to a given class.
      */
+
     virtual double getCategory(unsigned int categoryIndex) const = 0;
 		
     /**
@@ -221,12 +222,6 @@ namespace bpp
     virtual double Expectation(double a) const  = 0;
 
     /**
-     * @return The domain associated to classes of this distribution.
-     * @see Domain
-     */
-    virtual Domain getDomain() const = 0;
-
-    /**
      *@brief Sets the median value to true to say that the value in a
      * class is proportional to the median value of the class, the
      * proportionality factor being such that the sum of the values
@@ -249,6 +244,18 @@ namespace bpp
     virtual void discretize() = 0;
 
     /**
+     * @return the i th internal bound
+     *
+     */
+
+    virtual double getBound(unsigned int) const = 0;
+
+    /**
+     *@brief methods about the range of the definition
+     *
+     **/
+     
+    /**
      * @return The lowest value.
      */
     virtual double getLowerBound() const {
@@ -260,6 +267,20 @@ namespace bpp
      */
     virtual double getUpperBound() const {
       return (NumConstants::VERY_BIG);
+    }
+  
+    /**
+     * @return The lowest value.
+     */
+    virtual bool strictLowerBound() const {
+      return (true);
+    }
+  
+    /**
+     * @return The highest value.
+     */
+    virtual bool strictUpperBound() const {
+      return (true);
     }
   
     /**

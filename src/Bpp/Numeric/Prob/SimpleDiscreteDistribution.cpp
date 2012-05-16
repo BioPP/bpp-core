@@ -45,9 +45,11 @@
 using namespace bpp;
 using namespace std;
 
+
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
                                                        const map<double, double>& distribution,
-                                                       double prec) :
+                                                       double prec,
+                                                       bool fixed) :
   AbstractParameterAliasable("Simple."),
   AbstractDiscreteDistribution(distribution.size(),prec,"Simple.")
 {
@@ -59,8 +61,21 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   if (fabs(1. - sum) > precision())
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
-  intMinMax_.setLowerBound(distribution_.begin()->first,false);
-  intMinMax_.setUpperBound(distribution_.rbegin()->first,false);
+  if (! fixed){
+    unsigned int n=1;
+    double x,y=1;
+    for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++) {
+      addParameter_(Parameter("Simple.V"+TextTools::toString(n),i->first));
+
+      if (n!=numberOfCategories_){
+        x=i->second;
+        addParameter_(Parameter("Simple.theta"+TextTools::toString(n), x/y,&Parameter::PROP_CONSTRAINT_IN));
+        y-=x;
+      }
+      n++;
+    }
+  }
+  discretize();
 }
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(
@@ -99,6 +114,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
 
   }
 
+  discretize();
 }
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const SimpleDiscreteDistribution& sdd) :
@@ -155,6 +171,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     }
     distribution_[v]=x;
   }
+  discretize();
 }
 
 double SimpleDiscreteDistribution::qProb(double x) const{
@@ -194,25 +211,14 @@ double SimpleDiscreteDistribution::Expectation(double a) const{
 }
 
 
-Domain SimpleDiscreteDistribution::getDomain() const
+void SimpleDiscreteDistribution::discretize() 
 {
   // Compute a new arbitray bounderi:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
-  unsigned int n = values.size(); 
-  vector<double> bounderi(n + 1);
-	
-  // Fill from 1 to n-1 with midpoints:
-  for (unsigned int i = 1; i <= n - 1; i++)
-    bounderi[i] = (values[i] + values[i - 1]) / 2.;
-	
-  // Fill 0 with the values[0] - (midpoint[0] - values[0]):
-  bounderi[0] = 2 * values[0] - bounderi[1];
-	
-  // Fill n with values[n - 1] + (values[n - 1] - midpoint[n - 1]):
-  bounderi[n] = 2 * values[n - 1] - bounderi[n - 1];
-	
-  // Build a domain and return it
-  return Domain(bounderi, values);
+
+  // Fill from 0 to numberOfCategories_-2 with midpoints:
+  for (unsigned int i = 0; i < numberOfCategories_ - 1; i++)
+    bounds_[i] = (values[i] + values[i + 1]) / 2.;
 }
 
 void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
@@ -236,5 +242,6 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
   unsigned int size=distribution_.size();
   for (unsigned int i = 0; i< size; i++)
     getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(),true);
+
 }
 

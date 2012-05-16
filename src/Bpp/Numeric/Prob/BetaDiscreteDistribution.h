@@ -88,7 +88,6 @@ namespace bpp
     BetaDiscreteDistribution* clone() const { return new BetaDiscreteDistribution(*this); }
   
   public:
-    Domain getDomain() const;
     void fireParameterChanged(const ParameterList & parameters);
   
     double randC() const throw (Exception)
