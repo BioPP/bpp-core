@@ -435,6 +435,16 @@ void AbstractDiscreteDistribution::discretize()
   return;
 }
 
+Vdouble AbstractDiscreteDistribution::getBounds() const
+{
+  Vdouble vb(numberOfCategories_+1);
+  vb[0]=getLowerBound();
+  for (unsigned int i=0;i<numberOfCategories_-1;i++)
+    vb[i+1]=getBound(i);
+  vb[numberOfCategories_]=getUpperBound();
+
+  return vb;
+}
 
 void AbstractDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {

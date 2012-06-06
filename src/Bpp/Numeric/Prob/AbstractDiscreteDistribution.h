@@ -209,6 +209,13 @@ namespace bpp
       return intMinMax_.strictUpperBound();
     }
 
+
+    /*
+     *@brief Retunrs a vector of all the bounds
+     *
+     */
+    
+    Vdouble getBounds() const;
     
     void print(OutputStream& out) const;
 
