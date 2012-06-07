@@ -55,8 +55,6 @@ class ExponentialDiscreteDistribution :
   public AbstractDiscreteDistribution
 {
 protected:
-  IntervalConstraint* lambdaConstraint_;
-
   double lambda_;
 
 public:
@@ -70,12 +68,11 @@ public:
    *
    */
 
-  ExponentialDiscreteDistribution(unsigned int n, double lambda = 1., std::string prefix = "Exponential.");
+  ExponentialDiscreteDistribution(unsigned int n, double lambda = 1.);
 
   ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist) :
     AbstractParameterAliasable(dist),
     AbstractDiscreteDistribution(dist),
-    lambdaConstraint_(dynamic_cast<IntervalConstraint*>(dist.lambdaConstraint_->clone())),
     lambda_(dist.lambda_)
   {}
 
@@ -83,12 +80,11 @@ public:
   {
     AbstractParameterAliasable::operator=(dist);    
     AbstractDiscreteDistribution::operator=(dist);
-    lambdaConstraint_ = dynamic_cast<IntervalConstraint*>(dist.lambdaConstraint_->clone());
     lambda_ = dist.lambda_;
     return *this;
   }
 
-  virtual ~ExponentialDiscreteDistribution();
+  ~ExponentialDiscreteDistribution(){};
 
   ExponentialDiscreteDistribution* clone() const { return new ExponentialDiscreteDistribution(*this); }
 
