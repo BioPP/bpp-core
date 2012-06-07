@@ -87,5 +87,5 @@ void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const Constr
 {
   AbstractDiscreteDistribution::restrictToConstraint(c);
 
-  getParameter_("tp").setConstraint(intMinMax_.clone(),true);
+  getParameter_("tp").setConstraint(intMinMax_.clone(), true);
 }

@@ -62,7 +62,6 @@ public:
    * @brief Build a new discretized exponential distribution.
    * @param n the number of categories to use.
    * @param lambda The lambda parameter.
-   * @param prefix the spacename (for TruncExponential)
    *
    * The Parameter is: lambda @f$ \in [0;\infty[ @f$.
    *

@@ -353,7 +353,7 @@ void AbstractDiscreteDistribution::discretize()
           values[i] = (b - a) / ec;
           a = b;
         }
-      values[numberOfCategories_-1]=(Expectation(intMinMax_.getUpperBound())-a) / ec;
+      values[numberOfCategories_-1] = (Expectation(intMinMax_.getUpperBound())-a) / ec;
     }
   }
   else
@@ -362,12 +362,12 @@ void AbstractDiscreteDistribution::discretize()
     for (i = 1; i < numberOfCategories_; i++)
       bounds_[i-1] = intMinMax_.getLowerBound() + i * ec;
 
-    values[0]=(intMinMax_.getLowerBound()+bounds_[0])/2;
+    values[0] = (intMinMax_.getLowerBound() + bounds_[0]) / 2;
     
     for (i = 1; i < numberOfCategories_-1; i++)
       values[i] = (bounds_[i-1] + bounds_[i]) / 2;
 
-    values[numberOfCategories_-1]=(intMinMax_.getUpperBound()+bounds_[numberOfCategories_-1])/2;
+    values[numberOfCategories_-1] = (intMinMax_.getUpperBound()+bounds_[numberOfCategories_ - 1]) / 2;
   }
 
   if (intMinMax_.strictLowerBound())
@@ -437,12 +437,11 @@ void AbstractDiscreteDistribution::discretize()
 
 Vdouble AbstractDiscreteDistribution::getBounds() const
 {
-  Vdouble vb(numberOfCategories_+1);
-  vb[0]=getLowerBound();
-  for (unsigned int i=0;i<numberOfCategories_-1;i++)
-    vb[i+1]=getBound(i);
-  vb[numberOfCategories_]=getUpperBound();
-
+  Vdouble vb(numberOfCategories_ + 1);
+  vb[0] = getLowerBound();
+  for (unsigned int i = 0; i < numberOfCategories_ - 1; i++)
+    vb[i + 1] = getBound(i);
+  vb[numberOfCategories_] = getUpperBound();
   return vb;
 }
 

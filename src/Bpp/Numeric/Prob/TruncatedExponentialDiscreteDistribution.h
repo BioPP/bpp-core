@@ -76,7 +76,7 @@ public:
    * @brief Build a new truncated exponential discrete distribution.
    * @param n the number of categories to use.
    * @param lambda The lambda parameter
-   * @param truncationPoint The trucation point
+   * @param truncationPoint The truncation point
    *
    * The Parameters are: lambda @f$ \in [0.000001;\infty[ @f$ and tp .@f$ \in [0;\infty[ @f$
    *
