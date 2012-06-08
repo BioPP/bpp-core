@@ -52,6 +52,10 @@ ADD_EXECUTABLE(test_bfgs test_bfgs.cpp)
 TARGET_LINK_LIBRARIES(test_bfgs ${LIBS})
 ADD_TEST(test_bfgs "test_bfgs")
 
+ADD_EXECUTABLE(test_distributions test_distributions.cpp)
+TARGET_LINK_LIBRARIES(test_distributions ${LIBS})
+ADD_TEST(test_distributions "test_distributions")
+
 ADD_EXECUTABLE(test_stats test_stats.cpp)
 TARGET_LINK_LIBRARIES(test_stats ${LIBS})
 ADD_TEST(test_stats "test_stats")
