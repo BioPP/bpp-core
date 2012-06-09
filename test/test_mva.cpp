@@ -155,7 +155,7 @@ int main(int args, char ** argv)
 	delete pca1;
 	delete pca2;
 	delete coa;
-	
+  return 0;	
 }
 
 
