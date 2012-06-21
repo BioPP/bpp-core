@@ -50,7 +50,7 @@ void AbstractParametrizable::setNamespace(const std::string& prefix)
   for(unsigned int i = 0; i < parameters_.size(); i++)
   {
     currentName = parameters_[i].getName();
-    if(TextTools::startsWith(currentName, prefix_))
+    if (TextTools::startsWith(currentName, prefix_))
       parameters_[i].setName(prefix + currentName.substr(prefix_.size()));
     else
       parameters_[i].setName(prefix + currentName);

@@ -43,7 +43,6 @@ set(CPP_FILES
   Bpp/Numeric/VectorTools.cpp
   Bpp/Numeric/AutoParameter.cpp
   Bpp/Numeric/DataTable.cpp
-  Bpp/Numeric/IntervalData.cpp
   Bpp/Numeric/NumConstants.cpp
   Bpp/Numeric/Function/AbstractOptimizer.cpp
   Bpp/Numeric/Function/BrentOneDimension.cpp
@@ -121,7 +120,6 @@ set(H_FILES
   Bpp/Numeric/Constraints.h
   Bpp/Numeric/DataTableExceptions.h
   Bpp/Numeric/DataTable.h
-  Bpp/Numeric/IntervalData.h
   Bpp/Numeric/Number.h
   Bpp/Numeric/NumConstants.h
   Bpp/Numeric/NumTools.h

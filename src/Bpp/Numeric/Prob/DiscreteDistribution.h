@@ -244,10 +244,13 @@ namespace bpp
     virtual void discretize() = 0;
 
     /**
-     * @return the i th internal bound
-     *
+     *@return A vector of all the bounds
      */
-
+    virtual Vdouble getBounds() const = 0;
+    
+    /**
+     * @return the i th internal bound
+     */
     virtual double getBound(unsigned int) const = 0;
 
     /**

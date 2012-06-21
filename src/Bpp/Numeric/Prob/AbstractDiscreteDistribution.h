@@ -177,8 +177,10 @@ namespace bpp
      *
      */
     
-    double getBound(unsigned int i) const
+    double getBound(unsigned int i) const throw (IndexOutOfBoundsException)
     {
+      if (i >= numberOfCategories_)
+        throw IndexOutOfBoundsException("AbstractDiscreteDistribution::getBound(i).", i , 0, numberOfCategories_);
       return bounds_[i];
     }  
 
@@ -209,6 +211,7 @@ namespace bpp
       return intMinMax_.strictUpperBound();
     }
 
+    Vdouble getBounds() const;
     
     void print(OutputStream& out) const;
 

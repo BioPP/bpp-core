@@ -50,23 +50,16 @@ using namespace std;
 
 /****************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda, string prefix) :
-  AbstractParameterAliasable(prefix),
-  AbstractDiscreteDistribution(n, prefix),
-  lambdaConstraint_(0),
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda) :
+  AbstractParameterAliasable("Exponential."),
+  AbstractDiscreteDistribution(n, "Exponential."),
   lambda_(lambda)
 {
-  lambdaConstraint_ = new IntervalConstraint(1, 0.0, true);
-  Parameter p(prefix + "lambda", lambda, dynamic_cast<Constraint*>(lambdaConstraint_->clone()), true);
+  Parameter p("Exponential.lambda", lambda,  &Parameter::R_PLUS);
   addParameter_(p);
 
   intMinMax_.setLowerBound(0, true);
   discretize();
-}
-
-ExponentialDiscreteDistribution::~ExponentialDiscreteDistribution()
-{
-  delete lambdaConstraint_;
 }
 
 /******************************************************************************/

@@ -52,18 +52,20 @@ using namespace std;
 
 TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint) :
   AbstractParameterAliasable("TruncExponential."),
-  ExponentialDiscreteDistribution(n, lambda, "TruncExponential."),
-  tp_(truncationPoint)
+  AbstractDiscreteDistribution(n, "TruncExponential."),
+  lambda_(lambda),
+  tp_(truncationPoint),
+  cond_(1-exp(-lambda_*tp_))
 {
   addParameter_(Parameter("TruncExponential.tp", truncationPoint, &Parameter::R_PLUS));
+  Parameter p("TruncExponential.lambda", lambda,  &Parameter::R_PLUS);
+  addParameter_(p);
 
   intMinMax_.setLowerBound(0, true);
-  intMinMax_.setUpperBound(tp_, true);
+  intMinMax_.setUpperBound(tp_, false);
 
   discretize();
 }
-
-TruncatedExponentialDiscreteDistribution::~TruncatedExponentialDiscreteDistribution() {}
 
 /******************************************************************************/
 
@@ -72,7 +74,10 @@ void TruncatedExponentialDiscreteDistribution::fireParameterChanged(const Parame
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
   lambda_ = getParameterValue("lambda");
   tp_ = getParameterValue("tp");
+
   intMinMax_.setUpperBound(tp_, false);
+  cond_=1-exp(-lambda_*tp_);
+  
   discretize();
 }
 
@@ -80,7 +85,7 @@ void TruncatedExponentialDiscreteDistribution::fireParameterChanged(const Parame
 
 void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const Constraint& c)
 {
-  ExponentialDiscreteDistribution::restrictToConstraint(c);
+  AbstractDiscreteDistribution::restrictToConstraint(c);
 
-  getParameter_("tp").setConstraint(intMinMax_.clone(),true);
+  getParameter_("tp").setConstraint(intMinMax_.clone(), true);
 }
