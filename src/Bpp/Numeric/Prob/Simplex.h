@@ -62,7 +62,7 @@ namespace bpp
  *
  * Global ratio:
  *
- * @f$\forall i<n, \theta_i=\frac{p_i}{1-(p_1+...+p_{i-1})} @fs.
+ * @f$\forall i<n, \theta_i=\frac{p_i}{1-(p_1+...+p_{i-1})} @f$.
  *
  * In the reverse,
  * @f$\forall i<n, p_i= (1-\theta_1).(1-\theta_2)...\theta_{i} @f$
@@ -121,6 +121,7 @@ public:
    *    0: No parametrization
    *    1: Global ratio
    *    2: Local ratio
+   * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
   
@@ -134,6 +135,7 @@ public:
    *    0: No parametrization
    *    1: Global ratio
    *    2: Local ratio
+   * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
 

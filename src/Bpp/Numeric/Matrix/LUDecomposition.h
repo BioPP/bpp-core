@@ -323,7 +323,7 @@ namespace bpp
     /** 
      * @brief Solve A*X = B
      *
-     * @param  const B [in]  A Matrix with as many rows as A and any number of columns.
+     * @param  B [in]  A Matrix with as many rows as A and any number of columns.
      * @param  X [out]  A RowMatrix that will be changed such that L*U*X = B(piv,:).
      * @return  the lowest diagonal term (in absolute value), for further checkings
      *             of non-singularity of LU.
