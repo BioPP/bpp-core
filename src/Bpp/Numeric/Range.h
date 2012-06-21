@@ -104,6 +104,22 @@ template<class T> class Range:
     bool operator<(const Range<T>& r) const {
       return begin_ < r.begin_ || end_ < r.end_;
     }
+    virtual Range& operator+=(const T& val) {
+      begin_ += val;
+      end_ += val;
+      return *this;
+    }
+    virtual Range operator+(const T& val) {
+      return Range<T>(*this) += val;
+    }
+    virtual Range& operator-=(const T& val) {
+      begin_ -= val;
+      end_ -= val;
+      return *this;
+    }
+    virtual Range operator-(const T& val) {
+      return Range<T>(*this) -= val;
+    }
 
     T begin() const { return begin_; }
     
