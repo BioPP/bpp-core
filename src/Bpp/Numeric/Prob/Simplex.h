@@ -53,7 +53,7 @@ namespace bpp
  * @brief A Simplex object, used to define sets of probabilities that
  * sum 1.
  *
- * The probabilities are denoted @f$ p_i @f$ for @f$ i \in <1,n> @f$.
+ * The probabilities are denoted @f$p_i@f$ for @f$i \in <1,n>@f$.
  *
  * If they are parametrized, the parameters are called \c "theta1",
  * ..., \c "theta(n-1)".
@@ -62,18 +62,18 @@ namespace bpp
  *
  * Global ratio:
  *
- * @f$\forall i<n, \theta_i=\frac{p_i}{1-(p_1+...+p_{i-1})} @f$.
+ * @f$\forall i<n, \theta_i=\frac{p_i}{1-(p_1+...+p_{i-1})}@f$.
  *
  * In the reverse,
- * @f$\forall i<n, p_i= (1-\theta_1).(1-\theta_2)...\theta_{i} @f$
- * and @f$p_n=(1-\theta_1).(1-\theta_2)...(1-\theta_{n-1}) @f$.
+ * @f$\forall i<n, p_i= (1-\theta_1).(1-\theta_2)...\theta_{i}@f$
+ * and @f$p_n=(1-\theta_1).(1-\theta_2)...(1-\theta_{n-1})@f$.
  *
  *
  * Local ratio:
  *
- * @f$ \theta_i = \frac{p_i}{p_i+p_{i+1}} \forall i \in 1..\textrm{n-1}} @f$.
+ * @f$\theta_i = \frac{p_i}{p_i+p_{i+1}} \forall i \in 1..\textrm{n-1}@f$.
  *
- * In the reverse if we denote @f$ \alpha_i=\frac{1-\theta_i}{\theta_i} @f$,
+ * In the reverse if we denote @f$\alpha_i=\frac{1-\theta_i}{\theta_i}@f$,
  * @f$p_i=\frac{\alpha_1...\alpha_{i-1}}{1+\sum_{k=1}^{n-1}\alpha_1...\alpha_k}@f$.
  *
  */
