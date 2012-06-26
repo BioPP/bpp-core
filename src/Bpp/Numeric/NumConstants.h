@@ -73,7 +73,16 @@ namespace bpp {
     static const double TINY;
     static const double VERY_TINY;
     static const double VERY_BIG;
+    /**
+     * @name Define those constants in case they would not be available in stl/limits.
+     *
+     * @{
+     */
     static const double INF;
+    static const double NaN; //NAN seems to be a reserved macro
+    static const double PINF;
+    static const double MINF;
+    /** @} */
 
     static const double PI;
   };
