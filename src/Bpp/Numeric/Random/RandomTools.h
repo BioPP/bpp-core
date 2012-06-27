@@ -231,6 +231,7 @@ namespace bpp
      * removed from the vector, and so is the corresponding weight
      *
      * @param v The vector of elements.
+     * @param w The vector of weight associated to the v elements.
      * @param replace Should pick with replacement? (default: false)
      * @return On element of the vector.
      * @throw EmptyVectorException if the vector is empty.

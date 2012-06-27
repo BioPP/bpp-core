@@ -315,7 +315,7 @@ public:
    * @brief Add matrix x.B to matrix A.
    *
    * @param A [in,out] Matrix A
-   * @param [in] Scalar x
+   * @param x [in] Scalar x
    * @param B [in] Matrix B
    * @throw DimensionException If A and B have note the same size.
    */
@@ -587,6 +587,7 @@ public:
    * @brief Print a matrix to a stream, so that it is read by R.
    *
    * @param m The matrix to print.
+   * @param variableName The name of the R variable handeling the matrix
    * @param out The stream to use.
    */
   template<class Matrix>

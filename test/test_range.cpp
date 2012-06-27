@@ -176,6 +176,16 @@ int main() {
   r = r1; r.sliceWith(r7); cout << "r1 /\\ r7: "  << r.toString() << endl;
   if (r != r1) return 1;
 
+  cout << endl << "..:: Operators ::.." << endl;
+  r = r1; r += 1; cout << "r1 += 1: " << r.toString() << endl;
+  if (r != Range<unsigned int>(4, 7)) return 1;
+  r = r1 + 2; cout << "r1 + 2: " << r.toString() << endl;
+  if (r != Range<unsigned int>(5, 8)) return 1;
+  r = r1; r -= 1; cout << "r1 -= 1: " << r.toString() << endl;
+  if (r != Range<unsigned int>(2, 5)) return 1;
+  r = r1 - 2; cout << "r1 - 2: " << r.toString() << endl;
+  if (r != Range<unsigned int>(1, 4)) return 1;
+
   cout << endl << "..:: MultiRange ::.." << endl;
   MultiRange<unsigned int> mr;
   test_range(mr);

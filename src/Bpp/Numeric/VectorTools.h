@@ -871,7 +871,6 @@ namespace bpp
      * @param v1 A std::vector.
      * @param variableName the variable name (default "x").
      * @param out A stream (default cout).
-     * @param delim A string which is used to separate the values (default is " ").
      */
     template<class T>
     static void printForR(const std::vector<T>& v1, std::string variableName="x", std::ostream& out = std::cout)
