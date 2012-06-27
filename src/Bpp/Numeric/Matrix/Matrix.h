@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -46,6 +46,7 @@
 #include "../../Clonable.h"
 #include "../NumConstants.h"
 #include "../NumTools.h"
+#include "../VectorExceptions.h"
 #include <iostream>
 
 namespace bpp
@@ -223,9 +224,15 @@ namespace bpp
     {
       m_.resize(nRows);
       for(unsigned int i = 0; i < nRows; i++)
-        {
-          m_[i].resize(nCols);
-        }
+      {
+        m_[i].resize(nCols);
+      }
+    }
+
+    void addRow(const std::vector<Scalar>& newRow) throw (DimensionException)
+    {
+      if (newRow.size() != getNumberOfColumns()) throw DimensionException("RowMatrix::addRow: invalid row dimension", newRow.size(), getNumberOfColumns());
+      m_.push_back(newRow);
     }
 
   };
