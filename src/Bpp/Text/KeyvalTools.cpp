@@ -109,7 +109,7 @@ void KeyvalTools::parseProcedure(const std::string& desc, std::string& name, std
   if (begin == string::npos && end != string::npos)
     throw KeyvalException("Bad keyval procedure, missing closing parenthesis.");
   
-  if(!TextTools::isEmpty(desc.substr(end + 1)))
+  if (!TextTools::isEmpty(desc.substr(end + 1)))
     throw KeyvalException("Bad keyval procedure, extra characters after closing parenthesis: " + desc.substr(end + 1));
   //Get the procedure name (without leading spaces):
   name = TextTools::removeFirstWhiteSpaces(desc.substr(0, begin));
