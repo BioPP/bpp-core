@@ -298,7 +298,7 @@ class ApplicationTools
       if (TextTools::isEmpty(s)) return std::vector<T>(0);
       if (s[0] == '(' && s[s.size() - 1] == ')') {
         //This is a delimited vector:
-        s = s.substr(1, s.size() - 1);
+        s = s.substr(1, s.size() - 2);
         if (TextTools::isEmpty(s)) return std::vector<T>(0);
       }
       NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
