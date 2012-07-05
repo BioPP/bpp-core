@@ -128,9 +128,9 @@ public:
    * @param lny The power
    * @return @f$ ln(x+y) @f$.
    */ 
-  template<class T> static T logsum(T lnx, T lny) {  lny < lnx ?
-      return lnx + log(1. + exp(lny - lnx)) :
-      return lny + log(1. + exp(lnx - lny));
+  template<class T> static T logsum(T lnx, T lny) {  return (lny < lnx) ?
+      lnx + log(1. + exp(lny - lnx)) :
+      lny + log(1. + exp(lnx - lny));
   }
 
   /**************************************************************************/
