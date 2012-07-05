@@ -429,11 +429,12 @@ class DataTable:
     /**
      * @brief Write a DataTable object to stream in CVS-like format.
      * 
-     * @param data     The table to write.
-     * @param out      The output stream.
-     * @param sep      The column delimiter.
+     * @param data         The table to write.
+     * @param out          The output stream.
+     * @param sep          The column delimiter.
+     * @param alignHeaders If true, add a delimiter before the first column header if there is row names.
      */
-    static void write(const DataTable& data, std::ostream& out, const std::string& sep = "\t");
+    static void write(const DataTable& data, std::ostream& out, const std::string& sep = "\t", bool alignHeaders = false);
 };
 
 } //end of namespace bpp.

@@ -563,13 +563,14 @@ DataTable* DataTable::read(istream& in, const string& sep, bool header, int rowN
 
 /******************************************************************************/
 
-void DataTable::write(const DataTable& data, ostream& out, const string& sep)
+void DataTable::write(const DataTable& data, ostream& out, const string& sep, bool alignHeaders)
 {
   unsigned int n = data.getNumberOfColumns();
   if(n == 0) return;
   if(data.hasColumnNames())
   { //Write header
     vector<string> colNames = data.getColumnNames();
+    if (alignHeaders && data.hasRowNames()) out << sep;
     out << colNames[0];
     for(unsigned int i = 1; i < n; i++) {
       out << sep << colNames[i];
