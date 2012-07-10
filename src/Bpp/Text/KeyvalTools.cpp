@@ -46,11 +46,11 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::string& val) throw (KeyvalException)
+void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split) throw (KeyvalException)
 {
-  string::size_type i = desc.find("=");
+  string::size_type i = desc.find(split);
   if (i == string::npos)
-    throw KeyvalException("Bad syntax! keyval should be of the form 'key=value', found '" + desc + "'.");
+    throw KeyvalException("Bad syntax! keyval should be of the form 'key" + split + "=value', found '" + desc + "'.");
   key = desc.substr(0, i);
   val = desc.substr(i+1);
 }
