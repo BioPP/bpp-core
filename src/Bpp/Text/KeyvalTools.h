@@ -81,12 +81,13 @@ class KeyvalTools
     /**
      * @brief Split a string into a key and a value (General purpose function).
      *
-     * @param desc [in]  A string descibing the keyval, with format key=val (space are considered normal character, that's up to you to deal with that afterward!).
-     * @param key  [out] Will contain the text of the key.
-     * @param val  [out] Will contain the text of the value.
+     * @param desc  [in]  A string descibing the keyval, with format key=val (space are considered normal character, that's up to you to deal with that afterward!).
+     * @param key   [out] Will contain the text of the key.
+     * @param val   [out] Will contain the text of the value.
+     * @param split [in]  The delimiter. Default is '=' but ':' can be used.
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
-    static void singleKeyval(const std::string& desc, std::string& key, std::string& val) throw (KeyvalException);
+    static void singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split = "=") throw (KeyvalException);
     
     /**
      * @brief Split a string into several keys and corresponding values (General purpose function).
