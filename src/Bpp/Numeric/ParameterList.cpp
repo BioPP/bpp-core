@@ -165,7 +165,8 @@ ParameterList ParameterList::getCommonParametersWith(const ParameterList& params
   {
     const Parameter& p = params[i];
     if (hasParameter(p.getName()))
-      pl.parameters_.push_back(dynamic_cast<Parameter*>(p.clone()));                                                                        // We use push_back instead of addParameter because we are sure the name is not duplicated.
+      pl.parameters_.push_back(dynamic_cast<Parameter*>(p.clone()));                                                                        
+    // We use push_back instead of addParameter because we are sure the name is not duplicated.
   }
 
   return pl;
@@ -184,6 +185,7 @@ std::vector<std::string> ParameterList::getParameterNames() const
 }
 
 /******************************************************************************/
+
 void ParameterList::addParameter(const Parameter& param) throw (ParameterException)
 {
   if (hasParameter(param.getName()))
@@ -192,6 +194,16 @@ void ParameterList::addParameter(const Parameter& param) throw (ParameterExcepti
 }
 
 /******************************************************************************/
+
+void ParameterList::addParameter(Parameter* param) throw (ParameterException)
+{
+  if (hasParameter(param->getName()))
+    throw ParameterException("ParameterList::addParameter. Parameter with name '" + param->getName() + "' already exists.", param);
+  parameters_.push_back(param);
+}
+
+/******************************************************************************/
+
 void ParameterList::setParameter(unsigned int index, const Parameter& param) throw (IndexOutOfBoundsException)
 {
   if (index >= size()) throw IndexOutOfBoundsException("ParameterList::setParameter.", index, 0, size());
@@ -200,6 +212,7 @@ void ParameterList::setParameter(unsigned int index, const Parameter& param) thr
 }
 
 /******************************************************************************/
+
 void ParameterList::includeParameters(const ParameterList& params)
 {
   for (unsigned int i = 0; i < params.size(); i++)
@@ -212,6 +225,7 @@ void ParameterList::includeParameters(const ParameterList& params)
 }
 
 /******************************************************************************/
+
 void ParameterList::addParameters(const ParameterList& params)
 throw (ParameterException)
 {
@@ -222,6 +236,7 @@ throw (ParameterException)
 }
 
 /******************************************************************************/
+
 void ParameterList::setParameterValue(const string& name, double value)
 throw (ParameterNotFoundException, ConstraintException)
 {
@@ -230,6 +245,7 @@ throw (ParameterNotFoundException, ConstraintException)
 }
 
 /******************************************************************************/
+
 void ParameterList::setAllParametersValues(const ParameterList& params)
 throw (ParameterNotFoundException, ConstraintException)
 {
@@ -250,6 +266,7 @@ throw (ParameterNotFoundException, ConstraintException)
 }
 
 /******************************************************************************/
+
 void ParameterList::setParametersValues(const ParameterList& params)
 {
   // First we check if all values are correct:
@@ -277,6 +294,7 @@ void ParameterList::setParametersValues(const ParameterList& params)
 }
 
 /******************************************************************************/
+
 bool ParameterList::testParametersValues(const ParameterList& params) const
 {
   // First we check if all values are correct:
@@ -306,6 +324,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
 }
 
 /******************************************************************************/
+
 bool ParameterList::matchParametersValues(const ParameterList& params)
 throw (ConstraintException)
 {
