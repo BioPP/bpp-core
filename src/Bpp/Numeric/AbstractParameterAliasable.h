@@ -177,7 +177,7 @@ namespace bpp
       void addParameter_(Parameter* parameter)
       {
         AbstractParametrizable::addParameter_(parameter);
-        independentParameters_.addParameter(parameter);
+        independentParameters_.addParameter(parameter->clone());
       }
 
       void addParameters_(const ParameterList& parameters)
