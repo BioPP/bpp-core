@@ -56,9 +56,9 @@ class PolynomialFunction1:
   public:
     PolynomialFunction1() : AbstractParametrizable(""), fval_(0) {
       //We declare parameters here:
-      addParameter_(Parameter("x", 0));
-      addParameter_(Parameter("y", 0));
-      addParameter_(Parameter("z", 0));
+      addParameter_(new Parameter("x", 0));
+      addParameter_(new Parameter("y", 0));
+      addParameter_(new Parameter("z", 0));
       fireParameterChanged(getParameters());
     }
  

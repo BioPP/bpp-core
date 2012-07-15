@@ -51,7 +51,7 @@ ConstantDistribution::ConstantDistribution(double value, bool fixed):
   value_(value)
 {
   if (! fixed)
-    addParameter_(Parameter("Constant.value", value));
+    addParameter_(new Parameter("Constant.value", value));
   distribution_[value_] = 1; //One single class  with probability 1.
 }
 

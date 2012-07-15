@@ -55,14 +55,12 @@ BetaDiscreteDistribution::BetaDiscreteDistribution(unsigned int n, double alpha,
   AbstractParameterAliasable("Beta."),
   AbstractDiscreteDistribution(n,NumConstants::VERY_TINY,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
-  Parameter p1("Beta.alpha", alpha, new IntervalConstraint(1, 0.0001, true), true);
-  addParameter_(p1);
-  Parameter p2("Beta.beta", beta, new IntervalConstraint(1, 0.0001, true), true);
-  addParameter_(p2);
-  intMinMax_.setLowerBound(0,true);
-  intMinMax_.setUpperBound(1,true);
+  addParameter_(new Parameter("Beta.alpha", alpha, new IntervalConstraint(1, 0.0001, true), true));
+  addParameter_(new Parameter("Beta.beta", beta, new IntervalConstraint(1, 0.0001, true), true));
+  intMinMax_.setLowerBound(0, true);
+  intMinMax_.setUpperBound(1, true);
 
-  diffln_=exp(RandomTools::lnBeta(alpha_+1,beta_)-RandomTools::lnBeta(alpha_,beta_));
+  diffln_ = exp(RandomTools::lnBeta(alpha_ + 1, beta_) - RandomTools::lnBeta(alpha_, beta_));
   discretize();
 }
 

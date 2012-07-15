@@ -61,8 +61,7 @@ DirichletDiscreteDistribution::DirichletDiscreteDistribution(vector<unsigned int
 
   for (unsigned int j = 0; j < valpha.size(); j++)
   {
-    Parameter p("Dirichlet.alpha_" + TextTools::toString(j + 1), valpha[j], new IntervalConstraint(1, 0.0001, true), true);
-    addParameter_(p);
+    addParameter_(new Parameter("Dirichlet.alpha_" + TextTools::toString(j + 1), valpha[j], new IntervalConstraint(1, 0.0001, true), true));
   }
 
   for (unsigned int j = 0; j < vn.size(); j++)

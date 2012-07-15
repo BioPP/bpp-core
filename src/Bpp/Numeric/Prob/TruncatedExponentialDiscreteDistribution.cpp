@@ -57,9 +57,8 @@ TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistributi
   tp_(truncationPoint),
   cond_(1-exp(-lambda_*tp_))
 {
-  addParameter_(Parameter("TruncExponential.tp", truncationPoint, &Parameter::R_PLUS));
-  Parameter p("TruncExponential.lambda", lambda,  &Parameter::R_PLUS);
-  addParameter_(p);
+  addParameter_(new Parameter("TruncExponential.tp", truncationPoint, &Parameter::R_PLUS));
+  addParameter_(new Parameter("TruncExponential.lambda", lambda,  &Parameter::R_PLUS));
 
   intMinMax_.setLowerBound(0, true);
   intMinMax_.setUpperBound(tp_, false);
