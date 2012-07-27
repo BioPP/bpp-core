@@ -181,6 +181,17 @@ public:
   virtual void addParameter(const Parameter& param) throw (ParameterException);
 
   /**
+   * @brief Add a new parameter at the end of the list.
+   *
+   * This function is more efficient than its reference counterpart,
+   * as it avoid an object copy. The ParameterList will own the pointer
+   * after addition, if it is successful.
+   *
+   * @param param A ppointer toward the parameter to add to the list.
+   */
+  virtual void addParameter(Parameter* param) throw (ParameterException);
+
+  /**
    * @brief Change given parameter.
    *
    * @param index The position of the parameter to alter.

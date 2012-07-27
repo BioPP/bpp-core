@@ -65,7 +65,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned int method, const s
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), &Parameter::PROP_CONSTRAINT_IN));
     }
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -76,7 +76,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned int method, const s
     double y = 1;
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y -= vProb_[i];
     }
     break;
@@ -99,7 +99,7 @@ Simplex::Simplex(unsigned int dim, unsigned int method, const std::string& name)
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
     }
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -110,7 +110,7 @@ Simplex::Simplex(unsigned int dim, unsigned int method, const std::string& name)
     double y = 1;
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y -= vProb_[i];
     }
     break;

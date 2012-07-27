@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -133,9 +133,10 @@ class AbstractParametrizable:
     virtual void fireParameterChanged(const ParameterList& parameters) = 0;
 
   protected:
-    void addParameter_(const Parameter& parameter)
+    void addParameter_(Parameter* parameter)
     {
-      parameters_.addParameter(parameter);
+      if (parameter)
+        parameters_.addParameter(parameter);
     }
 
     void addParameters_(const ParameterList& parameters)

@@ -146,8 +146,8 @@ protected:
   
 
 public:
-  IntervalConstraint() :  lowerBound_(-NumConstants::VERY_BIG),
-                upperBound_(NumConstants::VERY_BIG),
+  IntervalConstraint() :  lowerBound_(NumConstants::MINF),
+                upperBound_(NumConstants::PINF),
                 inclLowerBound_(true),
                 inclUpperBound_(true),
                 precision_(NumConstants::TINY) {}
@@ -170,8 +170,8 @@ public:
    * @param precision Parameter precision.
    */
   IntervalConstraint(short sign, double bound, bool incl, double precision = NumConstants::TINY) :
-    lowerBound_(sign > 0 ? bound : -NumConstants::VERY_BIG),
-    upperBound_(sign > 0 ? NumConstants::VERY_BIG : bound),
+    lowerBound_(sign > 0 ? bound : NumConstants::MINF),
+    upperBound_(sign > 0 ? NumConstants::PINF : bound),
     inclLowerBound_(sign > 0 ? incl : false),
     inclUpperBound_(sign > 0 ? false : incl),
     precision_(precision) {}
@@ -190,8 +190,8 @@ public:
   bool strictLowerBound() const { return !inclLowerBound_; }
   bool strictUpperBound() const { return !inclUpperBound_; }
 
-  bool finiteLowerBound() const { return lowerBound_ > -NumConstants::VERY_BIG; }
-  bool finiteUpperBound() const { return upperBound_ < NumConstants::VERY_BIG; }
+  bool finiteLowerBound() const { return lowerBound_ > NumConstants::MINF; }
+  bool finiteUpperBound() const { return upperBound_ < NumConstants::PINF; }
 
   bool includes(double min, double max) const
   {

@@ -55,10 +55,8 @@ GaussianDiscreteDistribution::GaussianDiscreteDistribution(unsigned int n, doubl
   AbstractParameterAliasable("Gaussian."),
   AbstractDiscreteDistribution(n,"Gaussian."), mu_(mu), sigma_(sigma)
 {
-  Parameter p1("Gaussian.mu", mu);
-  addParameter_(p1);
-  Parameter p2("Gaussian.sigma", sigma, &Parameter::R_PLUS_STAR);
-  addParameter_(p2);
+  addParameter_(new Parameter("Gaussian.mu", mu));
+  addParameter_(new Parameter("Gaussian.sigma", sigma, &Parameter::R_PLUS_STAR));
   discretize();
 }
 

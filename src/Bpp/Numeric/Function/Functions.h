@@ -632,8 +632,8 @@ class TestFunction :
     TestFunction(double x = 0, double y = 0) :
       AbstractParametrizable("")
     {
-      addParameter_(Parameter("x", x));
-      addParameter_(Parameter("y", y));
+      addParameter_(new Parameter("x", x));
+      addParameter_(new Parameter("y", y));
     }
 
     Clonable* clone() const { return new TestFunction(*this); }

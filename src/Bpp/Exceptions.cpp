@@ -7,7 +7,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -97,6 +97,14 @@ int* IndexOutOfBoundsException::getBounds() const
   bounds[1] = upperBound_;
   return bounds;
 }
+
+/******************************************************************************/
+
+OutOfRangeException::OutOfRangeException(const std::string& text, double badValue, double lowerBound, double upperBound):
+  Exception(TextTools::toString(badValue) + " out of [" + TextTools::toString(lowerBound) + ", " + TextTools::toString(upperBound) +  "])" + text),
+  lowerBound_(lowerBound),
+  upperBound_(upperBound)
+{}
 
 /******************************************************************************/
 

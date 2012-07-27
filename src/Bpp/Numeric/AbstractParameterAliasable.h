@@ -174,10 +174,10 @@ namespace bpp
       }
 
     protected:
-      void addParameter_(const Parameter& parameter)
+      void addParameter_(Parameter* parameter)
       {
         AbstractParametrizable::addParameter_(parameter);
-        independentParameters_.addParameter(parameter);
+        independentParameters_.addParameter(parameter->clone());
       }
 
       void addParameters_(const ParameterList& parameters)

@@ -335,6 +335,43 @@ class IndexOutOfBoundsException:
 
 
 /**
+ * @brief Out of range exception class.
+ */
+class OutOfRangeException:
+  public Exception
+{
+  protected:
+    double lowerBound_, upperBound_;
+  
+  public:
+    
+    /**
+     * @brief Build a new OutOfRangeException.
+     *
+     * @param text   A message to be passed to the exception hierarchy.
+     * @param badValue The faulty value.
+     * @param lowerBound Lower limit.
+     * @param upperBound Upper limit.
+     */
+    OutOfRangeException(const std::string& text, double badValue, double lowerBound, double upperBound);
+  
+    virtual ~OutOfRangeException() throw() {}
+
+  public:
+    
+    /**
+     * @return The lower bound.
+     */
+    double getLowerBound() const { return lowerBound_; }
+
+    /**
+     * @return The upper bound.
+     */
+    double getUpperBound() const { return upperBound_; }
+};
+
+
+/**
  * @brief This expeption is sent when a given method is not implemented.
  */
 class NotImplementedException:

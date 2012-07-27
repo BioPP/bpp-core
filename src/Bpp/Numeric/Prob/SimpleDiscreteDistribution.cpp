@@ -65,12 +65,12 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
     unsigned int n=1;
     double x,y=1;
     for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++) {
-      addParameter_(Parameter("Simple.V"+TextTools::toString(n),i->first));
+      addParameter_(new Parameter("Simple.V"+TextTools::toString(n),i->first));
 
-      if (n!=numberOfCategories_){
-        x=i->second;
-        addParameter_(Parameter("Simple.theta"+TextTools::toString(n), x/y,&Parameter::PROP_CONSTRAINT_IN));
-        y-=x;
+      if (n != numberOfCategories_) {
+        x = i->second;
+        addParameter_(new Parameter("Simple.theta" + TextTools::toString(n), x / y, &Parameter::PROP_CONSTRAINT_IN));
+        y -= x;
       }
       n++;
     }
@@ -104,14 +104,13 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
     throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
   
   if (! fixed){
-    double y=1;
-    for (unsigned int i=0;i<size-1;i++){
-      addParameter_(Parameter("Simple.V"+TextTools::toString(i+1),values[i]));
-      addParameter_(Parameter("Simple.theta"+TextTools::toString(i+1), probas[i]/y,&Parameter::PROP_CONSTRAINT_IN));
+    double y = 1;
+    for (unsigned int i = 0; i < size - 1; i++) {
+      addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
+      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y-=probas[i];
     }
-    addParameter_(Parameter("Simple.V"+TextTools::toString(size),values[size-1]));
-
+    addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size - 1]));
   }
 
   discretize();

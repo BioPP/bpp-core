@@ -65,8 +65,8 @@ const double NumConstants::TINY =  1e-12;
 const double NumConstants::VERY_TINY = 1e-20;
 const double NumConstants::VERY_BIG = static_cast<double>(1.7E+23);
 const double NumConstants::INF = -log(0);
-const double NumConstants::PINF = log(0);
-const double NumConstants::MINF = -log(0);
+const double NumConstants::PINF = -log(0);
+const double NumConstants::MINF = log(0);
 const double NumConstants::NaN = 3./0.;
 
 const double NumConstants::PI = 3.141593;

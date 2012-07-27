@@ -56,8 +56,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
   //We first change the namespace of the nested distribution:
   dist_->setNamespace("InvariantMixed." + nestedPrefix_);
   addParameters_(dist_->getIndependentParameters());
-  Parameter pinv("InvariantMixed.p", p, &Parameter::PROP_CONSTRAINT_IN);
-  addParameter_(pinv);
+  addParameter_(new Parameter("InvariantMixed.p", p, &Parameter::PROP_CONSTRAINT_IN));
 
   updateDistribution();
 }
