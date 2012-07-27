@@ -332,7 +332,8 @@ template<class T> class RangeSet:
     const Range<T>& getRange(unsigned int i) const {
       typename std::set< Range<T>* >::const_iterator it = ranges_.begin();
       for (unsigned int c = 0; c < i; ++c)
-        it = it++;
+        ++it;
+        //it = it++;
       return **it;
     }
     
