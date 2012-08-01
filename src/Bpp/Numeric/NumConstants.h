@@ -1,5 +1,5 @@
 //
-// File: Constants.h
+// File: NumConstants.h
 // Created by: Julien Dutheil
 // Created on: Tue Feb 03 14:21 2009
 //
@@ -40,14 +40,16 @@
 #ifndef _NUMCONSTANTS_H_
 #define _NUMCONSTANTS_H_
 
+#include <cmath>
+
 namespace bpp {
 
   /**
    * @brief this static class contains several useful constant values.
    */
-  class NumConstants
+  namespace NumConstants
   {
-  public:
+
     /**
      * @name Golden ratio.
      *
@@ -55,37 +57,39 @@ namespace bpp {
      * We also define @f$R=\phi-1@f$ and @f$C = 1 - R@f$.
      * @{
      */
-    static const double GOLDEN_RATIO_PHI;
-    static const double GOLDEN_RATIO_R;
-    static const double GOLDEN_RATIO_C;
+    const double GOLDEN_RATIO_PHI = (1. + sqrt(5.)) / 2.;
+    const double GOLDEN_RATIO_R = NumConstants::GOLDEN_RATIO_PHI - 1.;
+    const double GOLDEN_RATIO_C = 1. - NumConstants::GOLDEN_RATIO_R;
+
     /** @} */
 
-    static const double MEGA;
-    static const double KILO;
-    static const double DECI;
-    static const double CENTI;
-    static const double MILLI;
-    static const double MICRO;
-    static const double NANO;
-    static const double PICO;
+    const double MEGA = 1e6;
+    const double KILO = 1e3;
+    const double DECI = 1e-1;
+    const double CENTI = 1e-2;
+    const double MILLI = 1e-3;
+    const double MICRO = 1e-6;
+    const double NANO = 1e-9;
+    const double PICO = 1e-12;
+
+    const double SMALL = 1e-6;
+    const double TINY =  1e-12;
+    const double VERY_TINY = 1e-20;
+    const double VERY_BIG = static_cast<double>(1.7E+23);
     
-    static const double SMALL;
-    static const double TINY;
-    static const double VERY_TINY;
-    static const double VERY_BIG;
     /**
      * @name Define those constants in case they would not be available in stl/limits.
      *
      * @{
      */
-    static const double INF;
-    static const double NaN; //NAN seems to be a reserved macro
-    static const double PINF;
-    static const double MINF;
+    const double INF = -log(0);
+    const double PINF = -log(0);
+    const double MINF = log(0);
+    const double NaN = 3./0.;
     /** @} */
 
-    static const double PI;
-  };
+    const double PI = 3.141593;
+  } //end of namespace NumConstants.
 
 }//end of namespace bpp.
 
