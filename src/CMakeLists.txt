@@ -43,7 +43,6 @@ set(CPP_FILES
   Bpp/Numeric/VectorTools.cpp
   Bpp/Numeric/AutoParameter.cpp
   Bpp/Numeric/DataTable.cpp
-  Bpp/Numeric/NumConstants.cpp
   Bpp/Numeric/Function/AbstractOptimizer.cpp
   Bpp/Numeric/Function/BrentOneDimension.cpp
   Bpp/Numeric/Function/ConjugateGradientMultiDimensions.cpp
