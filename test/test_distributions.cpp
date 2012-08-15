@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void testSumProbs(const DiscreteDistribution& dist) {
+void testSumProbs(const DiscreteDistribution& dist) throw (Exception) {
   cout << "Test sum of probabilities: ";
   cout.flush();
   double s = VectorTools::sum(dist.getProbabilities());
@@ -52,7 +52,7 @@ void testSumProbs(const DiscreteDistribution& dist) {
   cout << "ok" << endl;
 }
 
-void testEqualProbs(const DiscreteDistribution& dist) {
+void testEqualProbs(const DiscreteDistribution& dist) throw (Exception) {
   cout << "Test equality of probabilities: ";
   cout.flush();
   for (unsigned int i = 1; i < dist.getNumberOfCategories(); ++i)
