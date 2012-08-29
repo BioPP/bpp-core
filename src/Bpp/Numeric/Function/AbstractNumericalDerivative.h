@@ -168,10 +168,10 @@ class AbstractNumericalDerivative:
         {
           return function1_->getFirstOrderDerivative(variable);
         }
-        catch(Exception & e) {}
+        catch (Exception& e) {}
       }    
       std::map<std::string, unsigned int>::iterator it = index_.find(variable);
-      if(computeD1_ && it != index_.end()) return der1_[it->second];
+      if (computeD1_ && it != index_.end()) return der1_[it->second];
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
     /** @} */

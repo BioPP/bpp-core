@@ -24,6 +24,10 @@ ENDMACRO(TEST_FIND_LIBRARY)
 #Find the bpp-core library library:
 TEST_FIND_LIBRARY(LIBS bpp-core Bpp/Clonable.h)
 
+ADD_EXECUTABLE(test_numconstants test_numconstants.cpp)
+TARGET_LINK_LIBRARIES(test_numconstants ${LIBS})
+ADD_TEST(test_numconstants "test_numconstants")
+
 ADD_EXECUTABLE(test_eigen test_eigen.cpp)
 TARGET_LINK_LIBRARIES(test_eigen ${LIBS})
 ADD_TEST(test_eigen "test_eigen")
@@ -77,11 +81,11 @@ TARGET_LINK_LIBRARIES(test_text_tools ${LIBS})
 ADD_TEST(test_text_tools "test_text_tools")
 
 IF(UNIX)
-  SET_PROPERTY(TEST test_eigen test_matrices test_derivative1 test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(APPLE)
-  SET_PROPERTY(TEST test_eigen test_matrices test_derivative1 test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(WIN32)

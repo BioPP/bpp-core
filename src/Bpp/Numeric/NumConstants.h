@@ -41,6 +41,7 @@
 #define _NUMCONSTANTS_H_
 
 #include <cmath>
+#include <limits>
 
 namespace bpp {
 
@@ -82,9 +83,10 @@ namespace bpp {
      *
      * @{
      */
-    const double INF = -log(0);
-    const double PINF = -log(0);
-    const double MINF = log(0);
+    //NB: numeric_limits<double>::infinity can throw an exception, so cannot be used directly here.
+    const double INF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
+    const double PINF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
+    const double MINF = std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min();
     const double NaN = 3./0.;
     /** @} */
 
