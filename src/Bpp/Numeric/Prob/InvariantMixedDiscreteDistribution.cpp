@@ -76,6 +76,7 @@ void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterLis
 void InvariantMixedDiscreteDistribution::updateDistribution()
 {
   distribution_.clear();
+  bounds_.clear();
   
   unsigned int distNCat = dist_->getNumberOfCategories();
   vector<double> probs = dist_->getProbabilities();
@@ -106,33 +107,27 @@ void InvariantMixedDiscreteDistribution::updateDistribution()
   // middle of the 3 values
 
   bool nv=true;
-  map<double, double>::const_iterator it = distribution_.begin();
-  unsigned int i=0;
 
-  double a= it->first, b;
+  double a= dist_->getCategory(0), b;
   if  (nv && (invariant_< a)){
     bounds_.push_back((a+invariant_)/2);
     nv=false;
   }
 
-
-  it++;
-  while (it != distribution_.end()){
-    b=it->first;
+  for (unsigned int i=1;i<distNCat;i++){
+    b=dist_->getCategory(i);
     if (nv && (invariant_< b)){
       bounds_.push_back((a+invariant_)/2);
       bounds_.push_back((invariant_+b)/2);
       nv=false;
     }
-    else
-      bounds_.push_back(dist_->getBound(i));
+    else 
+      bounds_.push_back(dist_->getBound(i-1));
     a=b;
-    i++;
   }
-
+  
   if (nv)
     bounds_.push_back((a+invariant_)/2);
-  
 }
 
 /******************************************************************************/
