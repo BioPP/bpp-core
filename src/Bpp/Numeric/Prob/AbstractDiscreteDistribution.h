@@ -179,8 +179,8 @@ namespace bpp
     
     double getBound(unsigned int i) const throw (IndexOutOfBoundsException)
     {
-      if (i >= numberOfCategories_)
-        throw IndexOutOfBoundsException("AbstractDiscreteDistribution::getBound(i).", i , 0, numberOfCategories_);
+      if (i >= numberOfCategories_-1)
+        throw IndexOutOfBoundsException("AbstractDiscreteDistribution::getBound(i)", i , 0, numberOfCategories_-1);
       return bounds_[i];
     }  
 
