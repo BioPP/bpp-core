@@ -324,9 +324,6 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
   // Writing the parameters 
   BppOParametrizableFormat* bOP=new BppOParametrizableFormat();
 
-  if (dist.hasParameter("p"))
-    cerr << ":" << dynamic_cast<const ParameterAliasable*>(&dist)->getParameterValue("p") << ":" << endl;
-
   bOP->write(dynamic_cast<const ParameterAliasable*>(&dist), out, globalAliases, dist.getIndependentParameters().getParameterNames(), writtenNames, true, comma);
   out << ")";
 
