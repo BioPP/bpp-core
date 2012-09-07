@@ -88,6 +88,8 @@ public:
   ExponentialDiscreteDistribution* clone() const { return new ExponentialDiscreteDistribution(*this); }
 
 public:
+  std::string getName() const {return("Exponential");}
+  
   void fireParameterChanged(const ParameterList& parameters);
 
   double randC() const throw (Exception)

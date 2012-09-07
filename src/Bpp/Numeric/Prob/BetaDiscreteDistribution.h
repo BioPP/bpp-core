@@ -88,6 +88,9 @@ namespace bpp
     BetaDiscreteDistribution* clone() const { return new BetaDiscreteDistribution(*this); }
   
   public:
+
+    std::string getName() const { return "Beta";}
+
     void fireParameterChanged(const ParameterList & parameters);
   
     double randC() const throw (Exception)

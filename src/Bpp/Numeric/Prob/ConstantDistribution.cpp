@@ -86,13 +86,6 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
 
 /******************************************************************************/
 
-std::string ConstantDistribution::getName() const
-{
-  return("ConstantDistribution");
-}
-
-/******************************************************************************/
-
 void ConstantDistribution::restrictToConstraint(const Constraint& c)
 {
   if (getNumberOfParameters()==0)

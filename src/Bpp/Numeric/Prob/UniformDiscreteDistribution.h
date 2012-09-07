@@ -78,6 +78,8 @@ namespace bpp
     UniformDiscreteDistribution* clone() const { return new UniformDiscreteDistribution(*this); }
   
   public:
+    std::string getName() const {return("Uniform");}
+
     void fireParameterChanged(const ParameterList & parameters);
 
     double randC() const throw (Exception)

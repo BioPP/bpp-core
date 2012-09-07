@@ -104,6 +104,8 @@ class SimpleDiscreteDistribution:
 #endif
 
 public:
+  std::string getName() const {return("Simple");}
+  
   void discretize();
   
   void fireParameterChanged(const ParameterList & parameters);

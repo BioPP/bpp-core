@@ -80,6 +80,13 @@ namespace bpp
   public:
 		
     /**
+     * @brief Get the name of the distribution.
+     *
+     * @return The name of this distribution.
+     */
+    virtual std::string getName() const = 0;
+
+    /**
      * @return The number of categories.
      */
     virtual unsigned int getNumberOfCategories() const = 0;

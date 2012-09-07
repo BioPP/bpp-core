@@ -64,6 +64,8 @@ namespace bpp
     double ga1_;
     
   public:
+    std::string getName() const {return("Gamma");}
+
     /**
      * @brief Build a new discretized gamma distribution.
      * @param n the number of categories to use.
@@ -89,7 +91,6 @@ namespace bpp
     GammaDiscreteDistribution* clone() const { return new GammaDiscreteDistribution(*this); }
 
   
-  public:
     void fireParameterChanged(const ParameterList & parameters);
   
     double randC() const throw (Exception)

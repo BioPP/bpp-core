@@ -95,14 +95,12 @@ namespace bpp
       return *this;
     }
 
-#ifndef NO_VIRTUAL_COV
-    InvariantMixedDiscreteDistribution* 
-#else
-    Clonable*
-#endif
-    clone() const { return new InvariantMixedDiscreteDistribution(*this); }
+    InvariantMixedDiscreteDistribution* clone() const { return new InvariantMixedDiscreteDistribution(*this); }
 
   public:
+
+    std::string getName() const {return("Invariant");}
+
     void fireParameterChanged(const ParameterList & parameters);
 
     void setNamespace(const std::string& prefix);

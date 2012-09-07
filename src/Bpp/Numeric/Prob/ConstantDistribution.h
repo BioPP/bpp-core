@@ -89,7 +89,7 @@ namespace bpp
     void fireParameterChanged(const ParameterList& parameters);
     double randC() const throw (Exception) { return value_;}
 
-    std::string getName() const;
+    std::string getName() const {return("Constant");}
 
     double getLowerBound() const{
       return value_;

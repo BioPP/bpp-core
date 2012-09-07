@@ -125,6 +125,8 @@ protected:
   void applyParameters();
 
 public:
+  std::string getName() const {return("Dirichlet");}
+  
   void fireParameterChanged(const ParameterList& parameters);
 
   /**

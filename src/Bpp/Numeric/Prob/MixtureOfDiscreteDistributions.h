@@ -107,10 +107,42 @@ public:
 
 public:
 
+  std::string getName() const {return("Mixture");}
+
+  /*
+   *@brief Returns the number of discrete distributions in the
+   *mixture.
+   *
+   */
+
+  unsigned int getNumberOfDistributions() const {return vdd_.size();}
+
+  /*
+   *@brief Returns a pointer to the n-th discrete distribution in the mixture.
+   *
+   *@param n tne number of the distribution in the mixture;
+   */
+
+  const DiscreteDistribution* getNDistribution(unsigned int n) const
+  {
+    return vdd_[n];
+  }
+ 
+  /*
+   *@brief Returns the probability of the n-th discrete distribution in the mixture.
+   *
+   *@param n the number of the distribution in the mixture;
+   */
+
+  unsigned int getNProbability(unsigned int n) const
+  {
+    return probas_[n];
+  }
+  
   /*
    *@brief sets the number of categories of EACH submodel to
-   *nbClasses, so the number of categories of the mixture is at most
-   *the power of all these numbers.
+   *nbClasses, so the number of categories of the mixture is the sum
+   *of all these numbers.
    *
    */
   

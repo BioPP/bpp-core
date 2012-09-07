@@ -80,6 +80,9 @@ class GaussianDiscreteDistribution:
   GaussianDiscreteDistribution* clone() const { return new GaussianDiscreteDistribution(*this); }
   
 public:
+
+  std::string getName() const {return("Gaussian");}
+
   void fireParameterChanged(const ParameterList & parameters);
   
   double randC() const throw (Exception)

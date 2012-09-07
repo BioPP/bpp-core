@@ -107,6 +107,9 @@ public:
   TruncatedExponentialDiscreteDistribution* clone() const { return new TruncatedExponentialDiscreteDistribution(*this); }
 
 public:
+
+  std::string getName() const {return("TruncExponential");}
+
   void fireParameterChanged(const ParameterList& parameters);
 
   double randC() const throw (Exception)
