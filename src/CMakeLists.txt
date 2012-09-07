@@ -10,6 +10,9 @@ set(CPP_FILES
   Bpp/App/BppApplication.cpp
   Bpp/App/NumCalcApplicationTools.cpp
   Bpp/Io/FileTools.cpp
+  Bpp/Io/BppOParametrizableFormat.cpp
+  Bpp/Io/BppODiscreteDistributionFormat.cpp
+  Bpp/Io/IoDiscreteDistributionFactory.cpp
   Bpp/Utils/AttributesTools.cpp
   Bpp/Text/KeyvalTools.cpp
   Bpp/Text/NestedStringTokenizer.cpp
@@ -111,7 +114,12 @@ set(H_FILES
   Bpp/Graphics/RgbColor.h
   Bpp/Io/FileTools.h
   Bpp/Io/IoFormat.h
+  Bpp/Io/IoParametrizable.h
+  Bpp/Io/IoDiscreteDistribution.h
+  Bpp/Io/IoDiscreteDistributionFactory.h
   Bpp/Io/OutputStream.h
+  Bpp/Io/BppOParametrizableFormat.h
+  Bpp/Io/BppODiscreteDistributionFormat.h
   Bpp/Numeric/AbstractParameterAliasable.h
   Bpp/Numeric/AbstractParametrizable.h
   Bpp/Numeric/AdaptiveKernelDensityEstimation.h
