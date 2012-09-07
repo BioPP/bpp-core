@@ -42,7 +42,6 @@
 
 #include "../Numeric/ParameterAliasable.h"
 
-#include <Bpp/Exceptions.h>
 #include "IoFormat.h"
 #include "OutputStream.h"
 
@@ -62,37 +61,6 @@ namespace bpp
   public:
     virtual const std::string getDataType() const { return "Parametrizable"; }
   };
-
-//  /**
-//   * @brief General interface for distance matrix readers.
-//   */
-//  class IParametrizable:
-//    public virtual IOParametrizable
-//  {
-//  public:
-//    IParametrizable() {}
-//    virtual ~IParametrizable() {}
-//
-//  public:
-//    /**
-//     * @brief Read a discrete distribution from a string.
-//     *
-//     * @param distrlDescription A string describing the distribution in the format.
-//     * @param unparsedParameterValues [out] a map that will contain
-//     *                                all the distribution parameters names
-//     *                                and their corresponding unparsed
-//     *                                value, if they were found.
-//     * @param verbose Print some info to the 'message' output stream.
-//     * @return A new Parametrizable object according to options specified.
-//     * @throw Exception if an error occured.
-//     */
-//
-//    virtual Parametrizable* read(const std::string& distrDescription,
-//                                       std::map<std::string, std::string>& unparsedParameterValues,
-//                                       bool verbose) = 0;
-//
-//  };
-//
 
   /**
    * @brief General interface writers.
