@@ -158,6 +158,7 @@ void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasse
 
 void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& parameters)
 {
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
   size_t size = vdd_.size();
   double x = 1.0;
   for (size_t i = 0; i < size - 1; i++)
