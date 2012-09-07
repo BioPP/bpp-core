@@ -90,7 +90,14 @@ namespace bpp
 
     GammaDiscreteDistribution* clone() const { return new GammaDiscreteDistribution(*this); }
 
-  
+    /**
+     *@brief When this distribution id used for rates, beta parameter should be removed
+     *  and aliased to alpha.
+     *
+     */
+    
+    void normalize();
+    
     void fireParameterChanged(const ParameterList & parameters);
   
     double randC() const throw (Exception)
