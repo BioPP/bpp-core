@@ -40,6 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "InvariantMixedDiscreteDistribution.h"
 #include "../../Utils/MapTools.h"
 
+
 using namespace bpp;
 using namespace std;
 
@@ -47,16 +48,16 @@ using namespace std;
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
     DiscreteDistribution* dist, double p, double invariant):
-  AbstractParameterAliasable("InvariantMixed."),
-  AbstractDiscreteDistribution(1,"InvariantMixed."),
+  AbstractParameterAliasable("Invariant."),
+  AbstractDiscreteDistribution(1,"Invariant."),
   dist_(dist),
   invariant_(invariant), p_(p),
-  nestedPrefix_("dist_" + dist->getNamespace())
+  nestedPrefix_(dist->getNamespace())
 {
   //We first change the namespace of the nested distribution:
-  dist_->setNamespace("InvariantMixed." + nestedPrefix_);
+  dist_->setNamespace("Invariant." + nestedPrefix_);
   addParameters_(dist_->getIndependentParameters());
-  addParameter_(new Parameter("InvariantMixed.p", p, &Parameter::PROP_CONSTRAINT_IN));
+  addParameter_(new Parameter("Invariant.p", p, &Parameter::PROP_CONSTRAINT_IN));
 
   updateDistribution();
 }
@@ -65,6 +66,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
 
 void InvariantMixedDiscreteDistribution::fireParameterChanged(const ParameterList & parameters)
 {
+  AbstractDiscreteDistribution::fireParameterChanged(parameters);
   p_ = getParameterValue("p");
   dist_->matchParametersValues(parameters);
   
@@ -134,6 +136,7 @@ void InvariantMixedDiscreteDistribution::updateDistribution()
 
 void InvariantMixedDiscreteDistribution::setNamespace(const string& prefix)
 {
+  
   AbstractDiscreteDistribution::setNamespace(prefix);
   //We also need to update the namespace of the nested distribution:
   dist_->setNamespace(prefix + nestedPrefix_);
