@@ -59,6 +59,8 @@ int main() {
   RowMatrix<double> o(2, 2);
   MatrixTools::mult(m, n, o);
   MatrixTools::print(o);
-  
-  return (m.equals(m2, 0.000001) ? 0 : 1);
+ 
+  bool test = m.equals(m2, 0.000001);
+  ApplicationTools::displayBooleanResult("Test passed", test);
+  return (test ? 0 : 1);
 }

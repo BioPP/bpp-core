@@ -39,10 +39,10 @@
 
 #include "BppODiscreteDistributionFormat.h"
 
-#include <Bpp/Io/FileTools.h>
-#include <Bpp/Text/TextTools.h>
-#include <Bpp/Text/StringTokenizer.h>
-#include <Bpp/Text/KeyvalTools.h>
+#include "../Io/FileTools.h"
+#include "../Text/TextTools.h"
+#include "../Text/StringTokenizer.h"
+#include "../Text/KeyvalTools.h"
 
 #include "../Numeric/Prob.all"
 #include "BppOParametrizableFormat.h"

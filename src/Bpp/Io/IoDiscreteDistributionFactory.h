@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for sequences analysis.
@@ -41,8 +41,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _IODISCRETEDISTRIBUTIONFACTORY_H_
 
 #include "../Numeric/Prob.all"
+#include "../Exceptions.h"
 #include "IoDiscreteDistribution.h"
-#include <Bpp/Exceptions.h>
 
 //From the STL:
 #include <string>

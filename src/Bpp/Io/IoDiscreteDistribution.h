@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 16, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for phylogenetic data analysis.
@@ -41,8 +41,7 @@
 #define _IODISCRETEDISTRIBUTION_H_
 
 #include "../Numeric/Prob/DiscreteDistribution.h"
-
-#include <Bpp/Exceptions.h>
+#include "../Exceptions.h"
 #include "IoFormat.h"
 #include "OutputStream.h"
 
