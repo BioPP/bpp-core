@@ -269,7 +269,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
       }
       out << ")";
       for (unsigned int i=1;i<nd;i++)
-        writtenNames.push_back("Mixture.theta"+TextTools::toString(i));
+        writtenNames.push_back(mix->getNamespace()+"theta"+TextTools::toString(i));
     } 
   }
   
@@ -294,7 +294,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
   }
     
   const SimpleDiscreteDistribution* ps=dynamic_cast<const SimpleDiscreteDistribution*>(&dist);
-  if (ps && dist.getNumberOfParameters()==0){
+  if (ps){
     unsigned int nd=ps->getNumberOfCategories();
     if (comma)
       out << ",";
@@ -313,9 +313,9 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     out << ")";
 
     for (unsigned int i=1;i<nd;i++)
-      writtenNames.push_back("Simple.theta"+TextTools::toString(i));
+      writtenNames.push_back(ps->getNamespace()+"theta"+TextTools::toString(i));
     for (unsigned int i=1;i<nd+1;i++)
-      writtenNames.push_back("Simple.V"+TextTools::toString(i));
+      writtenNames.push_back(ps->getNamespace()+"V"+TextTools::toString(i));
 
     comma=true;
   }
