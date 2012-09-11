@@ -204,7 +204,7 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
 {
   unsigned int size=xi.size();
   
-  f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_IGNORE);
+  f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
   f1dim.setMessageHandler(messenger);
   f1dim.init(parameters, xi);
 

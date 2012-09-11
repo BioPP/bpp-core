@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -169,9 +169,9 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
 
   if (verbose_){
     for (unsigned int i = 0; i < parameters_.size(); i++)
-      {
-        profile(parameters_[i].getName() + "\t"); 
-      }
+    {
+      profile(parameters_[i].getName() + "\t"); 
+    }
     profileln("Function\tTime");
 
     //Parameters must be assigned by doInit:
