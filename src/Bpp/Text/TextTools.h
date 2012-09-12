@@ -342,8 +342,8 @@ namespace bpp
        * @return The string with all blocks removed.
        * @throw Exception If some blocks are not well formed.
        */
-  static std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding, std::vector<std::string>& exceptionsBeginning, std::vector<std::string>& exceptionsEnding)
-       throw (Exception);
+      static std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding, std::vector<std::string>& exceptionsBeginning, std::vector<std::string>& exceptionsEnding)
+        throw (Exception);
   
       /**
        * @brief Remove all occurences of a character in a string.
@@ -390,6 +390,15 @@ namespace bpp
        */
       static bool hasSubstring(const std::string& s, const std::string& pattern);
 
+      /**
+       * @brief Replacement of all non-overlapping occurrences of a certain motif in a string.
+       *
+       * @param target String to be modified
+       * @param query The motif to look for
+       * @param replacement The replacement string
+       */
+      static void replaceAll(std::string& target, const std::string& query, const std::string& replacement);
+     
   };
 
 } //end of namespace bpp.

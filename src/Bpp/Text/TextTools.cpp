@@ -486,3 +486,18 @@ bool TextTools::hasSubstring(const std::string& s, const std::string& pattern)
 
 /******************************************************************************/
 
+void TextTools::replaceAll(std::string& target, const std::string& query, const std::string& replacement)
+{
+  if (query.empty())
+    return;
+  size_t pos = 0;
+  while (pos != string::npos) {
+    pos = target.find(query, pos);
+    target.replace(pos, query.length(), replacement);
+    pos += replacement.length(); //We prevent recursivity!
+  
+  }
+}
+
+/******************************************************************************/
+
