@@ -46,12 +46,12 @@ using namespace bpp;
 using namespace std;
 
 
-SimpleDiscreteDistribution::SimpleDiscreteDistribution(
-                                                       const map<double, double>& distribution,
+SimpleDiscreteDistribution::SimpleDiscreteDistribution(const map<double, double>& distribution,
                                                        double prec,
                                                        bool fixed) :
   AbstractParameterAliasable("Simple."),
-  AbstractDiscreteDistribution(distribution.size(),prec,"Simple.")
+  AbstractDiscreteDistribution(distribution.size(),prec,"Simple."),
+  givenRanges_()
 {
   double sum=0;
   for(map<double, double>::const_iterator i = distribution.begin(); i != distribution.end(); i++) {
@@ -78,14 +78,14 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   discretize();
 }
 
-SimpleDiscreteDistribution::SimpleDiscreteDistribution(
-                                                       const vector<double>& values,
+SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& values,
                                                        const vector<double>& probas,
                                                        double prec,
                                                        bool fixed
                                                        ) :
   AbstractParameterAliasable("Simple."),
-  AbstractDiscreteDistribution(values.size(),prec,"Simple.")
+  AbstractDiscreteDistribution(values.size(),prec,"Simple."),
+  givenRanges_()
 {
   if (values.size() != probas.size()) {
     throw Exception("SimpleDiscreteDistribution. Values and probabilities vectors must have the same size (" + TextTools::toString(values.size()) + " != " + TextTools::toString(probas.size()) + ").");
@@ -116,9 +116,70 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(
   discretize();
 }
 
+SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>& values,
+                                                       const std::map<unsigned int, std::vector<double> >& ranges,
+                                                       const std::vector<double>& probas,
+                                                       double prec,
+                                                       bool fixed) :
+  AbstractParameterAliasable("Simple."),
+  AbstractDiscreteDistribution(values.size(),prec,"Simple."),
+  givenRanges_()
+{
+  if (values.size() != probas.size()) {
+    throw Exception("SimpleDiscreteDistribution. Values and probabilities vectors must have the same size (" + TextTools::toString(values.size()) + " != " + TextTools::toString(probas.size()) + ").");
+  }
+  unsigned int size = values.size();
+  
+  for(unsigned int i = 0; i < size; i++){
+    if (distribution_.find(values[i])!=distribution_.end())
+      throw Exception("SimpleDiscreteDistribution: two given values are equal");
+    else 
+      distribution_[values[i]] = probas[i];
+  }
+  
+  double sum = VectorTools::sum(probas);
+  if (fabs(1. - sum) > precision())
+    throw Exception("SimpleDiscreteDistribution. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
+  
+  if (! fixed){
+    double y = 1;
+    for (unsigned int i = 0; i < size - 1; i++) {
+      map<unsigned int, vector<double> >::const_iterator it=ranges.find(i+1);
+      if (it==ranges.end())
+        addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
+      else {
+        if (values[i]>=it->second[0] &&  values[i]<=it->second[1]){
+          addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i], new IntervalConstraint(it->second[0], it->second[1], true), true));
+          givenRanges_[i+1]=it->second;
+        }
+        else
+          throw Exception("SimpleDiscreteDistribution. Value and given range of parameter V" + TextTools::toString(i+1) + " do not match: " + TextTools::toString(values[i]) + " vs [" + TextTools::toString(it->second[0]) + ";" + TextTools::toString(it->second[1]) + "]");
+      }
+      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      y-=probas[i];
+    }
+    
+    map<unsigned int, vector<double> >::const_iterator it=ranges.find(size);
+    if (it==ranges.end())
+      addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size-1]));
+    else {
+      if (values[size-1]>=it->second[0] &&  values[size-1]<=it->second[1]){
+        addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size-1], new IntervalConstraint(it->second[0], it->second[1], true, true), true));
+        givenRanges_[size]=it->second;
+      }
+      else
+        throw Exception("SimpleDiscreteDistribution. Value and given range of parameter V" + TextTools::toString(size) + " do not match: " + TextTools::toString(values[size-1]) + " vs [" + TextTools::toString(it->second[0]) + ";" + TextTools::toString(it->second[1]) + "]");
+    }
+  }
+
+  discretize();
+}
+  
+
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const SimpleDiscreteDistribution& sdd) :
   AbstractParameterAliasable(sdd),
-  AbstractDiscreteDistribution(sdd)
+  AbstractDiscreteDistribution(sdd),
+  givenRanges_(sdd.givenRanges_)
 {  
 }
 
@@ -126,7 +187,8 @@ SimpleDiscreteDistribution& SimpleDiscreteDistribution::operator=(const SimpleDi
 {
   AbstractParameterAliasable::operator=(sdd);
   AbstractDiscreteDistribution::operator=(sdd);
-
+  givenRanges_=sdd.givenRanges_;
+  
   return *this;
 }
   
@@ -239,8 +301,15 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
   AbstractDiscreteDistribution::restrictToConstraint(c);
 
   unsigned int size=distribution_.size();
-  for (unsigned int i = 0; i< size; i++)
-    getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(),true);
-
+  for (unsigned int i = 0; i< size; i++){
+    map<unsigned int, vector<double> >::const_iterator itr=givenRanges_.find(i+1);
+    if (itr==givenRanges_.end())
+      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(),true);
+    else {
+      const Constraint* pc=getParameter_("V" + TextTools::toString(i + 1)).removeConstraint();
+      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(*pc & *intMinMax_.clone(),true);
+      delete pc;
+    }
+  }
 }
 
