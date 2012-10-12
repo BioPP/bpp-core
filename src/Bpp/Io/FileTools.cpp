@@ -90,6 +90,18 @@ std::string FileTools::getFileName(const std::string& path, char dirSep)
 
 /******************************************************************************/
 
+size_t FileTools::getFileSize(const std::string& filename)
+{
+  std::ifstream stream;
+  size_t size;
+  stream.open(filename.c_str(), std::ios::ate);
+  size = stream.tellg();
+  stream.close();
+  return size;
+}
+
+/******************************************************************************/
+
 std::string FileTools::getParent(const std::string& path, char dirSep)
 {
   // Position of file name:

@@ -109,6 +109,15 @@ class FileTools
 		 */
 		static std::string getFileName(const std::string& path, char dirSep = DIR_SEP);
 
+    /**
+     * @brief Get the size of a file.
+     *
+     * @param filename The path toward the file.
+     * @return The size of the file.
+     * @author Sylvain Gaillard
+     */
+    static size_t getFileSize(const std::string& filename);
+
 		/**
 		 * @brief Get the path of the parent directry of the given file/dir.
 		 * 
