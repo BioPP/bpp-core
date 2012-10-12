@@ -71,7 +71,6 @@ namespace bpp
      *
      * @param param A pointer to a Parametrizable object;
      * @param out The output stream;
-     * @param names the names of the parameters to be written;
      * @param writtenNames is the vector of the written
      *        parameters so far [in, out];
      * @param printComma boolean if a comma should be written at the
@@ -80,7 +79,6 @@ namespace bpp
     
     void write(const Parametrizable* parametrizable,
                OutputStream& out,
-               const std::vector<std::string>& names,
                std::vector<std::string>& writtenNames,
                bool printComma=false) const;
     

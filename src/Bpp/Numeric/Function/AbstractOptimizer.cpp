@@ -168,6 +168,7 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
   currentValue_ = function_->getValue();
 
   if (verbose_){
+    profile("Step\t");
     for (unsigned int i = 0; i < parameters_.size(); i++)
     {
       profile(parameters_[i].getName() + "\t"); 

@@ -63,6 +63,10 @@ namespace bpp
 class SimpleDiscreteDistribution:
   public AbstractDiscreteDistribution
 {
+private:
+
+  std::map<unsigned int, std::vector<double> > givenRanges_;
+  
   public:
     /**
      * @brief Builds a new SimpleDiscreteDistribution object from a
@@ -84,26 +88,47 @@ class SimpleDiscreteDistribution:
    *
    * @param values The vector of values.
    * @param probas The vector of probabilities.
-   * @param precision to discriminate the categories
+   * @param prec precision used to discriminate the categories
    * @param fixed tells if there are parameters (default false means there are parameters).
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, double precision=NumConstants::TINY, bool fixed=false);
-  
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
+
+  /**
+   * @brief Builds a new SimpleDiscreteDistribution object from a
+   * vector of values, a map of ranges and a vector of probabilities
+   *
+   * @param values The vector of values.
+   * @param ranges The map of ranges. Each key is the index of the
+   *        parameter in the given vector of values, and the
+   *        associated value is a vector of two doubles, for the min
+   *        and the max of the range.
+   * @param probas The vector of probabilities.
+   * @param prec precision to discriminate the categories
+   * @param fixed tells if there are parameters (default false means there are parameters).
+   *
+   */
+
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<unsigned int, std::vector<double> >& ranges, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
+
   virtual ~SimpleDiscreteDistribution() {}
 
   SimpleDiscreteDistribution(const SimpleDiscreteDistribution&);
 
   SimpleDiscreteDistribution& operator=(const SimpleDiscreteDistribution&);
   
-#if defined(NO_VIRTUAL_COV)
-    Clonable * clone() const { return new SimpleDiscreteDistribution(*this); }
-#else
-    SimpleDiscreteDistribution * clone() const { return new SimpleDiscreteDistribution(*this); }
-#endif
+  SimpleDiscreteDistribution * clone() const { return new SimpleDiscreteDistribution(*this); }
 
 public:
+
+  /*
+   *@brief Returns the map of the given ranges for the values.
+   *
+   */
+  
+  const std::map<unsigned int, std::vector<double> > getRanges() const {return givenRanges_;}
+    
   std::string getName() const {return("Simple");}
   
   void discretize();

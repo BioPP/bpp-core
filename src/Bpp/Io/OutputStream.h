@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <memory>
 #include <iomanip>
 
@@ -220,7 +221,7 @@ public:
 class StlOutputStreamWrapper :
   public AbstractOutputStream
 {
-private:
+protected:
   std::ostream* stream_;
 
 public:
@@ -234,6 +235,7 @@ public:
   StlOutputStreamWrapper& operator<<(const char& message) { if (stream_) *stream_ << message; return *this; }
   StlOutputStreamWrapper& operator<<(const int& message) { if (stream_) *stream_ << message; return *this; }
   StlOutputStreamWrapper& operator<<(const unsigned int& message) { if (stream_) *stream_ << message; return *this; }
+
   StlOutputStreamWrapper& operator<<(const long int& message) { if (stream_) *stream_ << message; return *this; }
   StlOutputStreamWrapper& operator<<(const unsigned long int& message) { if (stream_) *stream_ << message; return *this; }
   StlOutputStreamWrapper& operator<<(const double& message)
@@ -328,6 +330,22 @@ public:
   StdErr* clone() const { return new StdErr(*this); }
 #endif
 
+};
+
+/**
+ * @brief String output stream.
+ *
+ * This class wraps the std::ostringstream stream.
+ */
+class StdStr :
+  public StlOutputStreamWrapper
+{
+public:
+  StdStr(): StlOutputStreamWrapper(new std::ostringstream()){}
+  
+  std::string str() const { return dynamic_cast<const std::ostringstream*>(stream_)->str();}
+
+  ~StdStr() { delete stream_;}
 };
 
 } // end of namespace bpp;

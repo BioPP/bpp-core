@@ -50,7 +50,6 @@ using namespace std;
 
 void BppOParametrizableFormat::write(const Parametrizable* parametrizable,
                                      OutputStream& out,
-                                     const std::vector<std::string>& names,
                                      std::vector<std::string>& writtenNames,
                                      bool printComma) const
 {

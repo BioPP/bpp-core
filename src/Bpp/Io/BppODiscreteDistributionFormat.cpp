@@ -113,7 +113,34 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
       while (strtok2.hasMoreToken())
         probas.push_back(TextTools::toDouble(strtok2.nextToken()));
 
-      rDist = new SimpleDiscreteDistribution(values, probas);
+      std::map<unsigned int, std::vector<double> > ranges;
+      
+      if (args.find("ranges") != args.end()){
+        string rr =args["ranges"];
+        StringTokenizer strtok3(rr.substr(1, rr.length() - 2), ",");
+        string desc;
+        double deb,fin;
+        unsigned int num;
+        size_t po, pf, ppv;
+        while (strtok3.hasMoreToken()){
+          desc=strtok3.nextToken();
+          po=desc.find("[");
+          ppv=desc.find(";");
+          pf=desc.find("]");
+          num=(unsigned int)(TextTools::toInt(desc.substr(1,po-1)));
+          deb=TextTools::toDouble(desc.substr(po+1,ppv-po-1));
+          fin=TextTools::toDouble(desc.substr(ppv+1,pf-ppv-1));
+          vector<double> vd;
+          vd.push_back(deb);
+          vd.push_back(fin);
+          ranges[num]=vd;
+        }
+      }
+      if (ranges.size()==0)
+        rDist = new SimpleDiscreteDistribution(values, probas);
+      else
+        rDist = new SimpleDiscreteDistribution(values, ranges, probas);
+        
       vector<string> v = rDist->getParameters().getParameterNames();
 
       for (unsigned int i = 0; i < v.size(); i++)
@@ -312,6 +339,21 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     }
     out << ")";
 
+    const std::map<unsigned int, std::vector<double> > range=ps->getRanges();
+    if (range.size()!=0){
+      out << ",ranges=(";
+      std::map<unsigned int, std::vector<double> >::const_iterator it(range.begin());
+      while (it!=range.end()){
+        out << "V" << TextTools::toString(it->first);
+        out << "[" << TextTools::toString(it->second[0]) << ";" << TextTools::toString(it->second[1]) << "]";
+        it++;
+        if (it!=range.end())
+          out << ",";
+      }
+    }
+      
+    out << ")";
+      
     for (unsigned int i=1;i<nd;i++)
       writtenNames.push_back(ps->getNamespace()+"theta"+TextTools::toString(i));
     for (unsigned int i=1;i<nd+1;i++)
@@ -328,7 +370,6 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
   out << ")";
 
   delete bOP;
-  
 }
   
  
