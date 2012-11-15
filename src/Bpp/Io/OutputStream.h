@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -172,7 +172,7 @@ private:
   mutable std::auto_ptr<std::ostream> stream_;
 
 public:
-  StlOutputStream(std::auto_ptr<std::ostream> stream): stream_(stream) {}
+  StlOutputStream(std::ostream* stream): stream_(stream) {}
   StlOutputStream(const StlOutputStream& stlos) : stream_(stlos.stream_) {}
   StlOutputStream& operator=(const StlOutputStream& stlos)
   {
