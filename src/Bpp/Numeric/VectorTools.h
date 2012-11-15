@@ -648,7 +648,7 @@ namespace bpp
         {
           x += std::exp(v[i] - M);
         }
-      v -= M + log(x);
+      v -= M + std::log(x);
     }
 
     /**
