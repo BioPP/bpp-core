@@ -1510,7 +1510,7 @@ namespace bpp
      * @param base The base of the logarithm to use.
      */
     template<class InputType, class OutputType>
-    static double shannon(const std::vector<InputType>& v, double base = 2.7182818)
+    static OutputType shannon(const std::vector<InputType>& v, double base = 2.7182818)
     {
       OutputType s = 0;
       for (unsigned int i = 0; i < v.size(); i++)
@@ -1535,7 +1535,7 @@ namespace bpp
      * @param base The base of the logarithm to use.
      */
     template<class InputType, class OutputType>
-    static double shannonDiscrete(const std::vector<InputType>& v, double base = 2.7182818)
+    static OutputType shannonDiscrete(const std::vector<InputType>& v, double base = 2.7182818)
     {
       std::map<InputType, double> counts;
       for (unsigned int i = 0; i < v.size(); i++)
@@ -1567,7 +1567,7 @@ namespace bpp
      * @throw DimensionException if the two vectors do not have the same lengths.
      */
     template<class InputType, class OutputType>
-    static double miDiscrete(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
+    static OutputType miDiscrete(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
     {
       if (v1.size() != v2.size())
         throw DimensionException("VectorTools::miDiscrete. The two samples must have the same length.", v2.size(), v1.size());
@@ -1608,7 +1608,7 @@ namespace bpp
      * @param base The base of the logarithm to use.
      */
     template<class InputType, class OutputType>
-    static double shannonContinuous(const std::vector<InputType>& v, double base = 2.7182818)
+    static OutputType shannonContinuous(const std::vector<InputType>& v, double base = 2.7182818)
     {
       LinearMatrix<InputType> m(1, v.size());
       for (unsigned int i = 0; i < v.size(); i++)
@@ -1646,7 +1646,7 @@ namespace bpp
      * @throw DimensionException if the two vectors do not have the same lengths.
      */
     template<class InputType, class OutputType>
-    static double miContinuous(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
+    static OutputType miContinuous(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
     {
       if (v1.size() != v2.size())
         throw DimensionException("VectorTools::miContinuous. The two samples must have the same length.", v2.size(), v1.size());
