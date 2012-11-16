@@ -167,18 +167,16 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
   time(&startTime_);
   currentValue_ = function_->getValue();
 
-  if (verbose_){
-    profile("Step\t");
-    for (unsigned int i = 0; i < parameters_.size(); i++)
-    {
-      profile(parameters_[i].getName() + "\t"); 
-    }
-    profileln("Function\tTime");
-
-    //Parameters must be assigned by doInit:
-
-    printPoint(parameters_, currentValue_);
+  profile("Step\t");
+  for (unsigned int i = 0; i < parameters_.size(); i++)
+  {
+    profile(parameters_[i].getName() + "\t"); 
   }
+  profileln("Function\tTime");
+
+  //Parameters must be assigned by doInit:
+
+  printPoint(parameters_, currentValue_);
   
   // Initialize the StopCondition:
   stopCondition_->init();
@@ -190,8 +188,7 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
 double AbstractOptimizer::step() throw (Exception)
 {
   currentValue_ = doStep();
-  if (verbose_)
-    printPoint(parameters_, currentValue_);
+  printPoint(parameters_, currentValue_);
   fireOptimizationStepPerformed(OptimizationEvent(this));
   if (listenerModifiesParameters())
   {
