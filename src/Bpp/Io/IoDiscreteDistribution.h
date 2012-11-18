@@ -1,5 +1,5 @@
 //
-// File: IODiscreteDistribution.h
+// File: IoDiscreteDistribution.h
 // Created by: Laurent Guéguen
 // Created on: lundi 3 septembre 2012, à 14h 35
 //
@@ -50,12 +50,12 @@ namespace bpp
   /**
    * @brief General interface for model I/O.
    */
-  class IODiscreteDistribution:
+  class IoDiscreteDistribution:
     public virtual IOFormat
   {
   public:
-    IODiscreteDistribution() {}
-    virtual ~IODiscreteDistribution() {}
+    IoDiscreteDistribution() {}
+    virtual ~IoDiscreteDistribution() {}
 
   public:
     virtual const std::string getDataType() const { return "Discrete Distribution"; }
@@ -65,7 +65,7 @@ namespace bpp
    * @brief General interface for distance matrix readers.
    */
   class IDiscreteDistribution:
-    public virtual IODiscreteDistribution
+    public virtual IoDiscreteDistribution
   {
   public:
     IDiscreteDistribution() {}
@@ -76,18 +76,18 @@ namespace bpp
      * @brief Read a discrete distribution from a string.
      *
      * @param distrlDescription A string describing the distribution in the format.
-     * @param unparsedParameterValues [out] a map that will contain
-     *                                all the distribution parameters names
-     *                                and their corresponding unparsed
-     *                                value, if they were found.
-     * @param verbose Print some info to the 'message' output stream.
+     * @param parseArguments Attempt to parse function arguments. If not, only store them and use default values instead.
      * @return A new DiscreteDistribution object according to options specified.
      * @throw Exception if an error occured.
      */
+    virtual DiscreteDistribution* read(
+        const std::string& distrDescription,
+        bool parseArguments = true) = 0;
 
-    virtual DiscreteDistribution* read(const std::string& distrDescription,
-                                       std::map<std::string, std::string>& unparsedParameterValues,
-                                       bool verbose) = 0;
+    /**
+     * @return The arguments and their unparsed values from the last call of the read function, if there are any.
+     */
+    virtual const std::map<std::string, std::string>& getUnparsedArguments() const = 0;
 
   };
 
@@ -95,7 +95,7 @@ namespace bpp
    * @brief General interface writers.
    */
   class ODiscreteDistribution:
-    public virtual IODiscreteDistribution
+    public virtual IoDiscreteDistribution
   {
   public:
     ODiscreteDistribution() {}

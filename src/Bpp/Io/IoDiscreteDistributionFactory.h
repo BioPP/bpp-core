@@ -53,11 +53,8 @@ namespace bpp
 /**
  * @brief Utilitary class for creating discrete distribution readers and
  * writers.
- *
- * @see IOSequenceFactory
- * @see IOTreeFactory
  */
-class IODiscreteDistributionFactory
+class IoDiscreteDistributionFactory
 {
 public:
   static const std::string BPPO_FORMAT;  
@@ -69,13 +66,13 @@ public:
    *
    * Example:
    * @code
-   * IDiscreteDistribution * distReader = IODiscreteDistributionFactory().createReader(IODiscreteDistributionFactory::BPP_FORMAT);
-   * DiscreteDistribution * dist = distReader->read(...);
+   * IDiscreteDistribution* distReader = IoDiscreteDistributionFactory().createReader(IoDiscreteDistributionFactory::BPP_FORMAT);
+   * DiscreteDistribution* dist = distReader->read(...);
    * delete distReader;
    * @endcode
    */
-  IODiscreteDistributionFactory() {}
-  virtual ~IODiscreteDistributionFactory() {}
+  IoDiscreteDistributionFactory() {}
+  virtual ~IoDiscreteDistributionFactory() {}
   
   /**
    * @brief Get a new dynamically created IDiscreteDistribution object.
@@ -93,7 +90,7 @@ public:
    * @return A pointer toward a new ODiscreteDistribution object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual ODiscreteDistribution * createWriter(const std::string& format) throw (Exception);
+  virtual ODiscreteDistribution* createWriter(const std::string& format) throw (Exception);
 };
 
 } //end of namespace bpp.

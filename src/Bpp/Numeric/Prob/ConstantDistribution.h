@@ -53,19 +53,19 @@ namespace bpp
   class ConstantDistribution :
     public AbstractDiscreteDistribution
   {
+  
   private:
     double value_;
+  
   public:
     /**
      * @brief Builds a new ConstantDistribution object from a
      *  value
      *
-     * @param value
-     * @param fixed tells if there is a parameter (named "value")
-     * (default false means the value is a parameter).
+     * @param value The value of the distribution.
      *
      */
-    ConstantDistribution(double value, bool fixed=false);
+    ConstantDistribution(double value);
 
     ConstantDistribution(const ConstantDistribution&);
 
@@ -73,47 +73,32 @@ namespace bpp
     
     virtual ~ConstantDistribution() {}
   
-#if defined(NO_VIRTUAL_COV)
-    Clonable* clone() const
-    {
-      return new ConstantDistribution(*this);
-    }
-#else
     ConstantDistribution* clone() const
     {
       return new ConstantDistribution(*this);
     }
-#endif
   
   public:
     void fireParameterChanged(const ParameterList& parameters);
-    double randC() const throw (Exception) { return value_;}
+    
+    double randC() const throw (Exception) { return value_; }
 
-    std::string getName() const {return("Constant");}
+    std::string getName() const { return("Constant"); }
 
-    double getLowerBound() const{
-      return value_;
-    }
+    double getLowerBound() const { return value_; }
                                
-    double getUpperBound() const{
-      return value_;
-    }
+    double getUpperBound() const { return value_; }
 
-    double qProb(double x) const{
-      return (x >= 1) ? value_ : -NumConstants::VERY_BIG;
-    }
+    double qProb(double x) const { return (x >= 1) ? value_ : -NumConstants::VERY_BIG; }
      
-    double pProb(double x) const{
-      return x < value_ ? 0 : 1;
-    }
+    double pProb(double x) const { return x < value_ ? 0 : 1; }
                                 
-    double Expectation(double a) const{
-      return a < value_ ? 0 : 1;
-    }
+    double Expectation(double a) const { return a < value_ ? 0 : 1; }
 
     void restrictToConstraint(const Constraint& c);
 
     void discretize() {}
+
   };
   
 } //end of namespace bpp.

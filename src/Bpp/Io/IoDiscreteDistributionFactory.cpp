@@ -1,5 +1,5 @@
 //
-// File IODiscreteDistributionFactory.cpp
+// File IoDiscreteDistributionFactory.cpp
 // Created by: Laurent Guéguen
 // Created on: lundi 3 septembre 2012, à 14h 44
 //
@@ -41,15 +41,15 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
-const std::string IODiscreteDistributionFactory::BPPO_FORMAT = "Bpp0"; 
+const std::string IoDiscreteDistributionFactory::BPPO_FORMAT = "Bpp0"; 
 
-IDiscreteDistribution* IODiscreteDistributionFactory::createReader(const std::string& format) throw (Exception)
+IDiscreteDistribution* IoDiscreteDistributionFactory::createReader(const std::string& format) throw (Exception)
 {
   if(format == BPPO_FORMAT) return new BppODiscreteDistributionFormat();
   else throw Exception("Format " + format + " is not supported for input.");
 }
   
-ODiscreteDistribution* IODiscreteDistributionFactory::createWriter(const std::string& format) throw (Exception)
+ODiscreteDistribution* IoDiscreteDistributionFactory::createWriter(const std::string& format) throw (Exception)
 {
   if(format == BPPO_FORMAT) return new BppODiscreteDistributionFormat();
   else throw Exception("Format " + format + " is not supported for output.");

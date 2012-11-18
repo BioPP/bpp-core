@@ -45,6 +45,7 @@
 #include "../Text/KeyvalTools.h"
 
 #include "../Numeric/Prob.all"
+#include "../Numeric/AutoParameter.h"
 #include "BppOParametrizableFormat.h"
 
 using namespace bpp;
@@ -55,12 +56,13 @@ using namespace bpp;
 using namespace std;
 
 
-DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& distDescription,
-                                                           std::map<std::string, std::string>& unparsedParameterValues,
-                                                           bool verbose)
+DiscreteDistribution* BppODiscreteDistributionFormat::read(
+    const std::string& distDescription,
+    bool parseArguments)
 {
+  unparsedArguments_.clear();
   string distName;
-  DiscreteDistribution* rDist = 0;
+  auto_ptr<DiscreteDistribution> rDist;
   map<string, string> args;
   KeyvalTools::parseProcedure(distDescription, distName, args);
 
@@ -69,33 +71,32 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
     // We have to parse the nested distribution first:
     string nestedDistDescription = args["dist"];
     if (TextTools::isEmpty(nestedDistDescription))
-      throw Exception("PhylogeneticsApplicationTools::getDistributionDefaultInstance. Missing argument 'dist' for distribution 'Invariant'.");
-    if (verbose)
+      throw Exception("BppODiscreteDistributionFormat::read. Missing argument 'dist' for distribution 'Invariant'.");
+    if (verbose_)
       ApplicationTools::displayResult("Invariant Mixed distribution", distName );
-    map<string, string> unparsedParameterValuesNested;
-    DiscreteDistribution* nestedDistribution = read(nestedDistDescription,
-                                                    unparsedParameterValuesNested,
-                                                    verbose);
+    BppODiscreteDistributionFormat nestedReader(verbose_);
+    DiscreteDistribution* nestedDistribution = nestedReader.read(nestedDistDescription, true);
+    map<string, string> unparsedArgumentsNested(nestedReader.getUnparsedArguments());
 
     // Now we create the Invariant rate distribution:
-    rDist = new InvariantMixedDiscreteDistribution(nestedDistribution, 0.1, 0.000001);
+    rDist.reset(new InvariantMixedDiscreteDistribution(nestedDistribution, 0.1, 0.000001));
 
     // Then we update the parameter set:
-    for (map<string, string>::iterator it = unparsedParameterValuesNested.begin();
-         it != unparsedParameterValuesNested.end(); it++)
+    for (map<string, string>::iterator it = unparsedArgumentsNested.begin();
+         it != unparsedArgumentsNested.end(); it++)
     {
-      unparsedParameterValues["Invariant." + it->first] = it->second;
+      unparsedArguments_["Invariant." + it->first] = it->second;
     }
 
     if (args.find("p") != args.end())
-      unparsedParameterValues["Invariant.p"] = args["p"];
+      unparsedArguments_["Invariant.p"] = args["p"];
   }
   else if (distName == "Constant")
   {
     if (args.find("value") == args.end())
       throw Exception("Missing argument 'value' in Constant distribution");
-    rDist = new ConstantDistribution(TextTools::to<double>(args["value"]));
-    unparsedParameterValues["Constant.value"] = args["value"];
+    rDist.reset(new ConstantDistribution(TextTools::to<double>(args["value"])));
+    unparsedArguments_["Constant.value"] = args["value"];
   }
   else if (distName == "Simple")
   {
@@ -141,15 +142,15 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
       }
     }
     if (ranges.size() == 0)
-      rDist = new SimpleDiscreteDistribution(values, probas);
+      rDist.reset(new SimpleDiscreteDistribution(values, probas));
     else
-      rDist = new SimpleDiscreteDistribution(values, ranges, probas);
+      rDist.reset(new SimpleDiscreteDistribution(values, ranges, probas));
 
     vector<string> v = rDist->getParameters().getParameterNames();
 
     for (unsigned int i = 0; i < v.size(); i++)
     {
-      unparsedParameterValues[v[i]] = TextTools::toString(rDist->getParameterValue(rDist->getParameterNameWithoutNamespace(v[i])));
+      unparsedArguments_[v[i]] = TextTools::toString(rDist->getParameterValue(rDist->getParameterNameWithoutNamespace(v[i])));
     }
   }
   else if (distName == "Mixture")
@@ -173,20 +174,20 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
     if (v_nestedDistrDescr.size() != probas.size())
       throw Exception("Number of distributions (keyword 'dist" + TextTools::toString(probas.size()) + "') do not fit the number of probabilities");
 
-    map<string, string> unparsedParameterValuesNested;
+    BppODiscreteDistributionFormat nestedReader;
 
     for (unsigned i = 0; i < v_nestedDistrDescr.size(); i++)
     {
-      unparsedParameterValuesNested.clear();
-      pdd = read(v_nestedDistrDescr[i], unparsedParameterValuesNested, false);
+      pdd = nestedReader.read(v_nestedDistrDescr[i], true);
+      map<string, string> unparsedArgumentsNested(nestedReader.getUnparsedArguments());
 
-      for (map<string, string>::iterator it = unparsedParameterValuesNested.begin(); it != unparsedParameterValuesNested.end(); it++)
+      for (map<string, string>::iterator it = unparsedArgumentsNested.begin(); it != unparsedArgumentsNested.end(); it++)
       {
-        unparsedParameterValues[distName + "." + TextTools::toString(i + 1) + "_" + it->first] = it->second;
+        unparsedArguments_[distName + "." + TextTools::toString(i + 1) + "_" + it->first] = it->second;
       }
       v_pdd.push_back(pdd);
     }
-    rDist = new MixtureOfDiscreteDistributions(v_pdd, probas);
+    rDist.reset(new MixtureOfDiscreteDistributions(v_pdd, probas));
   }
   else
   {
@@ -197,46 +198,46 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
 
     if (distName == "Gamma")
     {
-      rDist = new GammaDiscreteDistribution(nbClasses, 1, 1);
+      rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1));
       if (args.find("alpha") != args.end())
-        unparsedParameterValues["Gamma.alpha"] = args["alpha"];
+        unparsedArguments_["Gamma.alpha"] = args["alpha"];
       if (args.find("beta") != args.end())
-        unparsedParameterValues["Gamma.beta"] = args["beta"];
+        unparsedArguments_["Gamma.beta"] = args["beta"];
     }
     else if (distName == "Gaussian")
     {
-      rDist = new GaussianDiscreteDistribution(nbClasses, 0, 1);
+      rDist.reset(new GaussianDiscreteDistribution(nbClasses, 0, 1));
       if (args.find("mu") != args.end())
-        unparsedParameterValues["Gaussian.mu"] = args["mu"];
+        unparsedArguments_["Gaussian.mu"] = args["mu"];
       if (args.find("sigma") != args.end())
-        unparsedParameterValues["Gaussian.sigma"] = args["sigma"];
+        unparsedArguments_["Gaussian.sigma"] = args["sigma"];
     }
     else if (distName == "Beta")
     {
-      rDist = new BetaDiscreteDistribution(nbClasses, 1, 1);
+      rDist.reset(new BetaDiscreteDistribution(nbClasses, 1, 1));
       if (args.find("alpha") != args.end())
-        unparsedParameterValues["Beta.alpha"] = args["alpha"];
+        unparsedArguments_["Beta.alpha"] = args["alpha"];
       if (args.find("beta") != args.end())
-        unparsedParameterValues["Beta.beta"] = args["beta"];
+        unparsedArguments_["Beta.beta"] = args["beta"];
     }
     else if (distName == "Exponential")
     {
-      rDist = new ExponentialDiscreteDistribution(nbClasses, 1);
+      rDist.reset(new ExponentialDiscreteDistribution(nbClasses, 1));
       if (args.find("lambda") != args.end())
-        unparsedParameterValues["Exponential.lambda"] = args["lambda"];
+        unparsedArguments_["Exponential.lambda"] = args["lambda"];
       if (args.find("median") != args.end())
         rDist->setMedian(true);
     }
     else if (distName == "TruncExponential")
     {
-      rDist = new TruncatedExponentialDiscreteDistribution(nbClasses, 1, 0);
+      rDist.reset(new TruncatedExponentialDiscreteDistribution(nbClasses, 1, 0));
 
       if (args.find("median") != args.end())
         rDist->setMedian(true);
       if (args.find("lambda") != args.end())
-        unparsedParameterValues["TruncExponential.lambda"] = args["lambda"];
+        unparsedArguments_["TruncExponential.lambda"] = args["lambda"];
       if (args.find("tp") != args.end())
-        unparsedParameterValues["TruncExponential.tp"] = args["tp"];
+        unparsedArguments_["TruncExponential.tp"] = args["tp"];
     }
     else if (distName == "Uniform")
     {
@@ -244,21 +245,26 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(const std::string& di
         throw Exception("Missing argument 'begin' in Uniform distribution");
       if (args.find("end") == args.end())
         throw Exception("Missing argument 'end' in Uniform distribution");
-      rDist = new UniformDiscreteDistribution(nbClasses, TextTools::to<double>(args["begin"]),
-                                              TextTools::to<double>(args["end"]));
+      rDist.reset(new UniformDiscreteDistribution(
+          nbClasses,
+          TextTools::to<double>(args["begin"]),
+          TextTools::to<double>(args["end"])));
     }
     else
     {
       throw Exception("Unknown distribution: " + distName + ".");
     }
   }
-  if (verbose)
+  if (verbose_)
   {
     ApplicationTools::displayResult("Distribution", distName);
     ApplicationTools::displayResult("Number of classes", TextTools::toString(rDist->getNumberOfCategories()));
   }
 
-  return rDist;
+  if (parseArguments)
+    initialize_(*rDist);
+
+  return rDist.release();
 }
 
 
@@ -368,7 +374,6 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
           out << ",";
       }
     }
-
     out << ")";
 
     for (unsigned int i = 1; i < nd; i++)
@@ -379,18 +384,47 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     {
       writtenNames.push_back(ps->getNamespace() + "V" + TextTools::toString(i));
     }
-
     comma = true;
   }
 
-
   // Writing the parameters
-  BppOParametrizableFormat* bOP = new BppOParametrizableFormat();
-
-  bOP->write(dynamic_cast<const ParameterAliasable*>(&dist), out, globalAliases, dist.getIndependentParameters().getParameterNames(), writtenNames, true, comma);
+  BppOParametrizableFormat bOP;
+  bOP.write(dynamic_cast<const ParameterAliasable*>(&dist), out, globalAliases, dist.getIndependentParameters().getParameterNames(), writtenNames, true, comma);
   out << ")";
-
-  delete bOP;
 }
+
+void BppODiscreteDistributionFormat::initialize_(
+  DiscreteDistribution& rDist) throw (Exception)
+{
+  ParameterList pl = rDist.getIndependentParameters();
+
+  for (unsigned int i = 0; i < pl.size(); ++i)
+  {
+    AutoParameter ap(pl[i]);
+    ap.setMessageHandler(ApplicationTools::warning);
+    pl.setParameter(i, ap);
+  }
+
+  for (unsigned int i = 0; i < pl.size(); ++i)
+  {
+    const string pName = pl[i].getName();
+    double value = ApplicationTools::getDoubleParameter(pName, unparsedArguments_, pl[i].getValue());
+    pl[i].setValue(value);
+    if (verbose_)
+      ApplicationTools::displayResult("Parameter found", pName + "=" + TextTools::toString(pl[i].getValue()));
+  }
+  
+  rDist.matchParametersValues(pl);
+  if (verbose_)
+  {
+    for (unsigned int c = 0; c < rDist.getNumberOfCategories(); ++c)
+    {
+      ApplicationTools::displayResult("- Category " + TextTools::toString(c)
+        + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
+        TextTools::toString(rDist.getCategory(c)));
+    }
+  }
+}
+
 
 

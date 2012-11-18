@@ -48,12 +48,11 @@ namespace bpp
   /**
    * @brief Parametrizable output in BppO format.
    *
-   * Writes a new paramtrizable objecd according to BppO description
+   * Writes a new paramtrizable object according to BppO description
    * syntax (see the Bio++ Progam Suite manual for a detailed
    * description of this syntax).
    *
    */
-  
   class BppOParametrizableFormat:
     public OParametrizable
   {

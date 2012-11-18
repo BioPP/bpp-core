@@ -107,11 +107,6 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parame
 
 /******************************************************************************/
 
-void GammaDiscreteDistribution::normalize()
-{
-  aliasParameters("alpha", "beta");
-}
-
 // Adapted from function DiscreteGamma of Yang
 
 double GammaDiscreteDistribution::qProb(double x) const

@@ -146,7 +146,7 @@ class AbstractParametrizable:
 
     void deleteParameter_(unsigned int index) throw (IndexOutOfBoundsException)
     {
-      if(index >= parameters_.size())
+      if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
       parameters_.deleteParameter(index);
     }

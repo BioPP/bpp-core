@@ -54,11 +54,15 @@ namespace bpp
  */
 
 class BppODiscreteDistributionFormat :
-  public IDiscreteDistribution,
-  public ODiscreteDistribution
+  public virtual IDiscreteDistribution,
+  public virtual ODiscreteDistribution
 {
+protected:
+  bool verbose_;
+  std::map<std::string, std::string> unparsedArguments_;
+
 public:
-  BppODiscreteDistributionFormat() {}
+  BppODiscreteDistributionFormat(bool verbose = true) : verbose_(verbose), unparsedArguments_() {}
   virtual ~BppODiscreteDistributionFormat() {}
 
 public:
@@ -66,41 +70,27 @@ public:
 
   const std::string getFormatDescription() const { return "Bpp Options format."; }
 
+  DiscreteDistribution* read(const std::string& distDescription, bool parseArguments = true);
 
-  /**
-   * @brief Read a discrete distribution from a string.
-   *
-   * @param distDescription A string describing the distribution in the keyval syntax.
-   * @param unparsedParameterValues [out] a map that will contain
-   *                                all the distribution parameters names
-   *                                and their corresponding unparsed
-   *                                value, if they were found.
-   * @param verbose Print some info to the 'message' output stream.
-   * @return A new DiscreteDistribution object according to options specified.
-   * @throw Exception if an error occured.
-   */
-
-  DiscreteDistribution* read(const std::string& distDescription,
-                             std::map<std::string, std::string>& unparsedParameterValues,
-                             bool verbose);
-
-  /**
-   * @brief Write a discrete distribution to a stream.
-   *
-   * @param dist A discrete distribution object;
-   * @param out The output stream;
-   * @param globalAliases parameters linked to global alias. The
-   * output will be "name=alias_name";
-   * @param writtenNames is the vector of the written
-   * parameters so far [in, out];
-   * @throw Exception If an error occured.
-   */
+  const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
   void write(const DiscreteDistribution& dist,
              OutputStream& out,
              std::map<std::string, std::string>& globalAliases,
              std::vector<std::string>& writtenNames) const;
+
+protected:
+  /**
+   * @brief Set parameter initial values of a given distribution according to options.
+   *
+   * Parameters actually depends on the distribution passed as argument.
+   *
+   * @param rDist                   The distribution to set up.
+   * @throw Exception if an error occured.
+   */
+  void initialize_(DiscreteDistribution& rDist) throw (Exception);
 };
+
 } // end of namespace bpp.
 
 #endif // _BPPODISCRETEDISTRIBUTIONFORMAT_H_

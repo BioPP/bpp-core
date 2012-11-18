@@ -40,18 +40,19 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ConstantDistribution.h"
 
 using namespace bpp;
+
 #include <iostream>
+
 using namespace std;
 
 /******************************************************************************/
 
-ConstantDistribution::ConstantDistribution(double value, bool fixed):
+ConstantDistribution::ConstantDistribution(double value):
   AbstractParameterAliasable("Constant."),
   AbstractDiscreteDistribution(1, "Constant."),
   value_(value)
 {
-  if (! fixed)
-    addParameter_(new Parameter("Constant.value", value));
+  addParameter_(new Parameter("Constant.value", value)); 
   distribution_[value_] = 1; //One single class  with probability 1.
 }
 
@@ -59,8 +60,7 @@ ConstantDistribution::ConstantDistribution(const ConstantDistribution& cd) :
   AbstractParameterAliasable(cd),
   AbstractDiscreteDistribution(cd),
   value_(cd.value_)
-{
-}
+{}
 
 ConstantDistribution& ConstantDistribution::operator=(const ConstantDistribution& cd)
 {
