@@ -133,23 +133,26 @@ template<class T> class Range:
      */
     bool overlap(const Range& r) const
     {
-      if (r.begin_ < end_ && r.end_ > begin_)
-        return true;
-      else
-        return false;
+      return (r.begin_ < end_ && r.end_ > begin_);
     }
 
     /**
-     * @param r Range to compar with.
+     * @param r Range to compare with.
      * @return True if the two intervals are contiguous (i.e. the two intervals
      * are adjacent and share one bound).
      */
     bool isContiguous(const Range& r) const
     {
-      if (r.begin_ == end_ || r.end_ == begin_)
-        return true;
-      else
-        return false;
+      return (r.begin_ == end_ || r.end_ == begin_);
+    }
+
+    /**
+     * @param r Range to compare with.
+     * @return True if the given interval is included in the instanciated one.
+     */
+    bool contains(const Range& r) const
+    {
+      return (r.begin_ >= begin_ && r.end_ <= end_);
     }
 
     /**
@@ -220,6 +223,13 @@ template<class T> class RangeCollection {
      * @param r Restriction range.
      */
     virtual void restrictTo(const Range<T>& r) = 0;
+
+    /**
+     * @brief Only keep the ranges that fall within the given range.
+     *
+     * @param r Restriction range.
+     */
+    virtual void filterWithin(const Range<T>& r) = 0;
 
     /**
      * @return A string representation of the set of intervals.
@@ -300,22 +310,34 @@ template<class T> class RangeSet:
     }
 
     void restrictTo(const Range<T>& r) {
-      std::set < Range<T>*, rangeComp_<T> > bck = ranges_;
-      std::vector < Range<T>* > trash;
-      ranges_.clear();
-      for (typename std::set< Range<T>* >::iterator it = bck.begin(); it != bck.end(); ++it) {
-        Range<T>* rc = *it;
-        rc->sliceWith(r);
-        if (!rc->isEmpty()) {
-          ranges_.insert(rc);
+      typename std::set< Range<T>* >::iterator it = ranges_.begin();
+      while (it != ranges_.end()) {
+        (**it).sliceWith(r);
+        if ((**it).isEmpty()) {
+          typename std::set< Range<T>* >::iterator it2 = it;
+          delete *it;
+          ++it;
+          ranges_.erase(it2);
         } else {
-          trash.push_back(rc);
+          ++it;
         }
       }
-      for (size_t i = 0; i < trash.size(); ++i)
-        delete trash[i];
     }
 
+    void filterWithin(const Range<T>& r) {
+      typename std::set< Range<T>* >::iterator it = ranges_.begin();
+      while (it != ranges_.end()) {
+        if (r.contains(**it)) {
+          ++it;
+        } else {
+          typename std::set< Range<T>* >::iterator it2 = it;
+          delete *it;
+          ++it;
+          ranges_.erase(it2);
+        }
+      }
+    }
+    
     std::string toString() const {
       std::string s = "{ ";
       for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it) {
@@ -412,19 +434,24 @@ template<class T> class MultiRange:
       clean_();
     }
 
-    /**
-     * @brief Get the intersection with a given range.
-     *
-     * The new multirange is the union of all ranges intersections with the given range.
-     *
-     * @param r Restriction range.
-     */
     void restrictTo(const Range<T>& r) {
       for (size_t i = 0; i < ranges_.size(); ++i)
         ranges_[i]->sliceWith(r);
       clean_();
     }
 
+    void filterWithin(const Range<T>& r) {
+      typename std::vector< Range<T>* >::iterator it = ranges_.begin();
+      while (it != ranges_.end()) {
+        if (r.contains(**it)) {
+          ++it;
+        } else {
+          delete *it;
+          it = ranges_.erase(it);
+        }
+      }
+    }
+ 
     /**
      * @return A string representation of the set of intervals.
      */
@@ -467,10 +494,13 @@ template<class T> class MultiRange:
       rangeComp_<T> comp;
       std::sort(ranges_.begin(), ranges_.end(), comp);
       //Remove empty intervals:
-      for (size_t i = ranges_.size(); i > 0; --i) {
-        if (ranges_[i - 1]->isEmpty()) {
-          delete ranges_[i - 1];
-          ranges_.erase(ranges_.begin() + i - 1);
+      typename std::vector< Range<T>* >::iterator it = ranges_.begin();
+      while (it != ranges_.end()) {
+        if ((**it).isEmpty()) {
+          delete *it;
+          it = ranges_.erase(it);
+        } else {
+          ++it;
         }
       }
     }
