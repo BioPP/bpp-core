@@ -149,7 +149,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
         addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
       else {
         if (values[i]>=it->second[0] &&  values[i]<=it->second[1]){
-          addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i], new IntervalConstraint(it->second[0], it->second[1], true), true));
+          addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i], new IntervalConstraint(it->second[0], it->second[1], true, true), true));
           givenRanges_[i+1]=it->second;
         }
         else
@@ -158,7 +158,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
       addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y-=probas[i];
     }
-    
+
     map<unsigned int, vector<double> >::const_iterator it=ranges.find(size);
     if (it==ranges.end())
       addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size-1]));
@@ -296,7 +296,7 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
 
   for (it=distribution_.begin(); it!= distribution_.end(); it++)
     if (! pi->isCorrect(it->first))
-      throw Exception("Impossible to restrict to Constraint  value" + TextTools::toString(it->first));
+      throw Exception("Impossible to restrict to Constraint value " + TextTools::toString(it->first));
 
   AbstractDiscreteDistribution::restrictToConstraint(c);
 
