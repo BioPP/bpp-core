@@ -320,9 +320,9 @@ void AbstractDiscreteDistribution::discretize()
   unsigned int i;
   vector<double> values(numberOfCategories_);
 
-  // if maxX==minX, uniform discretization of the range
   if (maxX != minX)
   {
+    // divide the domain into equiprobable intervals
     ec = (maxX - minX) / numberOfCategories_;
 
     for (i = 1; i < numberOfCategories_; i++)
@@ -330,6 +330,8 @@ void AbstractDiscreteDistribution::discretize()
       bounds_[i-1] = qProb(minX + i * ec);
     }
 
+    // for each category, sets the value v as the median, adjusted
+    //      such that the sum of the values = 1
     if (median_)
     {
       double t=0;
@@ -345,7 +347,9 @@ void AbstractDiscreteDistribution::discretize()
         values[i] *= mean / t / ec;
     }
     else
-    {
+      // for each category, sets the value v such that
+      //      v * length_of_the_interval = the surface of the category
+      {
       double a = Expectation(intMinMax_.getLowerBound()), b;
       for (i = 0; i < numberOfCategories_-1; i++)
         {
@@ -356,7 +360,8 @@ void AbstractDiscreteDistribution::discretize()
       values[numberOfCategories_-1] = (Expectation(intMinMax_.getUpperBound())-a) / ec;
     }
   }
-  else
+  else 
+    // if maxX==minX, uniform discretization of the range
   {
     ec = (intMinMax_.getUpperBound() - intMinMax_.getLowerBound()) / numberOfCategories_;
     for (i = 1; i < numberOfCategories_; i++)
@@ -370,6 +375,7 @@ void AbstractDiscreteDistribution::discretize()
     values[numberOfCategories_-1] = (intMinMax_.getUpperBound()+bounds_[numberOfCategories_ - 1]) / 2;
   }
 
+  // adjustments near the boundaries of the domain, according to the precision chosen
   if (intMinMax_.strictLowerBound())
   {
     for (i = 0; i < numberOfCategories_; i++)
@@ -412,7 +418,7 @@ void AbstractDiscreteDistribution::discretize()
     }
   }
 
-  // now the distribution_ map
+  // now the distribution_ map, taking care that all values are different
   
   double p = 1. / static_cast<double>(numberOfCategories_);
   for (i = 0; i < numberOfCategories_; i++)
