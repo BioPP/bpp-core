@@ -213,9 +213,10 @@ bool TextTools::isDecimalNumber(char c)
 
 /******************************************************************************/
 
-bool TextTools::isDecimalNumber(const std::string& s, char dec)
+bool TextTools::isDecimalNumber(const std::string& s, char dec, char scientificNotation)
 {
   size_t sepCount = 0;
+  size_t sciCount = 0;
   size_t i = 0;
   if (s[0] == '-') i = 1;
   for (; i < s.size(); ++i)
@@ -223,9 +224,16 @@ bool TextTools::isDecimalNumber(const std::string& s, char dec)
     char c = s[i];
     if (c == dec)
       sepCount++;
-    else if (!isDecimalNumber(c))
+    else if (c == scientificNotation) {
+      sciCount++;
+      if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
+      c = s[i + 1];
+      if (c == '-') i++;
+      if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
+      if (sepCount == 0) sepCount = 1; //We do not want any dec in the exponent.
+    } else if (!isDecimalNumber(c))
       return false;
-    if (sepCount > 1)
+    if (sepCount > 1 || sciCount > 1)
       return false;
   }
   return true;
@@ -233,14 +241,22 @@ bool TextTools::isDecimalNumber(const std::string& s, char dec)
 
 /******************************************************************************/
 
-bool TextTools::isDecimalInteger(const std::string& s)
+bool TextTools::isDecimalInteger(const std::string& s, char scientificNotation)
 {
+  size_t sciCount = 0;
   size_t i = 0;
   if (s[0] == '-') i = 1;
   for (; i < s.size(); ++i)
   {
     char c = s[i];
-    if (!isDecimalNumber(c))
+    if (c == scientificNotation) {
+      sciCount++;
+      if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
+      c = s[i + 1];
+      if (c == '-') return false; //Not an integer then!
+    } else if (!isDecimalNumber(c))
+      return false;
+    if (sciCount > 1)
       return false;
   }
   return true;
@@ -275,8 +291,9 @@ std::string TextTools::toString(double d, int precision)
 
 /******************************************************************************/
 
-int TextTools::toInt(const std::string& s)
+int TextTools::toInt(const std::string& s) throw (Exception)
 {
+  if (!isDecimalInteger(s)) throw Exception("TextTools::toInt(). Invalid number specification: " + s);
   istringstream iss(s);
   int i;
   iss >> i;
@@ -285,8 +302,9 @@ int TextTools::toInt(const std::string& s)
 
 /******************************************************************************/
 
-double TextTools::toDouble(const std::string& s)
+double TextTools::toDouble(const std::string& s) throw (Exception)
 {
+  if (!isDecimalNumber(s)) throw Exception("TextTools::toDouble(). Invalid number specification: " + s);
   istringstream iss(s);
   double d;
   iss >> d;

@@ -165,18 +165,20 @@ namespace bpp
        * NB: for now, this parser will not recognize thousands delimiters, and not the scientific notation neither.
        * @param s The string to parse.
        * @param dec The decimal separator.
+       * @param scientificNotation character to use for scientific notation (typically 'e' or 'E').
        * @return true if the given string is the representation of a decimal number.
        */
-      static bool isDecimalNumber(const std::string& s, char dec = '.');
+      static bool isDecimalNumber(const std::string& s, char dec = '.', char scientificNotation = 'e');
 
       /**
        * @brief Tell is a given character string describes a decimal integer.
        *
        * NB: for now, this parser will not recognize thousands delimiters, and not the scientific notation neither.
        * @param s The string to parse.
+       * @param scientificNotation character to use for scientific notation (typically 'e' or 'E').
        * @return true if the given string is the representation of a decimal integer.
        */
-      static bool isDecimalInteger(const std::string& s);
+      static bool isDecimalInteger(const std::string& s, char scientificNotation = 'e');
 
       /**
        * @brief General template method to convert to a string.
@@ -250,16 +252,18 @@ namespace bpp
        *
        * @param s The string to parse.
        * @return The integer corresponding to s.
+       * @throw Exception if the string does not specify a valid number.
        */
-      static int toInt(const std::string& s);
+      static int toInt(const std::string& s) throw (Exception);
 
       /**
        * @brief Convert from string to double.
        *
        * @param s The string to parse.
        * @return The double corresponding to s.
+       * @throw Exception if the string does not specify a valid number.
        */
-      static double toDouble(const std::string& s);
+      static double toDouble(const std::string& s) throw (Exception);
 
       /**
        * @brief Template to string conversion.

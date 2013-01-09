@@ -123,7 +123,7 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           {
             // Ignore this token untill closing block is found
             cache += s.substr(index, newIndex - index + 1);
-            index = newIndex+1;
+            index = newIndex + 1;
             newIndex = s.find(delimiters, index);
           }
 			  }

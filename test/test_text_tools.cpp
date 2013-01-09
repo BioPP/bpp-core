@@ -44,17 +44,22 @@ using namespace bpp;
 using namespace std;
 
 int main()
-{  
+{
   cout << "Testing string conversion..." << endl;
-  if (TextTools::isDecimalNumber("aazz")) { cout << "aazz is not a decimal number!" << endl; return 1; }
-  if (TextTools::isDecimalNumber("-aazz")) { cout << "-aazz is not a decimal number!" << endl; return 1; }
-  if (TextTools::isDecimalNumber("-3.45z")) { cout << "-3.45z is not a decimal number!" << endl; return 1; }
+  if ( TextTools::isDecimalNumber("aazz")) { cout << "aazz is not a decimal number!" << endl; return 1; }
+  if ( TextTools::isDecimalNumber("-aazz")) { cout << "-aazz is not a decimal number!" << endl; return 1; }
+  if ( TextTools::isDecimalNumber("-3.45z")) { cout << "-3.45z is not a decimal number!" << endl; return 1; }
   if (!TextTools::isDecimalNumber("0")) { cout << "0 is a decimal number!" << endl; return 1; }
   if (!TextTools::isDecimalNumber("123")) { cout << "123 is a decimal number!" << endl; return 1; }
   if (!TextTools::isDecimalNumber("-123")) { cout << "-123 is a decimal number!" << endl; return 1; }
   if (!TextTools::isDecimalNumber("-123.456")) { cout << "-123.456 is a decimal number!" << endl; return 1; }
   if (!TextTools::isDecimalInteger("123456")) { cout << "123456 is a decimal integer!" << endl; return 1; }
   if (!TextTools::isDecimalInteger("-7890")) { cout << "-7890 is a decimal integer!" << endl; return 1; }
+  if (!TextTools::isDecimalNumber("-123.456e-5")) { cout << "-123.456e-5 is a decimal number!" << endl; return 1; }
+  if ( TextTools::isDecimalNumber("-123.456e-5.8")) { cout << "-123.456e-5.8 is not a decimal number!" << endl; return 1; }
+  if (!TextTools::isDecimalInteger("-123e6")) { cout << "-123e6 is a decimal integer!" << endl; return 1; }
+  if ( TextTools::isDecimalInteger("-123.456e5")) { cout << "-123.456e5 is not a decimal integer!" << endl; return 1; }
+  if ( TextTools::isDecimalInteger("-123e-6")) { cout << "-123e-6 is not a decimal integer!" << endl; return 1; }
 
   cout << "Testing string tokenizer..." << endl;
   string t;
