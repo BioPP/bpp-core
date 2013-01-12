@@ -141,6 +141,11 @@ public:
       double tol = 0.0000001,
       bool verbose = true) throw (Exception);
  
+  std::vector<double> computeVariancePercentagePerAxis() throw (Exception);
+  
+  unsigned int getNbOfKeptAxes() const throw (Exception) { return nbAxes_; }
+  const std::vector<double> getRowWeights() const throw (Exception) { return rowWeights_; }
+  const	std::vector<double> getColumnWeights() const throw (Exception) { return colWeights_; }	  
   const std::vector<double>& getEigenValues() const throw (Exception) { return eigenValues_; }
   const RowMatrix<double>& getRowCoordinates() const throw (Exception) { return rowCoord_; }
   const RowMatrix<double>& getColCoordinates() const throw (Exception) { return colCoord_; }
