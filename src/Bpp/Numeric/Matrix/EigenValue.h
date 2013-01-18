@@ -633,9 +633,13 @@ class EigenValue
         H_(n,n) = H_(n,n) + exshift;
         d_[n] = H_(n,n);
         e_[n] = 0.0;
-        n--;
         iter = 0;
-  
+        //n--;
+        //modified by jdutheil on 18/01/13 because n is now of type size_t and cannot be negative
+        if (n > low)
+          n--;
+        else
+          break;
         // Two roots found
   
       }
@@ -714,8 +718,13 @@ class EigenValue
           e_[n-1] = z;
           e_[n] = -z;
         }
-        n = n - 2;
         iter = 0;
+        //n = n - 2;
+        //modified by jdutheil on 18/01/13 because n is now of type size_t and cannot be negative
+        if (n > low + 2)
+          n -= 2;
+        else
+          break;
   
         // No convergence yet
   
