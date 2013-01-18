@@ -71,75 +71,47 @@ namespace bpp
      * @param i row index.
      * @param j column index.
      */
-    virtual const Scalar& operator()(unsigned int i, unsigned int j) const = 0;
+    virtual const Scalar& operator()(size_t i, size_t j) const = 0;
     /**
      * @return \f$m_{i,j}\f$.
      * @param i row index.
      * @param j column index.
      */
-    virtual Scalar& operator()(unsigned int i, unsigned int j) = 0;
-    /**
-     * @return \f$m_{i,j}\f$.
-     * @param i row index.
-     * @param j column index.
-     */
-    virtual const Scalar& operator()(unsigned int i, int j) const {
-      return (*this)(i, static_cast<unsigned int>(j));
-    }
-    virtual const Scalar& operator()(int i, unsigned int j) const {
-      return (*this)(static_cast<unsigned int>(i), j);
-    }
-    virtual const Scalar& operator()(int i, int j) const {
-      return (*this)(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
-    }
-    /**
-     * @return \f$m_{i,j}\f$.
-     * @param i row index.
-     * @param j column index.
-     */
-    virtual Scalar& operator()(unsigned int i, int j)  {
-      return (*this)(i, static_cast<unsigned int>(j));
-    }
-    virtual Scalar& operator()(int i, unsigned int j)  {
-      return (*this)(static_cast<unsigned int>(i), j);
-    }
-    virtual Scalar& operator()(int i, int j)  {
-      return (*this)(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
-    }
+    virtual Scalar& operator()(size_t i, size_t j) = 0;
 
     virtual bool equals(const Matrix& m, Scalar threshold = NumConstants::TINY) {
       if (m.getNumberOfRows() != getNumberOfRows() || m.getNumberOfColumns() != getNumberOfColumns())
         return false;
-      for (unsigned int i = 0; i < getNumberOfRows(); i++)
-        for (unsigned int j = 0; j < getNumberOfColumns(); j++)
+      for (size_t i = 0; i < getNumberOfRows(); i++)
+        for (size_t j = 0; j < getNumberOfColumns(); j++)
           if (NumTools::abs<Scalar>(operator()(i, j) - m(i, j)) > threshold) return false;
       return true;
     }
     /**
      * @return The number of rows.
      */
-    virtual unsigned int getNumberOfRows() const = 0;
+    virtual size_t getNumberOfRows() const = 0;
     /**
      * @return The number of columns.
      */
-    virtual unsigned int getNumberOfColumns() const = 0;
+    virtual size_t getNumberOfColumns() const = 0;
     /**
      * @return the row at position i as a vector.
      * @param i The index of the row.
      */
-    virtual std::vector<Scalar> row(unsigned int i) const = 0;
+    virtual std::vector<Scalar> row(size_t i) const = 0;
     /**
      * @return the column at position j as a vector.
      * @param j The index of the column.
      */
-    virtual std::vector<Scalar> col(unsigned int j) const = 0;
+    virtual std::vector<Scalar> col(size_t j) const = 0;
     /**
      * @brief Resize the matrix.
      *
      * @param nRows The new number of rows.
      * @param nCols The new number of columns.
      */
-    virtual void resize(unsigned int nRows, unsigned int nCols) = 0;
+    virtual void resize(size_t nRows, size_t nCols) = 0;
   };
 
   /**
@@ -158,9 +130,9 @@ namespace bpp
   public:
     RowMatrix(): m_() {}
 
-    RowMatrix(unsigned int nRow, unsigned int nCol): m_(nRow)
+    RowMatrix(size_t nRow, size_t nCol): m_(nRow)
     {
-      for(unsigned int i = 0; i < nRow; i++)
+      for(size_t i = 0; i < nRow; i++)
         {
           m_[i].resize(nCol);
         }
@@ -168,25 +140,25 @@ namespace bpp
 
     RowMatrix(const Matrix<Scalar>& m): m_(m.getNumberOfRows())
     {
-      unsigned int nr = m.getNumberOfRows();
-      unsigned int nc = m.getNumberOfColumns();
-      for(unsigned int i = 0; i < nr; i++)
+      size_t nr = m.getNumberOfRows();
+      size_t nc = m.getNumberOfColumns();
+      for(size_t i = 0; i < nr; i++)
         {
           m_[i].resize(nc);
-          for(unsigned int j = 0; j < nc; j++)
+          for(size_t j = 0; j < nc; j++)
             m_[i][j] = m(i, j);
         }
     }
 
     RowMatrix& operator=(const Matrix<Scalar>& m)
     {
-      unsigned int nr = m.getNumberOfRows();
+      size_t nr = m.getNumberOfRows();
       m_.resize(nr);
-      unsigned int nc = m.getNumberOfColumns();
-      for(unsigned int i = 0; i < nr; i++)
+      size_t nc = m.getNumberOfColumns();
+      for(size_t i = 0; i < nr; i++)
         {
           m_[i].resize(nc);
-          for(unsigned int j = 0; j < nc; j++)
+          for(size_t j = 0; j < nc; j++)
             m_[i][j] = m(i, j);
         }
       return *this;
@@ -198,32 +170,32 @@ namespace bpp
     
     RowMatrix* clone() const { return new RowMatrix(*this); }
     
-    const Scalar& operator()(unsigned int i, unsigned int j) const { return m_[i][j]; }
+    const Scalar& operator()(size_t i, size_t j) const { return m_[i][j]; }
     
-    Scalar& operator()(unsigned int i, unsigned int j) { return m_[i][j]; }
+    Scalar& operator()(size_t i, size_t j) { return m_[i][j]; }
     
-    unsigned int getNumberOfRows() const { return m_.size(); }
+    size_t getNumberOfRows() const { return m_.size(); }
     
-    unsigned int getNumberOfColumns() const { return m_.size() == 0 ? 0 : m_[0].size(); }
+    size_t getNumberOfColumns() const { return m_.size() == 0 ? 0 : m_[0].size(); }
     
-    std::vector<Scalar> row(unsigned int i) const
+    std::vector<Scalar> row(size_t i) const
     {
       std::vector<Scalar> r(getNumberOfColumns());
-      for (unsigned int j = 0; j < getNumberOfColumns(); j++) r[j] = operator()(i, j);
+      for (size_t j = 0; j < getNumberOfColumns(); j++) r[j] = operator()(i, j);
       return(r);
     }
     
-    std::vector<Scalar> col(unsigned int j) const
+    std::vector<Scalar> col(size_t j) const
     {
       std::vector<Scalar> c(getNumberOfRows());
-      for (unsigned int i = 0; i < getNumberOfRows(); i++) c[i] = operator()(i, j);
+      for (size_t i = 0; i < getNumberOfRows(); i++) c[i] = operator()(i, j);
       return(c);
     }
 
-    void resize(unsigned int nRows, unsigned int nCols)
+    void resize(size_t nRows, size_t nCols)
     {
       m_.resize(nRows);
-      for(unsigned int i = 0; i < nRows; i++)
+      for(size_t i = 0; i < nRows; i++)
       {
         m_[i].resize(nCols);
       }
@@ -259,8 +231,8 @@ namespace bpp
   {
   private:
     std::vector<Scalar> m_;
-    unsigned int rows_;
-    unsigned int cols_;
+    size_t rows_;
+    size_t cols_;
 
   public:
     /**
@@ -271,28 +243,28 @@ namespace bpp
     /**
      * @brief build a nRow x nCol matrix.
      */
-    LinearMatrix(unsigned int nRow, unsigned int nCol): m_(), rows_(nRow), cols_(nCol) { resize_(nRow, nCol); }
+    LinearMatrix(size_t nRow, size_t nCol): m_(), rows_(nRow), cols_(nCol) { resize_(nRow, nCol); }
 
     LinearMatrix(const Matrix<Scalar>& m): m_(m.getNumberOfRows() * m.getNumberOfColumns())
     {
-      unsigned int nr = m.getNumberOfRows();
-      unsigned int nc = m.getNumberOfColumns();
-      for(unsigned int i = 0; i < nr; i++)
+      size_t nr = m.getNumberOfRows();
+      size_t nc = m.getNumberOfColumns();
+      for(size_t i = 0; i < nr; i++)
         {
-          for(unsigned int j = 0; j < nc; j++)
+          for(size_t j = 0; j < nc; j++)
             m_[i * cols_ + j] = m(i, j);
         }
     }
 
     LinearMatrix& operator=(const Matrix<Scalar>& m)
     {
-      unsigned int nr = m.getNumberOfRows();
-      unsigned int nc = m.getNumberOfColumns();
+      size_t nr = m.getNumberOfRows();
+      size_t nc = m.getNumberOfColumns();
       m_.resize(nr * nc);
-      for(unsigned int i = 0; i < nr; i++)
+      for(size_t i = 0; i < nr; i++)
         {
           m_[i].resize(nc);
-          for(unsigned int j = 0; j < nc; j++)
+          for(size_t j = 0; j < nc; j++)
             m_[i * cols_ + j] = m(i, j);
         }
       return *this;
@@ -307,24 +279,24 @@ namespace bpp
 
     LinearMatrix* clone() const { return new LinearMatrix(*this); }
 
-    const Scalar& operator() (unsigned int i, unsigned int j) const { return m_[i * cols_ + j]; }
+    const Scalar& operator() (size_t i, size_t j) const { return m_[i * cols_ + j]; }
 
-    Scalar& operator() (unsigned int i, unsigned int j) { return m_[i* cols_ + j]; }
+    Scalar& operator() (size_t i, size_t j) { return m_[i* cols_ + j]; }
 
-    unsigned int getNumberOfRows() const { return rows_; }
+    size_t getNumberOfRows() const { return rows_; }
 
-    unsigned int getNumberOfColumns() const { return cols_; }
+    size_t getNumberOfColumns() const { return cols_; }
 
-    std::vector<Scalar> row(unsigned int i) const {
+    std::vector<Scalar> row(size_t i) const {
       std::vector<Scalar> r(getNumberOfColumns());
-      for (unsigned int j = 0; j < getNumberOfColumns(); j++)
+      for (size_t j = 0; j < getNumberOfColumns(); j++)
         r[j] = operator()(i, j);
       return(r);
     }
     
-    std::vector<Scalar> col(unsigned int j) const {
+    std::vector<Scalar> col(size_t j) const {
       std::vector<Scalar> c(getNumberOfRows());
-      for(unsigned int i = 0; i < getNumberOfRows(); i++)
+      for(size_t i = 0; i < getNumberOfRows(); i++)
         c[i] = operator()(i, j);
       return(c);
     }
@@ -333,9 +305,9 @@ namespace bpp
      * @copydoc Matrix::resize
      *
      * This method resize the matrix keeping old data in place.
-     * @see LinearMatrix::resize(unsigned int nRow, unsigned int nCol, bool keepValues)
+     * @see LinearMatrix::resize(size_t nRow, size_t nCol, bool keepValues)
      */
-    void resize(unsigned int nRows, unsigned int nCols)
+    void resize(size_t nRows, size_t nCols)
     {
       resize(nRows, nCols, true);
     }
@@ -353,8 +325,8 @@ namespace bpp
      * the same positions. For instance:
      * @code
      * LinearMatrix<int> m(3, 2);
-     * for (unsigned int i = 0 ; i < m.getNumberOfRows() ; i++) {
-     *   for (unsigned int j = 0 ; j < m.getNumberOfColumns() ; j++) {
+     * for (size_t i = 0 ; i < m.getNumberOfRows() ; i++) {
+     *   for (size_t j = 0 ; j < m.getNumberOfColumns() ; j++) {
      *     m(i, j) = i * m.nCols() + j + 1;
      *   }
      * }
@@ -383,14 +355,14 @@ namespace bpp
      * // ]
      * @endcode
      */
-    void resize(unsigned int nRows, unsigned int nCols, bool keepValues) {
+    void resize(size_t nRows, size_t nCols, bool keepValues) {
       LinearMatrix<Scalar> tmpM;
       if (keepValues)
         tmpM = *this;
       resize_(nRows, nCols);
       if (keepValues) {
-        for (unsigned int i = 0 ; i < nRows ; i++) {
-          for (unsigned int j = 0 ; j < nCols ; j++) {
+        for (size_t i = 0 ; i < nRows ; i++) {
+          for (size_t j = 0 ; j < nCols ; j++) {
             if (i < tmpM.getNumberOfRows() && j < tmpM.getNumberOfColumns()) {
               operator()(i, j) = tmpM(i, j);
             } else {
@@ -405,7 +377,7 @@ namespace bpp
     /**
      * @brief Internal basic resize fonctionnalities.
      */
-    void resize_(unsigned int nRows, unsigned int nCols) {
+    void resize_(size_t nRows, size_t nCols) {
       m_.resize(nRows * nCols);
       rows_ = nRows;
       cols_ = nCols;
@@ -417,8 +389,8 @@ namespace bpp
   {
     if (m1.getNumberOfRows() != m2.getNumberOfRows() || m1.getNumberOfColumns() != m2.getNumberOfColumns())
       return false;
-    for (unsigned int i = 0; i < m1.getNumberOfRows(); i++)
-      for (unsigned int j = 0; j < m1.getNumberOfColumns(); j++)
+    for (size_t i = 0; i < m1.getNumberOfRows(); i++)
+      for (size_t j = 0; j < m1.getNumberOfColumns(); j++)
         if (m1(i, j) != m2(i, j)) return false;
     return true;
   }

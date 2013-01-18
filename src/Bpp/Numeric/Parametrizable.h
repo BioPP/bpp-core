@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -156,7 +156,7 @@ class Parametrizable:
      * @see getNumberOfIndependentParameters If some parameters are aliased.
      * @return The number of parameters.
      */
-    virtual unsigned int getNumberOfParameters() const = 0;
+    virtual size_t getNumberOfParameters() const = 0;
 
     /**
      * @brief Set the namespace for the parameter names.
@@ -216,7 +216,7 @@ class ParametrizableAdapter:
 			throw (ParameterNotFoundException, ConstraintException) {}
 		bool matchParametersValues(const ParameterList & parameters)
 			throw (ConstraintException) { return false ;}
-    unsigned int getNumberOfParameters() const{ return 0; }
+    size_t getNumberOfParameters() const{ return 0; }
     void setNamespace(const std::string& prefix) {}
     std::string getNamespace() const { return ""; }
     std::string getParameterNameWithoutNamespace(const std::string& name) const { return name; }

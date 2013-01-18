@@ -90,7 +90,7 @@ namespace bpp
         /**
          * @return The total number of colors available.
          */
-        virtual unsigned int getNumberOfColors() const = 0;
+        virtual size_t getNumberOfColors() const = 0;
     };
 
 
@@ -181,7 +181,7 @@ namespace bpp
       }
       const std::vector<unsigned int>& getCodes() const { return codes_; }
       const std::vector<RGBColor>& getColors() const { return colors_; }
-      unsigned int getNumberOfColors() const { return colors_.size(); }
+      size_t getNumberOfColors() const { return colors_.size(); }
 
   };
 

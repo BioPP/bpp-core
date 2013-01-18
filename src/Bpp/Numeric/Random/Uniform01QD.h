@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -63,7 +63,7 @@ class Uniform01QD : public virtual RandomFactory
 		 *
 		 * @param seed The seed for the random numbers.
 		 */
-		Uniform01QD(long seed): _seed(seed) {}
+		Uniform01QD(long seed): seed_(seed) {}
 
 		/**
 		 * @brief Destroy the generator.
@@ -74,7 +74,7 @@ class Uniform01QD : public virtual RandomFactory
 		/**
 		 * @brief Set the seed for a new set of random numbers.
 		 */
-		void setSeed(long seed) { _seed = seed; }
+		void setSeed(long seed) { seed_ = seed; }
 
 		/**
 		 * @brief Get a random number between 0.0 and 1.0 (exclusive of the end point values).
@@ -82,7 +82,7 @@ class Uniform01QD : public virtual RandomFactory
 		double drawNumber() const;
 
 	private:
-		mutable long _seed;
+		mutable long seed_;
 };
 
 } //end of namespace bpp.

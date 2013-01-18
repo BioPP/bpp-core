@@ -78,9 +78,9 @@ namespace bpp {
       std::vector<double> scales_;
       double logLik_;
 
-      std::vector<unsigned int> breakPoints_;
+      std::vector<size_t> breakPoints_;
 
-      unsigned int nbStates_, nbSites_;
+      size_t nbStates_, nbSites_;
 
     public:
       /**
@@ -152,12 +152,12 @@ namespace bpp {
       const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
       HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
 
-      void setBreakPoints(const std::vector<unsigned int>& breakPoints) {
+      void setBreakPoints(const std::vector<size_t>& breakPoints) {
         breakPoints_ = breakPoints;
         computeForward_();
       }
 
-      const std::vector<unsigned int>& getBreakPoints() const { return breakPoints_; }
+      const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
 
       void setParameters(const ParameterList& pl) throw (Exception)
       {

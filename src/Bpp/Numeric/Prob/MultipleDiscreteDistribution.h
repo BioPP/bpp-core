@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -82,7 +82,7 @@ namespace bpp
     /**
      * @return The number of categories 
      */
-    virtual unsigned int getNumberOfCategories() const = 0;
+    virtual size_t getNumberOfCategories() const = 0;
 
     /**
      * @param Vvalue The vector of values to check.

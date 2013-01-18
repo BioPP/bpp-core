@@ -61,7 +61,7 @@ class DualityDiagram:
 private:
   std::vector<double> rowWeights_;
   std::vector<double> colWeights_;
-  unsigned int nbAxes_;
+  size_t nbAxes_;
   std::vector<double> eigenValues_;
   RowMatrix<double> eigenVectors_;
   RowMatrix<double> rowCoord_;
@@ -143,7 +143,7 @@ public:
  
   std::vector<double> computeVariancePercentagePerAxis() throw (Exception);
   
-  unsigned int getNbOfKeptAxes() const throw (Exception) { return nbAxes_; }
+  size_t getNbOfKeptAxes() const throw (Exception) { return nbAxes_; }
   const std::vector<double> getRowWeights() const throw (Exception) { return rowWeights_; }
   const	std::vector<double> getColumnWeights() const throw (Exception) { return colWeights_; }	  
   const std::vector<double>& getEigenValues() const throw (Exception) { return eigenValues_; }

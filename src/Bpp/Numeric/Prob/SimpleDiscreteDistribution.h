@@ -65,7 +65,7 @@ class SimpleDiscreteDistribution:
 {
 private:
 
-  std::map<unsigned int, std::vector<double> > givenRanges_;
+  std::map<size_t, std::vector<double> > givenRanges_;
   
   public:
     /**
@@ -110,7 +110,7 @@ private:
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<unsigned int, std::vector<double> >& ranges, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<size_t, std::vector<double> >& ranges, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
 
   virtual ~SimpleDiscreteDistribution() {}
 
@@ -127,7 +127,7 @@ public:
    *
    */
   
-  const std::map<unsigned int, std::vector<double> > getRanges() const {return givenRanges_;}
+  const std::map<size_t, std::vector<double> > getRanges() const { return givenRanges_;}
     
   std::string getName() const {return("Simple");}
   

@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -93,8 +93,8 @@ class HmmLikelihood:
     
     virtual double getLogLikelihood() const = 0;
     
-    virtual const std::vector<unsigned int>& getBreakPoints() const = 0;
-    virtual void setBreakPoints(const std::vector<unsigned int>& breakPoints) = 0;
+    virtual const std::vector<size_t>& getBreakPoints() const = 0;
+    virtual void setBreakPoints(const std::vector<size_t>& breakPoints) = 0;
      
 };
 

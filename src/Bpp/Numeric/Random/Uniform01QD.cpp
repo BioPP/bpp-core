@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development TeamCNRS, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -47,8 +47,8 @@ using namespace std;
 
 double Uniform01QD::drawNumber() const
 {
-	_seed = _seed * 1103515245 + 12345;
-	if (_seed < 0) _seed = -_seed;
-	return _seed / 2147483648.0;
+	seed_ = seed_ * 1103515245 + 12345;
+	if (seed_ < 0) seed_ = -seed_;
+	return static_cast<double>(seed_ / 2147483648.0L);
 }
 

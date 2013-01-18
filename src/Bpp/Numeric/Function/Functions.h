@@ -347,7 +347,7 @@ class FunctionWrapper:
       return function_->matchParametersValues(parameters);
     }
 
-    unsigned int getNumberOfParameters() const
+    size_t getNumberOfParameters() const
     {
       return function_->getNumberOfParameters();
     }

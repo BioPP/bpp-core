@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -67,7 +67,7 @@ class DataTable:
 {
   
   protected:
-    unsigned int nRow_, nCol_;
+    size_t nRow_, nCol_;
     std::vector< std::vector<std::string> > data_;
     std::vector<std::string>* rowNames_;
     std::vector<std::string>* colNames_;
@@ -80,14 +80,14 @@ class DataTable:
      * @param nRow The number of rows of the DataTable.
      * @param nCol The number of columns of the DataTable.
      */
-    DataTable(unsigned int nRow, unsigned int nCol);
+    DataTable(size_t nRow, size_t nCol);
     
     /**
      * @brief Build a new void DataTable object with nCol columns.
      *
      * @param nCol The number of columns of the DataTable.
      */
-    DataTable(unsigned int nCol);
+    DataTable(size_t nCol);
 
     /**
      * @brief Build a new void DataTable object with named columns.
@@ -113,7 +113,7 @@ class DataTable:
      * @param colIndex Column number.
      * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
      */
-    std::string & operator()(unsigned int rowIndex, unsigned int colIndex) throw (IndexOutOfBoundsException);
+    std::string& operator()(size_t rowIndex, size_t colIndex) throw (IndexOutOfBoundsException);
     
     /**
      * @return The element at a given position.
@@ -121,7 +121,7 @@ class DataTable:
      * @param colIndex Column number.
      * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows. 
      */
-    const std::string & operator()(unsigned int rowIndex, unsigned int colIndex) const throw (IndexOutOfBoundsException);
+    const std::string& operator()(size_t rowIndex, size_t colIndex) const throw (IndexOutOfBoundsException);
     
     /**
      * @return The element at a given position.
@@ -131,7 +131,7 @@ class DataTable:
      * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
      * @throw TableNameNotFoundException If one of rowName or colName do not match existing names. 
      */
-    std::string & operator()(const std::string& rowName, const std::string& colName)
+    std::string& operator()(const std::string& rowName, const std::string& colName)
             throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
     
     /**
@@ -142,7 +142,7 @@ class DataTable:
      * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
      * @throw TableNameNotFoundException If one of rowName or colName do not match existing names. 
      */
-    const std::string & operator()(const std::string& rowName, const std::string& colName) const
+    const std::string& operator()(const std::string& rowName, const std::string& colName) const
             throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
     
     /**
@@ -153,7 +153,7 @@ class DataTable:
      * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns. 
      * @throw TableNameNotFoundException If rowName do not match existing names. 
      */
-    std::string & operator()(const std::string& rowName, unsigned int colIndex)
+    std::string& operator()(const std::string& rowName, size_t colIndex)
             throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
     
     /**
@@ -164,7 +164,7 @@ class DataTable:
      * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns. 
      * @throw TableNameNotFoundException If rowName do not match existing names. 
      */
-    const std::string & operator()(const std::string& rowName, unsigned int colIndex) const
+    const std::string& operator()(const std::string& rowName, size_t colIndex) const
             throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
 
     /**
@@ -175,7 +175,7 @@ class DataTable:
      * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
      * @throw TableNameNotFoundException If colName do not match existing names. 
      */
-    std::string & operator()(unsigned int rowIndex, const std::string& colName)
+    std::string& operator()(size_t rowIndex, const std::string& colName)
             throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
     
     /**
@@ -186,7 +186,7 @@ class DataTable:
      * @throw NoTableColumnNamesException If the table does not have names associated to columns. 
      * @throw TableNameNotFoundException If colName do not match existing names. 
      */
-    const std::string & operator()(unsigned int rowIndex, const std::string& colName) const
+    const std::string& operator()(size_t rowIndex, const std::string& colName) const
             throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
     
     /**
@@ -198,7 +198,7 @@ class DataTable:
     /**
      * @return The number of columns in this table.
      */
-    unsigned int getNumberOfColumns() const { return nCol_; }
+    size_t getNumberOfColumns() const { return nCol_; }
 
     /**
      * @brief Set the column names of this table.
@@ -223,7 +223,7 @@ class DataTable:
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    std::string getColumnName(unsigned int index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
+    std::string getColumnName(size_t index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
     
     /**
      * @return true If column names are associated to this table.
@@ -235,13 +235,13 @@ class DataTable:
      * @param index The index of the column.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    std::vector<std::string>& getColumn(unsigned int index) throw (IndexOutOfBoundsException);
+    std::vector<std::string>& getColumn(size_t index) throw (IndexOutOfBoundsException);
     /**
      * @return The values in the given column.
      * @param index The index of the column.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    const std::vector<std::string>& getColumn(unsigned int index) const throw (IndexOutOfBoundsException);
+    const std::vector<std::string>& getColumn(size_t index) const throw (IndexOutOfBoundsException);
     
     /**
      * @return The values in the given column.
@@ -249,14 +249,14 @@ class DataTable:
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw TableColumnNameNotFoundException If colName do not match existing column names. 
      */
-    std::vector<std::string> & getColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+    std::vector<std::string>& getColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
     /**
      * @return The values in the given column.
      * @param colName The name of the column.
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw TableColumnNameNotFoundException If colName do not match existing column names. 
      */
-    const std::vector<std::string> & getColumn(const std::string& colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+    const std::vector<std::string>& getColumn(const std::string& colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
 
     /**
      * @brief Tell is a given column exists.
@@ -272,7 +272,7 @@ class DataTable:
      * @param index The index of the column.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    void deleteColumn(unsigned int index) throw (IndexOutOfBoundsException);
+    void deleteColumn(size_t index) throw (IndexOutOfBoundsException);
     
     /**
      * @brief Delete the given column.
@@ -312,7 +312,7 @@ class DataTable:
     /**
      * @return The number of rows in this table.
      */
-    unsigned int getNumberOfRows() const { return nRow_; }
+    size_t getNumberOfRows() const { return nRow_; }
 
     /**
      * @brief Set the row names of this table.
@@ -347,7 +347,7 @@ class DataTable:
      * @throw NoTableRowNamesException If no row names are associated to this table.
      * @throw IndexOutOfBoundsException If index is >= number of rows.
      */
-    std::string getRowName(unsigned int index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
+    std::string getRowName(size_t index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
 
     /**
      * @return true If row names are associated to this table.
@@ -359,7 +359,7 @@ class DataTable:
      * @param index The index of the row.
      * @throw IndexOutOfBoundsException If index is >= number of rows.
      */
-    std::vector<std::string> getRow(unsigned int index) const throw (IndexOutOfBoundsException);
+    std::vector<std::string> getRow(size_t index) const throw (IndexOutOfBoundsException);
 
     /**
      * @return A vector which contains a copy  in the given row.
@@ -375,7 +375,7 @@ class DataTable:
      * @param index The index of the row.
      * @throw IndexOutOfBoundsException If index is >= number of row.
      */
-    void deleteRow(unsigned int index) throw (IndexOutOfBoundsException);
+    void deleteRow(size_t index) throw (IndexOutOfBoundsException);
 
     /**
      * @brief Delete the given row.

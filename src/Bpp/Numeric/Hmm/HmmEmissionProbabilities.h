@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -87,16 +87,16 @@ class HmmEmissionProbabilities:
      * @param pos The position of the sequential data to consider.
      * @param stateIndex The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
      */
-    virtual double getEmissionProbability(unsigned int pos, unsigned int stateIndex) const throw (Exception) = 0;
-    virtual void getEmissionProbabilities(unsigned int pos, std::vector<double>& probs) const throw (Exception) = 0;
+    virtual double getEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
+    virtual void getEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
     virtual void getEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
     
     /**
      * @param pos The position of the sequential data to consider.
      * @param stateIndex The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
      */
-    virtual double getLogEmissionProbability(unsigned int pos, unsigned int stateIndex) const throw (Exception) = 0;
-    virtual void getLogEmissionProbabilities(unsigned int pos, std::vector<double>& probs) const throw (Exception) = 0;
+    virtual double getLogEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
+    virtual void getLogEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
     virtual void getLogEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
 
     /**@} */
@@ -110,7 +110,7 @@ class HmmEmissionProbabilities:
      * @param pos The position of the sequential data to consider.
      * @param state The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
      */
-    virtual double operator()(unsigned int pos, unsigned int state) const = 0;
+    virtual double operator()(size_t pos, size_t state) const = 0;
 
     /**
      * @brief Operator access to the emission probabilities.
@@ -121,12 +121,12 @@ class HmmEmissionProbabilities:
      * @param pos The position of the sequential data to consider.
      * @return A vector of probabilities, whose size is the number of hidden states.
      */
-    virtual const std::vector<double>& operator()(unsigned int pos) const = 0;
+    virtual const std::vector<double>& operator()(size_t pos) const = 0;
     
     /**
      * @return The number of positions in the data.
      */
-    virtual unsigned int getNumberOfPositions() const = 0;
+    virtual size_t getNumberOfPositions() const = 0;
 
     /**
      * @brief Get the index of a given state in the list of observed states.
@@ -135,7 +135,7 @@ class HmmEmissionProbabilities:
      * @param pos The position of the observed state in the original sequence.
      * @return The index of the observed state in the list.
      */
-    virtual unsigned int getObservedStateIndex(unsigned int pos) const = 0;
+    virtual size_t getObservedStateIndex(size_t pos) const = 0;
     
     /**
      * @brief Get all emission probabilities, in a compressed form.

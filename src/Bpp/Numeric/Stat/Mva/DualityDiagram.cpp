@@ -73,8 +73,8 @@ void DualityDiagram::check_(
   const vector<double>& colWeights,
   unsigned int nbAxes) throw (Exception)
 {
-  unsigned int rowNb = matrix.getNumberOfRows();
-  unsigned int colNb = matrix.getNumberOfColumns();
+  size_t rowNb = matrix.getNumberOfRows();
+  size_t colNb = matrix.getNumberOfColumns();
 
   if (rowWeights.size() != rowNb)
     throw Exception("DualityDiagram::check_. The number of row weigths has to be equal to the number of rows!");
@@ -114,8 +114,8 @@ void DualityDiagram::setData(
 void DualityDiagram::compute_(const Matrix<double>& matrix,
     double tol, bool verbose)
 {
-  unsigned int rowNb = matrix.getNumberOfRows();
-  unsigned int colNb = matrix.getNumberOfColumns();
+  size_t rowNb = matrix.getNumberOfRows();
+  size_t colNb = matrix.getNumberOfColumns();
   
   // If there are less rows than columns, the variance-covariance or correlation matrix is obtain differently (see below)
   bool transpose = (rowNb < colNb);
@@ -157,8 +157,8 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
   eigenVectors_ = eigen.getV();
 
   // How many significant axes have to be conserved?
-  unsigned int rank = 0;
-  for (unsigned int i = eigenValues_.size(); i > 0; i--)
+  size_t rank = 0;
+  for (size_t i = eigenValues_.size(); i > 0; i--)
   {
     if ((eigenValues_[i - 1] / eigenValues_[eigenValues_.size() - 1]) > tol)
       rank++;
@@ -178,8 +178,8 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
   /*The eigen values are initially sorted into ascending order by the 'eigen' function. Here the significant values are sorted
      in the other way around.*/
   vector<double> tmpEigenValues(nbAxes_);
-  unsigned int cpt = 0;
-  for (unsigned int i = eigenValues_.size(); i > (eigenValues_.size() - nbAxes_); i--)
+  size_t cpt = 0;
+  for (size_t i = eigenValues_.size(); i > (eigenValues_.size() - nbAxes_); i--)
   {
     tmpEigenValues[cpt] = eigenValues_[i-1];
     cpt++;
@@ -199,13 +199,13 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
   }
 
   vector<double> dval(nbAxes_);
-  for (unsigned int i = 0; i < dval.size(); i++)
+  for (size_t i = 0; i < dval.size(); i++)
   {
     dval[i] = sqrt(eigenValues_[i]);
   }
 
   vector<double> invDval(nbAxes_);
-  for (unsigned int i = 0; i < invDval.size(); i++)
+  for (size_t i = 0; i < invDval.size(); i++)
   {
     invDval[i] = 1. / sqrt(eigenValues_[i]);
   }
@@ -222,8 +222,8 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
     // The eigen vectors are placed in the same order as their corresponding eigen value in eigenValues_.
     RowMatrix<double> tmpEigenVectors;
     tmpEigenVectors.resize(eigenVectors_.getNumberOfRows(), nbAxes_);
-    unsigned int cpt2 = 0;
-    for (unsigned int i = eigenVectors_.getNumberOfColumns(); i > (eigenVectors_.getNumberOfColumns() - nbAxes_); i--)
+    size_t cpt2 = 0;
+    for (size_t i = eigenVectors_.getNumberOfColumns(); i > (eigenVectors_.getNumberOfColumns() - nbAxes_); i--)
     {
       for (unsigned int j = 0; j < eigenVectors_.getNumberOfRows(); j++)
       {
@@ -256,10 +256,10 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
     // The eigen vectors are placed in the same order as their corresponding eigen value in eigenValues_.
     RowMatrix<double> tmpEigenVectors;
     tmpEigenVectors.resize(eigenVectors_.getNumberOfRows(), nbAxes_);
-    unsigned int cpt2 = 0;
-    for (unsigned int i = eigenVectors_.getNumberOfColumns(); i > (eigenVectors_.getNumberOfColumns() - nbAxes_); i--)
+    size_t cpt2 = 0;
+    for (size_t i = eigenVectors_.getNumberOfColumns(); i > (eigenVectors_.getNumberOfColumns() - nbAxes_); i--)
     {
-      for (unsigned int j = 0; j < eigenVectors_.getNumberOfRows(); j++)
+      for (size_t j = 0; j < eigenVectors_.getNumberOfRows(); j++)
       {
         tmpEigenVectors(j, cpt2) = eigenVectors_(j, i-1);
       }

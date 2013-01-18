@@ -208,7 +208,7 @@ class AbstractOptimizer:
     void setProfiler(OutputStream* profiler) { profiler_ = profiler; }
     OutputStream* getProfiler() const { return profiler_; }
 
-    int getNumberOfEvaluations() const { return nbEval_; }
+    unsigned int getNumberOfEvaluations() const { return nbEval_; }
     void setStopCondition(const OptimizationStopCondition& stopCondition)
     {
       stopCondition_ = dynamic_cast<OptimizationStopCondition*>(stopCondition.clone());
@@ -306,6 +306,13 @@ class AbstractOptimizer:
     /**
      * @brief Print to the profile if there is one.
      *
+     * @param v The unsigned int value to print.
+     */
+    void profile(unsigned int v);
+ 
+    /**
+     * @brief Print to the profile if there is one.
+     *
      * @param s The string to print to the profile.
      */
     void profile(const std::string& s);
@@ -317,6 +324,13 @@ class AbstractOptimizer:
      */
     void profileln(double v);
   
+    /**
+     * @brief Print to the profile if there is one and end line.
+     *
+     * @param v The unsigned int value to print.
+     */
+    void profileln(unsigned int v);
+ 
     /**
      * @brief Print to the profile if there is one and end line.
      *
@@ -362,7 +376,7 @@ class AbstractOptimizer:
 
   protected:
     ParameterList& getParameters_() { return parameters_; }
-    Parameter& getParameter_(unsigned int i) { return parameters_[i]; }
+    Parameter& getParameter_(size_t i) { return parameters_[i]; }
     Function* getFunction_() { return function_; }
     void setDefaultStopCondition_(OptimizationStopCondition* osc)
     {

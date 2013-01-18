@@ -49,8 +49,8 @@ using namespace std;
 /**************************************************************************/
 
 ContingencyTableGenerator::ContingencyTableGenerator(
-    const std::vector<unsigned int>& nrowt,
-    const std::vector<unsigned int>& ncolt):
+    const std::vector<size_t>& nrowt,
+    const std::vector<size_t>& ncolt):
   nrowt_(nrowt),
   ncolt_(ncolt),
   nrow_(nrowt.size()),
@@ -88,11 +88,11 @@ ContingencyTableGenerator::ContingencyTableGenerator(
    Taken from R source file rcont.c and adapted by Julien Dutheil, Dec 2010
 */
 
-RowMatrix<unsigned int> ContingencyTableGenerator::rcont2(const RandomFactory& generator)
+RowMatrix<size_t> ContingencyTableGenerator::rcont2(const RandomFactory& generator)
 {
-  RowMatrix<unsigned int> table(nrow_, ncol_); //Result
-  unsigned int j, l, m, ia, ib, ic, jc, id, ie, ii, nll, nlm, nr_1, nc_1;
-  double x, y, dummy, sumprb;
+  RowMatrix<size_t> table(nrow_, ncol_); //Result
+  size_t j, l, m, ia, ib, ic, jc, id, ie, ii, nll, nlm, nr_1, nc_1;
+  long double x, y, dummy, sumprb;
   bool lsm, lsp;
 
   nr_1 = nrow_ - 1;
@@ -132,7 +132,7 @@ RowMatrix<unsigned int> ContingencyTableGenerator::rcont2(const RandomFactory& g
 
         /* Compute conditional expected value of MATRIX(L, M) */
 
-        nlm = static_cast<unsigned int>(ia * (static_cast<double>(id) / static_cast<double>(ie)) + 0.5);
+        nlm = static_cast<size_t>(ia * (static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
         x = exp(fact_[ia] + fact_[ib] + fact_[ic] + fact_[id]
           - fact_[ie] - fact_[nlm]
           - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
@@ -145,11 +145,11 @@ RowMatrix<unsigned int> ContingencyTableGenerator::rcont2(const RandomFactory& g
 
         do {
           /* Increment entry in row L, column M */
-          j = static_cast<unsigned int>((id - nlm) * static_cast<double>(ia - nlm));
+          j = static_cast<size_t>((id - nlm) * static_cast<long double>(ia - nlm));
           lsp = (j == 0);
           if (!lsp) {
             ++nlm;
-            x = x * j / (static_cast<double>(nlm) * (ii + nlm));
+            x = x * j / (static_cast<long double>(nlm) * (ii + nlm));
             sumprb += x;
             if (sumprb >= dummy)
               goto L160;
@@ -161,7 +161,7 @@ RowMatrix<unsigned int> ContingencyTableGenerator::rcont2(const RandomFactory& g
             lsm = (j == 0);
             if (!lsm) {
               --nll;
-              y = y * j / (static_cast<double>(id - nll) * (ia - nll));
+              y = y * j / (static_cast<long double>(id - nll) * (ia - nll));
               sumprb += y;
               if (sumprb >= dummy) {
                 nlm = nll;

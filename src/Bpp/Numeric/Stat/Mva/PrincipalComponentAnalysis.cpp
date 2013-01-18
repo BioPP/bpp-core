@@ -4,7 +4,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 16, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for phylogenetic data analysis.
@@ -90,8 +90,8 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   columnMeans_(),
   columnSd_()
 {
-  unsigned int nRow = data.getNumberOfRows();
-  unsigned int nCol = data.getNumberOfColumns();
+  size_t nRow = data.getNumberOfRows();
+  size_t nCol = data.getNumberOfColumns();
 
   vector<double> rowW(nRow);
   vector<double> colW(nCol);
@@ -119,8 +119,8 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
 
 void PrincipalComponentAnalysis::center(Matrix<double>& matrix, const vector<double>& rowW) throw (Exception)
 {
-  unsigned int nRow = matrix.getNumberOfRows();
-  unsigned int nCol = matrix.getNumberOfColumns();
+  size_t nRow = matrix.getNumberOfRows();
+  size_t nCol = matrix.getNumberOfColumns();
   if (nRow != rowW.size())
     throw Exception("PrincipalComponentAnalysis::center. The number of row weigths have to be equal to the number of rows!");
 
@@ -150,15 +150,15 @@ void PrincipalComponentAnalysis::center(Matrix<double>& matrix, const vector<dou
 
 void PrincipalComponentAnalysis::scale(Matrix<double>& matrix, const vector<double>& rowW) throw (Exception)
 {
-  unsigned int nRow = matrix.getNumberOfRows();
-  unsigned int nCol = matrix.getNumberOfColumns();
+  size_t nRow = matrix.getNumberOfRows();
+  size_t nCol = matrix.getNumberOfColumns();
   if (nRow != rowW.size())
     throw Exception("PrincipalComponentAnalysis::scale. The number of row weigths have to be equal to the number of rows!");
 
   double sumRowWeights = VectorTools::sum(rowW);
 
   vector<double> columnSd(nCol);
-  for (unsigned int i = 0; i < nCol; i++)
+  for (size_t i = 0; i < nCol; i++)
   {
     double tmp = 0.;
     for (unsigned int j = 0; j < nRow; j++)
@@ -168,7 +168,7 @@ void PrincipalComponentAnalysis::scale(Matrix<double>& matrix, const vector<doub
     columnSd[i] = sqrt(tmp / sumRowWeights);
   }
 
-  for (unsigned int i = 0; i < nCol; i++)
+  for (size_t i = 0; i < nCol; i++)
   {
     for (unsigned int j = 0; j < nRow; j++)
     {

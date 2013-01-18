@@ -110,11 +110,11 @@ void RescaledHmmLikelihood::computeForward_()
   vector<double> trans(nbStates_ * nbStates_);
 
   //Transition probabilities:
-  for (unsigned int i = 0; i < nbStates_; i++)
+  for (size_t i = 0; i < nbStates_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++) {
-      trans[ii + j] = transitionMatrix_->Pij(j, i);
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++) {
+      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i));
       if (isnan(trans[ii + j]))
         throw Exception("RescaledHmmLikelihood::computeForward_. NaN transition probability");
       if (trans[ii + j] < 0)
@@ -125,11 +125,11 @@ void RescaledHmmLikelihood::computeForward_()
   //Initialisation:
   scales_[0] = 0;
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
-    unsigned int jj = j * nbStates_;
+    size_t jj = j * nbStates_;
     x = 0;
-    for (unsigned int k = 0; k < nbStates_; k++)
+    for (size_t k = 0; k < nbStates_; k++)
     {
       x += trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k];
       //cerr << j << "\t" << k << "\t" << trans[k + jj] << "\t" << transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << x << endl;  
@@ -138,31 +138,31 @@ void RescaledHmmLikelihood::computeForward_()
     //cerr << "e[j]=" << (*emissions)[j] << "\t" << tmp[j] << endl;
     scales_[0] += tmp[j];
   }
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
     likelihood_[j] = tmp[j] / scales_[0];
   }
   lScales[0] = log(scales_[0]);
  
   //Recursion:
-  unsigned int nextBrkPt = nbSites_; //next break point
-  vector<unsigned int>::const_iterator bpIt = breakPoints_.begin();
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
   if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
   
   double a;
-  for (unsigned int i = 1; i < nbSites_; i++)
+  for (size_t i = 1; i < nbSites_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    unsigned int iip = (i - 1) * nbStates_;
+    size_t ii = i * nbStates_;
+    size_t iip = (i - 1) * nbStates_;
     scales_[i] = 0 ;
     emissions = &(*emissionProbabilities_)(i);
     if (i < nextBrkPt)
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = 0;
-        for (unsigned int k = 0; k < nbStates_; k++)
+        for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * likelihood_[iip + k];
           //if (a < 0)
@@ -183,11 +183,11 @@ void RescaledHmmLikelihood::computeForward_()
     }
     else //Reset markov chain:
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = 0;
-        for (unsigned int k = 0; k < nbStates_; k++)
+        for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * transitionMatrix_->getEquilibriumFrequencies()[k];
           //if (a < 0)
@@ -210,7 +210,7 @@ void RescaledHmmLikelihood::computeForward_()
       else nextBrkPt = nbSites_;
     }
 
-    for (unsigned int j = 0; j < nbStates_; j++)
+    for (size_t j = 0; j < nbStates_; j++)
     {
       if (scales_[i] > 0) likelihood_[ii + j] = tmp[j] / scales_[i];
       else                likelihood_[ii + j] = 0;
@@ -220,7 +220,7 @@ void RescaledHmmLikelihood::computeForward_()
   greater<double> cmp;
   sort(lScales.begin(), lScales.end(), cmp);
   logLik_ = 0;
-  for (unsigned int i = 0; i < nbSites_; ++i)
+  for (size_t i = 0; i < nbSites_; ++i)
   {
     logLik_ += lScales[i];
   }
@@ -231,7 +231,7 @@ void RescaledHmmLikelihood::computeForward_()
 void RescaledHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b) const
 {
   b.resize(nbSites_);
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
     b[i].resize(nbStates_);
   }
@@ -239,37 +239,37 @@ void RescaledHmmLikelihood::computeBackward_(std::vector< std::vector<double> >&
 
   //Transition probabilities:
   vector<double> trans(nbStates_ * nbStates_);
-  for (unsigned int i = 0; i < nbStates_; i++)
+  for (size_t i = 0; i < nbStates_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
-      trans[ii + j] = transitionMatrix_->Pij(i, j);
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
+      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(i), static_cast<int>(j));
   }
 
 
   //Initialisation:
   const vector<double>* emissions = 0;
-  unsigned int nextBrkPt = 0; //next break point
-  vector<unsigned int>::const_reverse_iterator bpIt = breakPoints_.rbegin();
+  size_t nextBrkPt = 0; //next break point
+  vector<size_t>::const_reverse_iterator bpIt = breakPoints_.rbegin();
   if (bpIt != breakPoints_.rend()) nextBrkPt = *bpIt;
   
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
     x = 0;
     b[nbSites_ - 1][j] = 1.;
   }
 
   //Recursion:
-  for (unsigned int i = nbSites_ - 1; i > 0; i--)
+  for (size_t i = nbSites_ - 1; i > 0; i--)
   {
     emissions = &(*emissionProbabilities_)(i);
     if (i > nextBrkPt)
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
         x = 0;
-        unsigned int jj = j * nbStates_;
-        for (unsigned int k = 0; k < nbStates_; k++)
+        size_t jj = j * nbStates_;
+        for (size_t k = 0; k < nbStates_; k++)
         {
           x += (*emissions)[k] * trans[jj + k] * b[i][k];
         }
@@ -278,7 +278,7 @@ void RescaledHmmLikelihood::computeBackward_(std::vector< std::vector<double> >&
     }
     else //Reset markov chain
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
         b[i-1][j] = 1.;
       }    
@@ -293,9 +293,9 @@ void RescaledHmmLikelihood::computeBackward_(std::vector< std::vector<double> >&
 
 void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception)
 {
-  unsigned int offset = append ? probs.size() : 0;
+  size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
     probs[offset + i].resize(nbStates_);
   }
@@ -303,10 +303,10 @@ void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< s
   vector< vector<double> > b;
   computeBackward_(b);
   
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
     {
       probs[offset + i][j] = likelihood_[ii + j] * b[i][j];
     }

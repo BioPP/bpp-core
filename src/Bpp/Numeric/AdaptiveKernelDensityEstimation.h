@@ -59,8 +59,8 @@ class AdaptiveKernelDensityEstimation
 {
   private:
     RowMatrix<double> x_; //The original sample
-    unsigned int n_;
-    unsigned int r_;
+    size_t n_;
+    size_t r_;
     RowMatrix<double> covar_; //The covariance matrix, used for the linear transformation
     RowMatrix<double> invSqrtCovar_; //The inverse of the square root of the covariance matrix, used for the linear transformation
     std::vector<double> xMean_;

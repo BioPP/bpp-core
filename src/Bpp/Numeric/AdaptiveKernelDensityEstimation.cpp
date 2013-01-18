@@ -99,13 +99,13 @@ void AdaptiveKernelDensityEstimation::init_()
 
 void AdaptiveKernelDensityEstimation::sampleMean_(const Matrix<double>& x, std::vector<double>& mean)
 {
-  unsigned int nc = x.getNumberOfColumns();
-  unsigned int nr = x.getNumberOfRows();
+  size_t nc = x.getNumberOfColumns();
+  size_t nr = x.getNumberOfRows();
   mean.resize(nr);
-  for (unsigned int i = 0; i < nr; i++)
+  for (size_t i = 0; i < nr; i++)
   {
     mean[i] = 0;
-    for (unsigned int j = 0; j < nc; j++)
+    for (size_t j = 0; j < nc; j++)
       mean[i] += x(i, j);
     mean[i] /= static_cast<double>(nc);
   }
@@ -116,8 +116,8 @@ double AdaptiveKernelDensityEstimation::kernel_(const Matrix<double>& x)
   //x is supposed to have only one column and r_ rows.
   //We compute the scalar product of the column with itself:
   double scalar = 0;
-  for (unsigned int i = 0; i < r_; i++)
-    scalar += std::pow(x(i, 0u), 2.);
+  for (size_t i = 0; i < r_; i++)
+    scalar += std::pow(x(i, 0), 2.);
 
   return std::pow(2. * NumConstants::PI, -static_cast<double>(r_) / 2.) * std::exp(-0.5 * scalar);
 }

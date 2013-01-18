@@ -115,7 +115,7 @@ public:
    *
    */
 
-  unsigned int getNumberOfDistributions() const {return vdd_.size();}
+  size_t getNumberOfDistributions() const {return vdd_.size();}
 
   /*
    *@brief Returns a pointer to the n-th discrete distribution in the mixture.
@@ -134,7 +134,7 @@ public:
    *@param n the number of the distribution in the mixture;
    */
 
-  unsigned int getNProbability(unsigned int n) const
+  double getNProbability(size_t n) const
   {
     return probas_[n];
   }

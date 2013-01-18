@@ -182,9 +182,9 @@ void XFigGraphicDevice::drawText(double x, double y, const std::string& text, sh
 
 int XFigGraphicDevice::getFillCode(short fill)
 {
-  if(fill == FILL_EMPTY) return -1;
-  if(fill == FILL_FILLED) return 20;
-  if(fill == FILL_PATTERN)
+  if (fill == FILL_EMPTY) return -1;
+  if (fill == FILL_FILLED) return 20;
+  if (fill == FILL_PATTERN)
   {
     //TODO: define a field names currentPattern_, etc.
   }

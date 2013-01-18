@@ -103,12 +103,12 @@ double RandomTools::randExponential(double mean, const RandomFactory& generator)
   return - mean * log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1, generator));
 }
 
-std::vector<unsigned int> RandomTools::randMultinomial(unsigned int n, const std::vector<double>& probs)
+std::vector<size_t> RandomTools::randMultinomial(size_t n, const std::vector<double>& probs)
 {
   double s = VectorTools::sum(probs);
   double r;
   double cumprob;
-  vector<unsigned int> sample(n);
+  vector<size_t> sample(n);
   for(unsigned int i = 0; i < n; i++)
   {
     r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
@@ -124,7 +124,7 @@ std::vector<unsigned int> RandomTools::randMultinomial(unsigned int n, const std
       }
     }
     // This test should never be true if probs sum to one:
-    if(test) sample[i] = probs.size();
+    if (test) sample[i] = probs.size();
   }
   return sample;
 }

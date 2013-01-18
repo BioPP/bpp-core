@@ -65,9 +65,9 @@ bool TextTools::isEmpty(const std::string& s)
 std::string TextTools::toUpper(const std::string& s)
 {
   string result = "";
-  for (unsigned int i = 0; i < s.size(); i++)
+  for (size_t i = 0; i < s.size(); i++)
   {
-    result += toupper(s[i]);
+    result += static_cast<char>(toupper(static_cast<int>(s[i])));
   }
   return result;
 }
@@ -77,9 +77,9 @@ std::string TextTools::toUpper(const std::string& s)
 std::string TextTools::toLower(const std::string& s)
 {
   string result = "";
-  for (unsigned int i = 0; i < s.size(); i++)
+  for (size_t i = 0; i < s.size(); i++)
   {
-    result += tolower(s[i]);
+    result += static_cast<char>(tolower(static_cast<int>(s[i])));
   }
   return result;
 }
@@ -313,7 +313,7 @@ double TextTools::toDouble(const std::string& s) throw (Exception)
 
 /******************************************************************************/
 
-std::string TextTools::resizeRight(const std::string& s, unsigned int newSize, char fill)
+std::string TextTools::resizeRight(const std::string& s, size_t newSize, char fill)
 {
   if (s.size() > newSize)
     return s.substr(0, newSize);
@@ -323,7 +323,7 @@ std::string TextTools::resizeRight(const std::string& s, unsigned int newSize, c
 
 /******************************************************************************/
 
-std::string TextTools::resizeLeft(const std::string& s, unsigned int newSize, char fill)
+std::string TextTools::resizeLeft(const std::string& s, size_t newSize, char fill)
 {
   if (s.size() > newSize)
     return s.substr(s.size() - newSize);
@@ -333,7 +333,7 @@ std::string TextTools::resizeLeft(const std::string& s, unsigned int newSize, ch
 
 /******************************************************************************/
 
-std::vector<std::string> TextTools::split(const std::string& s, unsigned int n)
+std::vector<std::string> TextTools::split(const std::string& s, size_t n)
 {
   vector<string> v;
   string tmp = s;
@@ -385,22 +385,24 @@ throw (Exception)
 {
   string t = "";
   int blockCount = 0;
-  int begPos = 0;
-  for (unsigned int i = 0; i < s.size(); i++)
+  size_t begPos = 0;
+  for (size_t i = 0; i < s.size(); i++)
   {
     char current = s[i];
     if (current == blockBeginning)
     {
       bool except = false;
-      for (unsigned int j = 0; j < exceptionsBeginning.size(); j++)
+      for (size_t j = 0; j < exceptionsBeginning.size(); j++)
       {
-        int pos = exceptionsBeginning[j].find(blockBeginning);
-        int left = i - pos;
-        int right = i + exceptionsBeginning[j].length() - pos;
-        if ((left > 0 ) &&  (right < (int)(s.length()) - 1 ) && (hasSubstring (s.substr(left, right), exceptionsBeginning[j])) )
-        {
-          except = true;
-          break;
+        size_t pos = exceptionsBeginning[j].find(blockBeginning);
+        if (pos != string::npos) {
+          size_t left = i - pos;
+          size_t right = i + exceptionsBeginning[j].length() - pos;
+          if ((right < s.length() - 1) && (hasSubstring (s.substr(left, right), exceptionsBeginning[j])))
+          {
+            except = true;
+            break;
+          }
         }
       }
       if (!except)
@@ -411,14 +413,16 @@ throw (Exception)
     }
     else if ( (current == blockEnding) && (blockCount > 0) )
     {
-      for (unsigned int j = 0; j < exceptionsEnding.size(); j++)
+      for (size_t j = 0; j < exceptionsEnding.size(); j++)
       {
-        int pos = exceptionsEnding[j].find(blockEnding);
-        int left = i - pos;
-        int right = i + exceptionsEnding[j].length() - pos;
-        if ((left > 0 ) &&  (right < (int)(s.length()) - 1 ) && (hasSubstring (s.substr(left, right), exceptionsEnding[j])) )
-        {
-          break;
+        size_t pos = exceptionsEnding[j].find(blockEnding);
+        if (pos != string::npos) {
+          size_t left = i - pos;
+          size_t right = i + exceptionsEnding[j].length() - pos;
+          if ((right < s.length() - 1 ) && (hasSubstring (s.substr(left, right), exceptionsEnding[j])))
+          {
+            break;
+          }
         }
       }
       blockCount--;

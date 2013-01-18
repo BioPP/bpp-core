@@ -69,9 +69,9 @@ void Uniform01K::setSeed(long seed)
 	_tab[55] = tmp1;
 	tmp2 = 1;
 
-	for (i=1 ; i<=54 ; i++)
+	for (i = 1 ; i <= 54 ; i++)
   {
-		ii = (21 * i) % 55;
+		ii = static_cast<unsigned short>((21 * i) % 55);
 		_tab[ii] = tmp2;
 		tmp2 = tmp1 - tmp2;
 
@@ -96,9 +96,9 @@ double Uniform01K::drawNumber() const
 	if (++_it2 == 56) _it2 = 1;
 
 	long tmp = _tab[_it1] - _tab[_it2];
-	if(tmp < ZERO) tmp += MAXNUMBER;
+	if (tmp < ZERO) tmp += MAXNUMBER;
 	_tab[_it2] = tmp;
-	double r = 1. * tmp / MAXNUMBER;
+	double r = static_cast<double>(static_cast<long double>(tmp) / MAXNUMBER);
 	//if (r < 0.) return drawNumber(); // In case of negative number, take the next one in the serie.
 	//if (r > 1.) return drawNumber(); // In case of number > 1, take the next one in the serie.
 	return r;

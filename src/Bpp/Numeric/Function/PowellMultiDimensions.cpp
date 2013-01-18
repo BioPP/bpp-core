@@ -75,9 +75,9 @@ AbstractOptimizer(function), fp_(0), fret_(0), pt_(), xi_(), ncom_(0), pcom_(), 
 void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 {
   // Build the initial matrix:
-  unsigned int n = params.size();
+  size_t n = params.size();
   xi_.resize(n);
-  for(unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
   {
     // Copy the parameter list:
     xi_[i].resize(n);
@@ -97,7 +97,7 @@ void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception
   
 double PowellMultiDimensions::doStep() throw (Exception)
 {
-  unsigned int n = getParameters().size();
+  size_t n = getParameters().size();
   fp_ = fret_;
   unsigned int ibig = 0;
   double del = 0.0; // Will be the biggest function decrease

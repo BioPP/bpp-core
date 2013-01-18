@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Developement Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -90,7 +90,7 @@ public:
   /**
    * @return The total number of fonts available.
    */
-  virtual unsigned int getNumberOfFonts() const = 0;
+  virtual size_t getNumberOfFonts() const = 0;
 };
 
 
@@ -132,7 +132,7 @@ public:
   }
   std::vector<CodeType> getCodes() const { return codes_; }
   std::vector<Font> getFonts() const { return fonts_; }
-  unsigned int getNumberOfFonts() const { return fonts_.size(); }
+  size_t getNumberOfFonts() const { return fonts_.size(); }
 
 protected:
   void registerFont_(const Font& font, int code)

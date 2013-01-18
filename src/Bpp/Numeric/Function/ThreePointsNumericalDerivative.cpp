@@ -199,7 +199,7 @@ throw (ParameterNotFoundException, ConstraintException)
             p[0].setValue(value1 - h1);
             p[1].setValue(value2 - h2);
             function_->setParameters(p); //also reset previous parameter...
-            vector<unsigned int> tmp(2);
+            vector<size_t> tmp(2);
             tmp[0] = 0;
             tmp[1] = 1;
             p = p.subList(tmp); //removed the previous parameters.

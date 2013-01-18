@@ -79,11 +79,11 @@ private:
   std::vector<double> likelihood1_;
   std::vector<double> likelihood2_;
   double logLik_;
-  unsigned int maxSize_;
+  size_t maxSize_;
 
-  std::vector<unsigned int> breakPoints_;
+  std::vector<size_t> breakPoints_;
 
-  unsigned int nbStates_, nbSites_;
+  size_t nbStates_, nbSites_;
 
 public:
   /**
@@ -106,7 +106,7 @@ public:
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
     const std::string& prefix,
-    unsigned int maxSize = 1000000) throw (Exception);
+    size_t maxSize = 1000000) throw (Exception);
 
   LowMemoryRescaledHmmLikelihood(const LowMemoryRescaledHmmLikelihood& lik) :
     AbstractParametrizable(lik),
@@ -165,12 +165,12 @@ public:
   const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
   HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
 
-  void setBreakPoints(const std::vector<unsigned int>& breakPoints) {
+  void setBreakPoints(const std::vector<size_t>& breakPoints) {
     breakPoints_ = breakPoints;
     computeForward_();
   }
 
-  const std::vector<unsigned int>& getBreakPoints() const { return breakPoints_; }
+  const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
 
   void setParameters(const ParameterList& pl) throw (Exception)
   {

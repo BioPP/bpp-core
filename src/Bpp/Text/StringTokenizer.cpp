@@ -103,7 +103,7 @@ const std::string& StringTokenizer::nextToken() throw (Exception)
 
 void StringTokenizer::removeEmptyTokens()
 {
-  for (unsigned int i = tokens_.size(); i > currentPosition_; i--)
+  for (size_t i = tokens_.size(); i > currentPosition_; i--)
   {
     if (tokens_[i-1] == "") tokens_.erase(tokens_.begin() + i - 1);
   }
@@ -112,7 +112,7 @@ void StringTokenizer::removeEmptyTokens()
 std::string StringTokenizer::unparseRemainingTokens() const
 {
   string s;
-  for (unsigned int i = currentPosition_; i < tokens_.size() - 1; ++i) {
+  for (size_t i = currentPosition_; i < tokens_.size() - 1; ++i) {
     s += tokens_[i] + splits_[i];
   }
   if (numberOfRemainingTokens() > 0)

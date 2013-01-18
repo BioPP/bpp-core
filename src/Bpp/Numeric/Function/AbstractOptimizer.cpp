@@ -235,6 +235,19 @@ void AbstractOptimizer::profileln(double v)
 	
 /******************************************************************************/
 
+void AbstractOptimizer::profile(unsigned int v)
+{
+  if (profiler_) *profiler_ << v;
+}
+/******************************************************************************/
+
+void AbstractOptimizer::profileln(unsigned int v)
+{
+  if (profiler_) (*profiler_ << v).endLine();
+}
+	
+/******************************************************************************/
+
 void AbstractOptimizer::profile(const std::string& s)
 {
   if (profiler_) *profiler_ << s;
@@ -251,10 +264,10 @@ void AbstractOptimizer::profileln(const std::string& s)
 
 void AbstractOptimizer::printPoint(const ParameterList& params, double value)
 {
-  unsigned int ndim = params.size();
+  size_t ndim = params.size();
   profile(nbEval_);
   profile("\t");
-  for (unsigned int j = 0; j < ndim; j++)
+  for (size_t j = 0; j < ndim; j++)
   {
     profile(TextTools::toString(params[j].getValue()));
     profile("\t"); 

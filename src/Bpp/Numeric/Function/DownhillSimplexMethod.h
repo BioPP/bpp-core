@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -92,17 +92,17 @@ class DownhillSimplexMethod:
         virtual ~Simplex() {}
       
       public: // Methods:
-        const ParameterList& operator[](unsigned int i) const { return parameters_[i]; }
-        ParameterList& operator[](unsigned int i) { return parameters_[i]; }
-        void resize(unsigned int size) { parameters_.resize(size); }
-        unsigned int getDimension() const { return parameters_[0].size(); }
+        const ParameterList& operator[](size_t i) const { return parameters_[i]; }
+        ParameterList& operator[](size_t i) { return parameters_[i]; }
+        void resize(size_t size) { parameters_.resize(size); }
+        size_t getDimension() const { return parameters_[0].size(); }
     };
     
   protected:
-    Simplex _simplex;
-    Vdouble _y;
-    ParameterList _pSum;
-    unsigned int _iHighest, _iNextHighest, _iLowest;
+    Simplex simplex_;
+    Vdouble y_;
+    ParameterList pSum_;
+    unsigned int iHighest_, iNextHighest_, iLowest_;
   
   public:
 
@@ -130,7 +130,7 @@ class DownhillSimplexMethod:
      */
     
     /**
-     * @brief Multidimensional minimization of the function _function by the
+     * @brief Multidimensional minimization of the function function_ by the
      * downhill simplex method of Nelder and Mead.
      */
     double optimize() throw (Exception);
@@ -149,7 +149,7 @@ class DownhillSimplexMethod:
      */
     
     /**
-     * @brief Update the _pSum variable.
+     * @brief Update the pSum_ variable.
      */
     ParameterList getPSum();
   

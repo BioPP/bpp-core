@@ -169,7 +169,7 @@ namespace bpp
     /**
      * @return The number of optimizers in the set.
      */
-    virtual unsigned int getNumberOfOptimizers() const { return optimizers_.size(); }
+    virtual size_t getNumberOfOptimizers() const { return optimizers_.size(); }
   };
 
   /**
@@ -194,7 +194,7 @@ namespace bpp
   private:
     MetaOptimizerInfos* optDesc_;
     std::vector<ParameterList> optParameters_;
-    std::vector<unsigned int> nbParameters_;
+    std::vector<size_t> nbParameters_;
     unsigned int n_;
     double precisionStep_;
     unsigned int stepCount_;

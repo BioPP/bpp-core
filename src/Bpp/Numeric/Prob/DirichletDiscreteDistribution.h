@@ -112,7 +112,7 @@ public:
    * @param vn the vector of the dim-1 numbers of categories to use.
    * @param valpha the vector of the dim alpha parameters.
    */
-  DirichletDiscreteDistribution(std::vector<unsigned int> vn, Vdouble valpha);
+  DirichletDiscreteDistribution(std::vector<size_t> vn, Vdouble valpha);
 
   ~DirichletDiscreteDistribution();
 
@@ -132,7 +132,7 @@ public:
   /**
    * @return The number of categories
    */
-  unsigned int getNumberOfCategories() const;
+  size_t getNumberOfCategories() const;
 
   /**
    * @param Vvalue

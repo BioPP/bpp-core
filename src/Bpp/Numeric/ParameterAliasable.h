@@ -94,7 +94,7 @@ class ParameterAliasable :
      * @return The number of independent parameters.
      * If no parameters are aliased, this is equivalent to the getNumberOfParameters() method.
      */
-    virtual unsigned int getNumberOfIndependentParameters() const = 0;
+    virtual size_t getNumberOfIndependentParameters() const = 0;
 
     /**
      * @brief Set two parameters as 'aliased'.

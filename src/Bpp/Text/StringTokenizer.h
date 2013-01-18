@@ -64,7 +64,7 @@ class StringTokenizer
     std::deque<std::string> splits_;
 		
 		/** @brief the current position in the token list. */
-		unsigned int currentPosition_;
+		size_t currentPosition_;
 
 	public:
 		
@@ -106,7 +106,7 @@ class StringTokenizer
 		 *
 		 * @return the number of tokens available.
 		 */
-		unsigned int numberOfRemainingTokens() const { return tokens_.size() - currentPosition_; }
+		size_t numberOfRemainingTokens() const { return tokens_.size() - currentPosition_; }
 
 		/**
 		 * @brief Get a particular token.

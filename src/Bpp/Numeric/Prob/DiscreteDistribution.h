@@ -74,7 +74,7 @@ namespace bpp
 
   
 #ifndef NO_VIRTUAL_COV
-    DiscreteDistribution * clone() const = 0;
+    DiscreteDistribution* clone() const = 0;
 #endif
 
   public:
@@ -89,7 +89,7 @@ namespace bpp
     /**
      * @return The number of categories.
      */
-    virtual unsigned int getNumberOfCategories() const = 0;
+    virtual size_t getNumberOfCategories() const = 0;
 
     
     /**
@@ -97,7 +97,7 @@ namespace bpp
      * is a change in this number.
      */
     
-    virtual void setNumberOfCategories(unsigned int nbClasses) = 0;
+    virtual void setNumberOfCategories(size_t nbClasses) = 0;
 		
     /**
      * @param value 
@@ -113,13 +113,13 @@ namespace bpp
      * @return The value associated to a given class.
      */
 
-    virtual double getCategory(unsigned int categoryIndex) const = 0;
+    virtual double getCategory(size_t categoryIndex) const = 0;
 		
     /**
      * @param categoryIndex Class index.
      * @return The probability associated to a given class.
      */
-    virtual double getProbability(unsigned int categoryIndex) const = 0;
+    virtual double getProbability(size_t categoryIndex) const = 0;
 
     /**
      * @param category The value associated to the class.
@@ -166,7 +166,7 @@ namespace bpp
      * @return \f$Pr(x < \mbox{category})\f$.
      * @param category The class value.
      */
-    virtual double  getInfCumulativeProbability(double category) const = 0;
+    virtual double getInfCumulativeProbability(double category) const = 0;
     /**
      * @return \f$Pr(x \leq \mbox{category})\f$.
      * @param category The class value.
@@ -176,7 +176,7 @@ namespace bpp
      * @return \f$Pr(x > \mbox{category})\f$.
      * @param category The class value.
      */
-    virtual double  getSupCumulativeProbability(double category) const = 0;
+    virtual double getSupCumulativeProbability(double category) const = 0;
     /**
      * @return \f$Pr(x \geq \mbox{category})\f$.
      * @param category The class value.
@@ -258,7 +258,7 @@ namespace bpp
     /**
      * @return the i th internal bound
      */
-    virtual double getBound(unsigned int) const = 0;
+    virtual double getBound(size_t) const = 0;
 
     /**
      *@brief methods about the range of the definition

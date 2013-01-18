@@ -117,7 +117,7 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
   for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
   {
     optParameters_[i].reset();
-    for (unsigned int j = 0; j < optDesc_->getParameterNames(i).size(); j++)
+    for (size_t j = 0; j < optDesc_->getParameterNames(i).size(); j++)
     {
       string pname = optDesc_->getParameterNames(i)[j];
       if (parameters.hasParameter(pname))

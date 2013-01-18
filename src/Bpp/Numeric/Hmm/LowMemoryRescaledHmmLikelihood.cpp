@@ -50,7 +50,7 @@ LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
   HmmTransitionMatrix* transitionMatrix,
   HmmEmissionProbabilities* emissionProbabilities,
   const std::string& prefix,
-  unsigned int maxSize) throw (Exception) :
+  size_t maxSize) throw (Exception) :
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
   transitionMatrix_(transitionMatrix),
@@ -110,30 +110,30 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   vector<double> trans(nbStates_ * nbStates_);
 
   // Transition probabilities:
-  for (unsigned int i = 0; i < nbStates_; i++)
+  for (size_t i = 0; i < nbStates_; i++)
   {
-   unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
+   size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
     {
-      trans[ii + j] = transitionMatrix_->Pij(j, i);
+      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i));
     }
   }
 
   // Initialisation:
   double scale = 0;
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
-   unsigned int jj = j * nbStates_;
+   size_t jj = j * nbStates_;
     x = 0;
-    for (unsigned int k = 0; k < nbStates_; k++)
+    for (size_t k = 0; k < nbStates_; k++)
     {
       x += trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k];
     }
     tmp[j] = (*emissions)[j] * x;
     scale += tmp[j];
   }
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
     likelihood1_[j] = tmp[j] / scale;
   }
@@ -142,15 +142,15 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   vector<double>* previousLikelihood = &likelihood2_, * currentLikelihood = &likelihood1_, * tmpLikelihood;
 
   // Recursion:
-  unsigned int nextBrkPt = nbSites_; // next break point
-  vector<unsigned int>::const_iterator bpIt = breakPoints_.begin();
+  size_t nextBrkPt = nbSites_; // next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
   if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
 
   double a;
   logLik_ = 0;
-  unsigned int offset = 0;
+  size_t offset = 0;
   greater<double> cmp;
-  for (unsigned int i = 1; i < nbSites_; i++)
+  for (size_t i = 1; i < nbSites_; i++)
   {
     //Swap pointers:
     tmpLikelihood = previousLikelihood;
@@ -161,11 +161,11 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
     emissions = &(*emissionProbabilities_)(i);
     if (i < nextBrkPt)
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = 0;
-        for (unsigned int k = 0; k < nbStates_; k++)
+        for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * (*previousLikelihood)[k];
           if (a < 0)
@@ -186,11 +186,11 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
     }
     else // Reset markov chain:
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = 0;
-        for (unsigned int k = 0; k < nbStates_; k++)
+        for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * transitionMatrix_->getEquilibriumFrequencies()[k];
           if (a < 0)
@@ -213,7 +213,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
       else nextBrkPt = nbSites_;
     }
 
-    for (unsigned int j = 0; j < nbStates_; j++)
+    for (size_t j = 0; j < nbStates_; j++)
     {
       if (scale > 0) (*currentLikelihood)[j] = tmp[j] / scale;
       else (*currentLikelihood)[j] = 0;
@@ -225,7 +225,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
       //We make partial calculations and reset the arrays:
       double partialLogLik = 0;
       sort(lScales.begin(), lScales.end(), cmp);
-      for (unsigned int j = 0; j < maxSize_; ++j)
+      for (size_t j = 0; j < maxSize_; ++j)
       {
         partialLogLik += lScales[j];
       }
@@ -235,7 +235,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   }
   sort(lScales.begin(), lScales.begin() + nbSites_ - offset, cmp);
   double partialLogLik = 0;
-  for (unsigned int i = 0; i < nbSites_ - offset; ++i)
+  for (size_t i = 0; i < nbSites_ - offset; ++i)
   {
     partialLogLik += lScales[i];
   }

@@ -48,50 +48,50 @@ using namespace std;
 void DirectionFunction::setParameters(const ParameterList & params)
   throw (ParameterNotFoundException, ConstraintException)
 {
-  _params = params;
-  double x = _params[0].getValue();
-  for(unsigned int j = 0; j < _p.size(); j++)
+  params_ = params;
+  double x = params_[0].getValue();
+  for(unsigned int j = 0; j < p_.size(); j++)
     {
-      //      cout << _p[j].getValue() << " " << x << " " << _xi[j] << endl;
-      _xt[j].setValue((_p[j].getValue()) + x * _xi[j]);
+      //      cout << p_[j].getValue() << " " << x << " " << xi_[j] << endl;
+      xt_[j].setValue((p_[j].getValue()) + x * xi_[j]);
     }
-  _function->setParameters(_xt);
+  function_->setParameters(xt_);
 }
 
 /******************************************************************************/
 
 double DirectionFunction::getValue() const throw (Exception)
 {
-  return _function->getValue();
+  return function_->getValue();
 }
 
 /******************************************************************************/
 
 const ParameterList & DirectionFunction::getParameters() const throw (Exception)
 {
-  return _params;
+  return params_;
 }
 
 /******************************************************************************/
 
 void DirectionFunction::init(const ParameterList & p, const vector<double> & xi)
 {
-  _p = p;
-  _xi = xi;
-  if(_constraintPolicy == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
-  else if(_constraintPolicy == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
-  _xt = _p;
+  p_ = p;
+  xi_ = xi;
+  if(constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
+  else if(constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+  xt_ = p_;
 }
 
 /******************************************************************************/
 
 void DirectionFunction::autoParameter()
 {
-  for(unsigned int i = 0; i < _p.size(); i++)
+  for(unsigned int i = 0; i < p_.size(); i++)
     {
-      AutoParameter ap(_p[i]);
-      ap.setMessageHandler(_messenger);
-      _p.setParameter(i, ap);
+      AutoParameter ap(p_[i]);
+      ap.setMessageHandler(messenger_);
+      p_.setParameter(i, ap);
     }
 }
 
@@ -99,9 +99,9 @@ void DirectionFunction::autoParameter()
 
 void DirectionFunction::ignoreConstraints()
 {
-  for(unsigned int i = 0; i < _p.size(); i++)
+  for(unsigned int i = 0; i < p_.size(); i++)
     {
-      _p[i].removeConstraint();
+      p_[i].removeConstraint();
     }
 }
 

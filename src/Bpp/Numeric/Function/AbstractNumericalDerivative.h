@@ -72,7 +72,7 @@ class AbstractNumericalDerivative:
     DerivableSecondOrder *function2_;
     double h_;
     std::vector<std::string> variables_;
-    mutable std::map<std::string, unsigned int> index_; //Store positions in array corresponding to variable names.
+    mutable std::map<std::string, size_t> index_; //Store positions in array corresponding to variable names.
     std::vector<double> der1_;
     std::vector<double> der2_;
     RowMatrix<double> crossDer2_;
@@ -144,7 +144,7 @@ class AbstractNumericalDerivative:
     {
       variables_ = variables;
       index_.clear();
-      for(unsigned int i = 0; i < variables_.size(); i++)
+      for(size_t i = 0; i < variables_.size(); i++)
         index_[variables_[i]] = i;
       der1_.resize(variables_.size());
       der2_.resize(variables_.size());
@@ -170,7 +170,7 @@ class AbstractNumericalDerivative:
         }
         catch (Exception& e) {}
       }    
-      std::map<std::string, unsigned int>::iterator it = index_.find(variable);
+      std::map<std::string, size_t>::iterator it = index_.find(variable);
       if (computeD1_ && it != index_.end()) return der1_[it->second];
       else throw Exception("First order derivative not computed for variable " + variable + "."); 
     }
@@ -196,7 +196,7 @@ class AbstractNumericalDerivative:
         }
         catch(Exception & e) {}
       }    
-      std::map<std::string, unsigned int>::iterator it = index_.find(variable);
+      std::map<std::string, size_t>::iterator it = index_.find(variable);
       if(computeD2_ && it != index_.end()) return der2_[it->second];
       else throw Exception("Second order derivative not computed for variable " + variable + "."); 
     }
@@ -212,8 +212,8 @@ class AbstractNumericalDerivative:
         }
         catch(Exception & e) {}
       }    
-      std::map<std::string, unsigned int>::iterator it1 = index_.find(variable1);
-      std::map<std::string, unsigned int>::iterator it2 = index_.find(variable2);
+      std::map<std::string, size_t>::iterator it1 = index_.find(variable1);
+      std::map<std::string, size_t>::iterator it2 = index_.find(variable2);
       if(computeCrossD2_ && it1 != index_.end() && it2 != index_.end()) return crossDer2_(it1->second, it2->second);
       else throw Exception("Cross second order derivative not computed for variables " + variable1 + " and " + variable2 + "."); 
     }

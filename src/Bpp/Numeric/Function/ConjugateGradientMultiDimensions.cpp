@@ -56,14 +56,14 @@ ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirs
 
 void ConjugateGradientMultiDimensions::doInit(const ParameterList & params) throw (Exception)
 {
-  unsigned int nbParams = params.size();
+  size_t nbParams = params.size();
   g_.resize(nbParams);
   h_.resize(nbParams);
   xi_.resize(nbParams);
   getFunction_()->enableFirstOrderDerivatives(true);
   getFunction_()->setParameters(params);
   getGradient(xi_);
-  for(unsigned int i = 0; i < nbParams; i++)
+  for(size_t i = 0; i < nbParams; i++)
   {
     g_[i]  = -xi_[i];
     xi_[i] = h_[i] = g_[i];
@@ -75,7 +75,7 @@ void ConjugateGradientMultiDimensions::doInit(const ParameterList & params) thro
 double ConjugateGradientMultiDimensions::doStep() throw (Exception)
 {
   double gg, gam, f, dgg;
-  unsigned int n = getParameters().size();
+  size_t n = getParameters().size();
   //Loop over iterations.
   getFunction_()->enableFirstOrderDerivatives(false);
   nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,

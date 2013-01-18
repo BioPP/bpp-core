@@ -50,7 +50,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations, bool warn):
+ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<size_t> >& table, unsigned int nbPermutations, bool warn):
   statistic_(0),
   pvalue_(0),
   df_(0),
@@ -72,7 +72,7 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
     if (table[i].size() != m)
       throw Exception("ContingencyTableTest. Input array has non-homogeneous dimensions!");
     for (size_t j = 0; j < m; ++j) {
-      unsigned int c = table[i][j];
+      size_t c = table[i][j];
       if (c <= 5) test = true;
       margin1_[i] += c;
       margin2_[j] += c;
@@ -86,32 +86,32 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<unsign
       throw Exception("ContingencyTableTest. Column " + TextTools::toString(j) + " sums to 0.");
 
 
-  unsigned int tot = VectorTools::sum(margin1_);
+  size_t tot = VectorTools::sum(margin1_);
   df_ = static_cast<double>((m - 1) * (n - 1));
   
-  RowMatrix<double> expc(n, m);
+  RowMatrix<long double> expc(n, m);
   for (size_t i = 0; i < n; ++i) {
     for (size_t j = 0; j < m; ++j) {
-      double c = table[i][j];
-      double e = static_cast<double>(margin1_[i] * margin2_[j]) / static_cast<double>(tot);
+      long double c = table[i][j];
+      long double e = static_cast<long double>(margin1_[i] * margin2_[j]) / static_cast<long double>(tot);
       expc(i, j) = e;
-      statistic_ += std::pow(c - e, 2.) / e;
+      statistic_ += static_cast<double>(std::pow(c - e, 2.) / e);
     }
   }
 
   if (nbPermutations > 0) {
-    unsigned int count = 0;
+    size_t count = 0;
     ContingencyTableGenerator ctgen(margin1_, margin2_);
     for (unsigned int k = 0; k < nbPermutations; ++k) {
       //Randomize:
-      RowMatrix<unsigned int> table_rep = ctgen.rcont2();
+      RowMatrix<size_t> table_rep = ctgen.rcont2();
       //Recompute statistic:
       double stat_rep = 0;
       for (size_t i = 0; i < n; ++i) {
         for (size_t j = 0; j < m; ++j) {
-          double c = table_rep(i , j);
-          double e = expc(i, j);
-          stat_rep += std::pow(c - e, 2.) / e;
+          long double c = table_rep(i , j);
+          long double e = expc(i, j);
+          stat_rep += static_cast<double>(std::pow(c - e, 2.) / e);
         }
       }
       if (stat_rep >= statistic_)

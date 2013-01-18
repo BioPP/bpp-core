@@ -108,8 +108,7 @@ namespace bpp
      * The number of categories
      */
 
-    unsigned int numberOfCategories_;
-    
+    size_t numberOfCategories_;  
     /**
      * These fields must be initialized in the constructor of the derived classes.
      */
@@ -132,14 +131,13 @@ namespace bpp
     bool median_;
     
   public:
-    AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix = ""); 
+    AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix = ""); 
 
-    /*
-    * With additional precision value to discriminate categories (default 1e-12)
-    *
-    */
-    
-    AbstractDiscreteDistribution(unsigned int nbClasses, double precision, const std::string& prefix = "");
+    /**
+     * With additional precision value to discriminate categories (default 1e-12)
+     *
+     */
+    AbstractDiscreteDistribution(size_t nbClasses, double precision, const std::string& prefix = "");
     
     AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde);
 
@@ -155,10 +153,10 @@ namespace bpp
      *
      * @{
      */
-    unsigned int getNumberOfCategories() const;
-    void setNumberOfCategories(unsigned int nbClasses);
-    double getCategory(unsigned int categoryIndex) const;
-    double getProbability(unsigned int categoryIndex) const;
+    size_t getNumberOfCategories() const;
+    void setNumberOfCategories(size_t nbClasses);
+    double getCategory(size_t categoryIndex) const;
+    double getProbability(size_t categoryIndex) const;
     double getProbability(double category) const;
     Vdouble getCategories() const;
     Vdouble getProbabilities() const;
@@ -177,9 +175,9 @@ namespace bpp
      *
      */
     
-    double getBound(unsigned int i) const throw (IndexOutOfBoundsException)
+    double getBound(size_t i) const throw (IndexOutOfBoundsException)
     {
-      if (i >= numberOfCategories_-1)
+      if (i >= numberOfCategories_ - 1)
         throw IndexOutOfBoundsException("AbstractDiscreteDistribution::getBound(i)", i , 0, numberOfCategories_-1);
       return bounds_[i];
     }  

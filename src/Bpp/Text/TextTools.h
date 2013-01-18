@@ -289,7 +289,7 @@ namespace bpp
        * @param fill    The character to use to fill the string id length < newSize.
        * @return A string of size newsize which is a copy from the left of s.
        */
-      static std::string resizeRight(const std::string& s, unsigned int newSize, char fill = ' ');
+      static std::string resizeRight(const std::string& s, size_t newSize, char fill = ' ');
 
       /**
        * @brief Send a string of size 'newSize', which is a copy of 's' truncated or
@@ -300,7 +300,7 @@ namespace bpp
        * @param fill    The character to use to fill the string id length < newSize.
        * @return A string of size newsize which is a copy from the right of s.
        */
-      static std::string resizeLeft(const std::string& s, unsigned int newSize, char fill = ' ');
+      static std::string resizeLeft(const std::string& s, size_t newSize, char fill = ' ');
 
       /**
        * @brief Split a string into parts of size 'n'.
@@ -311,7 +311,7 @@ namespace bpp
        * @param n The number of tokens.
        * @return A vector of strings with all tokens.
        */
-      static std::vector<std::string> split(const std::string& s, unsigned int n);
+      static std::vector<std::string> split(const std::string& s, size_t n);
 
       /**
        * @brief Remove substrings from a string.

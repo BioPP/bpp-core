@@ -70,9 +70,9 @@ public:
   static void copy(const MatrixA& A, MatrixO& O)
   {
     O.resize(A.getNumberOfRows(), A.getNumberOfColumns());
-    for (unsigned int i = 0; i < A.getNumberOfRows(); i++)
+    for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < A.getNumberOfColumns(); j++)
       {
         O(i, j) = A(i, j);
       }
@@ -86,12 +86,14 @@ public:
    * @param O [out] A identity matrix of size n.
    */
   template<class Matrix>
-  static void getId(unsigned int n, Matrix& O)
+  static void getId(size_t n, Matrix& O)
   {
     O.resize(n, n);
-    for (unsigned int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
     {
-      for (unsigned int j = 0; j < n; j++) { O(i, j) = (i == j) ? 1 : 0;}
+      for (size_t j = 0; j < n; j++) {
+        O(i, j) = (i == j) ? 1 : 0;
+      }
     }
   }
 
@@ -102,11 +104,11 @@ public:
   template<class Scalar>
   static void diag(const std::vector<Scalar>& D, Matrix<Scalar>& O)
   {
-    unsigned int n = D.size();
+    size_t n = D.size();
     O.resize(n, n);
-    for (unsigned int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
     {
-      for (unsigned int j = 0; j < n; j++) { O(i, j) = (i == j) ? D[i] : 0;}
+      for (size_t j = 0; j < n; j++) { O(i, j) = (i == j) ? D[i] : 0;}
     }
   }
 
@@ -116,12 +118,12 @@ public:
    * @param O [out] A diagonal matrix with diagonal elements equal to x
    */
   template<class Scalar>
-  static void diag(const Scalar x, unsigned int n, Matrix<Scalar>& O)
+  static void diag(const Scalar x, size_t n, Matrix<Scalar>& O)
   {
     O.resize(n, n);
-    for (unsigned int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
       {
-        for (unsigned int j = 0; j < n; j++) { O(i, j) = (i == j) ? x : 0;}
+        for (size_t j = 0; j < n; j++) { O(i, j) = (i == j) ? x : 0;}
       }
   }
 
@@ -133,11 +135,11 @@ public:
   template<class Scalar>
   static void diag(const Matrix<Scalar>& M, std::vector<Scalar>& O) throw (DimensionException)
   {
-    unsigned int nc = M.getNumberOfColumns();
-    unsigned int nr = M.getNumberOfRows();
+    size_t nc = M.getNumberOfColumns();
+    size_t nr = M.getNumberOfRows();
     if (nc != nr) throw DimensionException("MatrixTools::diag(). M must be a square matrix.", nr, nc);
     O.resize(nc);
-    for (unsigned int i = 0; i < nc; i++) { O[i] = M(i, i);}
+    for (size_t i = 0; i < nc; i++) { O[i] = M(i, i);}
   }
 
   /**
@@ -148,9 +150,9 @@ public:
   template<class Matrix, class Scalar>
   static void fill(Matrix& M, Scalar x)
   {
-    for (unsigned int i = 0; i < M.getNumberOfRows(); i++)
+    for (size_t i = 0; i < M.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < M.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < M.getNumberOfColumns(); j++)
       {
         M(i, j) = x;
       }
@@ -169,9 +171,9 @@ public:
   template<class Matrix, class Scalar>
   static void scale(Matrix& A, Scalar a, Scalar b = 0)
   {
-    for (unsigned int i = 0; i < A.getNumberOfRows(); i++)
+    for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < A.getNumberOfColumns(); j++)
       {
         A(i, j) = a * A(i, j) + b;
       }
@@ -186,18 +188,18 @@ public:
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
     O.resize(nrA, ncB);
-    for (unsigned int i = 0; i < nrA; i++)
+    for (size_t i = 0; i < nrA; i++)
     {
-      for (unsigned int j = 0; j < ncB; j++)
+      for (size_t j = 0; j < ncB; j++)
       {
         O(i, j) = 0;
-        for (unsigned int k = 0; k < ncA; k++)
+        for (size_t k = 0; k < ncA; k++)
         {
           O(i, j) += A(i, k) * B(k, j);
         }
@@ -220,19 +222,19 @@ public:
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
     if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size.", D.size(), ncA);
     O.resize(nrA, ncB);
-    for (unsigned int i = 0; i < nrA; i++)
+    for (size_t i = 0; i < nrA; i++)
     {
-      for (unsigned int j = 0; j < ncB; j++)
+      for (size_t j = 0; j < ncB; j++)
       {
         O(i, j) = 0;
-        for (unsigned int k = 0; k < ncA; k++)
+        for (size_t k = 0; k < ncA; k++)
         {
           O(i, j) += A(i, k) * B(k, j) * D[k];
         }
@@ -259,23 +261,23 @@ public:
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const std::vector<Scalar>& U, const std::vector<Scalar>& L, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
     if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size.", D.size(), ncA);
     if (ncA != U.size()+1) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size-1.", U.size(), ncA);
     if (ncA != L.size()+1) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size-1.", L.size(), ncA);
     O.resize(nrA, ncB);
-    for (unsigned int i = 0; i < nrA; i++)
+    for (size_t i = 0; i < nrA; i++)
       {
-        for (unsigned int j = 0; j < ncB; j++)
+        for (size_t j = 0; j < ncB; j++)
           {
             O(i, j) = A(i, 0) * D[0] * B(0, j);
             if (nrB>1)
               O(i, j) += A(i,0) * U[0] * B(1,j);
-            for (unsigned int k = 1; k < ncA-1; k++)
+            for (size_t k = 1; k < ncA-1; k++)
               {
                 O(i, j) += A(i, k) * (L[k-1] * B(k-1, j) + D[k] * B(k, j) + U[k] * B(k+1,j));
               }
@@ -296,15 +298,15 @@ public:
   template<class MatrixA, class MatrixB>
   static void add(MatrixA& A, const MatrixB& B) throw (DimensionException)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
     if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
-    for (unsigned int i = 0; i < A.getNumberOfRows(); i++)
+    for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < A.getNumberOfColumns(); j++)
       {
         A(i, j) += B(i, j);
       }
@@ -322,15 +324,15 @@ public:
   template<class MatrixA, class MatrixB, class Scalar>
   static void add(MatrixA& A, Scalar& x, const MatrixB& B) throw (DimensionException)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
     if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
-    for (unsigned int i = 0; i < A.getNumberOfRows(); i++)
+    for (size_t i = 0; i < A.getNumberOfRows(); i++)
       {
-        for (unsigned int j = 0; j < A.getNumberOfColumns(); j++)
+        for (size_t j = 0; j < A.getNumberOfColumns(); j++)
           {
             A(i, j) += x*B(i, j);
           }
@@ -349,9 +351,9 @@ public:
    * @throw DimensionException If m is not a square matrix.
    */
   template<class Matrix>
-  static void pow(const Matrix& A, unsigned int p, Matrix& O) throw (DimensionException)
+  static void pow(const Matrix& A, size_t p, Matrix& O) throw (DimensionException)
   {
-    unsigned int n = A.getNumberOfRows();
+    size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
     switch(p){
     case 0:
@@ -390,7 +392,7 @@ public:
   template<class Scalar>
   static void pow(const Matrix<Scalar>& A, double p, Matrix<Scalar>& O) throw (DimensionException)
   {
-    unsigned int n = A.getNumberOfRows();
+    size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
     EigenValue<Scalar> eigen(A);
     RowMatrix<Scalar> rightEV, leftEV;
@@ -412,7 +414,7 @@ public:
   template<class Scalar>
   static void exp(const Matrix<Scalar>& A, Matrix<Scalar>& O) throw (DimensionException)
   {
-    unsigned int n = A.getNumberOfRows();
+    size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::exp(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
     EigenValue<Scalar> eigen(A);
     RowMatrix<Scalar> rightEV, leftEV;
@@ -432,16 +434,16 @@ public:
    */
   
   template<class Matrix, class Scalar>
-  static void Taylor(const Matrix& A, unsigned int p, std::vector< RowMatrix<Scalar> > & vO) throw (DimensionException)
+  static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> > & vO) throw (DimensionException)
   {
-    unsigned int n = A.getNumberOfRows();
+    size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns())
       throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
     vO.resize(p+1);
     getId<Matrix>(n, vO[0]);
     copy(A,vO[1]);
     
-    for (unsigned int i = 1; i < p; i++)
+    for (size_t i = 1; i < p; i++)
       {
         mult(vO[i], A, vO[i+1]);
       }
@@ -452,17 +454,17 @@ public:
    * @param m The matrix.
    */
   template<class Matrix>
-  static std::vector<unsigned int> whichMax(const Matrix& m)
+  static std::vector<size_t> whichMax(const Matrix& m)
   {
-    unsigned int nrows = m.getNumberOfRows();
-    unsigned int ncols = m.getNumberOfColumns();
-    std::vector<unsigned int> pos(2);
-    unsigned int imax = 0;
-    unsigned int jmax = 0;
+    size_t nrows = m.getNumberOfRows();
+    size_t ncols = m.getNumberOfColumns();
+    std::vector<size_t> pos(2);
+    size_t imax = 0;
+    size_t jmax = 0;
     double currentMax = log(0.);
-    for (unsigned int i = 0; i < nrows; i++)
+    for (size_t i = 0; i < nrows; i++)
     {
-      for (unsigned int j = 0; j < ncols; j++)
+      for (size_t j = 0; j < ncols; j++)
       {
         double currentValue = m(i, j);
         // cout << currentValue << "\t" << (currentValue > currentMax) << endl;
@@ -484,17 +486,17 @@ public:
    * @param m The matrix.
    */
   template<class Matrix>
-  static std::vector<unsigned int> whichMin(const Matrix& m)
+  static std::vector<size_t> whichMin(const Matrix& m)
   {
-    unsigned int nrows = m.getNumberOfRows();
-    unsigned int ncols = m.getNumberOfColumns();
-    std::vector<unsigned int> pos(2);
-    unsigned int imin = 0;
-    unsigned int jmin = 0;
+    size_t nrows = m.getNumberOfRows();
+    size_t ncols = m.getNumberOfColumns();
+    std::vector<size_t> pos(2);
+    size_t imin = 0;
+    size_t jmin = 0;
     double currentMin = -log(0.);
-    for (unsigned int i = 0; i < nrows; i++)
+    for (size_t i = 0; i < nrows; i++)
     {
-      for (unsigned int j = 0; j < ncols; j++)
+      for (size_t j = 0; j < ncols; j++)
       {
         double currentValue = m(i, j);
         if (currentValue < currentMin)
@@ -517,12 +519,12 @@ public:
   template<class Real>
   static Real max(const Matrix<Real>& m)
   {
-    unsigned int nrows = m.getNumberOfRows();
-    unsigned int ncols = m.getNumberOfColumns();
+    size_t nrows = m.getNumberOfRows();
+    size_t ncols = m.getNumberOfColumns();
     Real currentMax = log(0.);
-    for (unsigned int i = 0; i < nrows; i++)
+    for (size_t i = 0; i < nrows; i++)
     {
-      for (unsigned int j = 0; j < ncols; j++)
+      for (size_t j = 0; j < ncols; j++)
       {
         Real currentValue = m(i, j);
         // cout << currentValue << "\t" << (currentValue > currentMax) << endl;
@@ -543,12 +545,12 @@ public:
   template<class Real>
   static Real min(const Matrix<Real>& m)
   {
-    unsigned int nrows = m.getNumberOfRows();
-    unsigned int ncols = m.getNumberOfColumns();
+    size_t nrows = m.getNumberOfRows();
+    size_t ncols = m.getNumberOfColumns();
     Real currentMin = -log(0.);
-    for (unsigned int i = 0; i < nrows; i++)
+    for (size_t i = 0; i < nrows; i++)
     {
-      for (unsigned int j = 0; j < ncols; j++)
+      for (size_t j = 0; j < ncols; j++)
       {
         Real currentValue = m(i, j);
         if (currentValue < currentMin)
@@ -571,10 +573,10 @@ public:
   {
     out << m.getNumberOfRows() << "x" << m.getNumberOfColumns() << std::endl;
     out << "[" << std::endl;
-    for (unsigned int i = 0; i < m.getNumberOfRows(); i++)
+    for (size_t i = 0; i < m.getNumberOfRows(); i++)
     {
       out << "[";
-      for (unsigned int j = 0; j < m.getNumberOfColumns() - 1; j++)
+      for (size_t j = 0; j < m.getNumberOfColumns() - 1; j++)
       {
         out << m(i, j) << ", ";
       }
@@ -595,9 +597,9 @@ public:
   {
     out.precision(12);
     out << variableName << "<-matrix(c(";
-    for (unsigned int i = 0; i < m.getNumberOfRows(); i++)
+    for (size_t i = 0; i < m.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < m.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < m.getNumberOfColumns(); j++)
       {
         if (i > 0 || j > 0)
           out << ", ";
@@ -619,7 +621,7 @@ public:
   {
     out << v.size() << std::endl;
     out << "[";
-    for (unsigned int i = 0; i < v.size() - 1; i++)
+    for (size_t i = 0; i < v.size() - 1; i++)
     {
       out << v[i] << ", ";
     }
@@ -675,9 +677,9 @@ public:
   static void transpose(const MatrixA& A, MatrixO& O)
   {
     O.resize(A.getNumberOfColumns(), A.getNumberOfRows());
-    for (unsigned int i = 0; i < A.getNumberOfColumns(); i++)
+    for (size_t i = 0; i < A.getNumberOfColumns(); i++)
     {
-      for (unsigned int j = 0; j < A.getNumberOfRows(); j++)
+      for (size_t j = 0; j < A.getNumberOfRows(); j++)
       {
         O(i, j) = A(j, i);
       }
@@ -699,17 +701,17 @@ public:
   template<class Scalar>
   static void covar(const Matrix<Scalar>& A, Matrix<Scalar>& O)
   {
-    unsigned int r = A.getNumberOfRows();
-    unsigned int n = A.getNumberOfColumns();
+    size_t r = A.getNumberOfRows();
+    size_t n = A.getNumberOfColumns();
     O.resize(r, r);
     RowMatrix<Scalar> tA;
     transpose(A, tA);
     mult(A, tA, O);
     scale(O, 1. / static_cast<double>(n));
     RowMatrix<Scalar> mean(r, 1);
-    for (unsigned int i = 0; i < r; i++)
+    for (size_t i = 0; i < r; i++)
     {
-      for (unsigned int j = 0; j < n; j++)
+      for (size_t j = 0; j < n; j++)
       {
         mean(i, 0) += A(i, j);
       }
@@ -733,19 +735,19 @@ public:
   template<class Scalar>
   static void kroneckerMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     O.resize(nrA * nrB, ncA * ncB);
-    for (unsigned int ia = 0; ia < nrA; ia++)
+    for (size_t ia = 0; ia < nrA; ia++)
     {
-      for (unsigned int ja = 0; ja < ncA; ja++)
+      for (size_t ja = 0; ja < ncA; ja++)
       {
         Scalar aij = A(ia, ja);
-        for (unsigned int ib = 0; ib < nrB; ib++)
+        for (size_t ib = 0; ib < nrB; ib++)
         {
-          for (unsigned int jb = 0; jb < ncB; jb++)
+          for (size_t jb = 0; jb < ncB; jb++)
           {
             O(ia * nrB + ib, ja * ncB + jb) = aij * B(ib, jb);
           }
@@ -764,16 +766,16 @@ public:
   template<class Scalar>
   static void hadamardMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     if (nrA != nrB) throw DimensionException("MatrixTools::hadamardMult(). nrows A != nrows B.", nrA, nrB);
     if (ncA != ncB) throw DimensionException("MatrixTools::hadamardMult(). ncols A != ncols B.", ncA, ncB);
     O.resize(nrA, ncA);
-    for (unsigned int i = 0; i < nrA; i++)
+    for (size_t i = 0; i < nrA; i++)
     {
-      for (unsigned int j = 0; j < ncA; j++)
+      for (size_t j = 0; j < ncA; j++)
       {
         O(i, j) = A(i, j) * B(i, j);
       }
@@ -791,17 +793,17 @@ public:
   template<class Scalar>
   static void hadamardMult(const Matrix<Scalar>& A, const std::vector<Scalar>& B, Matrix<Scalar>& O, bool row = true)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int sB = B.size();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t sB = B.size();
     if (row == true && nrA != sB) throw DimensionException("MatrixTools::hadamardMult(). nrows A != size of B.", nrA, sB);
     if (row == false && ncA != sB) throw DimensionException("MatrixTools::hadamardMult(). ncols A != size of B.", ncA, sB);
     O.resize(nrA, ncA);
     if (row)
     {
-      for (unsigned int i = 0; i < nrA; i++)
+      for (size_t i = 0; i < nrA; i++)
       {
-        for (unsigned int j = 0; j < ncA; j++)
+        for (size_t j = 0; j < ncA; j++)
         {
           O(i, j) = A(i, j) * B[i];
         }
@@ -809,9 +811,9 @@ public:
     }
     else
     {
-      for (unsigned int i = 0; i < nrA; i++)
+      for (size_t i = 0; i < nrA; i++)
       {
-        for (unsigned int j = 0; j < ncA; j++)
+        for (size_t j = 0; j < ncA; j++)
         {
           O(i, j) = A(i, j) * B[j];
         }
@@ -829,21 +831,21 @@ public:
   template<class Scalar>
   static void kroneckerSum(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
   {
-    unsigned int ncA = A.getNumberOfColumns();
-    unsigned int nrA = A.getNumberOfRows();
-    unsigned int nrB = B.getNumberOfRows();
-    unsigned int ncB = B.getNumberOfColumns();
+    size_t ncA = A.getNumberOfColumns();
+    size_t nrA = A.getNumberOfRows();
+    size_t nrB = B.getNumberOfRows();
+    size_t ncB = B.getNumberOfColumns();
     O.resize(nrA + nrB, ncA + ncB);
-    for (unsigned int ia = 0; ia < nrA; ia++)
+    for (size_t ia = 0; ia < nrA; ia++)
     {
-      for (unsigned int ja = 0; ja < ncA; ja++)
+      for (size_t ja = 0; ja < ncA; ja++)
       {
         O(ia, ja) = A(ia, ja);
       }
     }
-    for (unsigned int ib = 0; ib < nrB; ib++)
+    for (size_t ib = 0; ib < nrB; ib++)
     {
-      for (unsigned int jb = 0; jb < nrB; jb++)
+      for (size_t jb = 0; jb < nrB; jb++)
       {
         O(nrA + ib, ncA + jb) = B(ib, jb);
       }
@@ -859,22 +861,22 @@ public:
   template<class Scalar>
   static void kroneckerSum(const std::vector< Matrix<Scalar>*>& vA, Matrix<Scalar>& O)
   {
-    unsigned int nr = 0;
-    unsigned int nc = 0;
-    for (unsigned int k = 0; k < vA.size(); k++)
+    size_t nr = 0;
+    size_t nc = 0;
+    for (size_t k = 0; k < vA.size(); k++)
     {
       nr += vA[k]->getNumberOfRows();
       nc += vA[k]->getNumberOfColumns();
     }
     O.resize(nr, nc);
-    unsigned int rk = 0; // Row counter
-    unsigned int ck = 0; // Col counter
-    for (unsigned int k = 0; k < vA.size(); k++)
+    size_t rk = 0; // Row counter
+    size_t ck = 0; // Col counter
+    for (size_t k = 0; k < vA.size(); k++)
     {
       const Matrix<Scalar>* Ak = vA[k];
-      for (unsigned int i = 0; i < Ak->getNumberOfRows(); i++)
+      for (size_t i = 0; i < Ak->getNumberOfRows(); i++)
       {
-        for (unsigned int j = 0; j < Ak->getNumberOfColumns(); j++)
+        for (size_t j = 0; j < Ak->getNumberOfColumns(); j++)
         {
           O(rk + i, ck + j) = (*Ak)(i, j);
         }
@@ -893,13 +895,13 @@ public:
   template<class Scalar>
   static void toVVdouble(const Matrix<Scalar>& M, std::vector< std::vector<Scalar> >& vO)
   {
-    unsigned int n = M.getNumberOfRows();
-    unsigned int m = M.getNumberOfColumns();
+    size_t n = M.getNumberOfRows();
+    size_t m = M.getNumberOfColumns();
     vO.resize(n);
-    for (unsigned int i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
     {
       vO[i].resize(m);
-      for (unsigned int j = 0; j < m; j++)
+      for (size_t j = 0; j < m; j++)
       {
         vO[i][j] = M(i, j);
       }
@@ -915,9 +917,9 @@ public:
   static Scalar sumElements(const Matrix<Scalar>& M)
   {
     Scalar sum = 0;
-    for (unsigned int i = 0; i < M.getNumberOfRows(); i++)
+    for (size_t i = 0; i < M.getNumberOfRows(); i++)
     {
-      for (unsigned int j = 0; j < M.getNumberOfColumns(); j++)
+      for (size_t j = 0; j < M.getNumberOfColumns(); j++)
       {
         sum += M(i, j);
       }
@@ -948,21 +950,21 @@ public:
       std::vector<Scalar> &u, 
       std::vector<Scalar> &v) throw (Exception)
   {
-    unsigned int dim = assignCost.getNumberOfRows();
+    size_t dim = assignCost.getNumberOfRows();
     if (assignCost.getNumberOfColumns() != dim)
       throw Exception("MatrixTools::lap. Cost matrix should be scare.");
   
     bool unassignedFound;
-    unsigned int i, iMin;
-    unsigned int numFree = 0, previousNumFree, f, i0, k, freeRow;
-    std::vector<unsigned int> free(dim); // list of unassigned rows.
-    std::vector<unsigned int> pred(dim); // row-predecessor of column in augmenting/alternating path.
-    unsigned int j, j1, j2, endOfPath, last, low, up;
-    std::vector<unsigned int> colList(dim); // list of columns to be scanned in various ways.
+    size_t i, iMin;
+    size_t numFree = 0, previousNumFree, f, i0, k, freeRow;
+    std::vector<size_t> free(dim); // list of unassigned rows.
+    std::vector<size_t> pred(dim); // row-predecessor of column in augmenting/alternating path.
+    size_t j, j1, j2, endOfPath, last, low, up;
+    std::vector<size_t> colList(dim); // list of columns to be scanned in various ways.
     std::vector<short int> matches(dim, 0); // counts how many times a row could be assigned.
     Scalar min;
     Scalar h;
-    unsigned int uMin, uSubMin;
+    size_t uMin, uSubMin;
     Scalar v2;
     std::vector<Scalar> d(dim); // 'cost-distance' in augmenting path calculation.
 
@@ -1235,8 +1237,8 @@ public:
    Matrix operator-(const Matrix A)
    {
    Matrix B(A.getNumberOfRows(), A.getNumberOfColumns());
-   for(unsigned int i = 0; i < B.getNumberOfRows(); i++) {
-   for(unsigned int j = 0; j < B.getNumberOfColumns(); j++) {
+   for(size_t i = 0; i < B.getNumberOfRows(); i++) {
+   for(size_t j = 0; j < B.getNumberOfColumns(); j++) {
    B(i, j) = -A(i, j);
    }
    }
@@ -1246,15 +1248,15 @@ public:
    template<class MatrixA, class MatrixB>
    MatrixA operator-(const MatrixA & A, const MatrixB & B) throw (DimensionException)
    {
-   //    unsigned int ncA = A.getNumberOfColumns();
-   //    unsigned int nrA = A.getNumberOfRows();
-   //    unsigned int nrB = B.getNumberOfRows();
-   //    unsigned int ncB = B.getNumberOfColumns();
+   //    size_t ncA = A.getNumberOfColumns();
+   //    size_t nrA = A.getNumberOfRows();
+   //    size_t nrB = B.getNumberOfRows();
+   //    size_t ncB = B.getNumberOfColumns();
    //    if(ncA != ncB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of colums.", ncB, ncA);
    //    if(nrA != nrB) throw DimensionException("MatrixTools::operator-(). A and B must have the same number of rows.", nrB, nrA);
    //    MatrixB C(A.getNumberOfRows(), A.getNumberOfColumns());
-   //    for(unsigned int i = 0; i < A.getNumberOfRows(); i++) {
-   //      for(unsigned int j = 0; j < A.getNumberOfColumns(); j++) {
+   //    for(size_t i = 0; i < A.getNumberOfRows(); i++) {
+   //      for(size_t j = 0; j < A.getNumberOfColumns(); j++) {
    //        C(i, j) = A(i, j) - B(i, j);
    //      }
    //    }

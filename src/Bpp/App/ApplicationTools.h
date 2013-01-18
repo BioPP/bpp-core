@@ -112,7 +112,7 @@ class ApplicationTools
     /**
      * @brief The width of the output terminal (in character).
      */
-    static unsigned int terminalWidth;
+    static size_t terminalWidth;
 
     /**
      * @brief The fraction of terminal width dedicated to messages.
@@ -418,7 +418,7 @@ class ApplicationTools
     template<class T>
     static void displayResult(const std::string& text, const T& result)
     {
-      displayMessage(TextTools::resizeRight(text, (unsigned int) (terminalWidth * terminalSplit - 1), '.') + ": " + TextTools::toString<T>(result));
+      displayMessage(TextTools::resizeRight(text, static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit - 1), '.') + ": " + TextTools::toString<T>(result));
     }
 
     /**

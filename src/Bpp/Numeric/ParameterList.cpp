@@ -139,7 +139,7 @@ ParameterList ParameterList::subList(const std::string& name) const throw (Param
 }
 
 /******************************************************************************/
-ParameterList ParameterList::subList(const std::vector<unsigned int>& parameters) const
+ParameterList ParameterList::subList(const std::vector<size_t>& parameters) const
 {
   ParameterList pl;
   for (unsigned int i = 0; i < parameters.size(); i++)
@@ -150,7 +150,7 @@ ParameterList ParameterList::subList(const std::vector<unsigned int>& parameters
 }
 
 /******************************************************************************/
-ParameterList ParameterList::subList(unsigned int parameter) const
+ParameterList ParameterList::subList(size_t parameter) const
 {
   ParameterList pl;
   if (parameter < size()) pl.parameters_.push_back(dynamic_cast<Parameter*>(parameters_[parameter]->clone()));
@@ -204,7 +204,7 @@ void ParameterList::addParameter(Parameter* param) throw (ParameterException)
 
 /******************************************************************************/
 
-void ParameterList::setParameter(unsigned int index, const Parameter& param) throw (IndexOutOfBoundsException)
+void ParameterList::setParameter(size_t index, const Parameter& param) throw (IndexOutOfBoundsException)
 {
   if (index >= size()) throw IndexOutOfBoundsException("ParameterList::setParameter.", index, 0, size());
   delete parameters_[index];
@@ -428,7 +428,7 @@ void ParameterList::deleteParameters(const std::vector<std::string>& names) thro
 }
 
 /******************************************************************************/
-void ParameterList::deleteParameter(unsigned int index) throw (IndexOutOfBoundsException)
+void ParameterList::deleteParameter(size_t index) throw (IndexOutOfBoundsException)
 {
   if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
   Parameter* p = parameters_[index];
@@ -437,13 +437,13 @@ void ParameterList::deleteParameter(unsigned int index) throw (IndexOutOfBoundsE
 }
 
 /******************************************************************************/
-void ParameterList::deleteParameters(const std::vector<unsigned int>& indices) throw (IndexOutOfBoundsException)
+void ParameterList::deleteParameters(const std::vector<size_t>& indices) throw (IndexOutOfBoundsException)
 {
-  vector<unsigned int> tmp(indices);
+  vector<size_t> tmp(indices);
   sort(tmp.begin(), tmp.end());
-  for (vector<unsigned int>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
+  for (vector<size_t>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
   {
-    unsigned int index = *i;
+    size_t index = *i;
     if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
     Parameter* p = parameters_[index];
     delete p;
@@ -452,9 +452,9 @@ void ParameterList::deleteParameters(const std::vector<unsigned int>& indices) t
 }
 
 /******************************************************************************/
-unsigned int ParameterList::whichParameterHasName(const std::string& name) const throw (ParameterNotFoundException)
+size_t ParameterList::whichParameterHasName(const std::string& name) const throw (ParameterNotFoundException)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     if (parameters_[i]->getName() == name) return i;
   }

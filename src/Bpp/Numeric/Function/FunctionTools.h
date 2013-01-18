@@ -79,12 +79,12 @@ class ParameterGrid
       return names_[i];
     }
 
-    unsigned int getNumberOfDimensions() const { return names_.size(); }
+    size_t getNumberOfDimensions() const { return names_.size(); }
     
     /**
      * @return The total number of points in the grid, that is the product of all dimension sizes.
      */
-    unsigned int getTotalNumberOfPoints() const;
+    size_t getTotalNumberOfPoints() const;
 
     const VVdouble& getPoints() const { return grid_; }
     const Vdouble& getPointsForDimension(unsigned int i) const throw (IndexOutOfBoundsException);

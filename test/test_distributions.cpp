@@ -55,7 +55,7 @@ void testSumProbs(const DiscreteDistribution& dist) throw (Exception) {
 void testEqualProbs(const DiscreteDistribution& dist) throw (Exception) {
   cout << "Test equality of probabilities: ";
   cout.flush();
-  for (unsigned int i = 1; i < dist.getNumberOfCategories(); ++i)
+  for (size_t i = 1; i < dist.getNumberOfCategories(); ++i)
     if (abs(dist.getProbability(i) - dist.getProbability(i - 1)) > 0.000001)
       throw Exception("Probability " + TextTools::toString(i) + " and " + TextTools::toString(i - 1) + " differ.");
   cout << "ok" << endl;

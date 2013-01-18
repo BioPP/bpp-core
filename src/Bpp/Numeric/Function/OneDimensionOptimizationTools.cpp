@@ -184,11 +184,11 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(
   //parameters.matchParametersValues(f1dim.getFunction()->getParameters());
   
   double xmin = f1dim.getParameters()[0].getValue();
-  for(unsigned int j = 0; j < parameters.size(); j++)
-    {
-      xi[j] *= xmin;
-      parameters[j].setValue(parameters[j].getValue() + xi[j]);
-    }
+  for(size_t j = 0; j < parameters.size(); j++)
+  {
+    xi[j] *= xmin;
+    parameters[j].setValue(parameters[j].getValue() + xi[j]);
+  }
   return bod.getNumberOfEvaluations();
 }
 
@@ -202,7 +202,7 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
                                                        OutputStream* messenger,
                                                        int verbose)
 {
-  unsigned int size=xi.size();
+  size_t size = xi.size();
   
   f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
   f1dim.setMessageHandler(messenger);

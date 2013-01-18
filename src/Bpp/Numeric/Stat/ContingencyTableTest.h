@@ -60,8 +60,8 @@ class ContingencyTableTest:
     double statistic_;
     double pvalue_;
     double df_;
-    std::vector<unsigned int> margin1_;
-    std::vector<unsigned int> margin2_;
+    std::vector<size_t> margin1_;
+    std::vector<size_t> margin2_;
 
   public:
     /**
@@ -71,7 +71,7 @@ class ContingencyTableTest:
      * @param nbPermutations If greater than 0, performs a randomization test instead of using the chisquare approximation.
      * @param warn Should a warning message be displayed in case of unsufficient observations?
      */
-    ContingencyTableTest(const std::vector< std::vector<unsigned int> >& table, unsigned int nbPermutations = 0, bool warn = true);
+    ContingencyTableTest(const std::vector< std::vector<size_t> >& table, unsigned int nbPermutations = 0, bool warn = true);
     virtual ~ContingencyTableTest() {}
 
 #ifndef NO_VIRTUAL_COV
@@ -86,8 +86,8 @@ class ContingencyTableTest:
     double getStatistic() const { return statistic_; }
     double getPValue() const { return pvalue_; }
     double getDegreesOfFreedom() const { return df_; }
-    const std::vector<unsigned int> getMarginRows() const { return margin1_; }
-    const std::vector<unsigned int> getMarginColumns() const { return margin2_; }
+    const std::vector<size_t> getMarginRows() const { return margin1_; }
+    const std::vector<size_t> getMarginColumns() const { return margin2_; }
 
 };
 

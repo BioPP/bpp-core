@@ -117,7 +117,7 @@ class AbstractParametrizable:
       return test;
     }
 
-    unsigned int getNumberOfParameters() const { return parameters_.size(); }
+    size_t getNumberOfParameters() const { return parameters_.size(); }
      
     void setNamespace(const std::string& prefix);
     
@@ -144,7 +144,7 @@ class AbstractParametrizable:
       parameters_.addParameters(parameters);
     }
 
-    void deleteParameter_(unsigned int index) throw (IndexOutOfBoundsException)
+    void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
     {
       if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
@@ -185,13 +185,13 @@ class AbstractParametrizable:
       return getParameter(name);
     }
 
-    Parameter& getParameter_(unsigned int index) throw (IndexOutOfBoundsException)
+    Parameter& getParameter_(size_t index) throw (IndexOutOfBoundsException)
     {
       if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
       return parameters_[index];
     }
-    const Parameter& getParameter_(unsigned int index) const throw (IndexOutOfBoundsException)
+    const Parameter& getParameter_(size_t index) const throw (IndexOutOfBoundsException)
     {
       if(index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);

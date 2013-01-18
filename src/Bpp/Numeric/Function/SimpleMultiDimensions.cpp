@@ -71,7 +71,7 @@ void SimpleMultiDimensions::doInit(const ParameterList& params) throw (Exception
   if (nbParams_ == 0) return;
 
   // Initialize optimizers:
-  unsigned int nbEvalMax = nbEvalMax_ / nbParams_;
+  unsigned int nbEvalMax = nbEvalMax_ / static_cast<unsigned int>(nbParams_);
   optimizer_.setMaximumNumberOfEvaluations(nbEvalMax);
   optimizer_.setProfiler(getProfiler());
   optimizer_.setMessageHandler(getMessageHandler());

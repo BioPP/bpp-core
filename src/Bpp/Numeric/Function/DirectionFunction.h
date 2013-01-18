@@ -55,32 +55,32 @@ class DirectionFunction:
   public ParametrizableAdapter
 {
   private:
-    mutable ParameterList _params, _p, _xt;
-    std::vector<double> _xi;
-    Function* _function;
-    std::string _constraintPolicy;
-    OutputStream* _messenger;
+    mutable ParameterList params_, p_, xt_;
+    std::vector<double> xi_;
+    Function* function_;
+    std::string constraintPolicy_;
+    OutputStream* messenger_;
       
   public:
     DirectionFunction(Function* function = 0) :
-      _params(), _p(), _xt(), _xi(),
-      _function(function), _constraintPolicy(AutoParameter::CONSTRAINTS_KEEP),
-      _messenger(ApplicationTools::message) {}
+      params_(), p_(), xt_(), xi_(),
+      function_(function), constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
+      messenger_(ApplicationTools::message) {}
 
     DirectionFunction(const DirectionFunction& df) :
-      ParametrizableAdapter(df), _params(df._params), _p(df._p), _xt(df._p), _xi(df._xi),
-      _function(df._function), _constraintPolicy(df._constraintPolicy), _messenger(df._messenger) {}
+      ParametrizableAdapter(df), params_(df.params_), p_(df.p_), xt_(df.p_), xi_(df.xi_),
+      function_(df.function_), constraintPolicy_(df.constraintPolicy_), messenger_(df.messenger_) {}
 
     DirectionFunction& operator=(const DirectionFunction& df)
     {
       ParametrizableAdapter::operator=(df);
-      _params = df._params;
-      _p = df._p;
-      _xt = df._p;
-      _xi = df._xi;
-      _function = df._function;
-      _constraintPolicy = df._constraintPolicy;
-      _messenger = df._messenger;
+      params_ = df.params_;
+      p_ = df.p_;
+      xt_ = df.p_;
+      xi_ = df.xi_;
+      function_ = df.function_;
+      constraintPolicy_ = df.constraintPolicy_;
+      messenger_ = df.messenger_;
       return *this;
     }
 
@@ -98,15 +98,15 @@ class DirectionFunction:
     void init(const ParameterList & p, const std::vector<double> & xi);
     void autoParameter();
     void ignoreConstraints();
-    void setConstraintPolicy(const std::string & constraintPolicy) { _constraintPolicy = constraintPolicy; }
-    std::string getConstraintPolicy() const { return _constraintPolicy; }
-    void setMessageHandler(OutputStream* messenger) { _messenger = messenger; }
-    Function * getFunction() const { return _function; }
+    void setConstraintPolicy(const std::string & constraintPolicy) { constraintPolicy_ = constraintPolicy; }
+    std::string getConstraintPolicy() const { return constraintPolicy_; }
+    void setMessageHandler(OutputStream* messenger) { messenger_ = messenger; }
+    Function * getFunction() const { return function_; }
     /**
      * @return The set of parameters associated to the function, as specified by the init() method.
      */
-    ParameterList getFunctionParameters() const { return _p; }
-    unsigned int getNumberOfParameters() const { return _p.size(); }
+    ParameterList getFunctionParameters() const { return p_; }
+    size_t getNumberOfParameters() const { return p_.size(); }
 
 };
 

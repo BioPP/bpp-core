@@ -53,7 +53,7 @@ OutputStream* ApplicationTools::error   = new StdErr();
 OutputStream* ApplicationTools::message = new StdOut();
 OutputStream* ApplicationTools::warning = new StdOut();
 time_t ApplicationTools::startTime;
-unsigned int ApplicationTools::terminalWidth = 80;
+size_t ApplicationTools::terminalWidth = 80;
 float ApplicationTools::terminalSplit = 0.5;
 bool ApplicationTools::interactive = true;
 
@@ -213,9 +213,9 @@ void ApplicationTools::displayTask(const std::string& text, bool eof)
 {
   if (message)
   {
-    *message << TextTools::resizeRight(text, (unsigned int) (terminalWidth * terminalSplit - 1), '.') << ": ";
-    if(eof) message->endLine();
-    else    message->flush();
+    *message << TextTools::resizeRight(text, static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit - 1), '.') << ": ";
+    if (eof) message->endLine();
+    else     message->flush();
   }
 }
     
@@ -227,8 +227,8 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
 {
   if (!message) return;
   if (total == 0) return;//We do not display anything in that case.
-  size_t width = static_cast<size_t>(terminalWidth * terminalSplit - 2);
-  string gauge = string(static_cast<unsigned int>((1. * iter / total) * width), symbol);
+  size_t width = static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit - 2);
+  string gauge = string(static_cast<size_t>((1. * static_cast<double>(iter) / static_cast<double>(total)) * static_cast<double>(width)), symbol);
   string info = mes;
   if (interactive)
   {
@@ -247,10 +247,10 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
       message->flush();
       return;
     }
-    size_t step = static_cast<size_t>(ceil(1. * total / width));
+    size_t step = static_cast<size_t>(ceil(1. * static_cast<double>(total) / static_cast<double>(width)));
     if (iter >= total)
     {
-      size_t fill = static_cast<size_t>(terminalWidth * terminalSplit) - (total - 1) / step - 1;
+      size_t fill = static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit) - (total - 1) / step - 1;
       *message << TextTools::resizeLeft("]", fill, symbol);
       message->flush();
       return;

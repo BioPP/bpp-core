@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -102,11 +102,11 @@ class DimensionException :
   public Exception
 {
 	private:
-		unsigned int dimension_;
-		unsigned int correctDimension_; 
+		size_t dimension_;
+		size_t correctDimension_; 
 			
 	public:
-		DimensionException(const std::string& text, unsigned int dimension, unsigned int correctDimension) :
+		DimensionException(const std::string& text, size_t dimension, size_t correctDimension) :
 		    Exception("DimensionException (found " + TextTools::toString(dimension) + ", should be " + TextTools::toString(correctDimension) + ") " + text),
         dimension_(dimension),
         correctDimension_(correctDimension) {};
@@ -114,8 +114,8 @@ class DimensionException :
 		virtual ~DimensionException() throw () {}
 
 	public:
-		virtual unsigned int getDimension() const { return dimension_; }
-		virtual unsigned int getCorrectDimension() const { return correctDimension_; }
+		virtual size_t getDimension() const { return dimension_; }
+		virtual size_t getCorrectDimension() const { return correctDimension_; }
 };
 
 /**

@@ -55,7 +55,7 @@ class StatTools
     struct PValue_ {
       double pvalue_;
       size_t index_;
-      PValue_(double pvalue, unsigned int index):
+      PValue_(double pvalue, size_t index):
         pvalue_(pvalue), index_(index) {}
 
       bool operator<(const PValue_& pvalue) const {

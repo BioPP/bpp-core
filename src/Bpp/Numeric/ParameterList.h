@@ -87,14 +87,14 @@ public:
   /**
    * @return The number of parameters in the list.
    */
-  unsigned int size() const { return parameters_.size(); }
+  size_t size() const { return parameters_.size(); }
 
   /**
    * @return The parameter at a given position.
    * @warning No check is performed on the validity of the index given as input!
    */
-  virtual const Parameter& operator[](unsigned int i) const { return *parameters_[i]; }
-  virtual Parameter& operator[](unsigned int i) { return *parameters_[i]; }
+  virtual const Parameter& operator[](size_t i) const { return *parameters_[i]; }
+  virtual Parameter& operator[](size_t i) { return *parameters_[i]; }
 
   /**
    * @brief Get the parameter with name <i>name</i>.
@@ -148,7 +148,7 @@ public:
    * @param parameters Positions of the parameters to be included in the list.
    * @return A list with all parameters specified.
    */
-  virtual ParameterList subList(const std::vector<unsigned int>& parameters) const;
+  virtual ParameterList subList(const std::vector<size_t>& parameters) const;
 
   /**
    * @brief Get given parameter as a sublist.
@@ -156,7 +156,7 @@ public:
    * @param parameter Position of the parameters to be included in the list.
    * @return A list with the parameter specified.
    */
-  virtual ParameterList subList(unsigned int parameter) const;
+  virtual ParameterList subList(size_t parameter) const;
 
   /**
    * @brief Get the sublist containing all common parameter between this list and pl.
@@ -198,7 +198,7 @@ public:
    * @param param The parameter to add to the list.
    * @throw IndexOutOfBoundsException if the index is not valid.
    */
-  virtual void setParameter(unsigned int index, const Parameter& param) throw (IndexOutOfBoundsException);
+  virtual void setParameter(size_t index, const Parameter& param) throw (IndexOutOfBoundsException);
 
   /**
    * @brief Add new parameters at the end of the list.
@@ -332,7 +332,7 @@ public:
    *
    * @param index The position of the parameter to delete in the list.
    */
-  virtual void deleteParameter(unsigned int index) throw (IndexOutOfBoundsException);
+  virtual void deleteParameter(size_t index) throw (IndexOutOfBoundsException);
 
   /**
    * @brief Delete several parameters from the list.
@@ -340,7 +340,7 @@ public:
    * @param indices The positions of the parameters to delete in the list.
    * Duplicated positions will be considered only one time.
    */
-  virtual void deleteParameters(const std::vector<unsigned int>& indices) throw (IndexOutOfBoundsException);
+  virtual void deleteParameters(const std::vector<size_t>& indices) throw (IndexOutOfBoundsException);
 
   /**
    * @brief Get the position of a given parameter according to its name.
@@ -350,7 +350,7 @@ public:
    * the position of the first one is returned.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual unsigned int whichParameterHasName(const std::string& name) const throw (ParameterNotFoundException);
+  virtual size_t whichParameterHasName(const std::string& name) const throw (ParameterNotFoundException);
 
   /**
    * @brief Print all parameters.

@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -87,7 +87,7 @@ private:
    *
    */
    
-  unsigned int dim_;
+  size_t dim_;
 
   /*
    *@brief the method of parametrization.
@@ -97,8 +97,7 @@ private:
    * 2: Local ratio
    *
    */
-  
-  unsigned int method_;
+  unsigned short method_;
   
   std::vector<double> vProb_;
 
@@ -125,7 +124,7 @@ public:
    *
    */
   
-  Simplex(unsigned int dim, unsigned int method=0, const std::string& name="Simplex.");
+  Simplex(size_t dim, unsigned short method = 0, const std::string& name = "Simplex.");
 
   /**
    * @brief Builds a new Simplex object from a vector of probabilities
@@ -139,24 +138,20 @@ public:
    *
    */
 
-  Simplex(const std::vector<double>& probas, unsigned int method=0, const std::string& name="Simplex.");
+  Simplex(const std::vector<double>& probas, unsigned short method = 0, const std::string& name = "Simplex.");
   
   virtual ~Simplex() {}
 
-#if defined(NO_VIRTUAL_COV)
-    Clonable * clone() const { return new Simplex(*this); }
-#else
-    Simplex* clone() const { return new Simplex(*this); }
-#endif
+  Simplex* clone() const { return new Simplex(*this); }
 
 public:
   void fireParameterChanged(const ParameterList & parameters);
 
-  unsigned int dimension() const {return dim_;}
+  size_t dimension() const { return dim_; }
 
   void setFrequencies(const std::vector<double>&);
   
-  double prob(unsigned int i) const { return vProb_[i];}
+  double prob(size_t i) const { return vProb_[i];}
 };
 
 } //end of namespace bpp.

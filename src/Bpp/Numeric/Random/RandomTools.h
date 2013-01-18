@@ -216,10 +216,10 @@ namespace bpp
     {
       if (vout.size() > vin.size() && !replace)
         throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", vout.size(), 0, vin.size());
-      std::vector<unsigned int> hat(vin.size());
-      for (unsigned int i = 0 ; i < vin.size() ; i++)
+      std::vector<size_t> hat(vin.size());
+      for (size_t i = 0 ; i < vin.size() ; i++)
         hat[i] = i;
-      for (unsigned int i = 0 ; i < vout.size() ; i++)
+      for (size_t i = 0 ; i < vout.size() ; i++)
         vout[i] = vin[pickOne(hat, replace)];
     }
 
@@ -295,11 +295,11 @@ namespace bpp
     {
       if (vout.size() > vin.size() && !replace)
         throw IndexOutOfBoundsException("RandomTools::getSample (with weights): size exceeded v.size.", vout.size(), 0, vin.size());
-      std::vector<unsigned int> hat(vin.size());
-      for (unsigned int i = 0 ; i < vin.size() ; i++)
+      std::vector<size_t> hat(vin.size());
+      for (size_t i = 0 ; i < vin.size() ; i++)
         hat[i] = i;
       std::vector<double> w2(w); //non const copy
-      for (unsigned int i = 0 ; i < vout.size() ; i++)
+      for (size_t i = 0 ; i < vout.size() ; i++)
         vout[i] = vin[pickOne(hat, w2, replace)];
     }
 
@@ -313,7 +313,7 @@ namespace bpp
      * @param probs The set of intput probabilities.
      * @return A vector of int values corresponding to the output states. States are supposed to be in the same order as the input probabilities, the first state being '0'.
      */ 
-    static std::vector<unsigned int> randMultinomial(unsigned int n, const std::vector<double>& probs);
+    static std::vector<size_t> randMultinomial(size_t n, const std::vector<double>& probs);
 
     /**
      * @name Probability functions.

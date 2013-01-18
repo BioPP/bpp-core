@@ -973,9 +973,9 @@ namespace bpp
     {
       OutputType result = 0;
       for (size_t i = 0; i < v1.size(); i++)
-        {
-          result += v1[i] * v1[i];
-        }
+      {
+        result += v1[i] * v1[i];
+      }
       return sqrt(result);
     }
 

@@ -57,12 +57,12 @@ namespace bpp
   {
     private:
       std::string id_;
-      unsigned int alias_;
+      size_t alias_;
       ParameterList *pl_;
       std::string name_;
 
     public:
-      AliasParameterListener(const std::string& id, unsigned int alias, ParameterList* pl):
+      AliasParameterListener(const std::string& id, size_t alias, ParameterList* pl):
         id_(id),
         alias_(alias),
         pl_(pl),
@@ -155,7 +155,7 @@ namespace bpp
  
       const ParameterList& getIndependentParameters() const { return independentParameters_; }
     
-      unsigned int getNumberOfIndependentParameters() const { return independentParameters_.size(); }
+      size_t getNumberOfIndependentParameters() const { return independentParameters_.size(); }
 
       void aliasParameters(const std::string& p1, const std::string& p2) throw (ParameterNotFoundException, Exception);
 
@@ -186,7 +186,7 @@ namespace bpp
         independentParameters_.addParameters(parameters);
       }
 
-      void deleteParameter_(unsigned int index) throw (IndexOutOfBoundsException)
+      void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
       {
         std::string name = getParameter_(index).getName();
         AbstractParametrizable::deleteParameter_(index);

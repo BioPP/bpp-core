@@ -77,22 +77,20 @@ NumberFormatException::NumberFormatException(const std::string& text, const std:
 
 /******************************************************************************/
   
-IndexOutOfBoundsException::IndexOutOfBoundsException(const char* text, int badInt, int lowerBound, int upperBound):
-  BadIntegerException(
-    "out of [" + TextTools::toString(lowerBound) +  ", " + TextTools::toString(upperBound) + "])" + string(text),
-    badInt),
+IndexOutOfBoundsException::IndexOutOfBoundsException(const char* text, size_t badInt, size_t lowerBound, size_t upperBound):
+  Exception(
+    "out of [" + TextTools::toString(lowerBound) +  ", " + TextTools::toString(upperBound) + "])" + string(text)),
   lowerBound_(lowerBound),
   upperBound_(upperBound) {}
 
-IndexOutOfBoundsException::IndexOutOfBoundsException(const std::string& text, int badInt, int lowerBound, int upperBound):
-  BadIntegerException("out of [" + TextTools::toString(lowerBound) + ", " + TextTools::toString(upperBound) +  "])" + text,
-    badInt),
+IndexOutOfBoundsException::IndexOutOfBoundsException(const std::string& text, size_t badInt, size_t lowerBound, size_t upperBound):
+  Exception("out of [" + TextTools::toString(lowerBound) + ", " + TextTools::toString(upperBound) +  "])" + text),
   lowerBound_(lowerBound),
   upperBound_(upperBound) {}
 
-int* IndexOutOfBoundsException::getBounds() const
+vector<size_t> IndexOutOfBoundsException::getBounds() const
 {
-  int* bounds = new int[2];
+  vector<size_t> bounds(2);
   bounds[0] = lowerBound_;
   bounds[1] = upperBound_;
   return bounds;

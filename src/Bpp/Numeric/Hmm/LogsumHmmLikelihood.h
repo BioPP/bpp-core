@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -84,9 +84,9 @@ namespace bpp {
       std::vector<double> partialLogLikelihoods_;
       double logLik_;
 
-      std::vector<unsigned int> breakPoints_;
+      std::vector<size_t> breakPoints_;
 
-      unsigned int nbStates_, nbSites_;
+      size_t nbStates_, nbSites_;
 
     public:
       /**
@@ -144,9 +144,9 @@ namespace bpp {
 #ifndef NO_VIRTUAL_COV
       LogsumHmmLikelihood*
 #else
-        Clonable*
+      Clonable*
 #endif
-        clone() const { return new LogsumHmmLikelihood(*this); }
+      clone() const { return new LogsumHmmLikelihood(*this); }
 
     public:
       const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }
@@ -158,12 +158,12 @@ namespace bpp {
       const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
       HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
 
-      void setBreakPoints(const std::vector<unsigned int>& breakPoints) {
+      void setBreakPoints(const std::vector<size_t>& breakPoints) {
         breakPoints_ = breakPoints;
         computeForward_();
       }
 
-      const std::vector<unsigned int>& getBreakPoints() const { return breakPoints_; }
+      const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
 
       void setParameters(const ParameterList& pl) throw (Exception)
       {

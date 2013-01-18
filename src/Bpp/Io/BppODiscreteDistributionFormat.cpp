@@ -116,7 +116,7 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(
     while (strtok2.hasMoreToken())
       probas.push_back(TextTools::toDouble(strtok2.nextToken()));
 
-    std::map<unsigned int, std::vector<double> > ranges;
+    std::map<size_t, std::vector<double> > ranges;
 
     if (args.find("ranges") != args.end())
     {
@@ -292,7 +292,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     const MixtureOfDiscreteDistributions* mix = dynamic_cast<const MixtureOfDiscreteDistributions*>(&dist);
     if (mix)
     {
-      unsigned int nd = mix->getNumberOfDistributions();
+      size_t nd = mix->getNumberOfDistributions();
       for (unsigned int i = 0; i < nd; i++)
       {
         if (comma)
@@ -341,7 +341,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
   const SimpleDiscreteDistribution* ps = dynamic_cast<const SimpleDiscreteDistribution*>(&dist);
   if (ps)
   {
-    unsigned int nd = ps->getNumberOfCategories();
+    size_t nd = ps->getNumberOfCategories();
     if (comma)
       out << ",";
     out << "values=(";
@@ -352,7 +352,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
         out << ",";
     }
     out << "),probas=(";
-    for (unsigned int i = 0; i < nd; i++)
+    for (size_t i = 0; i < nd; i++)
     {
       out << ps->getProbability(i);
       if (i != nd - 1)
@@ -360,11 +360,11 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     }
     out << ")";
 
-    const std::map<unsigned int, std::vector<double> > range = ps->getRanges();
+    const std::map<size_t, std::vector<double> > range = ps->getRanges();
     if (range.size() != 0)
     {
       out << ",ranges=(";
-      std::map<unsigned int, std::vector<double> >::const_iterator it(range.begin());
+      std::map<size_t, std::vector<double> >::const_iterator it(range.begin());
       while (it != range.end())
       {
         out << "V" << TextTools::toString(it->first);
@@ -376,11 +376,11 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     }
     out << ")";
 
-    for (unsigned int i = 1; i < nd; i++)
+    for (size_t i = 1; i < nd; i++)
     {
       writtenNames.push_back(ps->getNamespace() + "theta" + TextTools::toString(i));
     }
-    for (unsigned int i = 1; i < nd + 1; i++)
+    for (size_t i = 1; i < nd + 1; i++)
     {
       writtenNames.push_back(ps->getNamespace() + "V" + TextTools::toString(i));
     }
@@ -398,14 +398,14 @@ void BppODiscreteDistributionFormat::initialize_(
 {
   ParameterList pl = rDist.getIndependentParameters();
 
-  for (unsigned int i = 0; i < pl.size(); ++i)
+  for (size_t i = 0; i < pl.size(); ++i)
   {
     AutoParameter ap(pl[i]);
     ap.setMessageHandler(ApplicationTools::warning);
     pl.setParameter(i, ap);
   }
 
-  for (unsigned int i = 0; i < pl.size(); ++i)
+  for (size_t i = 0; i < pl.size(); ++i)
   {
     const string pName = pl[i].getName();
     double value = ApplicationTools::getDoubleParameter(pName, unparsedArguments_, pl[i].getValue());
@@ -417,7 +417,7 @@ void BppODiscreteDistributionFormat::initialize_(
   rDist.matchParametersValues(pl);
   if (verbose_)
   {
-    for (unsigned int c = 0; c < rDist.getNumberOfCategories(); ++c)
+    for (size_t c = 0; c < rDist.getNumberOfCategories(); ++c)
     {
       ApplicationTools::displayResult("- Category " + TextTools::toString(c)
         + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",

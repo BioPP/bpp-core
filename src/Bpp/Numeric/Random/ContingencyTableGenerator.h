@@ -70,21 +70,21 @@ namespace bpp
 class ContingencyTableGenerator
 {
   private:
-    std::vector<unsigned int> nrowt_;
-    std::vector<unsigned int> ncolt_;
+    std::vector<size_t> nrowt_;
+    std::vector<size_t> ncolt_;
     size_t nrow_;
     size_t ncol_;
     size_t nrowm_;
     size_t ncolm_;
-    std::vector<unsigned int> jwork_; //workspace
-    unsigned int ntot_; //total number of observations
+    std::vector<size_t> jwork_; //workspace
+    size_t ntot_; //total number of observations
     std::vector<double> fact_; //log factorial
 
   public:
-    ContingencyTableGenerator(const std::vector<unsigned int>& nrowt, const std::vector<unsigned int>& ncolt);
+    ContingencyTableGenerator(const std::vector<size_t>& nrowt, const std::vector<size_t>& ncolt);
 
   public:
-    RowMatrix<unsigned int> rcont2(const RandomFactory& generator = *RandomTools::DEFAULT_GENERATOR); 
+    RowMatrix<size_t> rcont2(const RandomFactory& generator = *RandomTools::DEFAULT_GENERATOR); 
 };
 
 } //end of namespace bpp.

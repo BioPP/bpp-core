@@ -105,20 +105,20 @@ void LogsumHmmLikelihood::computeForward_()
   vector<double> logTrans(nbStates_ * nbStates_);
 
   //Transition probabilities:
-  for (unsigned int i = 0; i < nbStates_; i++)
+  for (size_t i = 0; i < nbStates_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
-      logTrans[ii + j] = log(transitionMatrix_->Pij(j, i));
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
+      logTrans[ii + j] = log(transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i)));
   }
 
   //Initialisation:
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
-  for (unsigned int j = 0; j < nbStates_; j++)
+  for (size_t j = 0; j < nbStates_; j++)
   {
-    unsigned int jj = j * nbStates_;
+    size_t jj = j * nbStates_;
     x = logTrans[jj] + log(transitionMatrix_->getEquilibriumFrequencies()[0]);
-    for (unsigned int k = 1; k < nbStates_; k++)
+    for (size_t k = 1; k < nbStates_; k++)
     {
       a = logTrans[k + jj] + log(transitionMatrix_->getEquilibriumFrequencies()[k]);
       x = NumTools::logsum(x, a);
@@ -127,23 +127,23 @@ void LogsumHmmLikelihood::computeForward_()
   }
  
   //Recursion:
-  unsigned int nextBrkPt = nbSites_; //next break point
-  vector<unsigned int>::const_iterator bpIt = breakPoints_.begin();
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
   if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
   partialLogLikelihoods_.clear();
  
-  for (unsigned int i = 1; i < nbSites_; i++)
+  for (size_t i = 1; i < nbSites_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    unsigned int iip = (i - 1) * nbStates_;
+    size_t ii = i * nbStates_;
+    size_t iip = (i - 1) * nbStates_;
     emissions = &(*emissionProbabilities_)(i);
     if (i < nextBrkPt)
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = logTrans[jj] + logLikelihood_[iip];
-        for (unsigned int k = 1; k < nbStates_; k++)
+        for (size_t k = 1; k < nbStates_; k++)
         {
           a = logTrans[jj + k] + logLikelihood_[iip + k];
           x = NumTools::logsum(x, a);
@@ -155,15 +155,15 @@ void LogsumHmmLikelihood::computeForward_()
     {
       //Termination of previous segment:
       double tmpLog = logLikelihood_[(i - 1) * nbStates_];
-      for (unsigned int k = 1; k < nbStates_; k++)
+      for (size_t k = 1; k < nbStates_; k++)
         tmpLog = NumTools::logsum(tmpLog, logLikelihood_[(i - 1) * nbStates_ + k]);
       partialLogLikelihoods_.push_back(tmpLog);
 
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = logTrans[jj] + log(transitionMatrix_->getEquilibriumFrequencies()[0]);
-        for (unsigned int k = 1; k < nbStates_; k++)
+        for (size_t k = 1; k < nbStates_; k++)
         {
           a = logTrans[jj + k] + log(transitionMatrix_->getEquilibriumFrequencies()[k]);
           x = NumTools::logsum(x, a);
@@ -185,7 +185,7 @@ void LogsumHmmLikelihood::computeForward_()
   logLik_ = 0;
   vector<double> copy = partialLogLikelihoods_; //We need to keep the original order for posterior decoding.
   sort(copy.begin(), copy.end());
-  for (unsigned int i = copy.size(); i > 0; --i)
+  for (size_t i = copy.size(); i > 0; --i)
     logLik_ += copy[i - 1];
 }
 
@@ -194,7 +194,7 @@ void LogsumHmmLikelihood::computeForward_()
 void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b) const
 {
   b.resize(nbSites_);
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
     b[i].resize(nbStates_);
   }
@@ -202,36 +202,36 @@ void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b
 
   //Transition probabilities:
   vector<double> logTrans(nbStates_ * nbStates_);
-  for (unsigned int i = 0; i < nbStates_; i++)
+  for (size_t i = 0; i < nbStates_; i++)
   {
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
-      logTrans[ii + j] = log(transitionMatrix_->Pij(i, j));
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
+      logTrans[ii + j] = log(transitionMatrix_->Pij(static_cast<int>(i), static_cast<int>(j)));
   }
 
 
   //Initialisation:
   const vector<double>* emissions = 0;
-  unsigned int nextBrkPt = 0; //next break point
-  vector<unsigned int>::const_reverse_iterator bpIt = breakPoints_.rbegin();
+  size_t nextBrkPt = 0; //next break point
+  vector<size_t>::const_reverse_iterator bpIt = breakPoints_.rbegin();
   if (bpIt != breakPoints_.rend()) nextBrkPt = *bpIt;
   
-  for (unsigned int k = 0; k < nbStates_; k++)
+  for (size_t k = 0; k < nbStates_; k++)
   {
     b[nbSites_ - 1][k] = 0.;
   }
 
   //Recursion:
-  for (unsigned int i = nbSites_ - 1; i > 0; i--)
+  for (size_t i = nbSites_ - 1; i > 0; i--)
   {
     emissions = &(*emissionProbabilities_)(i);
     if (i > nextBrkPt)
     {
-      for (unsigned int j = 0; j < nbStates_; j++)
+      for (size_t j = 0; j < nbStates_; j++)
       {
-        unsigned int jj = j * nbStates_;
+        size_t jj = j * nbStates_;
         x = log((*emissions)[0]) + logTrans[jj] + b[i][0];
-        for (unsigned int k = 1; k < nbStates_; k++)
+        for (size_t k = 1; k < nbStates_; k++)
         {
           x = NumTools::logsum(x, log((*emissions)[k]) + logTrans[jj + k] + b[i][k]);
         }
@@ -255,9 +255,9 @@ void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b
 
 void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception)
 {
-  unsigned int offset = append ? probs.size() : 0;
+  size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
     probs[offset + i].resize(nbStates_);
   }
@@ -265,22 +265,22 @@ void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std
   vector< vector<double> > logB;
   computeBackward_(logB);
  
-  unsigned int nextBrkPt = nbSites_; //next break point
-  vector<unsigned int>::const_iterator bpIt = breakPoints_.begin();
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
   if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
  
   vector<double>::const_iterator logLikIt = partialLogLikelihoods_.begin();
-  for (unsigned int i = 0; i < nbSites_; i++)
+  for (size_t i = 0; i < nbSites_; i++)
   {
     if (i == nextBrkPt) {
       logLikIt++;
       bpIt++;
       if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
       else nextBrkPt = nbSites_;
-   }
+    }
 
-    unsigned int ii = i * nbStates_;
-    for (unsigned int j = 0; j < nbStates_; j++)
+    size_t ii = i * nbStates_;
+    for (size_t j = 0; j < nbStates_; j++)
     {
       probs[offset + i][j] = exp(logLikelihood_[ii + j] + logB[i][j] - *logLikIt);
     }

@@ -86,7 +86,7 @@ class ColorSet
     /**
      * @return The total number of colors available.
      */
-    virtual unsigned int getNumberOfColors() const = 0;
+    virtual size_t getNumberOfColors() const = 0;
 };
 
 
@@ -123,7 +123,7 @@ class AbstractColorSet:
     
     std::vector<std::string> getColorNames() const { return MapTools::getKeys(colors_); }
     
-    unsigned int getNumberOfColors() const { return colors_.size(); }
+    size_t getNumberOfColors() const { return colors_.size(); }
 };
 
 } // end of namespace bpp;

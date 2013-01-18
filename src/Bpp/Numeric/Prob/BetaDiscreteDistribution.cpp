@@ -51,7 +51,7 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-BetaDiscreteDistribution::BetaDiscreteDistribution(unsigned int n, double alpha, double beta) :
+BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, double beta) :
   AbstractParameterAliasable("Beta."),
   AbstractDiscreteDistribution(n,NumConstants::VERY_TINY,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {

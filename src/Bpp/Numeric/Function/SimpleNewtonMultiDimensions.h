@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 19, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -57,7 +57,7 @@ class SimpleNewtonMultiDimensions:
 {
 	private:
 
-		unsigned int nbParams_;
+		size_t nbParams_;
 
 		NewtonOneDimension optimizer_; // One dimensional optimizer.
 

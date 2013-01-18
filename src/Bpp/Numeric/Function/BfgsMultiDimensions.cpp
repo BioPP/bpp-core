@@ -67,7 +67,7 @@ BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function) :
 
 void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 {
-  unsigned int nbParams = params.size();
+  size_t nbParams = params.size();
   p_.resize(nbParams);
   gradient_.resize(nbParams);
   xi_.resize(nbParams);
@@ -77,12 +77,12 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
   Lo_.resize(nbParams);
 
   hessian_.resize(nbParams);
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     hessian_[i].resize(nbParams);
   }
 
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     const Constraint* cp = params[i].getConstraint();
     if (!cp)
@@ -102,7 +102,7 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 
   getGradient(gradient_);
 
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     p_[i] = getParameters()[i].getValue();
 
@@ -115,7 +115,7 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 
 
   double sum = 0;
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     sum += p_[i] * p_[i];
   }
@@ -126,7 +126,7 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 double BfgsMultiDimensions::doStep() throw (Exception)
 {
   double f;
-  unsigned int n = getParameters().size();
+  size_t n = getParameters().size();
   // Loop over iterations.
 
   unsigned int i;
@@ -266,9 +266,9 @@ void BfgsMultiDimensions::getGradient(std::vector<double>& gradient) const
 
 void BfgsMultiDimensions::setDirection()
 {
-  unsigned int nbParams = getParameters().size();
+  size_t nbParams = getParameters().size();
 
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     xi_[i] = 0;
     for (unsigned int j = 0; j < nbParams; j++)
@@ -278,7 +278,7 @@ void BfgsMultiDimensions::setDirection()
   }
 
   double v = 1, alpmax = 1;
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     if ((xi_[i] > 0) && (p_[i] + NumConstants::TINY * xi_[i] < Up_[i]))
       v = (Up_[i] - p_[i]) / xi_[i];
@@ -288,7 +288,7 @@ void BfgsMultiDimensions::setDirection()
       alpmax = v;
   }
 
-  for (unsigned int i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; i++)
   {
     if (p_[i] + NumConstants::TINY * xi_[i] >= Up_[i])
       xi_[i] = Up_[i] - p_[i];

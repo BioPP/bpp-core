@@ -43,6 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _EXCEPTIONS_H_
 
 #include <stdexcept>
+#include <vector>
 
 namespace bpp
 {
@@ -294,10 +295,10 @@ class NumberFormatException:
  * @brief Index out of bounds exception class.
  */
 class IndexOutOfBoundsException:
-  public BadIntegerException
+  public virtual Exception
 {
   protected:
-    int lowerBound_, upperBound_;
+    size_t lowerBound_, upperBound_;
   
   public:
     
@@ -309,7 +310,7 @@ class IndexOutOfBoundsException:
      * @param lowerBound Lower limit.
      * @param upperBound Upper limit.
      */
-    IndexOutOfBoundsException(const char* text, int badInt, int lowerBound, int upperBound);
+    IndexOutOfBoundsException(const char* text, size_t badInt, size_t lowerBound, size_t upperBound);
 
     /**
      * @brief Build a new IndexOutOfBoundsException.
@@ -319,7 +320,7 @@ class IndexOutOfBoundsException:
      * @param lowerBound Lower limit.
      * @param upperBound Upper limit.
      */
-    IndexOutOfBoundsException(const std::string& text, int badInt, int lowerBound, int upperBound);
+    IndexOutOfBoundsException(const std::string& text, size_t badInt, size_t lowerBound, size_t upperBound);
   
     virtual ~IndexOutOfBoundsException() throw() {}
 
@@ -330,7 +331,7 @@ class IndexOutOfBoundsException:
      *
      * @return The bounds.
      */
-    int* getBounds() const;
+    std::vector<size_t> getBounds() const;
 };
 
 

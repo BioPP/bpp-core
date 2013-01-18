@@ -45,7 +45,7 @@
 using namespace bpp;
 using namespace std;
 
-Simplex::Simplex(const std::vector<double>& probas, unsigned int method, const std::string& name) : AbstractParameterAliasable(name),
+Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const std::string& name) : AbstractParameterAliasable(name),
   dim_(probas.size()),
   method_(method),
   vProb_(),
@@ -83,15 +83,16 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned int method, const s
   }
 }
 
-Simplex::Simplex(unsigned int dim, unsigned int method, const std::string& name)  : AbstractParameterAliasable(name),
+Simplex::Simplex(size_t dim, unsigned short method, const std::string& name) :
+  AbstractParameterAliasable(name),
   dim_(dim),
   method_(method),
   vProb_(),
   valpha_()
 {
-  for (unsigned int i = 0; i < dim_; i++)
+  for (size_t i = 0; i < dim_; i++)
   {
-    vProb_.push_back(1. / dim_);
+    vProb_.push_back(1. / static_cast<double>(dim_));
   }
 
   switch (method_)

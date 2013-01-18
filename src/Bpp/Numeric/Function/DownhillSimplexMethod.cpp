@@ -48,15 +48,15 @@ using namespace std;
 double DownhillSimplexMethod::DSMStopCondition::getCurrentTolerance() const
 {
 	const DownhillSimplexMethod* dsm = dynamic_cast<const DownhillSimplexMethod *>(optimizer_);
-	double rTol = 2.0 * NumTools::abs(dsm->_y[dsm->_iHighest] - dsm->_y[dsm->_iLowest]) /
-		(NumTools::abs(dsm->_y[dsm->_iHighest]) + NumTools::abs(dsm->_y[dsm->_iLowest]));
+	double rTol = 2.0 * NumTools::abs(dsm->y_[dsm->iHighest_] - dsm->y_[dsm->iLowest_]) /
+		(NumTools::abs(dsm->y_[dsm->iHighest_]) + NumTools::abs(dsm->y_[dsm->iLowest_]));
 	return rTol;
 }
 	
 /******************************************************************************/
 			
 DownhillSimplexMethod::DownhillSimplexMethod(Function* function):
-  AbstractOptimizer(function), _simplex(), _y(), _pSum(), _iHighest(0), _iNextHighest(0), _iLowest(0)
+  AbstractOptimizer(function), simplex_(), y_(), pSum_(), iHighest_(0), iNextHighest_(0), iLowest_(0)
 {
 	// Default values:
 	nbEvalMax_ = 5000;
@@ -68,34 +68,34 @@ DownhillSimplexMethod::DownhillSimplexMethod(Function* function):
 
 void DownhillSimplexMethod::doInit(const ParameterList& params) throw (Exception)
 {
-	unsigned int nDim = getParameters().size();
+	size_t nDim = getParameters().size();
 	nbEval_ = 0;
 
 	// Initialize the simplex:
-	_simplex.resize(nDim + 1);
-	_y.resize(nDim + 1);
+	simplex_.resize(nDim + 1);
+	y_.resize(nDim + 1);
 	double lambda = 0.2; //20% of the parameter value.
   for(unsigned int i = 1; i < nDim + 1; i++)
   {
 		// Copy the vector...
-		_simplex[i] = getParameters();
+		simplex_[i] = getParameters();
 		// ... and set the initial values.
 		for(unsigned int j = 0; j < nDim; j++)
     {
       //Hummm... that does not work when the first point is 0!!! where does this come from???
-			//_simplex[i][j].setValue(getParameters()[j].getValue() * (1. + (j == i - 1 ? lambda : 0.)));
-			_simplex[i][j].setValue(getParameters()[j].getValue() + (j == i - 1 ? lambda : 0.));
+			//simplex_[i][j].setValue(getParameters()[j].getValue() * (1. + (j == i - 1 ? lambda : 0.)));
+			simplex_[i][j].setValue(getParameters()[j].getValue() + (j == i - 1 ? lambda : 0.));
     }
 		//Compute the corresponding f value:
-		_y[i] = getFunction()->f(_simplex[i]);
+		y_[i] = getFunction()->f(simplex_[i]);
     nbEval_++;
 	}
   //Last function evaluation, setting current value:
-	_simplex[0] = getParameters();
-	_y[0] = getFunction()->f(_simplex[0]);
+	simplex_[0] = getParameters();
+	y_[0] = getFunction()->f(simplex_[0]);
   nbEval_++;
 	
-	_pSum = getPSum();
+	pSum_ = getPSum();
 }
 	
 /******************************************************************************/
@@ -103,74 +103,74 @@ void DownhillSimplexMethod::doInit(const ParameterList& params) throw (Exception
 double DownhillSimplexMethod::doStep() throw (Exception)
 {
 	// The number of dimensions of the parameter space:
-	unsigned int nDim = _simplex.getDimension();
-	unsigned int mpts = nDim + 1;
+	size_t nDim = simplex_.getDimension();
+	size_t mpts = nDim + 1;
 
-	_iLowest = 0;
+	iLowest_ = 0;
 	// First we must determine which point is the highest (worst),
 	// next-highest, and lowest (best), by looping over the points
 	// in the simplex.
-	if(_y[0] > _y[1])
+	if(y_[0] > y_[1])
   {
-		_iHighest = 0;
-		_iNextHighest = 1;
+		iHighest_ = 0;
+		iNextHighest_ = 1;
 	}
   else
   {
-		_iHighest = 1;
-		_iNextHighest = 0;
+		iHighest_ = 1;
+		iNextHighest_ = 0;
 	}
 	
 	for(unsigned int i = 0; i < mpts; i++)
   {
-		if (_y[i] <= _y[_iLowest]) _iLowest = i;
-		if (_y[i] > _y[_iHighest])
+		if (y_[i] <= y_[iLowest_]) iLowest_ = i;
+		if (y_[i] > y_[iHighest_])
     {
-			_iNextHighest = _iHighest;
-			_iHighest = i;
+			iNextHighest_ = iHighest_;
+			iHighest_ = i;
 		}
-    else if(_y[i] > _y[_iNextHighest] && i != _iHighest) _iNextHighest = i;
+    else if(y_[i] > y_[iNextHighest_] && i != iHighest_) iNextHighest_ = i;
 	}
 		
   // Set current best point:
-	getParameters_() = _simplex[_iLowest];
+	getParameters_() = simplex_[iLowest_];
 		
 	// Begin a new iteration.
 	// First extrapolate by a factor -1 through the face of the simplex
 	// across from high point, i.e., reflect the simplex from the high point.</p>
 
 	double yTry = tryExtrapolation(-1.0);
-	if(yTry <= _y[_iLowest])
+	if (yTry <= y_[iLowest_])
   {
 		// Expansion.
 		yTry = tryExtrapolation(2.0);
 	}
-  else if(yTry >= _y[_iNextHighest])
+  else if (yTry >= y_[iNextHighest_])
   {
 		// Contraction.
-		double ySave = _y[_iHighest];
+		double ySave = y_[iHighest_];
 		yTry = tryExtrapolation(0.5);
-		if(yTry >= ySave)
+		if (yTry >= ySave)
     {
-			for(unsigned int i = 0; i < mpts; i++)
+			for (size_t i = 0; i < mpts; i++)
       {
-				if(i != _iLowest)
+				if (i != iLowest_)
         {
-					for(unsigned int j = 0; j < nDim; j++)
+					for (size_t j = 0; j < nDim; j++)
           {
-						_pSum[j].setValue(0.5 * (_simplex[i][j].getValue() + _simplex[_iLowest][j].getValue()));
-						_simplex[i][j].setValue(_pSum[j].getValue());
+						pSum_[j].setValue(0.5 * (simplex_[i][j].getValue() + simplex_[iLowest_][j].getValue()));
+						simplex_[i][j].setValue(pSum_[j].getValue());
 					}
-					_y[i] = getFunction()->f(_pSum);
+					y_[i] = getFunction()->f(pSum_);
 	        nbEval_++;
 				}
 			}
-			nbEval_ += nDim;
-			_pSum = getPSum();
+			nbEval_ += static_cast<unsigned int>(nDim);
+			pSum_ = getPSum();
 		}
 	}
 
-	return _y[_iLowest];
+	return y_[iLowest_];
 }
 
 /******************************************************************************/
@@ -180,25 +180,25 @@ double DownhillSimplexMethod::optimize() throw (Exception)
   AbstractOptimizer::optimize();
 
 	// set best shot:
-	return getFunction()->f(_simplex[_iLowest]);
+	return getFunction()->f(simplex_[iLowest_]);
 }
 
 /******************************************************************************/
 
 ParameterList DownhillSimplexMethod::getPSum()
 {
-	int ndim = _simplex.getDimension();
-	int mpts = ndim + 1;
+	size_t ndim = simplex_.getDimension();
+	size_t mpts = ndim + 1;
 	
 	// Get a copy...
 	ParameterList pSum = getParameters();
 	// ... and initializes it.
-	for (int j = 0; j < ndim; j++)
+	for (size_t j = 0; j < ndim; j++)
   {
 		double sum = 0.;
-		for (int i = 0; i < mpts; i++)
+		for (size_t i = 0; i < mpts; i++)
     {
-			sum += _simplex[i][j].getValue();
+			sum += simplex_[i][j].getValue();
 		}
 		pSum[j].setValue(sum);
 	}
@@ -209,31 +209,31 @@ ParameterList DownhillSimplexMethod::getPSum()
 
 double DownhillSimplexMethod::tryExtrapolation(double fac)
 {
-	int ndim = _simplex.getDimension();
+	size_t ndim = simplex_.getDimension();
 	double fac1, fac2, yTry;
 
-	fac1 = (1.0 - fac) / ndim;
+	fac1 = (1.0 - fac) / static_cast<double>(ndim);
 	fac2 = fac1 - fac;
 	
 	// Get a copy...
 	ParameterList pTry = getParameters();
 	// and initialize it:
-	for (int j = 0; j < ndim; j++)
+	for (size_t j = 0; j < ndim; j++)
   {
-		pTry[j].setValue(_pSum[j].getValue() * fac1 - _simplex[_iHighest][j].getValue() * fac2);
+		pTry[j].setValue(pSum_[j].getValue() * fac1 - simplex_[iHighest_][j].getValue() * fac2);
 	}
 	// Now compute the function for this new set of parameters:
 	yTry = getFunction()->f(pTry);
   nbEval_++;
 	
 	// Then test this new point:
-	if (yTry < _y[_iHighest])
+	if (yTry < y_[iHighest_])
   {
-		_y[_iHighest] = yTry;
-		for (int j = 0; j < ndim; j++)
+		y_[iHighest_] = yTry;
+		for (size_t j = 0; j < ndim; j++)
     {
-			_pSum[j].setValue(_pSum[j].getValue() + pTry[j].getValue() - _simplex[_iHighest][j].getValue());
-			_simplex[_iHighest][j].setValue(pTry[j].getValue());
+			pSum_[j].setValue(pSum_[j].getValue() + pTry[j].getValue() - simplex_[iHighest_][j].getValue());
+			simplex_[iHighest_][j].setValue(pTry[j].getValue());
 		}
 	}
 	return yTry;

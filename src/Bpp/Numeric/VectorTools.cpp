@@ -64,8 +64,8 @@ vector<double> VectorTools::breaks(const vector<double> & v, unsigned int n) {
 
 bool VectorTools::test()
 {
-  vector<float> x1(5);
-  vector<float> x2(5);
+  vector<double> x1(5);
+  vector<double> x2(5);
   x1[0] = -3.4;
   x1[1] =  1.8;
   x1[2] = -2.1;
@@ -80,16 +80,16 @@ bool VectorTools::test()
 
   print(x1);
   print(x2);
-  float m1 = mean<float, float>(x1);
-  float m2 = mean<float, float>(x2);
-  float v1 = var<float, float>(x1);
-  float v2 = var<float, float>(x2);
+  double m1 = mean<double, double>(x1);
+  double m2 = mean<double, double>(x2);
+  double v1 = var<double, double>(x1);
+  double v2 = var<double, double>(x2);
   cout << "Mean x1 = " << m1 << "\tVar x1 = " << v1 << endl;
   cout << "Mean x2 = " << m2 << "\tVar x2 = " << v2 << endl;
-  cov<float, float>(x1,x2);
-  cor<float, float>(x1,x2);
-  cos<float, float>(x1,x2);
-  shannon<float, float>(x1);
+  cov<double, double>(x1,x2);
+  cor<double, double>(x1,x2);
+  cos<double, double>(x1,x2);
+  shannon<double, double>(x1);
   return m1 == -0.2 && m2 == 0.04 && v1 == 6.565 && v2 == 27.603;
 }
 

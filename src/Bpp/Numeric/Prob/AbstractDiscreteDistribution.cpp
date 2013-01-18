@@ -46,7 +46,7 @@ using namespace bpp;
 using namespace std;
 
 
-AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasses, const std::string& prefix) :
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix) :
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(),
@@ -55,7 +55,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasse
   median_(false)
 {}
 
-AbstractDiscreteDistribution::AbstractDiscreteDistribution(unsigned int nbClasses, double delta, const std::string& prefix) :
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, double delta, const std::string& prefix) :
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(Order(delta)),
@@ -88,12 +88,12 @@ AbstractDiscreteDistribution& AbstractDiscreteDistribution::operator=(const Abst
 
 /******************************************************************************/
 
-unsigned int AbstractDiscreteDistribution::getNumberOfCategories() const
+size_t AbstractDiscreteDistribution::getNumberOfCategories() const
 {
   return numberOfCategories_;
 }
 
-void AbstractDiscreteDistribution::setNumberOfCategories(unsigned int nbClasses)
+void AbstractDiscreteDistribution::setNumberOfCategories(size_t nbClasses)
 {
   if (nbClasses <= 0)
     cerr << "DEBUG: ERROR!!! Number of categories is <= 0 in AbstractDiscreteDistribution::setNumberOfCategories()." << endl;
@@ -108,7 +108,7 @@ void AbstractDiscreteDistribution::setNumberOfCategories(unsigned int nbClasses)
 
 /******************************************************************************/
 
-double AbstractDiscreteDistribution::getCategory(unsigned int categoryIndex) const
+double AbstractDiscreteDistribution::getCategory(size_t categoryIndex) const
 {
   map<double, double>::const_iterator it = distribution_.begin();
   for (unsigned int i = 0; i < categoryIndex; i++)
@@ -120,7 +120,7 @@ double AbstractDiscreteDistribution::getCategory(unsigned int categoryIndex) con
 
 /******************************************************************************/
 
-double AbstractDiscreteDistribution::getProbability(unsigned int categoryIndex) const
+double AbstractDiscreteDistribution::getProbability(size_t categoryIndex) const
 {
   map<double, double>::const_iterator it = distribution_.begin();
   for (unsigned int i = 0; i < categoryIndex; i++)
@@ -317,17 +317,17 @@ void AbstractDiscreteDistribution::discretize()
   double maxX = pProb(intMinMax_.getUpperBound());
 
   double ec;
-  unsigned int i;
+  size_t i;
   vector<double> values(numberOfCategories_);
 
   if (maxX != minX)
   {
     // divide the domain into equiprobable intervals
-    ec = (maxX - minX) / numberOfCategories_;
+    ec = (maxX - minX) / static_cast<double>(numberOfCategories_);
 
     for (i = 1; i < numberOfCategories_; i++)
     {
-      bounds_[i-1] = qProb(minX + i * ec);
+      bounds_[i-1] = qProb(minX + static_cast<double>(i) * ec);
     }
 
     // for each category, sets the value v as the median, adjusted
@@ -336,7 +336,7 @@ void AbstractDiscreteDistribution::discretize()
     {
       double t=0;
       for (i = 0; i < numberOfCategories_; i++)
-        values[i] = qProb(minX + (i + 0.5) * ec);
+        values[i] = qProb(minX + (static_cast<double>(i) + 0.5) * ec);
 
       for (i = 0, t = 0; i < numberOfCategories_; i++)
         t += values[i];
@@ -363,9 +363,9 @@ void AbstractDiscreteDistribution::discretize()
   else 
     // if maxX==minX, uniform discretization of the range
   {
-    ec = (intMinMax_.getUpperBound() - intMinMax_.getLowerBound()) / numberOfCategories_;
+    ec = (intMinMax_.getUpperBound() - intMinMax_.getLowerBound()) / static_cast<double>(numberOfCategories_);
     for (i = 1; i < numberOfCategories_; i++)
-      bounds_[i-1] = intMinMax_.getLowerBound() + i * ec;
+      bounds_[i-1] = intMinMax_.getLowerBound() + static_cast<double>(i) * ec;
 
     values[0] = (intMinMax_.getLowerBound() + bounds_[0]) / 2;
     

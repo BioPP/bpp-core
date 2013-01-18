@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -254,7 +254,7 @@ namespace bpp
      *
      * @return The number of function evaluations.
      */
-    virtual	int getNumberOfEvaluations() const = 0;
+    virtual	unsigned int getNumberOfEvaluations() const = 0;
 		
     /**
      * @brief Set the stop condition of the optimization algorithm.

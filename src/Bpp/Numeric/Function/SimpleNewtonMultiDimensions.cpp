@@ -70,7 +70,7 @@ void SimpleNewtonMultiDimensions::doInit(const ParameterList& params) throw (Exc
   if (nbParams_ == 0) return;
 
   // Initialize optimizers:
-  unsigned int nbEvalMax = nbEvalMax_ / nbParams_;
+  unsigned int nbEvalMax = nbEvalMax_ / static_cast<unsigned int>(nbParams_);
   optimizer_.setMaximumNumberOfEvaluations(nbEvalMax);
   optimizer_.setProfiler(getProfiler());
   optimizer_.setMessageHandler(getMessageHandler());

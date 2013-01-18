@@ -51,14 +51,14 @@ using namespace std;
 //tbl<-rbind(c(6,12,16,20),c(9,34,28,12))
 //chisq.test(tbl);
 int main() {
-  vector< vector<unsigned int> > table;
-  vector<unsigned int> row1;
+  vector< vector<size_t> > table;
+  vector<size_t> row1;
   row1.push_back(6);
   row1.push_back(12);
   row1.push_back(16);
   row1.push_back(20);
   table.push_back(row1);
-  vector<unsigned int> row2;
+  vector<size_t> row2;
   row2.push_back(9);
   row2.push_back(34);
   row2.push_back(28);
@@ -68,7 +68,7 @@ int main() {
   VectorTools::print(test.getMarginRows());
   VectorTools::print(test.getMarginColumns());
   ContingencyTableGenerator ctRand(test.getMarginRows(), test.getMarginColumns());
-  RowMatrix<unsigned int> rtable = ctRand.rcont2();
+  RowMatrix<size_t> rtable = ctRand.rcont2();
   MatrixTools::print(rtable);
 
   cout << test.getStatistic() << " \t" << test.getPValue() << endl;

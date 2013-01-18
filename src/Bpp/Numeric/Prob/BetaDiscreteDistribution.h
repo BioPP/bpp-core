@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -79,7 +79,7 @@ namespace bpp
      *
      */
     
-    BetaDiscreteDistribution(unsigned int n, double alpha = 1, double beta = 1);
+    BetaDiscreteDistribution(size_t n, double alpha = 1, double beta = 1);
 
     BetaDiscreteDistribution(const BetaDiscreteDistribution&);
 

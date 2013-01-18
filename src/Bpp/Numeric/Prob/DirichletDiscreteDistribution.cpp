@@ -52,25 +52,25 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-DirichletDiscreteDistribution::DirichletDiscreteDistribution(vector<unsigned int> vn, Vdouble valpha) :
+DirichletDiscreteDistribution::DirichletDiscreteDistribution(vector<size_t> vn, Vdouble valpha) :
   AbstractParameterAliasable("Dirichlet."),
   vpBDD_()
 {
   if (vn.size() <= 0 || vn.size() != valpha.size() - 1)
     throw Exception("Wrong number of categories for Dirichlet distribution: " + TextTools::toString(vn.size()));
 
-  for (unsigned int j = 0; j < valpha.size(); j++)
+  for (size_t j = 0; j < valpha.size(); j++)
   {
     addParameter_(new Parameter("Dirichlet.alpha_" + TextTools::toString(j + 1), valpha[j], new IntervalConstraint(1, 0.0001, true), true));
   }
 
-  for (unsigned int j = 0; j < vn.size(); j++)
+  for (size_t j = 0; j < vn.size(); j++)
   {
     if (vn[j] <= 0)
       throw Exception("Wrong number of categories in Dirichlet distribution constructor: " + TextTools::toString(vn[j]));
   }
 
-  for (unsigned int j = 0; j < vn.size(); j++)
+  for (size_t j = 0; j < vn.size(); j++)
   {
     vpBDD_.push_back(new BetaDiscreteDistribution(vn[j], 1, 1));
   }
@@ -137,11 +137,11 @@ void DirichletDiscreteDistribution::discretize(Vdouble& valpha)
 
 /******************************************************************************/
 
-unsigned int DirichletDiscreteDistribution::getNumberOfCategories() const
+size_t DirichletDiscreteDistribution::getNumberOfCategories() const
 {
-  unsigned int n = 1;
+  size_t n = 1;
 
-  for (unsigned int j = 0; j < vpBDD_.size(); j++)
+  for (size_t j = 0; j < vpBDD_.size(); j++)
   {
     n *= vpBDD_[j]->getNumberOfCategories();
   }

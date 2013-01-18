@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -68,11 +68,11 @@ const Vdouble& ParameterGrid::getPointsForDimension(unsigned int i) const throw 
   return grid_[i];
 }
 
-unsigned int ParameterGrid::getTotalNumberOfPoints() const
+size_t ParameterGrid::getTotalNumberOfPoints() const
 {
-  if(grid_.size() == 0) return 0;
-  unsigned int n = 1;
-  for(unsigned int i = 0; i < grid_.size(); i++)
+  if (grid_.size() == 0) return 0;
+  size_t n = 1;
+  for (size_t i = 0; i < grid_.size(); i++)
     n *= grid_[i].size();
   return n;
 }
@@ -82,7 +82,7 @@ VVdouble* FunctionTools::computeGrid(
     const ParameterGrid& grid) throw (Exception)
 {
   //Init stuff...
-  unsigned int n = grid.getNumberOfDimensions();
+  size_t n = grid.getNumberOfDimensions();
   VVdouble* data = new VVdouble();
   if(n == 0) return data; //Empty data table returned.
 
@@ -98,7 +98,7 @@ VVdouble* FunctionTools::computeGrid(
   unsigned int currentDimension = 0;
   vector<unsigned int> currentPointInDimension(n);
   vector<double> row(n + 1);
-  unsigned int nbPoints = grid.getTotalNumberOfPoints();
+  size_t nbPoints = grid.getTotalNumberOfPoints();
   ApplicationTools::displayMessage("Computing likelihood profile...");
   for (unsigned int i = 0; true ; i++)
   {

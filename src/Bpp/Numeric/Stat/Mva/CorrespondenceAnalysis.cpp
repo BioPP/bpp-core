@@ -52,11 +52,11 @@ CorrespondenceAnalysis::CorrespondenceAnalysis(
   DualityDiagram(),
   n_()
 {
-  unsigned int nRow = data.getNumberOfRows();
-  unsigned int nCol = data.getNumberOfColumns();
+  size_t nRow = data.getNumberOfRows();
+  size_t nCol = data.getNumberOfColumns();
 
   double tmp = 0.;
-  for (unsigned int i = 0; i < nRow; i++)
+  for (size_t i = 0; i < nRow; i++)
   {
     for (unsigned int j = 0; j < nCol; j++)
     {
@@ -76,7 +76,7 @@ CorrespondenceAnalysis::CorrespondenceAnalysis(
   vector<double> rowWeights(nRow);
   vector<double> colWeights(nCol);
 
-  for (unsigned int i = 0; i < nRow; i++)
+  for (size_t i = 0; i < nRow; i++)
   {
     for (unsigned int j = 0; j < nCol; j++)
     {
@@ -87,14 +87,14 @@ CorrespondenceAnalysis::CorrespondenceAnalysis(
 
   vector<double> tmpRowWeigths(nRow);
   vector<double> tmpColWeigths(nCol);
-  for (unsigned int i = 0; i < rowWeights.size(); i++)
+  for (size_t i = 0; i < rowWeights.size(); i++)
   {
     if (rowWeights[i] == 0.)
       tmpRowWeigths[i] = 0.;
     else
       tmpRowWeigths[i] = 1. / rowWeights[i];
   }
-  for (unsigned int j = 0; j < colWeights.size(); j++)
+  for (size_t j = 0; j < colWeights.size(); j++)
   {
     if (colWeights[j] == 0.)
       tmpColWeigths[j] = 0.;
