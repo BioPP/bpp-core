@@ -183,7 +183,7 @@ namespace bpp
     static T pickOne(std::vector<T>& v, bool replace = false) throw (EmptyVectorException<T>) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne: input vector is empty", &v);
-      size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(v.size()));
+      size_t pos = static_cast<size_t>(RandomTools::giveIntRandomNumberBetweenZeroAndEntry(static_cast<int>(v.size())));
       if (replace)
         return v[pos];
       else {
