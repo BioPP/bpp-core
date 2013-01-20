@@ -50,7 +50,7 @@ using namespace std;
 
 /****************************************************************/
 
-ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(unsigned int n, double lambda) :
+ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(size_t n, double lambda) :
   AbstractParameterAliasable("Exponential."),
   AbstractDiscreteDistribution(n, "Exponential."),
   lambda_(lambda)

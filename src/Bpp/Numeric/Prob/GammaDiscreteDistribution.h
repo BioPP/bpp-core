@@ -80,7 +80,7 @@ namespace bpp
      * If @f$ alpha > 1 @f$, the minimum value of the distribution is
      * set to 1e-12, otherwise it is 0.
      */
-    GammaDiscreteDistribution(unsigned int n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05);
+    GammaDiscreteDistribution(size_t n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05);
 
     GammaDiscreteDistribution(const GammaDiscreteDistribution&);
 

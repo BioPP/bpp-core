@@ -50,7 +50,7 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda, double truncationPoint) :
+TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(size_t n, double lambda, double truncationPoint) :
   AbstractParameterAliasable("TruncExponential."),
   AbstractDiscreteDistribution(n, "TruncExponential."),
   lambda_(lambda),

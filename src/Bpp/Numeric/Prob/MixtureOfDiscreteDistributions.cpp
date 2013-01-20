@@ -82,20 +82,25 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
   }
 
 
-  for (size_t i = 0; i < size; i++) {
+  for (size_t i = 0; i < size; i++)
+  {
     vdd_.push_back(distributions[i]->clone());
   }
 
   //  Parameters
 
-  for (size_t i = 0; i < size; i++) {
-    vNestedPrefix_.push_back(TextTools::toString(i+1)+"_"+distributions[i]->getNamespace());
+  for (size_t i = 0; i < size; i++)
+  {
+    vNestedPrefix_.push_back(TextTools::toString(i + 1) + "_" + distributions[i]->getNamespace());
   }
 
   for (size_t i = 0; i < size; i++)
-    vdd_[i]->setNamespace("Mixture."+vNestedPrefix_[i]);
-  
-  for (size_t i = 0; i < size; i++){
+  {
+    vdd_[i]->setNamespace("Mixture." + vNestedPrefix_[i]);
+  }
+
+  for (size_t i = 0; i < size; i++)
+  {
     addParameters_(vdd_[i]->getParameters());
   }
 
@@ -110,27 +115,27 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDi
   vNestedPrefix_()
 {
   for (size_t i = 0; i < mdd.vdd_.size(); i++)
-    {
-      probas_.push_back(mdd.probas_[i]);
-      vdd_.push_back(mdd.vdd_[i]->clone());
-      vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
-    }
+  {
+    probas_.push_back(mdd.probas_[i]);
+    vdd_.push_back(mdd.vdd_[i]->clone());
+    vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
+  }
 }
 
-MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const MixtureOfDiscreteDistributions& mdd) 
+MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const MixtureOfDiscreteDistributions& mdd)
 {
   AbstractParameterAliasable::operator=(mdd);
   AbstractDiscreteDistribution::operator=(mdd);
   vdd_.clear();
   probas_.clear();
   vNestedPrefix_.clear();
-  
+
   for (size_t i = 0; i < mdd.vdd_.size(); i++)
-    {
-      probas_.push_back(mdd.probas_[i]);
-      vdd_.push_back(mdd.vdd_[i]->clone());
-      vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
-    }
+  {
+    probas_.push_back(mdd.probas_[i]);
+    vdd_.push_back(mdd.vdd_[i]->clone());
+    vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
+  }
 
   return *this;
 }
@@ -138,14 +143,14 @@ MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const 
 MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
 {
   for (size_t i = 0; i < vdd_.size(); i++)
-    {
-      delete vdd_[i];
-    }
+  {
+    delete vdd_[i];
+  }
 
   vdd_.clear();
 }
 
-void MixtureOfDiscreteDistributions::setNumberOfCategories(unsigned int nbClasses)
+void MixtureOfDiscreteDistributions::setNumberOfCategories(size_t nbClasses)
 {
   for (size_t i = 0; i < vdd_.size(); i++)
   {
@@ -171,7 +176,9 @@ void MixtureOfDiscreteDistributions::fireParameterChanged(const ParameterList& p
 
 
   for (size_t i = 0; i < size; i++)
+  {
     vdd_[i]->matchParametersValues(parameters);
+  }
 
   updateDistribution();
 }
@@ -195,7 +202,7 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   {
     vector<double> values = vdd_[i]->getCategories();
     vector<double> probas2 = vdd_[i]->getProbabilities();
-    for (unsigned int j = 0; j < values.size(); j++)
+    for (size_t j = 0; j < values.size(); j++)
     {
       distribution_[values[j]] += probas2[j] * probas_[i];
     }
@@ -209,17 +216,19 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   uB = -NumConstants::VERY_BIG;
   lB = NumConstants::VERY_BIG;
 
-  bool suB=true, slB=true;
-  
+  bool suB = true, slB = true;
+
   for (size_t i = 0; i < size; i++)
   {
-    if (vdd_[i]->getLowerBound() <= lB){
+    if (vdd_[i]->getLowerBound() <= lB)
+    {
       lB = vdd_[i]->getLowerBound();
-      slB= vdd_[i]->strictLowerBound();
+      slB = vdd_[i]->strictLowerBound();
     }
-    if (vdd_[i]->getUpperBound() >= uB){
+    if (vdd_[i]->getUpperBound() >= uB)
+    {
       uB = vdd_[i]->getUpperBound();
-      suB= vdd_[i]->strictUpperBound();
+      suB = vdd_[i]->strictUpperBound();
     }
   }
 
@@ -229,12 +238,13 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   // Compute midpoint bounds_:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);
 
-  bounds_.resize(numberOfCategories_-1);
-  
+  bounds_.resize(numberOfCategories_ - 1);
+
   // Fill from 0 to numberOfCategories_-1 with midpoints:
   for (size_t i = 0; i < numberOfCategories_ - 1; i++)
+  {
     bounds_[i] = (values[i] + values[i + 1]) / 2.;
-
+  }
 }
 
 void MixtureOfDiscreteDistributions::setMedian(bool median)
@@ -300,10 +310,10 @@ void MixtureOfDiscreteDistributions::restrictToConstraint(const Constraint& c)
 void MixtureOfDiscreteDistributions::setNamespace(const string& prefix)
 {
   AbstractDiscreteDistribution::setNamespace(prefix);
-  //We also need to update the namespace of the nested distributions:
+  // We also need to update the namespace of the nested distributions:
   for (size_t i = 0; i < vdd_.size(); i++)
-    {
-      vdd_[i]->setNamespace(prefix+ vNestedPrefix_[i]);
-    }
+  {
+    vdd_[i]->setNamespace(prefix + vNestedPrefix_[i]);
+  }
 }
 

@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -69,7 +69,7 @@ class GaussianDiscreteDistribution:
      * @f$ \in ]0;\infty[ @f$.
      *
      */
-  GaussianDiscreteDistribution(unsigned int n, double mu=0., double sigma = 1.);
+  GaussianDiscreteDistribution(size_t n, double mu=0., double sigma = 1.);
 
   GaussianDiscreteDistribution(const GaussianDiscreteDistribution&);
 

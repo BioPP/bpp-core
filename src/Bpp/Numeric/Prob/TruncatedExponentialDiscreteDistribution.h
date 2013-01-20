@@ -82,7 +82,7 @@ public:
    *
    */
 
-  TruncatedExponentialDiscreteDistribution(unsigned int n, double lambda = 1., double truncationPoint = 10);
+  TruncatedExponentialDiscreteDistribution(size_t n, double lambda = 1., double truncationPoint = 10);
 
   TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist) :
     AbstractParameterAliasable(dist),

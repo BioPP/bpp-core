@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -51,7 +51,7 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-GaussianDiscreteDistribution::GaussianDiscreteDistribution(unsigned int n, double mu, double sigma) :
+GaussianDiscreteDistribution::GaussianDiscreteDistribution(size_t n, double mu, double sigma) :
   AbstractParameterAliasable("Gaussian."),
   AbstractDiscreteDistribution(n,"Gaussian."), mu_(mu), sigma_(sigma)
 {

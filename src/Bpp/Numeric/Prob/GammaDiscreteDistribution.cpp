@@ -51,7 +51,7 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-GammaDiscreteDistribution::GammaDiscreteDistribution(unsigned int n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
+GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
   AbstractParameterAliasable("Gamma."),
   AbstractDiscreteDistribution(n, "Gamma."),
   alpha_(alpha),

@@ -67,7 +67,7 @@ public:
    *
    */
 
-  ExponentialDiscreteDistribution(unsigned int n, double lambda = 1.);
+  ExponentialDiscreteDistribution(size_t n, double lambda = 1.);
 
   ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist) :
     AbstractParameterAliasable(dist),
