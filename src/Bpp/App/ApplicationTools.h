@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide basal and 
 utilitary classes. This file belongs to the Bio++ Project.
@@ -302,9 +302,9 @@ class ApplicationTools
         if (TextTools::isEmpty(s)) return std::vector<T>(0);
       }
       NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
-      unsigned int n = st.numberOfRemainingTokens();
+      size_t n = st.numberOfRemainingTokens();
       std::vector<T> v(n);
-      for (unsigned int i = 0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
       {
         v[i] = TextTools::fromString<T>(st.nextToken());
       }
@@ -339,9 +339,9 @@ class ApplicationTools
     {
       std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
       StringTokenizer st(s, TextTools::toString(separator));
-      unsigned int n = st.numberOfRemainingTokens();
+      size_t n = st.numberOfRemainingTokens();
       std::vector<T> v;
-      for (unsigned int i = 0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
       {
         std::string token = st.nextToken();
         std::string::size_type pos = token.find(rangeOperator);
@@ -438,7 +438,7 @@ class ApplicationTools
      *
      * Show progress status.
      * @code
-     * for(unsigned int i = 0; i < 1000; i++)
+     * for(size_t i = 0; i < 1000; i++)
      * {
      *   ApplicationTools::displayGauge(i, 999, '*');
      *   //Perform time consuming task...
@@ -461,7 +461,7 @@ class ApplicationTools
      *
      * Show progress status.
      * @code
-     * for(unsigned int i = 0; i < 1000; i++)
+     * for(size_t i = 0; i < 1000; i++)
      * {
      *   ApplicationTools::displayUnlimitedGauge(i);
      *   //Perform time consuming task...
