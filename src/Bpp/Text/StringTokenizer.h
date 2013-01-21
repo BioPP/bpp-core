@@ -116,7 +116,7 @@ class StringTokenizer
 		 * @param pos The index of the token.
 		 * @return the token at position 'pos'.
 		 */
-    const std::string& getToken(unsigned int pos) const { return tokens_[pos]; }
+    const std::string& getToken(size_t pos) const { return tokens_[pos]; }
 
 		/**
 		 * @brief Retrieve all tokens.
