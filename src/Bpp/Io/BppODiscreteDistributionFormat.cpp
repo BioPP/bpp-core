@@ -44,7 +44,17 @@
 #include "../Text/StringTokenizer.h"
 #include "../Text/KeyvalTools.h"
 
-#include "../Numeric/Prob.all"
+#include "../Numeric/Prob/DiscreteDistribution.h"
+#include "../Numeric/Prob/InvariantMixedDiscreteDistribution.h"
+#include "../Numeric/Prob/ConstantDistribution.h"
+#include "../Numeric/Prob/SimpleDiscreteDistribution.h"
+#include "../Numeric/Prob/MixtureOfDiscreteDistributions.h"
+#include "../Numeric/Prob/GammaDiscreteDistribution.h"
+#include "../Numeric/Prob/GaussianDiscreteDistribution.h"
+#include "../Numeric/Prob/BetaDiscreteDistribution.h"
+#include "../Numeric/Prob/ExponentialDiscreteDistribution.h"
+#include "../Numeric/Prob/TruncatedExponentialDiscreteDistribution.h"
+#include "../Numeric/Prob/UniformDiscreteDistribution.h"
 #include "../Numeric/AutoParameter.h"
 #include "BppOParametrizableFormat.h"
 

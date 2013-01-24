@@ -41,6 +41,12 @@ SET(BPPCORE_VERSION_MINOR ${BPPCORE_VERSION_AGE})
 SET(BPPCORE_VERSION_PATCH ${BPPCORE_VERSION_REVISION})
 SET(BPPCORE_VERSION "${BPPCORE_VERSION_MAJOR}.${BPPCORE_VERSION_MINOR}.${BPPCORE_VERSION_PATCH}")
 
+# Set the CMAKE_PREFIX_PATH for the find_library fonction when using non
+# standard install location
+IF(CMAKE_INSTALL_PREFIX)
+  SET(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
+ENDIF(CMAKE_INSTALL_PREFIX)
+
 # Subdirectories
 ADD_SUBDIRECTORY(src)
 
@@ -57,6 +63,11 @@ IF (DOXYGEN_FOUND)
     COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile-stable
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ENDIF (DOXYGEN_FOUND)
+
+# Python, needed for install:
+FIND_PACKAGE(PythonInterp)
+FIND_PACKAGE(PythonLibs)
+
 
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-core")
@@ -96,7 +107,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "Core.tag"
  "Testing"
  "build-stamp"
- "genIncludes.py"
  "install_manifest.txt"
  "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}

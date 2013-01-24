@@ -220,24 +220,29 @@ set(H_FILES
 )
 
 # Build the static lib
-add_library(bppcore-static STATIC ${CPP_FILES})
-set_target_properties(bppcore-static
+ADD_LIBRARY(bppcore-static STATIC ${CPP_FILES})
+SET_TARGET_PROPERTIES(bppcore-static
   PROPERTIES OUTPUT_NAME bpp-core
   CLEAN_DIRECT_OUTPUT 1
   )
+TARGET_LINK_LIBRARIES(bppcore-static ${LIBS})
 
 # Build the shared lib
-add_library(bppcore-shared SHARED ${CPP_FILES})
-set_target_properties(bppcore-shared
+ADD_LIBRARY(bppcore-shared SHARED ${CPP_FILES})
+SET_TARGET_PROPERTIES(bppcore-shared
   PROPERTIES OUTPUT_NAME bpp-core
   CLEAN_DIRECT_OUTPUT 1
   VERSION ${BPPCORE_VERSION}
   SOVERSION ${BPPCORE_VERSION_MAJOR}
   )
+TARGET_LINK_LIBRARIES(bppcore-shared ${LIBS})
 
 # Install libs
-install(TARGETS bppcore-static bppcore-shared DESTINATION lib${LIB_SUFFIX})
+INSTALL(TARGETS bppcore-static bppcore-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
-install(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h" PATTERN "*.all")
+INSTALL(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
+
+# Generate generic include files (.all)
+INSTALL(CODE "EXECUTE_PROCESS(COMMAND python ${CMAKE_SOURCE_DIR}/genIncludes.py ${CMAKE_PREFIX_PATH}/include/Bpp/Seq)")
 

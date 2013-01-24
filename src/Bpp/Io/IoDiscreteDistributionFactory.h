@@ -40,7 +40,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _IODISCRETEDISTRIBUTIONFACTORY_H_
 #define _IODISCRETEDISTRIBUTIONFACTORY_H_
 
-#include "../Numeric/Prob.all"
+#include "../Numeric/Prob/DiscreteDistribution.h"
 #include "../Exceptions.h"
 #include "IoDiscreteDistribution.h"
 
