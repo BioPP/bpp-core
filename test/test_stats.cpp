@@ -37,10 +37,11 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Numeric/Stat.all>
+#include <Bpp/Numeric/Stat/ContingencyTableTest.h>
 #include <Bpp/Numeric/VectorTools.h>
-#include <Bpp/Numeric/Random.all>
-#include <Bpp/Numeric/Matrix.all>
+#include <Bpp/Numeric/Random/ContingencyTableGenerator.h>
+#include <Bpp/Numeric/Random/RandomTools.h>
+#include <Bpp/Numeric/Matrix/MatrixTools.h>
 #include <vector>
 #include <iostream>
 #include <cmath>
