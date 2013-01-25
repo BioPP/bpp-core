@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/VectorTools.h>
-#include <Bpp/Numeric/Random.all>
+#include <Bpp/Numeric/Random/RandomTools.h>
 #include <vector>
 #include <string>
 #include <iostream>
