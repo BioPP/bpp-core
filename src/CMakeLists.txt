@@ -3,7 +3,7 @@
 # Created: 17/08/2009
 
 # File list
-set(CPP_FILES
+SET(CPP_FILES
   Bpp/Exceptions.cpp
   Bpp/BppString.cpp
   Bpp/App/ApplicationTools.cpp
@@ -89,7 +89,7 @@ set(CPP_FILES
   Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.cpp 
   )
 
-set(H_FILES
+SET(H_FILES
   Bpp/BppString.h
   Bpp/BppBoolean.h
   Bpp/BppVector.h
