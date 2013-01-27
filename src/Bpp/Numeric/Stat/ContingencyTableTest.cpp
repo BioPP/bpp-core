@@ -95,7 +95,7 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<size_t
       long double c = table[i][j];
       long double e = static_cast<long double>(margin1_[i] * margin2_[j]) / static_cast<long double>(tot);
       expc(i, j) = e;
-      statistic_ += static_cast<double>(std::pow(c - e, 2.) / e);
+      statistic_ += static_cast<double>(std::pow(c - e, 2.L) / e);
     }
   }
 
@@ -111,7 +111,7 @@ ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<size_t
         for (size_t j = 0; j < m; ++j) {
           long double c = table_rep(i , j);
           long double e = expc(i, j);
-          stat_rep += static_cast<double>(std::pow(c - e, 2.) / e);
+          stat_rep += static_cast<double>(std::pow(c - e, 2.L) / e);
         }
       }
       if (stat_rep >= statistic_)
