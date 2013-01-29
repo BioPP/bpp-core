@@ -80,11 +80,13 @@ NumberFormatException::NumberFormatException(const std::string& text, const std:
 IndexOutOfBoundsException::IndexOutOfBoundsException(const char* text, size_t badInt, size_t lowerBound, size_t upperBound):
   Exception(
     "out of [" + TextTools::toString(lowerBound) +  ", " + TextTools::toString(upperBound) + "])" + string(text)),
+  badIndex_(badInt),
   lowerBound_(lowerBound),
   upperBound_(upperBound) {}
 
 IndexOutOfBoundsException::IndexOutOfBoundsException(const std::string& text, size_t badInt, size_t lowerBound, size_t upperBound):
   Exception("out of [" + TextTools::toString(lowerBound) + ", " + TextTools::toString(upperBound) +  "])" + text),
+  badIndex_(badInt),
   lowerBound_(lowerBound),
   upperBound_(upperBound) {}
 

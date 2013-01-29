@@ -298,7 +298,7 @@ class IndexOutOfBoundsException:
   public virtual Exception
 {
   protected:
-    size_t lowerBound_, upperBound_;
+    size_t badIndex_, lowerBound_, upperBound_;
   
   public:
     
@@ -332,6 +332,8 @@ class IndexOutOfBoundsException:
      * @return The bounds.
      */
     std::vector<size_t> getBounds() const;
+
+    size_t getBadIndex() const { return badIndex_; }
 };
 
 
