@@ -103,6 +103,7 @@ template <class Real>
 class EigenValue
 {
 
+  private:
    /** 
     * @brief Row and column dimension (square matrix).
     */
@@ -111,7 +112,7 @@ class EigenValue
    /**
     * @brief Tell if the matrix is symmetric.
     */
-   bool isSymmetric_;
+   bool issymmetric_;
 
    /**
     * @name Arrays for internal storage of eigenvalues.
@@ -149,7 +150,6 @@ class EigenValue
     */
    std::vector<Real> ort_;
 
-
    /**
     * @brief Symmetric Householder reduction to tridiagonal form.
     *
@@ -167,20 +167,20 @@ class EigenValue
 
      // Householder reduction to tridiagonal form.
    
-     for (size_t i = n_-1; i > 0; i--)
+     for (int i = static_cast<int>(n_)-1; i > 0; i--)
      {
        // Scale to avoid under/overflow.
    
        Real scale = 0.0;
        Real h = 0.0;
-       for (size_t k = 0; k < i; k++)
+       for (int k = 0; k < i; k++)
        {
          scale = scale + NumTools::abs<Real>(d_[k]);
        }
        if (scale == 0.0)
        {
          e_[i] = d_[i-1];
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            d_[j] = V_(i-1,j);
            V_(i,j) = 0.0;
@@ -191,7 +191,7 @@ class EigenValue
        {
          // Generate Householder vector.
    
-         for (size_t k = 0; k < i; k++)
+         for (int k = 0; k < i; k++)
          {
            d_[k] /= scale;
            h += d_[k] * d_[k];
@@ -205,19 +205,19 @@ class EigenValue
          e_[i] = scale * g;
          h = h - f * g;
          d_[i-1] = f - g;
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            e_[j] = 0.0;
          }
    
          // Apply similarity transformation to remaining columns.
    
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            f = d_[j];
            V_(j,i) = f;
            g = e_[j] + V_(j,j) * f;
-           for (size_t k = j+1; k <= i-1; k++)
+           for (int k = j+1; k <= i-1; k++)
            {
              g += V_(k,j) * d_[k];
              e_[k] += V_(k,j) * f;
@@ -225,21 +225,21 @@ class EigenValue
            e_[j] = g;
          }
          f = 0.0;
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            e_[j] /= h;
            f += e_[j] * d_[j];
          }
          Real hh = f / (h + h);
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            e_[j] -= hh * d_[j];
          }
-         for (size_t j = 0; j < i; j++)
+         for (int j = 0; j < i; j++)
          {
            f = d_[j];
            g = e_[j];
-           for (size_t k = j; k <= i-1; k++)
+           for (int k = j; k <= i-1; k++)
            {
              V_(k,j) -= (f * e_[k] + g * d_[k]);
            }
@@ -309,15 +309,15 @@ class EigenValue
      Real f = 0.0;
      Real tst1 = 0.0;
      Real eps = pow(2.0,-52.0);
-     for (size_t l = 0; l < n_; l++)
+     for (int l = 0; l < static_cast<int>(n_); l++)
      {
        // Find small subdiagonal element
    
        tst1 = std::max(tst1, NumTools::abs<Real>(d_[l]) + NumTools::abs<Real>(e_[l]));
-       size_t m = l;
+       int m = l;
 
        // Original while-loop from Java code
-       while (m < n_)
+       while (m < static_cast<int>(n_))
        {
          if (NumTools::abs<Real>(e_[m]) <= eps*tst1)
          {
@@ -331,7 +331,7 @@ class EigenValue
    
        if (m > l)
        {
-         size_t iter = 0;
+         int iter = 0;
          do
          {
            iter = iter + 1;  // (Could check iteration count here.)
@@ -364,9 +364,8 @@ class EigenValue
            Real el1 = e_[l+1];
            Real s = 0.0;
            Real s2 = 0.0;
-           for (size_t iIt = m; iIt > l; iIt--)
+           for (int i = m-1; i >= l; i--)
            {
-             size_t i = iIt - 1;
              c3 = c2;
              c2 = c;
              s2 = s;
@@ -402,7 +401,7 @@ class EigenValue
      
      // Sort eigenvalues and corresponding vectors.
    
-     for (size_t i = 0; i < n_-1; i++)
+     for (size_t i = 0; n_ > 0 && i < n_-1; i++)
      {
        size_t k = i;
        Real p = d_[i];
@@ -438,15 +437,15 @@ class EigenValue
     */
    void orthes ()
    {
-     size_t low = 0;
-     size_t high = n_-1;
+     int low = 0;
+     int high = static_cast<int>(n_)-1;
    
-     for (size_t m = low+1; m <= high-1; m++)
+     for (int m = low+1; m <= high-1; m++)
      {
        // Scale column.
    
        Real scale = 0.0;
-       for (size_t i = m; i <= high; i++)
+       for (int i = m; i <= high; i++)
        {
          scale = scale + NumTools::abs<Real>(H_(i,m-1));
        }
@@ -455,9 +454,8 @@ class EigenValue
          // Compute Householder transformation.
    
          Real h = 0.0;
-         for (size_t iIt = high + 1; iIt > m; iIt--)
+         for (int i = high; i >= m; i--)
          {
-           size_t i = iIt - 1;
            ort_[i] = H_(i,m-1)/scale;
            h += ort_[i] * ort_[i];
          }
@@ -472,31 +470,29 @@ class EigenValue
          // Apply Householder similarity transformation
          // H = (I-u*u'/h)*H*(I-u*u')/h)
    
-         for (size_t j = m; j < n_; j++)
+         for (int j = m; j < static_cast<int>(n_); j++)
          {
            Real f = 0.0;
-           for (size_t iIt = high + 1; iIt > m; iIt--)
+           for (int i = high; i >= m; i--)
            {
-             size_t i = iIt - 1;
              f += ort_[i]*H_(i,j);
            }
            f = f/h;
-           for (size_t i = m; i <= high; i++)
+           for (int i = m; i <= high; i++)
            {
              H_(i,j) -= f*ort_[i];
            }
          }
    
-         for (size_t i = 0; i <= high; i++)
+         for (int i = 0; i <= high; i++)
          {
            Real f = 0.0;
-           for (size_t jIt = high + 1; jIt > m; jIt--)
+           for (int j = high; j >= m; j--)
            {
-             size_t j = jIt - 1;
              f += ort_[j]*H_(i,j);
            }
            f = f/h;
-           for (size_t j = m; j <= high; j++)
+           for (int j = m; j <= high; j++)
            {
              H_(i,j) -= f*ort_[j];
            }
@@ -516,24 +512,24 @@ class EigenValue
        }
      }
 
-     for (size_t m = high-1; m >= low+1; m--)
+     for (int m = high-1; m >= low+1; m--)
      {
        if (H_(m,m-1) != 0.0)
        {
-         for (size_t i = m+1; i <= high; i++)
+         for (int i = m+1; i <= high; i++)
          {
            ort_[i] = H_(i,m-1);
          }
-         for (size_t j = m; j <= high; j++)
+         for (int j = m; j <= high; j++)
          {
            Real g = 0.0;
-           for (size_t i = m; i <= high; i++)
+           for (int i = m; i <= high; i++)
            {
              g += ort_[i] * V_(i,j);
            }
            // Double division avoids possible underflow
            g = (g / ort_[m]) / H_(m,m-1);
-           for (size_t i = m; i <= high; i++)
+           for (int i = m; i <= high; i++)
            {
              V_(i,j) += g * ort_[i];
            }
@@ -577,10 +573,10 @@ class EigenValue
   
     // Initialize
    
-    size_t nn = this->n_;
-    size_t n = nn-1;
-    size_t low = 0;
-    size_t high = nn-1;
+    int nn = static_cast<int>(this->n_);
+    int n = nn-1;
+    int low = 0;
+    int high = nn-1;
     Real eps = pow(2.0,-52.0);
     Real exshift = 0.0;
     Real p=0,q=0,r=0,s=0,z=0,t,w,x,y;
@@ -588,16 +584,14 @@ class EigenValue
     // Store roots isolated by balanc and compute matrix norm
    
     Real norm = 0.0;
-    for (size_t i = 0; i < nn; i++)
+    for (int i = 0; i < nn; i++)
     {
       if ((i < low) || (i > high))
       {
         d_[i] = H_(i,i);
         e_[i] = 0.0;
       }
-      size_t mx = 0;
-      if (i > 1) mx = i - 1;
-      for (size_t j = mx; j < nn; j++)
+      for (int j = std::max(i-1,0); j < nn; j++)
       {
         norm = norm + NumTools::abs<Real>(H_(i,j));
       }
@@ -605,12 +599,12 @@ class EigenValue
    
     // Outer loop over eigenvalue index
   
-    size_t iter = 0;
+    int iter = 0;
     while (n >= low)
     {
       // Look for single small sub-diagonal element
   
-      size_t l = n;
+      int l = n;
       while (l > low)
       {
         s = NumTools::abs<Real>(H_(l-1,l-1)) + NumTools::abs<Real>(H_(l,l));
@@ -633,13 +627,9 @@ class EigenValue
         H_(n,n) = H_(n,n) + exshift;
         d_[n] = H_(n,n);
         e_[n] = 0.0;
+        n--;
         iter = 0;
-        //n--;
-        //modified by jdutheil on 18/01/13 because n is now of type size_t and cannot be negative
-        if (n > low)
-          n--;
-        else
-          break;
+  
         // Two roots found
   
       }
@@ -683,7 +673,7 @@ class EigenValue
   
           // Row modification
   
-          for (size_t j = n-1; j < nn; j++)
+          for (int j = n-1; j < nn; j++)
           {
             z = H_(n-1,j);
             H_(n-1,j) = q * z + p * H_(n,j);
@@ -692,7 +682,7 @@ class EigenValue
   
           // Column modification
   
-          for (size_t i = 0; i <= n; i++)
+          for (int i = 0; i <= n; i++)
           {
             z = H_(i,n-1);
             H_(i,n-1) = q * z + p * H_(i,n);
@@ -701,7 +691,7 @@ class EigenValue
   
           // Accumulate transformations
   
-          for (size_t i = low; i <= high; i++)
+          for (int i = low; i <= high; i++)
           {
             z = V_(i,n-1);
             V_(i,n-1) = q * z + p * V_(i,n);
@@ -718,13 +708,8 @@ class EigenValue
           e_[n-1] = z;
           e_[n] = -z;
         }
+        n = n - 2;
         iter = 0;
-        //n = n - 2;
-        //modified by jdutheil on 18/01/13 because n is now of type size_t and cannot be negative
-        if (n > low + 2)
-          n -= 2;
-        else
-          break;
   
         // No convergence yet
   
@@ -747,7 +732,7 @@ class EigenValue
         if (iter == 10)
         {
           exshift += x;
-          for (size_t i = low; i <= n; i++)
+          for (int i = low; i <= n; i++)
           {
             H_(i,i) -= x;
           }
@@ -769,7 +754,7 @@ class EigenValue
               s = -s;
             }
             s = x - w / ((y - x) / 2.0 + s);
-            for (size_t i = low; i <= n; i++)
+            for (int i = low; i <= n; i++)
             {
               H_(i,i) -= s;
             }
@@ -782,7 +767,7 @@ class EigenValue
   
         // Look for two consecutive small sub-diagonal elements
   
-        size_t m = n-2;
+        int m = n-2;
         while (m >= l)
         {
           z = H_(m,m);
@@ -808,7 +793,7 @@ class EigenValue
           m--;
         }
   
-        for (size_t i = m+2; i <= n; i++)
+        for (int i = m+2; i <= n; i++)
         {
           H_(i,i-2) = 0.0;
           if (i > m+2)
@@ -819,9 +804,9 @@ class EigenValue
  
         // Double QR step involving rows l:n and columns m:n
    
-        for (size_t k = m; k <= n-1; k++)
+        for (int k = m; k <= n-1; k++)
         {
-          bool notlast = (k != n-1);
+          int notlast = (k != n-1);
           if (k != m)
           {
             p = H_(k,k-1);
@@ -863,7 +848,7 @@ class EigenValue
    
             // Row modification
    
-            for (size_t j = k; j < nn; j++)
+            for (int j = k; j < nn; j++)
             {
               p = H_(k,j) + q * H_(k+1,j);
               if (notlast)
@@ -877,7 +862,7 @@ class EigenValue
    
             // Column modification
    
-            for (size_t i = 0; i <= std::min(n,k+3); i++)
+            for (int i = 0; i <= std::min(n,k+3); i++)
             {
               p = x * H_(i,k) + y * H_(i,k+1);
               if (notlast)
@@ -891,7 +876,7 @@ class EigenValue
    
             // Accumulate transformations
    
-            for (size_t i = low; i <= high; i++)
+            for (int i = low; i <= high; i++)
             {
               p = x * V_(i,k) + y * V_(i,k+1);
               if (notlast)
@@ -914,9 +899,8 @@ class EigenValue
        return;
     }
    
-    for (size_t nIt = nn; nIt > 0; nIt--)
+    for (n = nn-1; n >= 0; n--)
     {
-      n = nIt -1;
       p = d_[n];
       q = e_[n];
    
@@ -924,14 +908,13 @@ class EigenValue
    
       if (q == 0)
       {
-        size_t l = n;
+        int l = n;
         H_(n,n) = 1.0;
-        for (size_t iIt = n; iIt > 0; iIt--)
+        for (int i = n-1; i >= 0; i--)
         {
-          size_t i = iIt - 1;
           w = H_(i,i) - p;
           r = 0.0;
-          for (size_t j = l; j <= n; j++)
+          for (int j = l; j <= n; j++)
           {
             r = r + H_(i,j) * H_(j,n);
           }
@@ -979,7 +962,7 @@ class EigenValue
             t = NumTools::abs<Real>(H_(i,n));
             if ((eps * t) * t > 1)
             {
-              for (size_t j = i; j <= n; j++)
+              for (int j = i; j <= n; j++)
               {
                 H_(j,n) = H_(j,n) / t;
               }
@@ -992,7 +975,7 @@ class EigenValue
       }
       else if (q < 0)
       {
-        size_t l = n-1;
+        int l = n-1;
 
         // Last vector component imaginary so matrix is triangular
    
@@ -1009,13 +992,12 @@ class EigenValue
         }
         H_(n,n-1) = 0.0;
         H_(n,n) = 1.0;
-        for (size_t iIt = n-1; iIt > 0; iIt--)
+        for (int i = n-2; i >= 0; i--)
         {
-          size_t i = iIt - 1;
           Real ra,sa,vr,vi;
           ra = 0.0;
           sa = 0.0;
-          for (size_t j = l; j <= n; j++)
+          for (int j = l; j <= n; j++)
           {
             ra = ra + H_(i,j) * H_(j,n-1);
             sa = sa + H_(i,j) * H_(j,n);
@@ -1070,7 +1052,7 @@ class EigenValue
             t = std::max(NumTools::abs<Real>(H_(i,n-1)),NumTools::abs<Real>(H_(i,n)));
             if ((eps * t) * t > 1)
             {
-              for (size_t j = i; j <= n; j++)
+              for (int j = i; j <= n; j++)
               {
                 H_(j,n-1) = H_(j,n-1) / t;
                 H_(j,n) = H_(j,n) / t;
@@ -1083,11 +1065,11 @@ class EigenValue
    
     // Vectors of isolated roots
    
-    for (size_t i = 0; i < nn; i++)
+    for (int i = 0; i < nn; i++)
     {
       if (i < low || i > high)
       {
-        for (size_t j = i; j < nn; j++)
+        for (int j = i; j < nn; j++)
         {
           V_(i,j) = H_(i,j);
         }
@@ -1096,13 +1078,12 @@ class EigenValue
    
     // Back transformation to get eigenvectors of original matrix
    
-    for (size_t jIt = nn; jIt > low; jIt--)
+    for (int j = nn-1; j >= low; j--)
     {
-      size_t j = jIt - 1;
-      for (size_t i = low; i <= high; i++)
+      for (int i = low; i <= high; i++)
       {
         z = 0.0;
-        for (size_t k = low; k <= std::min(j, high); k++)
+        for (int k = low; k <= std::min(j,high); k++)
         {
           z = z + V_(i,k) * H_(k,j);
         }
@@ -1113,6 +1094,8 @@ class EigenValue
 
   public:
 
+   bool isSymmetric() const { return issymmetric_; }
+
 
     /**
      * @brief Check for symmetry, then construct the eigenvalue decomposition
@@ -1121,7 +1104,7 @@ class EigenValue
      */
     EigenValue(const Matrix<Real>& A) :
       n_(A.getNumberOfColumns()),
-      isSymmetric_(true),
+      issymmetric_(true),
       d_(n_),
       e_(n_),
       V_(n_,n_),
@@ -1130,15 +1113,15 @@ class EigenValue
       ort_(),
       cdivr(), cdivi()
     {
-      for (size_t j = 0; (j < n_) && isSymmetric_; j++)
+      for (size_t j = 0; (j < n_) && issymmetric_; j++)
       {
-        for (size_t i = 0; (i < n_) && isSymmetric_; i++)
+        for (size_t i = 0; (i < n_) && issymmetric_; i++)
         {
-          isSymmetric_ = (A(i,j) == A(j,i));
+          issymmetric_ = (A(i,j) == A(j,i));
         }
       }
 
-      if (isSymmetric_)
+      if (issymmetric_)
       {
         for (size_t i = 0; i < n_; i++)
         {
@@ -1232,9 +1215,9 @@ class EigenValue
      */
     const RowMatrix<Real>& getD() const
     {
-      for (size_t i = 0; i < n_; i++)
+      for (int i = 0; i < n_; i++)
       {
-        for (size_t j = 0; j < n_; j++)
+        for (int j = 0; j < n_; j++)
         {
           D_(i,j) = 0.0;
         }
@@ -1250,13 +1233,6 @@ class EigenValue
       }
       return D_;
     }
-
-    /**
-     * @brief Tells is the input matrix is symmetric.
-     *
-     * @return true is the input matrix is symmetric.
-     */
-    bool isSymmetric() const { return isSymmetric_; }
 };
 
 } //end of namespace bpp.
