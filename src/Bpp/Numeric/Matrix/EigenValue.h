@@ -47,6 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <cmath>
 // for abs() below
+#include <climits>
 
 #include "Matrix.h"
 #include "../NumTools.h"
@@ -1113,6 +1114,8 @@ class EigenValue
       ort_(),
       cdivr(), cdivi()
     {
+      if (n_ > INT_MAX)
+        throw Exception("EigenValue: can only be computed for matrices <= " + TextTools::toString(INT_MAX));
       for (size_t j = 0; (j < n_) && issymmetric_; j++)
       {
         for (size_t i = 0; (i < n_) && issymmetric_; i++)
