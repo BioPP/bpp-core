@@ -1218,9 +1218,9 @@ class EigenValue
      */
     const RowMatrix<Real>& getD() const
     {
-      for (int i = 0; i < n_; i++)
+      for (size_t i = 0; i < n_; i++)
       {
-        for (int j = 0; j < n_; j++)
+        for (size_t j = 0; j < n_; j++)
         {
           D_(i,j) = 0.0;
         }

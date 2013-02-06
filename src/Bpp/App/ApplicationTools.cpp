@@ -168,36 +168,42 @@ bool ApplicationTools::getBooleanParameter(
   bool suffixIsOptional,
   bool warn)
 {
+  string sParam;
   bool bParam = defaultValue;
-  if(parameterExists(parameterName + suffix, params))
+  if (parameterExists(parameterName + suffix, params))
   {
-    string sParam = params[parameterName + suffix];
-    bParam = (sParam == "true") 
-        || (sParam == "TRUE")
-        || (sParam == "t")
-        || (sParam == "T")
-        || (sParam == "yes")
-        || (sParam == "YES")
-        || (sParam == "y")
-        || (sParam == "Y")
-        || (sParam == "1");
+    sParam = params[parameterName + suffix];
   }
   else if (suffixIsOptional && parameterExists(parameterName, params)) {
-    string sParam = params[parameterName];
-    bParam = (sParam == "true") 
-        || (sParam == "TRUE")
-        || (sParam == "t")
-        || (sParam == "T")
-        || (sParam == "yes")
-        || (sParam == "YES")
-        || (sParam == "y")
-        || (sParam == "Y")
-          || (sParam == "1");
+    sParam = params[parameterName];
   }
   else if (warn)
   {
     displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + TextTools::toString(defaultValue));
+    return bParam;
   }
+  if ((sParam == "true") 
+   || (sParam == "TRUE")
+   || (sParam == "t")
+   || (sParam == "T")
+   || (sParam == "yes")
+   || (sParam == "YES")
+   || (sParam == "y")
+   || (sParam == "Y")
+   || (sParam == "1"))
+    bParam = true;
+  else if ((sParam == "false") 
+        || (sParam == "FALSE")
+        || (sParam == "f")
+        || (sParam == "F")
+        || (sParam == "no")
+        || (sParam == "NO")
+        || (sParam == "n")
+        || (sParam == "N")
+        || (sParam == "0"))
+    bParam = false;
+  else throw Exception("ApplicationTools::getBooleanParameter. Wrong description:" + sParam);
+ 
   return bParam;
 }
 

@@ -77,13 +77,6 @@ NumberFormatException::NumberFormatException(const std::string& text, const std:
 
 /******************************************************************************/
   
-IndexOutOfBoundsException::IndexOutOfBoundsException(const char* text, size_t badInt, size_t lowerBound, size_t upperBound):
-  Exception(
-    "out of [" + TextTools::toString(lowerBound) +  ", " + TextTools::toString(upperBound) + "])" + string(text)),
-  badIndex_(badInt),
-  lowerBound_(lowerBound),
-  upperBound_(upperBound) {}
-
 IndexOutOfBoundsException::IndexOutOfBoundsException(const std::string& text, size_t badInt, size_t lowerBound, size_t upperBound):
   Exception("out of [" + TextTools::toString(lowerBound) + ", " + TextTools::toString(upperBound) +  "])" + text),
   badIndex_(badInt),
@@ -97,6 +90,13 @@ vector<size_t> IndexOutOfBoundsException::getBounds() const
   bounds[1] = upperBound_;
   return bounds;
 }
+
+/******************************************************************************/
+  
+BadSizeException::BadSizeException(const std::string& text, size_t badSize, size_t correctSize):
+  Exception("Incorrect size " + TextTools::toString(badSize) + ", expected " + TextTools::toString(correctSize) + ". " + text),
+  badSize_(badSize),
+  correctSize_(correctSize) {}
 
 /******************************************************************************/
 

@@ -169,11 +169,9 @@ namespace bpp
      * @brief Pick one element in a vector
      *
      * Pick one element randomly in a vector and return it.
-     * If you choose to make the picking without replacement the element is
-     * removed from the vector
      *
      * @param v The vector of elements.
-     * @param replace Should pick with replacement? (default: false)
+     * @param replace If set to yes, then elements are allowed to be picked more than once, and therefore can be re-"placed" in the final sample.(default: false)
      * @return On element of the vector.
      * @throw EmptyVectorException if the vector is empty.
      *

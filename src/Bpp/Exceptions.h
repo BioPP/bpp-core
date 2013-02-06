@@ -301,16 +301,6 @@ class IndexOutOfBoundsException:
     size_t badIndex_, lowerBound_, upperBound_;
   
   public:
-    
-    /**
-     * @brief Build a new IndexOutOfBoundsException.
-     *
-     * @param text   A message to be passed to the exception hierarchy.
-     * @param badInt The faulty integer.
-     * @param lowerBound Lower limit.
-     * @param upperBound Upper limit.
-     */
-    IndexOutOfBoundsException(const char* text, size_t badInt, size_t lowerBound, size_t upperBound);
 
     /**
      * @brief Build a new IndexOutOfBoundsException.
@@ -334,6 +324,35 @@ class IndexOutOfBoundsException:
     std::vector<size_t> getBounds() const;
 
     size_t getBadIndex() const { return badIndex_; }
+};
+
+
+/**
+ * @brief Wrong size exception class.
+ */
+class BadSizeException:
+  public virtual Exception
+{
+  protected:
+    size_t badSize_, correctSize_;
+  
+  public:
+    
+    /**
+     * @brief Build a new BadSizeException.
+     *
+     * @param text   A message to be passed to the exception hierarchy.
+     * @param badSize The faulty size.
+     * @param correctSize The expected size.
+     */
+    BadSizeException(const std::string& text, size_t badSize, size_t correctSize);
+  
+    virtual ~BadSizeException() throw() {}
+
+  public:
+    
+    size_t getBadSize() const { return badSize_; }
+    size_t getCorrectSize() const { return correctSize_; }
 };
 
 

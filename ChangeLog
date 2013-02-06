@@ -1,3 +1,7 @@
+06/02/13 Julien Dutheil
+* Fixed bug #60
+* Fixed bug #63
+
 18/01/13 Julien Dutheil
 * Now compiles with -Wconversion
 * Several code formating update
