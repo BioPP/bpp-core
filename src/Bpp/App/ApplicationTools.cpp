@@ -185,7 +185,6 @@ bool ApplicationTools::getBooleanParameter(
     }
     return bParam;
   }
-  cout << sParam << endl;
   if ((sParam == "true") 
    || (sParam == "TRUE")
    || (sParam == "t")
