@@ -63,7 +63,7 @@ bool ApplicationTools::parameterExists(
   const std::string & parameterName,
   std::map<std::string, std::string>& params)
 {
-  return params.find(parameterName) != params.end() && !TextTools::isEmpty(params[parameterName]);
+  return (params.find(parameterName) != params.end() && !TextTools::isEmpty(params[parameterName]));
 }
   
 /******************************************************************************/
@@ -161,10 +161,10 @@ std::string ApplicationTools::getStringParameter(
 /******************************************************************************/
 
 bool ApplicationTools::getBooleanParameter(
-  const std::string & parameterName,
-  std::map<std::string, std::string> & params,
+  const std::string& parameterName,
+  std::map<std::string, std::string>& params,
   bool defaultValue,
-  const std::string & suffix,
+  const std::string& suffix,
   bool suffixIsOptional,
   bool warn)
 {
@@ -174,14 +174,18 @@ bool ApplicationTools::getBooleanParameter(
   {
     sParam = params[parameterName + suffix];
   }
-  else if (suffixIsOptional && parameterExists(parameterName, params)) {
+  else if (suffixIsOptional && parameterExists(parameterName, params))
+  {
     sParam = params[parameterName];
   }
-  else if (warn)
-  {
-    displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + TextTools::toString(defaultValue));
+  else {
+    if (warn)
+    {
+      displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + TextTools::toString(defaultValue));
+    }
     return bParam;
   }
+  cout << sParam << endl;
   if ((sParam == "true") 
    || (sParam == "TRUE")
    || (sParam == "t")
