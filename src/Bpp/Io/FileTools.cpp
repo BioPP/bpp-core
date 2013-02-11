@@ -90,7 +90,7 @@ std::string FileTools::getFileName(const std::string& path, char dirSep)
 
 /******************************************************************************/
 
-size_t FileTools::getFileSize(const std::string& filename)
+streampos FileTools::getFileSize(const std::string& filename)
 {
   std::ifstream stream;
   streampos size;
