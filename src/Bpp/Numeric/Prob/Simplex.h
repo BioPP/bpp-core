@@ -152,6 +152,8 @@ public:
   void setFrequencies(const std::vector<double>&);
   
   double prob(size_t i) const { return vProb_[i];}
+
+  unsigned short getMethod() const { return method_;}
 };
 
 } //end of namespace bpp.
