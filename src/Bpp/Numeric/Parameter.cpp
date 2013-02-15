@@ -194,13 +194,13 @@ bool Parameter::hasParameterListener(const std::string& listenerId)
 
 /******************************************************************************/
 
-const IntervalConstraint Parameter::R_PLUS(1, 0, true);
+const IntervalConstraint Parameter::R_PLUS(true, 0, true);
 
-const IntervalConstraint Parameter::R_PLUS_STAR(1, 0, false);
+const IntervalConstraint Parameter::R_PLUS_STAR(true, 0, false);
 
-const IntervalConstraint Parameter::R_MINUS(-1, 0, true);
+const IntervalConstraint Parameter::R_MINUS(false, 0, true);
 
-const IntervalConstraint Parameter::R_MINUS_STAR(-1, 0, false);
+const IntervalConstraint Parameter::R_MINUS_STAR(false, 0, false);
 
 const IntervalConstraint Parameter::PROP_CONSTRAINT_IN(0, 1, true, true);
 
