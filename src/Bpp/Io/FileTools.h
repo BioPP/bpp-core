@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -116,7 +116,7 @@ class FileTools
      * @return The size of the file.
      * @author Sylvain Gaillard
      */
-    static size_t getFileSize(const std::string& filename);
+    static std::streampos getFileSize(const std::string& filename);
 
 		/**
 		 * @brief Get the path of the parent directry of the given file/dir.

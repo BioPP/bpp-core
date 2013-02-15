@@ -165,16 +165,16 @@ public:
    *
    * The infinite bound will not be included, following mathematical conventions.
    *
-   * @param sign Tell if the infinite bound is positive or negative.
+   * @param isPositive Tell if the infinite bound is positive or negative.
    * @param bound The finite bound.
    * @param incl Tell if the finite bound is included or not.
    * @param precision Parameter precision.
    */
-  IntervalConstraint(short sign, double bound, bool incl, double precision = NumConstants::TINY) :
-    lowerBound_(sign > 0 ? bound : NumConstants::MINF),
-    upperBound_(sign > 0 ? NumConstants::PINF : bound),
-    inclLowerBound_(sign > 0 ? incl : false),
-    inclUpperBound_(sign > 0 ? false : incl),
+  IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY) :
+    lowerBound_(isPositive ? bound : NumConstants::MINF),
+    upperBound_(isPositive > 0 ? NumConstants::PINF : bound),
+    inclLowerBound_(isPositive ? incl : false),
+    inclUpperBound_(isPositive ? false : incl),
     precision_(precision) {}
  
   virtual ~IntervalConstraint() {}

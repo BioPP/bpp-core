@@ -6,7 +6,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -90,10 +90,10 @@ std::string FileTools::getFileName(const std::string& path, char dirSep)
 
 /******************************************************************************/
 
-size_t FileTools::getFileSize(const std::string& filename)
+streampos FileTools::getFileSize(const std::string& filename)
 {
   std::ifstream stream;
-  size_t size;
+  streampos size;
   stream.open(filename.c_str(), std::ios::ate);
   size = stream.tellg();
   stream.close();
