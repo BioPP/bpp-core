@@ -172,7 +172,7 @@ public:
    */
   IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY) :
     lowerBound_(isPositive ? bound : NumConstants::MINF),
-    upperBound_(isPositive > 0 ? NumConstants::PINF : bound),
+    upperBound_(isPositive ? NumConstants::PINF : bound),
     inclLowerBound_(isPositive ? incl : false),
     inclUpperBound_(isPositive ? false : incl),
     precision_(precision) {}

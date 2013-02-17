@@ -208,12 +208,3 @@ const IntervalConstraint Parameter::PROP_CONSTRAINT_EX(0, 1, false, false);
 
 /******************************************************************************/
 
-void ensure_initialization() {
-  Parameter::R_PLUS;
-  Parameter::R_PLUS_STAR;
-  Parameter::R_MINUS;
-  Parameter::R_MINUS_STAR;
-  Parameter::PROP_CONSTRAINT_IN;
-  Parameter::PROP_CONSTRAINT_EX;
-}
-
