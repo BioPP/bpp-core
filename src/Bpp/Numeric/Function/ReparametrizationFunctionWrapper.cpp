@@ -69,10 +69,10 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 1: [a,b]
             // This solves an issue if the original value is at the bound.
             double correctedValue = value;
-            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
-              correctedValue = interval->getLowerBound() + NumConstants::TINY;
-            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
-              correctedValue = interval->getUpperBound() - NumConstants::TINY;
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY())
+              correctedValue = interval->getLowerBound() + NumConstants::TINY();
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY())
+              correctedValue = interval->getUpperBound() - NumConstants::TINY();
             IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, correctedValue, interval->getLowerBound(), interval->getUpperBound());
             addParameter_(pp);
             if (verbose)
@@ -83,7 +83,7 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 2: ]a,b[
             // We have to correct the bound in order to prevent numerical issues.
             // It can happens that the original bound is matched because of rounding errors.
-            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, value, interval->getLowerBound() + NumConstants::TINY, interval->getUpperBound() - NumConstants::TINY);
+            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, value, interval->getLowerBound() + NumConstants::TINY(), interval->getUpperBound() - NumConstants::TINY());
             addParameter_(pp);
             if (verbose)
               ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp->getValue()));
@@ -93,9 +93,9 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 3: [a,b[
             // This solves an issue if the original value is at the bound.
             double correctedValue = value;
-            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
-              correctedValue = interval->getLowerBound() + NumConstants::TINY;
-            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, correctedValue, interval->getLowerBound(), interval->getUpperBound() - NumConstants::TINY);
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY())
+              correctedValue = interval->getLowerBound() + NumConstants::TINY();
+            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, correctedValue, interval->getLowerBound(), interval->getUpperBound() - NumConstants::TINY());
             addParameter_(pp);
             if (verbose)
               ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp->getValue()));
@@ -105,9 +105,9 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 4: ]a,b]
             // This solve an issue if the original value is at the bound.
             double correctedValue = value;
-            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
-              correctedValue = interval->getUpperBound() - NumConstants::TINY;
-            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, correctedValue, interval->getLowerBound() + NumConstants::TINY, interval->getUpperBound());
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY())
+              correctedValue = interval->getUpperBound() - NumConstants::TINY();
+            IntervalTransformedParameter* pp = new IntervalTransformedParameter(name, correctedValue, interval->getLowerBound() + NumConstants::TINY(), interval->getUpperBound());
             addParameter_(pp);
             if (verbose)
               ApplicationTools::displayMessage("Parameter " + name + " was tanh transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp->getValue()));
@@ -118,7 +118,7 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
           if (interval->strictLowerBound() && !interval->finiteUpperBound())
           {
             // Case 5: ]a, +inf[
-            RTransformedParameter* pp = new RTransformedParameter(name, value, interval->getLowerBound() + NumConstants::TINY, true);
+            RTransformedParameter* pp = new RTransformedParameter(name, value, interval->getLowerBound() + NumConstants::TINY(), true);
             addParameter_(pp);
             if (verbose)
               ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp->getValue()));
@@ -128,8 +128,8 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 6: [a, +inf[
             // This solve an issue if the original value is at the bound.
             double correctedValue = value;
-            if (abs(value - interval->getLowerBound()) < NumConstants::TINY)
-              correctedValue = interval->getLowerBound() + NumConstants::TINY;
+            if (abs(value - interval->getLowerBound()) < NumConstants::TINY())
+              correctedValue = interval->getLowerBound() + NumConstants::TINY();
             RTransformedParameter* pp = new RTransformedParameter(name, correctedValue, interval->getLowerBound(), true);
             addParameter_(pp);
             if (verbose)
@@ -138,7 +138,7 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
           else if (!interval->finiteLowerBound() && interval->strictUpperBound())
           {
             // Case 7: ]-inf, a[
-            RTransformedParameter* pp = new RTransformedParameter(name, value, interval->getUpperBound() - NumConstants::TINY, false);
+            RTransformedParameter* pp = new RTransformedParameter(name, value, interval->getUpperBound() - NumConstants::TINY(), false);
             addParameter_(pp);
             if (verbose)
               ApplicationTools::displayMessage("Parameter " + name + " was log transformed: " + TextTools::toString(value) + "->" + TextTools::toString(pp->getValue()));
@@ -148,8 +148,8 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
             // Case 8: ]-inf, a]
             // This solve an issue if the original value is at the bound.
             double correctedValue = value;
-            if (abs(value - interval->getUpperBound()) < NumConstants::TINY)
-              correctedValue = interval->getUpperBound() - NumConstants::TINY;
+            if (abs(value - interval->getUpperBound()) < NumConstants::TINY())
+              correctedValue = interval->getUpperBound() - NumConstants::TINY();
             RTransformedParameter* pp = new RTransformedParameter(name, correctedValue, interval->getUpperBound(), false);
             addParameter_(pp);
             if (verbose)

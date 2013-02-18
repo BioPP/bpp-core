@@ -85,7 +85,7 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc) throw
     if(keyvals.find("step") != keyvals.end())
     {
       double step = TextTools::toDouble(keyvals["step"]);
-      for(double x = start; x <= end+NumConstants::TINY; x += step)
+      for(double x = start; x <= end+NumConstants::TINY(); x += step)
         values.push_back(x);
     }
     else

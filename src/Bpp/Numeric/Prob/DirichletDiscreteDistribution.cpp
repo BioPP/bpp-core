@@ -159,10 +159,10 @@ Vdouble DirichletDiscreteDistribution::getValueCategory(Vdouble& value) const
   Vdouble vd;
   double y, sumc = 0;
 
-  for (unsigned int j = 0; j < vpBDD_.size(); j++)
+  for (size_t j = 0; j < vpBDD_.size(); j++)
   {
-    if (1 - sumc < NumConstants::VERY_TINY)
-      y = vpBDD_[j]->getValueCategory(NumConstants::VERY_TINY);
+    if (1 - sumc < NumConstants::VERY_TINY())
+      y = vpBDD_[j]->getValueCategory(NumConstants::VERY_TINY());
     else
       y = vpBDD_[j]->getValueCategory(value[j] / (1 - sumc)) * (1 - sumc);
     sumc += y;

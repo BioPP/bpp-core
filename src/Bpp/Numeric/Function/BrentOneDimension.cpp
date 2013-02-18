@@ -151,7 +151,7 @@ double BrentOneDimension::doStep() throw (Exception)
     etemp = e;
     e = d;
     if (NumTools::abs(p) >= NumTools::abs(0.5 * q * etemp) || p <= q * (a - x) || p >= q * (b - x))
-      d = NumConstants::GOLDEN_RATIO_C * (e = (x >= xm ? a - x : b - x));
+      d = NumConstants::GOLDEN_RATIO_C() * (e = (x >= xm ? a - x : b - x));
     else
     {
       d = p / q;
@@ -162,7 +162,7 @@ double BrentOneDimension::doStep() throw (Exception)
   }
   else
   {
-    d = NumConstants::GOLDEN_RATIO_C * (e = (x >= xm ? a - x : b - x));
+    d = NumConstants::GOLDEN_RATIO_C() * (e = (x >= xm ? a - x : b - x));
   }
   u = (NumTools::abs(d) >= tol1 ? x + d : x + NumTools::sign(tol1, d));
 

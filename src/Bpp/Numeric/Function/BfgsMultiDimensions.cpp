@@ -87,13 +87,13 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
     const Constraint* cp = params[i].getConstraint();
     if (!cp)
     {
-      Up_[i] = NumConstants::VERY_BIG;
-      Lo_[i] = -NumConstants::VERY_BIG;
+      Up_[i] = NumConstants::VERY_BIG();
+      Lo_[i] = -NumConstants::VERY_BIG();
     }
     else
     {
-      Up_[i] = cp->getAcceptedLimit(NumConstants::VERY_BIG) - NumConstants::TINY;
-      Lo_[i] = cp->getAcceptedLimit(-NumConstants::VERY_BIG) + NumConstants::TINY;
+      Up_[i] = cp->getAcceptedLimit(NumConstants::VERY_BIG()) - NumConstants::TINY();
+      Lo_[i] = cp->getAcceptedLimit(-NumConstants::VERY_BIG()) + NumConstants::TINY();
     }
   }
 
@@ -280,9 +280,9 @@ void BfgsMultiDimensions::setDirection()
   double v = 1, alpmax = 1;
   for (size_t i = 0; i < nbParams; i++)
   {
-    if ((xi_[i] > 0) && (p_[i] + NumConstants::TINY * xi_[i] < Up_[i]))
+    if ((xi_[i] > 0) && (p_[i] + NumConstants::TINY() * xi_[i] < Up_[i]))
       v = (Up_[i] - p_[i]) / xi_[i];
-    else if ((xi_[i] < 0) && (p_[i] + NumConstants::TINY * xi_[i] > Lo_[i]))
+    else if ((xi_[i] < 0) && (p_[i] + NumConstants::TINY() * xi_[i] > Lo_[i]))
       v = (Lo_[i] - p_[i]) / xi_[i];
     if (v < alpmax)
       alpmax = v;
@@ -290,9 +290,9 @@ void BfgsMultiDimensions::setDirection()
 
   for (size_t i = 0; i < nbParams; i++)
   {
-    if (p_[i] + NumConstants::TINY * xi_[i] >= Up_[i])
+    if (p_[i] + NumConstants::TINY() * xi_[i] >= Up_[i])
       xi_[i] = Up_[i] - p_[i];
-    else if (p_[i] + NumConstants::TINY * xi_[i] <= Lo_[i])
+    else if (p_[i] + NumConstants::TINY() * xi_[i] <= Lo_[i])
       xi_[i] = Lo_[i] - p_[i];
     else
       xi_[i] *= alpmax;

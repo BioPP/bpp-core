@@ -269,14 +269,14 @@ namespace bpp
      * @return The lowest value.
      */
     virtual double getLowerBound() const {
-      return (-NumConstants::VERY_BIG);
+      return (-NumConstants::VERY_BIG());
     }
   
     /**
      * @return The highest value.
      */
     virtual double getUpperBound() const {
-      return (NumConstants::VERY_BIG);
+      return (NumConstants::VERY_BIG());
     }
   
     /**

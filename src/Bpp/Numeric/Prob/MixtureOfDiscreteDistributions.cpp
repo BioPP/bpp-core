@@ -213,8 +213,8 @@ void MixtureOfDiscreteDistributions::updateDistribution()
   // intMinMax_
 
   double uB, lB;
-  uB = -NumConstants::VERY_BIG;
-  lB = NumConstants::VERY_BIG;
+  uB = -NumConstants::VERY_BIG();
+  lB = NumConstants::VERY_BIG();
 
   bool suB = true, slB = true;
 

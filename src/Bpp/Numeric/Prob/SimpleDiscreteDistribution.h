@@ -80,7 +80,7 @@ private:
      * @param fixed tells if there are parameters (default false means there are parameters).
      */
   
-  SimpleDiscreteDistribution(const std::map<double, double>& distribution, double precision=NumConstants::TINY, bool fixed=false);
+  SimpleDiscreteDistribution(const std::map<double, double>& distribution, double precision=NumConstants::TINY(), bool fixed=false);
 
   /**
    * @brief Builds a new SimpleDiscreteDistribution object from a
@@ -93,7 +93,7 @@ private:
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::vector<double>& probas, double prec=NumConstants::TINY(), bool fixed=false);
 
   /**
    * @brief Builds a new SimpleDiscreteDistribution object from a
@@ -110,7 +110,7 @@ private:
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<size_t, std::vector<double> >& ranges, const std::vector<double>& probas, double prec=NumConstants::TINY, bool fixed=false);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<size_t, std::vector<double> >& ranges, const std::vector<double>& probas, double prec=NumConstants::TINY(), bool fixed=false);
 
   virtual ~SimpleDiscreteDistribution() {}
 

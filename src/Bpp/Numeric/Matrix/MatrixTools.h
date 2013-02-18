@@ -649,7 +649,7 @@ public:
     LUDecomposition<Scalar> lu(A);
     RowMatrix<Scalar> I;
     getId(A.getNumberOfRows(), I);
-    return lu.solve(I,O);
+    return lu.solve(I, O);
   }
 
   /**
