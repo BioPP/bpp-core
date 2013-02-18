@@ -84,10 +84,10 @@ namespace bpp {
      * @{
      */
     //NB: numeric_limits<double>::infinity can throw an exception, so cannot be used directly here.
-    const double INF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
-    const double PINF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
-    const double MINF = std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min();
-    const double NaN = 3./0.;
+    extern const double INF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
+    extern const double PINF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
+    extern const double MINF = std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min();
+    extern const double NaN = 3./0.;
     /** @} */
 
     const double PI = 3.141593;
