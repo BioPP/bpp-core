@@ -258,7 +258,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
 
 double SimpleDiscreteDistribution::qProb(double x) const
 {
-  double s = -NumConstants::VERY_BIG;
+  double s = -NumConstants::VERY_BIG();
   double x2 = x;
   for (map<double, double>::const_iterator it = distribution_.begin(); it != distribution_.end(); it++)
   {

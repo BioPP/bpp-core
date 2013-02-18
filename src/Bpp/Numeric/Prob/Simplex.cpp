@@ -52,7 +52,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
   valpha_()
 {
   double sum = VectorTools::sum(probas);
-  if (fabs(1. - sum) > NumConstants::SMALL)
+  if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
   for (unsigned int i = 0; i < dim_; i++)
@@ -161,7 +161,7 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
 void Simplex::setFrequencies(const std::vector<double>& probas)
 {
   double sum = VectorTools::sum(probas);
-  if (fabs(1. - sum) > NumConstants::SMALL)
+  if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex::setFrequencies. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
   double y = 1;

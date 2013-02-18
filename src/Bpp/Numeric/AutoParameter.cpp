@@ -105,12 +105,12 @@ void AutoParameter::setValue(double value) throw (ConstraintException)
           try
             {
               // Try on the right:
-              Parameter::setValue(limit + NumConstants::TINY);
+              Parameter::setValue(limit + NumConstants::TINY());
             }
           catch(ConstraintException& ce3)
             {
               // Try on the left:
-              Parameter::setValue(limit - NumConstants::TINY);
+              Parameter::setValue(limit - NumConstants::TINY());
             }
         }
     }

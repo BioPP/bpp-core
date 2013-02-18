@@ -83,7 +83,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
     }
 	
   // First guess for third point:
-  bracket.c.x = bracket.b.x + NumConstants::GOLDEN_RATIO_PHI * (bracket.b.x - bracket.a.x);
+  bracket.c.x = bracket.b.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.b.x - bracket.a.x);
   parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
 	
   // Keep returning here until we bracket:
@@ -95,7 +95,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
       double q = (bracket.b.x - bracket.c.x) * (bracket.b.f - bracket.a.f);
 		
       double xu = bracket.b.x - ((bracket.b.x - bracket.c.x) * q - (bracket.b.x - bracket.a.x) * r) /
-        (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY), q - r));
+        (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
       double xulim = (bracket.b.x) + GLIMIT * (bracket.c.x - bracket.b.x);
       double fu;
 		
@@ -117,7 +117,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
             }
           // Parabolic fit was no use.
           // Use default magnification.
-          xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI * (bracket.c.x - bracket.b.x);
+          xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x);
           parameters[0].setValue(xu); fu = function->f(parameters);
         }
       else if ((bracket.c.x - xu) * (xu - xulim) > 0.0)
@@ -126,7 +126,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
           parameters[0].setValue(xu); fu = function->f(parameters);
           if (fu < bracket.c.f)
             {
-              NumTools::shift<double>(bracket.b.x, bracket.c.x, xu, bracket.c.x + NumConstants::GOLDEN_RATIO_PHI * (bracket.c.x - bracket.b.x));
+              NumTools::shift<double>(bracket.b.x, bracket.c.x, xu, bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x));
               parameters[0].setValue(xu);
               NumTools::shift<double>(bracket.b.f, bracket.c.f, fu, function->f(parameters));
             }
@@ -140,7 +140,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
       else
         {
           // Reject parabolic xu, use default magnification.
-          xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI * (bracket.c.x - bracket.b.x);
+          xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x);
           parameters[0].setValue(xu); fu = function->f(parameters);
         }
       // Eliminate oldest point and continue.

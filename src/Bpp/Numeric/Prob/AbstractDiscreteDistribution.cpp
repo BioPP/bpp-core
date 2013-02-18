@@ -51,7 +51,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, con
   numberOfCategories_(nbClasses),
   distribution_(),
   bounds_(nbClasses-1),
-  intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG, true, true),
+  intMinMax_(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true),
   median_(false)
 {}
 
@@ -60,7 +60,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, dou
   numberOfCategories_(nbClasses),
   distribution_(Order(delta)),
   bounds_(nbClasses-1),
-  intMinMax_(-NumConstants::VERY_BIG, NumConstants::VERY_BIG,true, true),
+  intMinMax_(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(),true, true),
   median_(false)
 {}
 
@@ -426,7 +426,7 @@ void AbstractDiscreteDistribution::discretize()
     if (distribution_.find(values[i]) != distribution_.end())
     {
       unsigned int j = 1;
-      int f = ((values[i] + NumConstants::TINY) >= intMinMax_.getUpperBound()) ? -1 : 1;
+      int f = ((values[i] + NumConstants::TINY()) >= intMinMax_.getUpperBound()) ? -1 : 1;
       while (distribution_.find(values[i] + f * j * precision()) != distribution_.end())
       {
         j++;

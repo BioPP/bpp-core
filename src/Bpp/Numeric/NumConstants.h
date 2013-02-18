@@ -47,10 +47,14 @@ namespace bpp {
 
   /**
    * @brief this static class contains several useful constant values.
+   *
+   * This classe uses function in order to avoid the infamous "static initialization order fiasco".
+   * C++0x solves this...
    */
-  namespace NumConstants
+  class NumConstants
   {
 
+  public:
     /**
      * @name Golden ratio.
      *
@@ -58,40 +62,39 @@ namespace bpp {
      * We also define @f$R=\phi-1@f$ and @f$C = 1 - R@f$.
      * @{
      */
-    const double GOLDEN_RATIO_PHI = (1. + sqrt(5.)) / 2.;
-    const double GOLDEN_RATIO_R = NumConstants::GOLDEN_RATIO_PHI - 1.;
-    const double GOLDEN_RATIO_C = 1. - NumConstants::GOLDEN_RATIO_R;
+    static double GOLDEN_RATIO_PHI() { return (1. + sqrt(5.)) / 2.; }
+    static double GOLDEN_RATIO_R() { return GOLDEN_RATIO_PHI() - 1.; }
+    static double GOLDEN_RATIO_C() { return 1. - GOLDEN_RATIO_R(); }
 
     /** @} */
 
-    const double MEGA = 1e6;
-    const double KILO = 1e3;
-    const double DECI = 1e-1;
-    const double CENTI = 1e-2;
-    const double MILLI = 1e-3;
-    const double MICRO = 1e-6;
-    const double NANO = 1e-9;
-    const double PICO = 1e-12;
+    static double MEGA() { return 1e6; }
+    static double KILO() { return 1e3; }
+    static double DECI() { return 1e-1; }
+    static double CENTI() { return 1e-2; }
+    static double MILLI() { return 1e-3; }
+    static double MICRO() { return 1e-6; }
+    static double NANO() { return 1e-9; }
+    static double PICO() { return 1e-12; }
 
-    const double SMALL = 1e-6;
-    const double TINY =  1e-12;
-    const double VERY_TINY = 1e-20;
-    const double VERY_BIG = static_cast<double>(1.7E+23);
+    static double SMALL() { return 1e-6; }
+    static double TINY() { return 1e-12; }
+    static double VERY_TINY() { return 1e-20; }
+    static double VERY_BIG() { return static_cast<double>(1.7E+23); }
     
     /**
      * @name Define those constants in case they would not be available in stl/limits.
      *
      * @{
      */
-    //NB: numeric_limits<double>::infinity can throw an exception, so cannot be used directly here.
-    extern "C" const double INF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
-    extern "C" const double PINF = std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max();
-    extern "C" const double MINF = std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min();
-    extern "C" const double NaN = 3./0.;
+    static double INF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
+    static double PINF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
+    static double MINF() { return std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min(); }
+    static double NaN() { return 3./0.; }
     /** @} */
 
-    const double PI = 3.141593;
-  } //end of namespace NumConstants.
+    static double PI() { return 3.141593; }
+  };
 
 }//end of namespace bpp.
 

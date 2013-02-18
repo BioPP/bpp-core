@@ -89,7 +89,7 @@ namespace bpp
                                
     double getUpperBound() const { return value_; }
 
-    double qProb(double x) const { return (x >= 1) ? value_ : -NumConstants::VERY_BIG; }
+    double qProb(double x) const { return (x >= 1) ? value_ : -NumConstants::VERY_BIG(); }
      
     double pProb(double x) const { return x < value_ ? 0 : 1; }
                                 

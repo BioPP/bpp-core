@@ -53,7 +53,7 @@ using namespace std;
 
 BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, double beta) :
   AbstractParameterAliasable("Beta."),
-  AbstractDiscreteDistribution(n,NumConstants::VERY_TINY,"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
+  AbstractDiscreteDistribution(n,NumConstants::VERY_TINY(),"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
   addParameter_(new Parameter("Beta.alpha", alpha, new IntervalConstraint(1, 0.0001, true), true));
   addParameter_(new Parameter("Beta.beta", beta, new IntervalConstraint(1, 0.0001, true), true));

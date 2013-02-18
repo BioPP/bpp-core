@@ -352,7 +352,7 @@ public:
         minD = currentValue;
     }
 
-    if (minD < NumConstants::SMALL)
+    if (minD < NumConstants::SMALL())
     {
       throw ZeroDivisionException("Singular matrix in LU::solve.");
     }
@@ -426,7 +426,7 @@ public:
         minD = currentValue;
     }
 
-    if (minD < NumConstants::SMALL)
+    if (minD < NumConstants::SMALL())
     {
       throw ZeroDivisionException("Singular matrix in LU::solve.");
     }

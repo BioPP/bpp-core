@@ -147,13 +147,13 @@ protected:
   
 
 public:
-  IntervalConstraint() :  lowerBound_(NumConstants::MINF),
-                upperBound_(NumConstants::PINF),
+  IntervalConstraint() :  lowerBound_(NumConstants::MINF()),
+                upperBound_(NumConstants::PINF()),
                 inclLowerBound_(true),
                 inclUpperBound_(true),
-                precision_(NumConstants::TINY) {}
+                precision_(NumConstants::TINY()) {}
 
-  IntervalConstraint(double lowerBound, double upperBound, bool inclLower, bool inclUpper, double precision = NumConstants::TINY) :
+  IntervalConstraint(double lowerBound, double upperBound, bool inclLower, bool inclUpper, double precision = NumConstants::TINY()) :
     lowerBound_(lowerBound),
     upperBound_(upperBound),
     inclLowerBound_(inclLower),
@@ -170,9 +170,9 @@ public:
    * @param incl Tell if the finite bound is included or not.
    * @param precision Parameter precision.
    */
-  IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY) :
-    lowerBound_(isPositive ? bound : NumConstants::MINF),
-    upperBound_(isPositive ? NumConstants::PINF : bound),
+  IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY()) :
+    lowerBound_(isPositive ? bound : NumConstants::MINF()),
+    upperBound_(isPositive ? NumConstants::PINF() : bound),
     inclLowerBound_(isPositive ? incl : false),
     inclUpperBound_(isPositive ? false : incl),
     precision_(precision) {}
@@ -191,8 +191,8 @@ public:
   bool strictLowerBound() const { return !inclLowerBound_; }
   bool strictUpperBound() const { return !inclUpperBound_; }
 
-  bool finiteLowerBound() const { return lowerBound_ > NumConstants::MINF; }
-  bool finiteUpperBound() const { return upperBound_ < NumConstants::PINF; }
+  bool finiteLowerBound() const { return lowerBound_ > NumConstants::MINF(); }
+  bool finiteUpperBound() const { return upperBound_ < NumConstants::PINF(); }
 
   bool includes(double min, double max) const
   {

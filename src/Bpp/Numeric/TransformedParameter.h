@@ -226,12 +226,12 @@ class IntervalTransformedParameter:
     IntervalTransformedParameter(const std::string& name, double value, double lowerBound = 0, double upperBound = 1, double scale = 1, bool hyper = true):
       TransformedParameter(name, hyper ?
           scale * atanh(2. * (value - lowerBound) / (upperBound - lowerBound) - 1.) :
-          scale * tan(NumConstants::PI * (value - lowerBound)/(upperBound - lowerBound) - NumConstants::PI / 2.)),
+          scale * tan(NumConstants::PI() * (value - lowerBound)/(upperBound - lowerBound) - NumConstants::PI() / 2.)),
       scale_(scale),
       lowerBound_(lowerBound),
       upperBound_(upperBound),
       hyper_(hyper),
-      tiny_(NumConstants::TINY)
+      tiny_(NumConstants::TINY())
     {}
 
     IntervalTransformedParameter* clone() const { return new IntervalTransformedParameter(*this); }
@@ -242,7 +242,7 @@ class IntervalTransformedParameter:
       if (value <= lowerBound_ || value >= upperBound_) throw ConstraintException("IntervalTransformedParameter::setValue", this, value);
       setValue(hyper_ ?
           scale_ * atanh(2. * (value - lowerBound_) / (upperBound_ - lowerBound_) - 1.) :
-          scale_ * tan(NumConstants::PI * (value - lowerBound_)/(upperBound_ - lowerBound_) - NumConstants::PI / 2.));
+          scale_ * tan(NumConstants::PI() * (value - lowerBound_)/(upperBound_ - lowerBound_) - NumConstants::PI() / 2.));
     }
 
     double getOriginalValue() const
@@ -250,7 +250,7 @@ class IntervalTransformedParameter:
       double x = getValue();
       double x2 = hyper_ ?
         (tanh(x / scale_) + 1.) * (upperBound_ - lowerBound_) / 2. + lowerBound_ :
-        (atan(x / scale_) + NumConstants::PI / 2.) * (upperBound_ - lowerBound_) / NumConstants::PI + lowerBound_;
+        (atan(x / scale_) + NumConstants::PI() / 2.) * (upperBound_ - lowerBound_) / NumConstants::PI() + lowerBound_;
       return x2;
     }
 
@@ -260,7 +260,7 @@ class IntervalTransformedParameter:
       double x = getValue();
       double x2 = hyper_ ?
         1. / (cosh(pow(x / scale_, 2))) * (upperBound_ - lowerBound_) / (2. * scale_) :
-        (upperBound_ - lowerBound_) / (NumConstants::PI * scale_ * (pow(x / scale_, 2) + 1.));
+        (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (pow(x / scale_, 2) + 1.));
       return x2;
     }
     double getSecondOrderDerivative() const throw (NotImplementedException)
@@ -268,7 +268,7 @@ class IntervalTransformedParameter:
       double x = getValue();
       double x2 = hyper_ ?
         - 1. / (cosh(pow(x / scale_, 2))) * tanh(x / scale_) *(upperBound_ - lowerBound_) / (scale_ * scale_) :
-        -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI * pow(scale_, 3) * pow((pow(x / scale_, 2) + 1.), 2));
+        -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * pow(scale_, 3) * pow((pow(x / scale_, 2) + 1.), 2));
       return x2;
     }
 };

@@ -119,7 +119,7 @@ double AdaptiveKernelDensityEstimation::kernel_(const Matrix<double>& x)
   for (size_t i = 0; i < r_; i++)
     scalar += std::pow(x(i, 0), 2.);
 
-  return std::pow(2. * NumConstants::PI, -static_cast<double>(r_) / 2.) * std::exp(-0.5 * scalar);
+  return std::pow(2. * NumConstants::PI(), -static_cast<double>(r_) / 2.) * std::exp(-0.5 * scalar);
 }
 
 double AdaptiveKernelDensityEstimation::kDensity(const std::vector<double>& x)

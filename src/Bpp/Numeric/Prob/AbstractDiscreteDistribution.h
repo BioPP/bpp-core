@@ -73,7 +73,7 @@ namespace bpp
       
     public:
 
-      Order(double prec=NumConstants::TINY):
+      Order(double prec=NumConstants::TINY()):
         precision_(prec)
       {}
 
