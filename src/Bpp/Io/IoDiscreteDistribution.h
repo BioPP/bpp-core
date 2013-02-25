@@ -75,7 +75,7 @@ namespace bpp
     /**
      * @brief Read a discrete distribution from a string.
      *
-     * @param distrlDescription A string describing the distribution in the format.
+     * @param distrDescription A string describing the distribution in the format.
      * @param parseArguments Attempt to parse function arguments. If not, only store them and use default values instead.
      * @return A new DiscreteDistribution object according to options specified.
      * @throw Exception if an error occured.

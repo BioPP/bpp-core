@@ -48,7 +48,7 @@ namespace bpp
   /**
    * @brief Parametrizable output in BppO format.
    *
-   * Writes a new paramtrizable object according to BppO description
+   * Writes a new parametrizable object according to BppO description
    * syntax (see the Bio++ Progam Suite manual for a detailed
    * description of this syntax).
    *
@@ -68,7 +68,7 @@ namespace bpp
     /**
      * @brief Write a Parametrizable to a stream.
      *
-     * @param param A pointer to a Parametrizable object;
+     * @param parametrizable A pointer to a Parametrizable object;
      * @param out The output stream;
      * @param writtenNames is the vector of the written
      *        parameters so far [in, out];
@@ -79,12 +79,12 @@ namespace bpp
     void write(const Parametrizable* parametrizable,
                OutputStream& out,
                std::vector<std::string>& writtenNames,
-               bool printComma=false) const;
+               bool printComma = false) const;
     
     /**
      * @brief Write a ParameterAliasable to a stream.
      *
-     * @param param A pointer to a Parametrizable object;
+     * @param parametrizable A pointer to a Parametrizable object;
      * @param out The output stream;
      * @param globalAliases parameters linked to global alias; 
      * @param names the names of the parameters to be written;
@@ -101,7 +101,7 @@ namespace bpp
                const std::vector<std::string>& names,
                std::vector<std::string>& writtenNames,
                bool printLocalAliases = true,
-               bool printComma=false) const;
+               bool printComma = false) const;
   };
 
 } //end of namespace bpp.
