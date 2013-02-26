@@ -56,7 +56,9 @@ BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, doubl
   AbstractDiscreteDistribution(n,NumConstants::VERY_TINY(),"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
   addParameter_(new Parameter("Beta.alpha", alpha, new IntervalConstraint(1, 0.0001, true), true));
-  addParameter_(new Parameter("Beta.beta", beta, new IntervalConstraint(1, 0.0001, true), true));
+
+  // For precision issues, beta cannot be too low
+  addParameter_(new Parameter("Beta.beta", beta, new IntervalConstraint(1, 0.1, true), true));
   intMinMax_.setLowerBound(0, true);
   intMinMax_.setUpperBound(1, true);
 
