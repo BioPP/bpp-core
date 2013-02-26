@@ -52,7 +52,6 @@ namespace bpp
  * manual for a detailed description of this syntax).
  *
  */
-
 class BppODiscreteDistributionFormat :
   public virtual IDiscreteDistribution,
   public virtual ODiscreteDistribution
@@ -85,7 +84,7 @@ protected:
    *
    * Parameters actually depends on the distribution passed as argument.
    *
-   * @param rDist                   The distribution to set up.
+   * @param rDist The distribution to set up.
    * @throw Exception if an error occured.
    */
   void initialize_(DiscreteDistribution& rDist) throw (Exception);

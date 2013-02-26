@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 16, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for phylogenetic data analysis.
@@ -76,15 +76,13 @@ namespace bpp
     /**
      * @brief Write a Parametrizable to a stream.
      *
-     * @param param A pointer to a Parametrizable object;
+     * @param parametrizable A pointer to a Parametrizable object;
      * @param out The output stream;
-     * @param names the names of the parameters to be written;
      * @param writtenNames is the vector of the written
      *        parameters so far [in, out];
      * @param printComma boolean if a comma should be written at the
      *        beginning of the description.
      */
-    
     virtual void write(const Parametrizable* parametrizable,
                        OutputStream& out,
                        std::vector<std::string>& writtenNames,
@@ -93,7 +91,7 @@ namespace bpp
     /**
      * @brief Write a ParameterAliasable to a stream.
      *
-     * @param param A pointer to a Parametrizable object;
+     * @param parametrizable A pointer to a Parametrizable object;
      * @param out The output stream;
      * @param globalAliases parameters linked to global alias; 
      * @param names the names of the parameters to be written;
@@ -103,7 +101,6 @@ namespace bpp
      * @param printComma boolean if a comma should be written at the
      *        beginning of the description.
      */
-    
     virtual void write(const ParameterAliasable* parametrizable,
                        OutputStream& out,
                        std::map<std::string, std::string>& globalAliases,

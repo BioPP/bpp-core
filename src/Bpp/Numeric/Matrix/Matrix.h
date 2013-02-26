@@ -76,7 +76,7 @@ public:
    */
   virtual Scalar& operator()(size_t i, size_t j) = 0;
 
-  virtual bool equals(const Matrix& m, double threshold = NumConstants::TINY)
+  virtual bool equals(const Matrix& m, double threshold = NumConstants::TINY())
   {
     if (m.getNumberOfRows() != getNumberOfRows() || m.getNumberOfColumns() != getNumberOfColumns())
       return false;
