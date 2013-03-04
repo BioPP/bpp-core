@@ -64,11 +64,6 @@ IF (DOXYGEN_FOUND)
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ENDIF (DOXYGEN_FOUND)
 
-# Python, needed for install:
-FIND_PACKAGE(PythonInterp)
-FIND_PACKAGE(PythonLibs)
-
-
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-core")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")

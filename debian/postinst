@@ -3,9 +3,41 @@
 # Abort if any command returns an error value
 set -e
 
+scanGeneric() {
+  echo "-- Creating generic include file: $1.all"
+  #Make sure we run into subdirectories first:
+  dirs=()
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      dirs+=( "$file" )
+    fi
+  done
+  for dir in ${dirs[@]}
+  do
+    scanGeneric $dir
+  done
+  #Now list all files, including newly created .all files:
+  if [ -f $1.all ]
+  then
+    rm $1.all
+  fi
+  dir=`basename $1`
+  for file in "$1"/*
+  do
+    if [ -f "$file" ] && ( [ "${file##*.}" == "h" ] || [ "${file##*.}" == "all" ] )
+    then
+      file=`basename $file`
+      echo "#include \"$dir/$file\"" >> $1.all
+    fi
+  done;
+}
+
 if [ "$1" = "configure" ]; then
-  # Run python script to actualize .all files
-  python genIncludes.py /usr/include/Bpp/Seq
+  # Actualize .all files
+  scanGeneric /usr/include/Bpp
 fi
 
 exit 0
