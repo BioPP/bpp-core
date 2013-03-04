@@ -59,7 +59,101 @@ rm -rf $RPM_BUILD_ROOT
 
 %post -n libbpp-core2 -p /sbin/ldconfig
 
+%post -n libbpp-core-devel
+/sbin/ldconfig
+createGeneric() {
+  echo "-- Creating generic include file: $1.all"
+  #Make sure we run into subdirectories first:
+  dirs=()
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      dirs+=( "$file" )
+    fi
+  done
+  for dir in ${dirs[@]}
+  do
+    createGeneric $dir
+  done
+  #Now list all files, including newly created .all files:
+  if [ -f $1.all ]
+  then
+    rm $1.all
+  fi
+  dir=`basename $1`
+  for file in "$1"/*
+  do
+    if [ -f "$file" ] && ( [ "${file##*.}" == "h" ] || [ "${file##*.}" == "all" ] )
+    then
+      file=`basename $file`
+      echo "#include \"$dir/$file\"" >> $1.all
+    fi
+  done;
+}
+# Actualize .all files
+createGeneric %{_prefix}/include/Bpp
+exit 0
+
+%preun -n libbpp-core-devel
+removeGeneric() {
+  if [ -f $1.all ]
+  then
+    echo "-- Remove generic include file: $1.all"
+    rm $1.all
+  fi
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      removeGeneric $file
+    fi
+  done
+}
+# Actualize .all files
+removeGeneric %{_prefix}/include/Bpp
+exit 0
+
 %postun -n libbpp-core2 -p /sbin/ldconfig
+
+%postun -n libbpp-core-devel
+/sbin/ldconfig
+createGeneric() {
+  echo "-- Creating generic include file: $1.all"
+  #Make sure we run into subdirectories first:
+  dirs=()
+  for file in "$1"/*
+  do
+    if [ -d "$file" ]
+    then
+      # Recursion:
+      dirs+=( "$file" )
+    fi
+  done
+  for dir in ${dirs[@]}
+  do
+    createGeneric $dir
+  done
+  #Now list all files, including newly created .all files:
+  if [ -f $1.all ]
+  then
+    rm $1.all
+  fi
+  dir=`basename $1`
+  for file in "$1"/*
+  do
+    if [ -f "$file" ] && ( [ "${file##*.}" == "h" ] || [ "${file##*.}" == "all" ] )
+    then
+      file=`basename $file`
+      echo "#include \"$dir/$file\"" >> $1.all
+    fi
+  done;
+}
+# Actualize .all files
+createGeneric %{_prefix}/include/Bpp
+exit 0
 
 %files -n libbpp-core2
 %defattr(-,root,root)
