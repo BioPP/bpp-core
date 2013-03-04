@@ -1,6 +1,6 @@
 #! /bin/bash
 
-scanGeneric() {
+createGeneric() {
   echo "-- Creating generic include file: $1.all"
   #Make sure we run into subdirectories first:
   dirs=()
@@ -14,7 +14,7 @@ scanGeneric() {
   done
   for dir in ${dirs[@]}
   do
-    scanGeneric $dir
+    createGeneric $dir
   done
   #Now list all files, including newly created .all files:
   if [ -f $1.all ]
@@ -32,4 +32,4 @@ scanGeneric() {
   done;
 }
 
-scanGeneric $1
+createGeneric $1

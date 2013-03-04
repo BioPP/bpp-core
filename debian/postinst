@@ -3,7 +3,7 @@
 # Abort if any command returns an error value
 set -e
 
-scanGeneric() {
+createGeneric() {
   echo "-- Creating generic include file: $1.all"
   #Make sure we run into subdirectories first:
   dirs=()
@@ -17,7 +17,7 @@ scanGeneric() {
   done
   for dir in ${dirs[@]}
   do
-    scanGeneric $dir
+    createGeneric $dir
   done
   #Now list all files, including newly created .all files:
   if [ -f $1.all ]
@@ -37,7 +37,7 @@ scanGeneric() {
 
 if [ "$1" = "configure" ]; then
   # Actualize .all files
-  scanGeneric /usr/include/Bpp
+  createGeneric /usr/include/Bpp
 fi
 
 exit 0
