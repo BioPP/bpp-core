@@ -1,3 +1,11 @@
+libbpp-core (2.1.0-1) unstable; urgency=low
+
+  * Extended range classes
+  * Improved initialization of static members
+  * Extended support for BppO.
+
+ -- Julien Dutheil <julien.dutheil@univ-montp2.fr>  Mon, 04 Mar 2013 10:15:00 +0100
+
 libbpp-core (2.0.3-1) unstable; urgency=low
 
   * New range classes

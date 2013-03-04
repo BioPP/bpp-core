@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Loic Dachary <loic@dachary.org>
 Uploaders: Julien Dutheil <julien.dutheil@univ-montp2.fr>
-Build-Depends: debhelper (>= 5), cmake (>= 2.6)
+Build-Depends: debhelper (>= 5), cmake (>= 2.6), python (>= 2.6)
 Standards-Version: 3.9.1
 
 Package: libbpp-core-dev

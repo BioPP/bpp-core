@@ -1,5 +1,5 @@
 %define _basename bpp-core
-%define _version 2.0.3
+%define _version 2.1.0
 %define _release 1
 %define _prefix /usr
 
@@ -17,6 +17,7 @@ Group: Development/Libraries/C and C++
 BuildRoot: %{_builddir}/%{_basename}-root
 BuildRequires: cmake >= 2.6.0
 BuildRequires: gcc-c++ >= 4.0.0
+BuildRequires: python >= 2.6.0
 AutoReq: yes
 AutoProv: yes
 
@@ -74,8 +75,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
+* Mon Mar 04 2013 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.1.0-1
+- Extended range classes
+- Improved initialization of static members
+- Extended support for BppO.
 * Thu Feb 09 2012 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.0.3-1
-- More matrix and text tools.
+- New range classes
+- Linear assigment method
+- Improved string tokenizer and text tools.
 * Thu Jun 09 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.0.2-1
 - New MVA classes + more numerical tools.
 * Mon Feb 28 2011 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.0.1-1
