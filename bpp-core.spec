@@ -17,7 +17,6 @@ Group: Development/Libraries/C and C++
 BuildRoot: %{_builddir}/%{_basename}-root
 BuildRequires: cmake >= 2.6.0
 BuildRequires: gcc-c++ >= 4.0.0
-BuildRequires: python >= 2.6.0
 AutoReq: yes
 AutoProv: yes
 
