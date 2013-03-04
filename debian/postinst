@@ -1,0 +1,11 @@
+#! /bin/bash
+
+# Abort if any command returns an error value
+set -e
+
+if [ "$1" = "configure" ]; then
+  # Run python script to actualize .all files
+  python genIncludes.py /usr/include/Bpp/Seq
+fi
+
+exit 0
