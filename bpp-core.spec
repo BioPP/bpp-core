@@ -60,7 +60,6 @@ rm -rf $RPM_BUILD_ROOT
 %post -n libbpp-core2 -p /sbin/ldconfig
 
 %post -n libbpp-core-devel
-/sbin/ldconfig
 createGeneric() {
   echo "-- Creating generic include file: $1.all"
   #Make sure we run into subdirectories first:
@@ -119,7 +118,6 @@ exit 0
 %postun -n libbpp-core2 -p /sbin/ldconfig
 
 %postun -n libbpp-core-devel
-/sbin/ldconfig
 createGeneric() {
   echo "-- Creating generic include file: $1.all"
   #Make sure we run into subdirectories first:
