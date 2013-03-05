@@ -32,7 +32,7 @@ ENDIF(NO_VIRTUAL_COV)
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
 SET(BPPCORE_VERSION_CURRENT "2")
-SET(BPPCORE_VERSION_REVISION "2")
+SET(BPPCORE_VERSION_REVISION "3")
 SET(BPPCORE_VERSION_AGE "0")
 
 # Effective version number computation
