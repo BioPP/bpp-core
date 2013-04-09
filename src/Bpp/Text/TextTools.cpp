@@ -512,12 +512,11 @@ void TextTools::replaceAll(std::string& target, const std::string& query, const 
 {
   if (query.empty())
     return;
-  size_t pos = 0;
+  size_t pos = target.find(query);
   while (pos != string::npos) {
-    pos = target.find(query, pos);
     target.replace(pos, query.length(), replacement);
-    pos += replacement.length(); //We prevent recursivity!
-  
+    pos += replacement.length(); //We prevent recursivity! 
+    pos = target.find(query, pos);
   }
 }
 
