@@ -174,6 +174,16 @@ public:
   virtual std::vector<std::string> getParameterNames() const;
 
   /**
+   * @brief Get all parameter names matching with the given name. Up
+   * to now, only "*" jokers are available.
+   *
+   * @param pattern a pattern of name
+   * @return A vector of matching names
+   */
+  
+  virtual std::vector<std::string> getMatchingParameterNames(const std::string& pattern) const;
+
+  /**
    * @brief Add a new parameter at the end of the list.
    *
    * @param param The parameter to add to the list.

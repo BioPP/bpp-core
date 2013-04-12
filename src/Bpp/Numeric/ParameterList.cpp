@@ -38,6 +38,7 @@
  */
 
 #include "ParameterList.h"
+#include "../Text/StringTokenizer.h"
 
 using namespace bpp;
 
@@ -181,6 +182,40 @@ std::vector<std::string> ParameterList::getParameterNames() const
   {
     pNames[i] = parameters_[i]->getName();
   }
+  return pNames;
+}
+
+/****************************************************************************/
+
+vector<string> ParameterList::getMatchingParameterNames(const string& pattern) const
+{
+  vector<string> pNames;
+  for (unsigned int i = 0; i < size(); i++)
+    {
+      string name = parameters_[i]->getName();
+
+      StringTokenizer stj(pattern, "*", true, false);
+      size_t pos1, pos2;
+      bool flag(true);
+      string g=stj.nextToken();
+      pos1=name.find(g);
+      if (pos1!=0)
+        flag=false;
+      pos1+=g.length();
+      while (flag && stj.hasMoreToken()){
+        g=stj.nextToken();
+        pos2=name.find(g,pos1);
+        if (pos2 == string::npos){
+          flag=false;
+          break;
+        }
+        pos1=pos2+g.length();
+      }
+      if (flag &&
+          ((g.length()==0) || (pos1==name.length()) || (name.rfind(g)==name.length()-g.length())))
+        pNames.push_back(name);
+    }
+
   return pNames;
 }
 
