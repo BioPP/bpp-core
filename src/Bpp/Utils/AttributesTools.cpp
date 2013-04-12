@@ -54,10 +54,10 @@ using namespace bpp;
 
 /******************************************************************************/
 
-std::vector<std::string> AttributesTools::getVector( int argc, char * argv[])
+std::vector<std::string> AttributesTools::getVector(int argc, char* argv[])
 {
   vector<string> result(argc);
-  for(int i = 1; i < argc; i++) result[i] = string(argv[i]);
+  for (int i = 1; i < argc; i++) result[i] = string(argv[i]);
   //Ignore first argc which is the program name!    
   return result;
 }
@@ -82,7 +82,7 @@ void AttributesTools::getAttributesMap(
 {
   vector<string> argv2(argv.size());
   //First make a few cleaning:
-  for(unsigned int i = 0; i < argv.size(); i++)
+  for (size_t i = 0; i < argv.size(); i++)
   {
     //Make a few corrections first:
     string arg = removeComments(argv[i], string("#"), string("\n"));//remove shell comments.
@@ -92,11 +92,11 @@ void AttributesTools::getAttributesMap(
     argv2[i] = arg;
   }
   //Now parse arguments:
-  for(unsigned int i = 0; i < argv.size(); i++)
+  for (size_t i = 0; i < argv.size(); i++)
   {
     string arg = argv2[i];
-    if(arg == "") continue; //Skipping void line.
-    while(arg[arg.size()-1] == '\\')
+    if (arg == "") continue; //Skipping void line.
+    while (arg[arg.size()-1] == '\\')
     {
       //Splitted line
       i++;
@@ -104,7 +104,7 @@ void AttributesTools::getAttributesMap(
     }
     //Parsing:
     string::size_type limit = arg.find(delimiter, 0);
-    if(limit == string::npos)
+    if (limit == string::npos)
     {
       //Invalid parameter
       (*ApplicationTools::warning << "WARNING!!! Parameter '" << arg << "' has been ignored.").endLine();
@@ -113,7 +113,7 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + limit);
       string value = string(arg.begin() + limit + delimiter.size(), arg.end());
-      if(name == "param")
+      if (name == "param")
       {
         //Recursive inclusion:
         getAttributesMapFromFile(value, am, delimiter);
