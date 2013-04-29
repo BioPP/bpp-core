@@ -116,10 +116,12 @@ throw (ParameterNotFoundException, Exception)
 
   string id = "__alias_" + p2 + "_to_" + p1;
   string idCheck = "__alias_" + p1 + "_to_" + p2;
+
   if (aliasListenersRegister_.find(idCheck) != aliasListenersRegister_.end())
     throw Exception("AbstractParameterAliasable::aliasParameters. Trying to alias parameter " + p2 + " to " + p1 + ", but parameter " + p1 + " is already aliased to parameter " + p2 + ".");
   Parameter* param1 = &getParameter_(p1);
   Parameter* param2 = &getParameter_(p2);
+
   if (!param1->hasConstraint())
   {
     if (param2->hasConstraint())
@@ -127,17 +129,23 @@ throw (ParameterNotFoundException, Exception)
   }
   else
   // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
-  if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-    throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
+    if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
+      throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
 
   // Every thing seems ok, let's create the listener and register it:
-  AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_());
+
+  AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_(), p1);
+
+  ParameterList pl=getParameters_();
+  
   aliasListenersRegister_[id] = aliasListener;
+
   // Now we add it to the appropriate parameter, that is p1.
   // The parameter will not own the listener, the bookkeeping being achieved by the register:
   param1->addParameterListener(aliasListener, false);
   // Finally we remove p2 from the list of independent parameters:
   independentParameters_.deleteParameter(getNamespace() + p2);
+
 }
 
 void AbstractParameterAliasable::unaliasParameters(const std::string& p1, const std::string& p2)
@@ -190,6 +198,7 @@ void AbstractParameterAliasable::setNamespace(const std::string& prefix)
 vector<string> AbstractParameterAliasable::getAlias(const string& name) const
 {
   vector<string> aliases;
+
   for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
        it != aliasListenersRegister_.end();
        it++)
@@ -198,10 +207,30 @@ vector<string> AbstractParameterAliasable::getAlias(const string& name) const
     {
       string alias = it->second->getAlias();
       aliases.push_back(alias);
-      vector<string> chainAliases = getAlias(alias);
-      VectorTools::append(aliases, chainAliases);
+      if (alias!=name){
+        vector<string> chainAliases = getAlias(alias);
+        VectorTools::append(aliases, chainAliases);
+      }
     }
   }
   return aliases;
+}
+
+string AbstractParameterAliasable::getFrom(const string& name) const
+{
+  string from="";
+  
+  for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
+       it != aliasListenersRegister_.end();
+       it++)
+    {
+      if (it->second->getName() == name)
+        {
+          from = it->second->getFrom();
+          break;
+        }
+    }
+
+  return from;
 }
 

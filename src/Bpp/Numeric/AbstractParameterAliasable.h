@@ -60,13 +60,15 @@ namespace bpp
       size_t alias_;
       ParameterList *pl_;
       std::string name_;
+      std::string from_;
 
     public:
-      AliasParameterListener(const std::string& id, size_t alias, ParameterList* pl):
+    AliasParameterListener(const std::string& id, size_t alias, ParameterList* pl, const std::string& from):
         id_(id),
         alias_(alias),
         pl_(pl),
-        name_()
+        name_(),
+        from_(from)
       {
         //This allow us to check if the parameter position have changed at some point...
         name_ = (*pl_)[alias].getName();
@@ -76,7 +78,8 @@ namespace bpp
         id_(apl.id_),
         alias_(apl.alias_),
         pl_(apl.pl_),
-        name_(apl.name_)
+        name_(apl.name_),
+        from_(apl.from_)
       {}
 
       AliasParameterListener& operator=(const AliasParameterListener& apl)
@@ -85,6 +88,7 @@ namespace bpp
         alias_ = apl.alias_;
         pl_    = apl.pl_;
         name_  = apl.name_;
+        from_  = apl.from_;
         return *this;
       }
 
@@ -93,6 +97,8 @@ namespace bpp
     public:
       const std::string& getId() const { return id_; }
 
+      const std::string& getFrom() const { return from_; }
+    
       void setParameterList(ParameterList* pl) { pl_ = pl; }
 
       void parameterNameChanged(ParameterEvent& event) throw (Exception) {}
@@ -168,6 +174,12 @@ namespace bpp
        */
       std::vector<std::string> getAlias(const std::string& name) const;
 
+     /**
+      * @return The names of the parameter from which a  given parameter is aliased.
+      * @param name The name of the parameter to look for.
+      */
+      std::string getFrom(const std::string& name) const;
+      
       void fireParameterChanged(const ParameterList& parameters)
       {
         independentParameters_.matchParametersValues(getParameters());
