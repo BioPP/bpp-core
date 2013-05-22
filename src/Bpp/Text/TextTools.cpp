@@ -228,7 +228,7 @@ bool TextTools::isDecimalNumber(const std::string& s, char dec, char scientificN
       sciCount++;
       if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
       c = s[i + 1];
-      if (c == '-') i++;
+      if (c == '-' || c == '+') i++;
       if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
       if (sepCount == 0) sepCount = 1; //We do not want any dec in the exponent.
     } else if (!isDecimalNumber(c))
@@ -254,6 +254,8 @@ bool TextTools::isDecimalInteger(const std::string& s, char scientificNotation)
       if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
       c = s[i + 1];
       if (c == '-') return false; //Not an integer then!
+      if (c == '+') i++;
+      if (i == s.size() - 1) return false; //Must be sthg after scientific notation.
     } else if (!isDecimalNumber(c))
       return false;
     if (sciCount > 1)
