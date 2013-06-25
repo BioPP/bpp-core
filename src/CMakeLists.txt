@@ -42,6 +42,7 @@ SET(CPP_FILES
   Bpp/Numeric/Random/Uniform01WH.cpp
   Bpp/Numeric/AbstractParameterAliasable.cpp
   Bpp/Numeric/AbstractParametrizable.cpp
+  Bpp/Numeric/ParametrizableCollection.cpp
   Bpp/Numeric/AdaptiveKernelDensityEstimation.cpp
   Bpp/Numeric/VectorTools.cpp
   Bpp/Numeric/AutoParameter.cpp
@@ -135,6 +136,7 @@ SET(H_FILES
   Bpp/Numeric/Parameter.h
   Bpp/Numeric/ParameterList.h
   Bpp/Numeric/Parametrizable.h
+  Bpp/Numeric/ParametrizableCollection.cpp
   Bpp/Numeric/TransformedParameter.h
   Bpp/Numeric/Random/RandomFactory.h
   Bpp/Numeric/Random/RandomTools.h
