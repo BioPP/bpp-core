@@ -143,11 +143,12 @@ public:
    *    1: Global ratio
    *    2: Local ratio
    *    3: Binary
+   * @param allowNull if null probabilites are allowed (default: false)
    * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
   
-  Simplex(size_t dim, unsigned short method = 0, const std::string& name = "Simplex.");
+  Simplex(size_t dim, unsigned short method = 0, bool allowNull = false, const std::string& name = "Simplex.");
 
   /**
    * @brief Builds a new Simplex object from a vector of probabilities
@@ -158,11 +159,12 @@ public:
    *    1: Global ratio
    *    2: Local ratio
    *    3: Binary
+   * @param allowNull if null probabilites are allowed (default: false)   
    * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
 
-  Simplex(const std::vector<double>& probas, unsigned short method = 0, const std::string& name = "Simplex.");
+  Simplex(const std::vector<double>& probas, unsigned short method = 0 , bool allowNull = false, const std::string& name = "Simplex.");
   
   virtual ~Simplex() {}
 

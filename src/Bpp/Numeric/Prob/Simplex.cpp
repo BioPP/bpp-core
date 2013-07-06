@@ -45,7 +45,7 @@
 using namespace bpp;
 using namespace std;
 
-Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const std::string& name) : AbstractParameterAliasable(name),
+Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool allowNull, const std::string& name) : AbstractParameterAliasable(name),
   dim_(probas.size()),
   method_(method),
   vProb_(),
@@ -55,10 +55,12 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
+  const Constraint* pc=(allowNull?&Parameter::PROP_CONSTRAINT_IN:&Parameter::PROP_CONSTRAINT_EX);
+  
   for (unsigned int i = 0; i < dim_; i++)
-  {
-    vProb_.push_back(probas[i]);
-  }
+    {
+      vProb_.push_back(probas[i]);
+    }
 
   double y = 1;
   switch (method_)
@@ -66,14 +68,14 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
   case 1:
     for (unsigned int i = 0; i < dim_ - 1; i++)
       {
-        addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+        addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, pc));
         y -= vProb_[i];
       }
     break;
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), pc));
     }
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -105,14 +107,13 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
               i1+=vProb_[t];
             j++;
           }
-        addParameter_(new Parameter(name + "theta" + TextTools::toString(i), i1/(i0+i1), &Parameter::PROP_CONSTRAINT_IN));
-          
+        addParameter_(new Parameter(name + "theta" + TextTools::toString(i), i1/(i0+i1), pc));
       }
     break;
   }
 }
 
-Simplex::Simplex(size_t dim, unsigned short method, const std::string& name) :
+Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::string& name) :
   AbstractParameterAliasable(name),
   dim_(dim),
   method_(method),
@@ -124,20 +125,22 @@ Simplex::Simplex(size_t dim, unsigned short method, const std::string& name) :
     vProb_.push_back(1. / static_cast<double>(dim_));
   }
 
+  const Constraint* pc=(allowNull?&Parameter::PROP_CONSTRAINT_IN:&Parameter::PROP_CONSTRAINT_EX);
+
   double y = 1;
   switch (method_)
   {
   case 1:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
-      addParameter_(new Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, pc));
       y -= vProb_[i];
     }
     break;
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
       {
-        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, pc));
       }
     for (unsigned int i = 0; i < dim_ - 1; i++)
       {
@@ -145,11 +148,11 @@ Simplex::Simplex(size_t dim, unsigned short method, const std::string& name) :
       }
     break;
   case 3:
-    addParameter_(new Parameter(name+ "theta1", double(size_t(dim_/2))/double(dim_), &Parameter::PROP_CONSTRAINT_IN));
+    addParameter_(new Parameter(name+ "theta1", double(size_t(dim_/2))/double(dim_), pc));
     
     for (unsigned int i = 1; i < dim_ - 1; i++)
       {
-        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, pc));
       }
     break;
   }
