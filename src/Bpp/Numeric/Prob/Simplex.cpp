@@ -60,8 +60,16 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
     vProb_.push_back(probas[i]);
   }
 
+  double y = 1;
   switch (method_)
   {
+  case 1:
+    for (unsigned int i = 0; i < dim_ - 1; i++)
+      {
+        addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+        y -= vProb_[i];
+      }
+    break;
   case 2:
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
@@ -72,13 +80,34 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, const
       valpha_.push_back(vProb_[i + 1] / vProb_[i]);
     }
     break;
-  case 1:
-    double y = 1;
-    for (unsigned int i = 0; i < dim_ - 1; i++)
-    {
-      addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
-      y -= vProb_[i];
-    }
+  case 3:
+    for (size_t i = 1; i < dim_; i++)
+      {
+        size_t o=i;
+        size_t li2=0; // rank of the strongest bit
+        while (o){
+          li2++;
+          o=o>>1;
+        }
+        
+        double i1=0, i0=0;
+        size_t j=0;
+        size_t pi=i &  ~(1<<(li2-1));
+        while (j<dim_)
+          {
+            size_t t=(j<<li2)+pi;
+            if (t>=dim_)
+              break;
+            else
+              i0+=vProb_[t];
+            t+=(1<<(li2-1));
+            if (t<dim_)
+              i1+=vProb_[t];
+            j++;
+          }
+        addParameter_(new Parameter(name + "theta" + TextTools::toString(i), i1/(i0+i1), &Parameter::PROP_CONSTRAINT_IN));
+          
+      }
     break;
   }
 }
@@ -95,25 +124,33 @@ Simplex::Simplex(size_t dim, unsigned short method, const std::string& name) :
     vProb_.push_back(1. / static_cast<double>(dim_));
   }
 
+  double y = 1;
   switch (method_)
   {
-  case 2:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
-    {
-      addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
-    }
-    for (unsigned int i = 0; i < dim_ - 1; i++)
-    {
-      valpha_.push_back(1.);
-    }
-    break;
   case 1:
-    double y = 1;
     for (unsigned int i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name+"theta" + TextTools::toString(i + 1), vProb_[i] / y, &Parameter::PROP_CONSTRAINT_IN));
       y -= vProb_[i];
     }
+    break;
+  case 2:
+    for (unsigned int i = 0; i < dim_ - 1; i++)
+      {
+        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+      }
+    for (unsigned int i = 0; i < dim_ - 1; i++)
+      {
+        valpha_.push_back(1.);
+      }
+    break;
+  case 3:
+    addParameter_(new Parameter(name+ "theta1", double(size_t(dim_/2))/double(dim_), &Parameter::PROP_CONSTRAINT_IN));
+    
+    for (unsigned int i = 1; i < dim_ - 1; i++)
+      {
+        addParameter_(new Parameter(name+ "theta" + TextTools::toString(i + 1), 0.5, &Parameter::PROP_CONSTRAINT_IN));
+      }
     break;
   }
 }
@@ -154,6 +191,31 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
       vProb_[i] /= x;
 
     break;
+  case 3:
+    size_t o=dim_;
+    size_t ld2=0; // rank of the strongest bit
+    while (o){
+      ld2++;
+      o=o>>1;
+    }
+    for (size_t i=0;i<dim_;i++)
+      {
+        x=1;
+        size_t ld=ld2;
+        size_t k=i;
+        while (ld){
+          if (k>>(ld-1))
+            x*=getParameterValue("theta" + TextTools::toString(k));
+          else
+            {
+              if ((k+(1<<(ld-1)))<dim_)
+                x*=1-getParameterValue("theta" + TextTools::toString(k+(1<<(ld-1))));
+            }
+          k &= ~(1<<(--ld));
+        }
+        vProb_[i]=x;
+      }
+    break;
   }
 }
 
@@ -183,8 +245,35 @@ void Simplex::setFrequencies(const std::vector<double>& probas)
           valpha_[i]=probas[i + 1] / probas[i];
         }
       break;
+    case 3:
+      for (size_t i = 1; i < dim_; i++)
+        {
+          size_t o=i;
+          size_t li2=0; // rank of the strongest bit
+          while (o){
+            li2++;
+            o=o>>1;
+          }
+        
+          double i1=0, i0=0;
+          size_t j=0;
+          size_t pi=i &  ~(1<<(li2-1));
+          while (j<dim_)
+            {
+              size_t t=(j<<li2)+pi;
+              if (t>=dim_)
+                break;
+              else
+                i0+=vProb_[t];
+              t+=(1<<(li2-1));
+              if (t<dim_)
+                i1+=vProb_[t];
+              j++;
+            }
+          pl.addParameter(Parameter(getNamespace() + "theta" + TextTools::toString(i), i1/(i0+i1)));        }
+      break;
     }
-
+  
   matchParametersValues(pl);
 }
 

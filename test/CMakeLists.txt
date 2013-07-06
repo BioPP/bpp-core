@@ -60,6 +60,10 @@ ADD_EXECUTABLE(test_distributions test_distributions.cpp)
 TARGET_LINK_LIBRARIES(test_distributions ${LIBS})
 ADD_TEST(test_distributions "test_distributions")
 
+ADD_EXECUTABLE(test_simplex test_simplex.cpp)
+TARGET_LINK_LIBRARIES(test_simplex ${LIBS})
+ADD_TEST(test_simplex "test_simplex")
+
 ADD_EXECUTABLE(test_stats test_stats.cpp)
 TARGET_LINK_LIBRARIES(test_stats ${LIBS})
 ADD_TEST(test_stats "test_stats")

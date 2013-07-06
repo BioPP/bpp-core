@@ -76,6 +76,27 @@ namespace bpp
  * In the reverse if we denote @f$\alpha_i=\frac{1-\theta_i}{\theta_i}@f$,
  * @f$p_i=\frac{\alpha_1...\alpha_{i-1}}{1+\sum_{k=1}^{n-1}\alpha_1...\alpha_k}@f$.
  *
+ * Binary:
+ *
+ * This parametrization is based on the binary coding.
+ **
+ * Given @f$a_b...a_1@f$ the writing of i in binary, we denote
+ * @f$i_k=a_k...a_1@f$.
+ *
+ * Given @f$a_b...a_1@f$ the writing of i in binary where @f$a_b=1@f$,
+ * we denote @f$1_i=\sum\{p_{j+1} such that j_b=i_b=1i_{b-1}\}@f$ and
+ * @f$0_i=\sum\{p_{j+1} such that j_b=0i_{b-1}\}@f$, and then we define:
+ *
+ *
+ * @f$\theta_i=\frac{1_i}{1_i+0_i}@f$
+ *
+ * and on the reverse, we denote @f$\theta'_{0i_{b-1}}=1-\theta_i@f$
+ * and @f$\theta'_{1i_{b-1}}=\theta_i@f$.
+ *
+ * Then, if @f$c=ceil(log_2(n))@f$, for @f$i \in <0,n-1>@f$.
+ *
+ * @f$p_{i+1}=\theta'_{i_c}....\theta'_{i_1} @f$
+ * 
  */
 
   class Simplex:
@@ -95,6 +116,7 @@ private:
    * 0: No parametrization
    * 1: Global ratio
    * 2: Local ratio
+   * 3: Binary
    *
    */
   unsigned short method_;
@@ -120,6 +142,7 @@ public:
    *    0: No parametrization
    *    1: Global ratio
    *    2: Local ratio
+   *    3: Binary
    * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
@@ -134,6 +157,7 @@ public:
    *    0: No parametrization
    *    1: Global ratio
    *    2: Local ratio
+   *    3: Binary
    * @param name The name passed to AbstractParameterAliasable constructor.
    *
    */
