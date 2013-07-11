@@ -239,14 +239,15 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
   size_t width = static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit - 2);
   string gauge = string(static_cast<size_t>((1. * static_cast<double>(iter) / static_cast<double>(total)) * static_cast<double>(width)), symbol);
   string info = mes;
+  size_t step = static_cast<size_t>(ceil(1. * static_cast<double>(total) / static_cast<double>(width)));
+  size_t x = iter % step;
   if (interactive)
   {
     string fill = string(width - gauge.length(), ' ');
     gauge = "[" + gauge + fill + "] " + TextTools::resizeLeft(TextTools::toString(100 * iter / total), 3) + "%";
     if (mes.size() > terminalWidth - gauge.size())
       info = TextTools::resizeRight(mes, terminalWidth - gauge.size());
-    *message << '\r' + info + gauge;
-    message->flush();
+    if (x == 0) { *message << '\r' + info + gauge; message->flush(); }
   }
   else
   {
@@ -256,7 +257,6 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
       message->flush();
       return;
     }
-    size_t step = static_cast<size_t>(ceil(1. * static_cast<double>(total) / static_cast<double>(width)));
     if (iter >= total)
     {
       size_t fill = static_cast<size_t>(static_cast<float>(terminalWidth) * terminalSplit) - (total - 1) / step - 1;
@@ -264,7 +264,6 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
       message->flush();
       return;
     }
-    size_t x = iter % step;
     if (x == 0) { *message << symbol; message->flush(); }
   }
 }
