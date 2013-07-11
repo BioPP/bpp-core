@@ -57,33 +57,33 @@ int main() {
   FivePointsNumericalDerivative nd5pt(&f) ; nd5pt.setParametersToDerivate(pl.getParameterNames());
   
   for (unsigned int repeat = 0; repeat < 10000; ++repeat) {
-    for (unsigned int i = 0; i < pl.size(); ++i) {
+    for (size_t i = 0; i < pl.size(); ++i) {
       double val = RandomTools::giveRandomNumberBetweenZeroAndEntry(100) - 50;
       pl[i].setValue(val);
     }
 
     nd2pt.setParameters(pl);
     vector<double> derivativesNum2pt(pl.size());
-    for (unsigned int i = 0; i < pl.size(); ++i) {
+    for (size_t i = 0; i < pl.size(); ++i) {
       derivativesNum2pt[i] = nd2pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
     }
 
     nd3pt.setParameters(pl);
     vector<double> derivativesNum3pt(pl.size());
-    for (unsigned int i = 0; i < pl.size(); ++i) {
+    for (size_t i = 0; i < pl.size(); ++i) {
       derivativesNum3pt[i] = nd3pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
     }
 
     nd5pt.setParameters(pl);
     vector<double> derivativesNum5pt(pl.size());
-    for (unsigned int i = 0; i < pl.size(); ++i) {
+    for (size_t i = 0; i < pl.size(); ++i) {
       derivativesNum5pt[i] = nd5pt.getFirstOrderDerivative(pl.getParameterNames()[i]);
     }
 
     vector<double> derivativesAna(pl.size());
     f1.setParameters(pl);
     bool test = true;
-    for (unsigned int i = 0; i < pl.size(); ++i) {
+    for (size_t i = 0; i < pl.size(); ++i) {
       derivativesAna[i] = f1.getFirstOrderDerivative(pl.getParameterNames()[i]);
       if (abs(derivativesAna[i] - derivativesNum2pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
       if (abs(derivativesAna[i] - derivativesNum3pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
@@ -93,7 +93,7 @@ int main() {
     //Test:
     if (!test) {
       //Failure!
-      for (unsigned int i = 0; i < pl.size(); ++i) {
+      for (size_t i = 0; i < pl.size(); ++i) {
         cout << setprecision(20) << pl[i].getName() << "=" << pl[i].getValue() << endl;
         cout << setprecision(20) << "Ana. Der.     =" << derivativesAna[i]    << endl;
         cout << setprecision(20) << "Num. Der. 2pts=" << derivativesNum2pt[i] << endl;
