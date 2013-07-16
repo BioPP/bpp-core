@@ -42,7 +42,6 @@ SET(CPP_FILES
   Bpp/Numeric/Random/Uniform01WH.cpp
   Bpp/Numeric/AbstractParameterAliasable.cpp
   Bpp/Numeric/AbstractParametrizable.cpp
-  Bpp/Numeric/ParametrizableCollection.cpp
   Bpp/Numeric/AdaptiveKernelDensityEstimation.cpp
   Bpp/Numeric/VectorTools.cpp
   Bpp/Numeric/AutoParameter.cpp
