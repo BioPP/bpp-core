@@ -51,6 +51,9 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool 
   vProb_(),
   valpha_()
 {
+  if  (dim_==0)
+    return;
+
   double sum = VectorTools::sum(probas);
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
@@ -120,6 +123,9 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
   vProb_(),
   valpha_()
 {
+  if  (dim_==0)
+    return;
+  
   for (size_t i = 0; i < dim_; i++)
   {
     vProb_.push_back(1. / static_cast<double>(dim_));
@@ -160,6 +166,9 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
 
 void Simplex::fireParameterChanged(const ParameterList& parameters)
 {
+  if  (dim_==0)
+    return;
+
   AbstractParameterAliasable::fireParameterChanged(parameters);
 
   double x = 1.0;
@@ -225,6 +234,9 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
 
 void Simplex::setFrequencies(const std::vector<double>& probas)
 {
+  if  (dim_==0)
+    return;
+
   double sum = VectorTools::sum(probas);
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex::setFrequencies. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");

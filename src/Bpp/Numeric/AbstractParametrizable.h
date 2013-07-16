@@ -144,12 +144,22 @@ class AbstractParametrizable:
       parameters_.addParameters(parameters);
     }
 
-    void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
+  void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
     {
       if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
       parameters_.deleteParameter(index);
     }
+
+  void deleteParameter_(std::string& name)
+  {
+    parameters_.deleteParameter(name);
+  }
+
+  void deleteParameters_(const std::vector<std::string>& names)
+  {
+     parameters_.deleteParameters(names);
+  }
 
     void resetParameters_()
     {

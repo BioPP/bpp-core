@@ -135,6 +135,7 @@ SET(H_FILES
   Bpp/Numeric/Parameter.h
   Bpp/Numeric/ParameterList.h
   Bpp/Numeric/Parametrizable.h
+  Bpp/Numeric/ParametrizableCollection.cpp
   Bpp/Numeric/TransformedParameter.h
   Bpp/Numeric/Random/RandomFactory.h
   Bpp/Numeric/Random/RandomTools.h

@@ -203,8 +203,25 @@ namespace bpp
         std::string name = getParameter_(index).getName();
         AbstractParametrizable::deleteParameter_(index);
         if (independentParameters_.hasParameter(name))
-        independentParameters_.deleteParameter(name);
+          independentParameters_.deleteParameter(name);
       }
+
+    void deleteParameter_(std::string& name) throw (IndexOutOfBoundsException)
+    {
+      AbstractParametrizable::deleteParameter_(name);
+      if (independentParameters_.hasParameter(name))
+        independentParameters_.deleteParameter(name);
+    }
+
+    void deleteParameters_(const std::vector<std::string>& names)
+    {
+      std::string x;
+      for (size_t i=0; i<names.size(); i++)
+        {
+          x=names[i];
+          deleteParameter_(x);
+        }
+    }
 
       void resetParameters_()
       {
