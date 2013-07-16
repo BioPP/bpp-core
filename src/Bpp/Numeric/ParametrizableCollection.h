@@ -68,14 +68,14 @@ namespace bpp
      * @brief Contains all objects used.
      */
     
-    std::map<unsigned int, std::auto_ptr<N> > objectsSet_;
+    std::map<size_t, N* > objectsSet_;
 
     /**
      * @brief Parameters for each object in the set.
      *
      */
   
-    std::map<unsigned int, ParameterList> parametersSet_;
+    std::map<size_t, ParameterList> parametersSet_;
 
   public:
     /**
@@ -90,28 +90,53 @@ namespace bpp
     {
     }
 
+    ParametrizableCollection(const ParametrizableCollection<N>& set) :
+      AbstractParameterAliasable(set),
+      objectsSet_(),
+      parametersSet_(set.parametersSet_)
+    {
+      // Duplicate all objects:
+      typename std::map<size_t, N* >::const_iterator it;
+      for (it=set.objectsSet_.begin(); it!=set.objectsSet_.end(); it++)
+        objectsSet_[it->first]=it->second->clone();
+    }
+
+    ParametrizableCollection<N>& operator=(const ParametrizableCollection<N>& set)
+    {
+      clear();
+
+      AbstractParameterAliasable::operator=(set);
+      parametersSet_     = set.parametersSet_;
+
+      // Duplicate all objects:
+      typename std::map<size_t, N* >::const_iterator it;
+      for (it=set.objectsSet_.begin(); it!=set.objectsSet_.end(); it++)
+        objectsSet_[it->first]=it->second->clone();
+
+      return *this;
+    }
+
     /**
      * @brief Resets all the information contained in this object.
      *
      */
    
-    void clear();
-  
-    ParametrizableCollection(const ParametrizableCollection<N>& set);
+    void clear()
+    {
+      resetParameters_();
+      
+      typename std::map<size_t, N*>::const_iterator it;
+      for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
+        delete it->second;
+      objectsSet_.clear();
+    }
 
-    ParametrizableCollection<N>& operator=(const ParametrizableCollection<N>& set);
-
-    virtual ~ParametrizableCollection()
+    ~ParametrizableCollection()
     {
       clear();
     }
 
-#ifndef NO_VIRTUAL_COV
-    ParametrizableCollection<N>*
-#else
-    Clonable*
-#endif
-    clone() const { return new ParametrizableCollection<N>(*this); }
+    ParametrizableCollection<N>* clone() const { return new ParametrizableCollection<N>(*this); }
 
   public:
     /**
@@ -120,7 +145,21 @@ namespace bpp
      * @param parameters The modified parameters.
      */
   
-    virtual void fireParameterChanged(const ParameterList& parameters);
+    void fireParameterChanged(const ParameterList& parameters)
+    {
+      typename std::map<size_t, N*>::iterator it;
+      // Then we update all objects in the set:
+      for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
+        {
+          size_t i=it->first;
+          for (size_t np = 0 ; np< parametersSet_[i].size() ; np++)
+            {
+              parametersSet_[i][np].setValue(getParameterValue(parametersSet_[i][np].getName()+"_"+TextTools::toString(i)));
+            }
+          it->second->matchParametersValues(parametersSet_[i]);
+        }
+    }
+
 
     /**
      * @return The current number of distinct discrete objects in this set.
@@ -135,7 +174,7 @@ namespace bpp
      * @return true or false.
      */
   
-    const bool hasObject(unsigned int objectIndex) const
+    const bool hasObject(size_t objectIndex) const
     {
       return (objectsSet_.find(objectIndex)!=objectsSet_.end());
     }
@@ -145,10 +184,10 @@ namespace bpp
      *
      */
   
-    const std::vector<unsigned int> keys() const
+    const std::vector<size_t> keys() const
     {
-      std::vector<unsigned int> vkeys;
-      typename std::map<unsigned int, std::auto_ptr<N> >::const_iterator it;
+      std::vector<size_t> vkeys;
+      typename std::map<size_t, N*>::const_iterator it;
 
       for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
         vkeys.push_back(it->first);
@@ -164,20 +203,22 @@ namespace bpp
      * @return A pointer toward the corresponding object.
      */
   
-    const N* getObject(unsigned int objectIndex) const
+    const N* getObject(size_t objectIndex) const
     {
-      typename std::map<unsigned int, std::auto_ptr<N> >::const_iterator it=objectsSet_.find(objectIndex);
+      typename std::map<size_t, N*>::const_iterator it=objectsSet_.find(objectIndex);
       if (it==objectsSet_.end())
-        throw BadIntegerException("ParametrizableCollection::getObject().", objectIndex);
+        throw BadIntegerException("ParametrizableCollection::getObject().", (int)objectIndex);
     
-      return dynamic_cast<const N*>(it->second.get());
+      return dynamic_cast<const N*>(it->second);
     }
 
-    N* getObject(unsigned int objectIndex)
+    N* getObject(size_t objectIndex)
     {
-      if (objectsSet_.find(objectIndex)==objectsSet_.end())
-        throw BadIntegerException("ParametrizableCollection::getObject().", objectIndex);
-      return objectsSet_.at(objectIndex).get();
+      typename std::map<size_t, N*>::iterator it=objectsSet_.find(objectIndex);
+      if (it==objectsSet_.end())
+        throw BadIntegerException("ParametrizableCollection::getObject().", (int)objectIndex);
+    
+      return it->second;
     }
   
     /**
@@ -193,7 +234,28 @@ namespace bpp
      * 
      */
 
-    void addObject(N* object, unsigned int objectIndex);
+    void addObject(N* object, size_t objectIndex)
+    {
+      typename std::map<size_t, N*>::iterator it=objectsSet_.find(objectIndex);
+      if (it!=objectsSet_.end())
+        throw BadIntegerException("ParametrizableCollection<N>::addObject. Object objectIndex already used", (int)objectIndex);
+
+      objectsSet_[objectIndex]=object;
+
+      // Associate parameters:
+      std::string pname;
+      std::vector<std::string> nplm=object->getParameters().getParameterNames();
+  
+      parametersSet_[objectIndex]=*object->getParameters().clone();
+  
+      for (size_t i  = 0; i < nplm.size(); i++)
+        {
+          pname = nplm[i];
+          Parameter* p = new Parameter(object->getParameters().getParameter(pname));
+          p->setName(pname + "_" + TextTools::toString(objectIndex));
+          addParameter_(p);
+        }
+    }
 
     /**
      * @brief Remove a object from the set, and all corresponding
@@ -203,7 +265,41 @@ namespace bpp
      * @return the removed N*. 
      */
   
-    N* removeObject(unsigned int objectIndex);
+    N* removeObject(size_t objectIndex)
+    {
+      if (objectsSet_.find(objectIndex)==objectsSet_.end())
+        throw BadIntegerException("ParametrizableCollection<N>::removeObject. None Object at this objectIndex", (int)objectIndex);
+
+      N* pm=objectsSet_[objectIndex];
+      objectsSet_.erase(objectIndex);
+      
+      // Erase all parameter references to this object and translate other indices...
+      
+      ParameterList pl=getParameters();
+      
+      for (size_t i = pl.size(); i>0; i--)
+        {
+          std::string pn=pl[i-1].getName();
+          
+          size_t pu=pn.rfind("_");
+          int nm=TextTools::toInt(pn.substr(pu,std::string::npos));
+          if (nm==(int)objectIndex){
+            std::vector<std::string> alpn=getAlias(pn);
+            for (unsigned j=0; j<alpn.size(); j++)
+              try {
+                unaliasParameters(alpn[j],pn);
+              }
+              catch (Exception& e)
+                {
+                  continue;
+                }
+            deleteParameter_(i-1);
+          }
+        }
+      
+      parametersSet_[objectIndex].reset();
+      return pm;
+    }
 
     /**
      * @brief Replace a object in the set, and returns the replaced one.
@@ -213,7 +309,13 @@ namespace bpp
      * @return the replaced N*. 
      */
 
-    N* replaceObject(N* object, unsigned int objectIndex);
+    N* replaceObject(N* object, size_t objectIndex)
+    {
+      N* pm=removeObject(objectIndex);
+      addObject(object, objectIndex);
+      return pm;
+    }
+
 
     /**
      * @brief Get the parameters attached to a Object.
@@ -223,7 +325,10 @@ namespace bpp
      * @return The parameters attached to the object.
      */
 
-    ParameterList getObjectParameters(unsigned int objectIndex) const;
+    ParameterList getObjectParameters(size_t objectIndex) const
+    {
+      return parametersSet_.at(objectIndex);
+    }
   
   };
 } // end of namespace bpp.
