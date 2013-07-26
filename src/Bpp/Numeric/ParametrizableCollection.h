@@ -71,12 +71,13 @@ namespace bpp
     std::map<size_t, N* > objectsSet_;
 
     /**
-     * @brief Parameters for each object in the set.
+     * @brief A vector of the numbers of objects that have changed
+     * during the last fireParameterChanged.
      *
      */
-  
-    std::map<size_t, ParameterList> parametersSet_;
 
+    std::vector<size_t> vChanged_;
+    
   public:
     /**
      * @brief Create an empty object set.
@@ -86,14 +87,14 @@ namespace bpp
     ParametrizableCollection():
       AbstractParameterAliasable(""),
       objectsSet_(),
-      parametersSet_()
+      vChanged_()
     {
     }
 
     ParametrizableCollection(const ParametrizableCollection<N>& set) :
       AbstractParameterAliasable(set),
       objectsSet_(),
-      parametersSet_(set.parametersSet_)
+      vChanged_(set.vChanged_)
     {
       // Duplicate all objects:
       typename std::map<size_t, N* >::const_iterator it;
@@ -106,8 +107,8 @@ namespace bpp
       clear();
 
       AbstractParameterAliasable::operator=(set);
-      parametersSet_     = set.parametersSet_;
-
+      vChanged_ = set.vChanged_;
+      
       // Duplicate all objects:
       typename std::map<size_t, N* >::const_iterator it;
       for (it=set.objectsSet_.begin(); it!=set.objectsSet_.end(); it++)
@@ -129,6 +130,7 @@ namespace bpp
       for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
         delete it->second;
       objectsSet_.clear();
+      vChanged_.empty();
     }
 
     ~ParametrizableCollection()
@@ -147,20 +149,36 @@ namespace bpp
   
     void fireParameterChanged(const ParameterList& parameters)
     {
-      typename std::map<size_t, N*>::iterator it;
-      // Then we update all objects in the set:
-      for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
+      vChanged_.clear();
+      
+      std::vector<size_t> vCh;
+
+      std::map<size_t, ParameterList > mNumPl;
+      
+      for (size_t i=0; i<parameters.size(); i++)
         {
-          size_t i=it->first;
-          for (size_t np = 0 ; np< parametersSet_[i].size() ; np++)
-            {
-              parametersSet_[i][np].setValue(getParameterValue(parametersSet_[i][np].getName()+"_"+TextTools::toString(i)));
-            }
-          it->second->matchParametersValues(parametersSet_[i]);
+          std::string n=parameters[i].getName();
+          size_t t=n.rfind("_");
+          if (t==std::string::npos)
+            continue;
+          size_t num=(size_t)atoi(n.substr(t+1).c_str());
+          mNumPl[num].addParameter(Parameter(n.substr(0,t),parameters[i].getValue()));
         }
+
+      std::map<size_t, ParameterList >::iterator it;
+      
+      // Then we update all objects in the set:
+      for (it=mNumPl.begin(); it!=mNumPl.end(); it++){
+        if (hasObject(it->first) && objectsSet_[it->first]->matchParametersValues(it->second))
+          vChanged_.push_back(it->first);
+      }
     }
 
-
+    std::vector<size_t> hasChanged() const
+    {
+      return vChanged_;
+    }
+    
     /**
      * @return The current number of distinct discrete objects in this set.
      */
@@ -203,7 +221,7 @@ namespace bpp
      * @return A pointer toward the corresponding object.
      */
   
-    const N* getObject(size_t objectIndex) const
+    const N* operator[](size_t objectIndex) const
     {
       typename std::map<size_t, N*>::const_iterator it=objectsSet_.find(objectIndex);
       if (it==objectsSet_.end())
@@ -212,7 +230,7 @@ namespace bpp
       return dynamic_cast<const N*>(it->second);
     }
 
-    N* getObject(size_t objectIndex)
+    N* operator[](size_t objectIndex)
     {
       typename std::map<size_t, N*>::iterator it=objectsSet_.find(objectIndex);
       if (it==objectsSet_.end())
@@ -244,10 +262,9 @@ namespace bpp
 
       // Associate parameters:
       std::string pname;
-      std::vector<std::string> nplm=object->getParameters().getParameterNames();
-  
-      parametersSet_[objectIndex]=*object->getParameters().clone();
-  
+      std::vector<std::string> nplm;
+      nplm=object->getParameters().getParameterNames();
+
       for (size_t i  = 0; i < nplm.size(); i++)
         {
           pname = nplm[i];
@@ -255,6 +272,16 @@ namespace bpp
           p->setName(pname + "_" + TextTools::toString(objectIndex));
           addParameter_(p);
         }
+
+      if (dynamic_cast<ParameterAliasable*>(object)){
+        ParameterAliasable* ppa=dynamic_cast<ParameterAliasable*>(object);
+        for (size_t i  = 0; i < nplm.size(); i++)
+          {
+            std::vector<std::string> va=ppa->getAlias(nplm[i]);
+            for (size_t j=0;j<va.size();j++)
+              aliasParameters(nplm[i] + "_" + TextTools::toString(objectIndex), va[j] + "_" + TextTools::toString(objectIndex));
+          }
+      }
     }
 
     /**
@@ -282,7 +309,7 @@ namespace bpp
           std::string pn=pl[i-1].getName();
           
           size_t pu=pn.rfind("_");
-          int nm=TextTools::toInt(pn.substr(pu,std::string::npos));
+          int nm=atoi(pn.substr(pu+1).c_str());
           if (nm==(int)objectIndex){
             std::vector<std::string> alpn=getAlias(pn);
             for (unsigned j=0; j<alpn.size(); j++)
@@ -297,7 +324,6 @@ namespace bpp
           }
         }
       
-      parametersSet_[objectIndex].reset();
       return pm;
     }
 
@@ -317,19 +343,6 @@ namespace bpp
     }
 
 
-    /**
-     * @brief Get the parameters attached to a Object.
-     *
-     * @param objectIndex the index of the object in the set
-     *
-     * @return The parameters attached to the object.
-     */
-
-    ParameterList getObjectParameters(size_t objectIndex) const
-    {
-      return parametersSet_.at(objectIndex);
-    }
-  
   };
 } // end of namespace bpp.
 

@@ -138,7 +138,19 @@ class ApplicationTools
      * @return True is the parameter of specified name is in the list.
      */
     static bool parameterExists(const std::string& parameterName, std::map<std::string, std::string>& params);
+
+  /**
+   * @brief Returns a vector of parameter names that match a given pattern.
+   *
+   * Only "*" wildcard is implemented now.
+   *
+   * @param pattern The pattern.
+   * @param params  The parameter list.
+   * @return a vector of matching names.
+   */
   
+  static std::vector<std::string> matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params);
+
     /**
      * @brief Get a double parameter.
      *

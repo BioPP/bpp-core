@@ -65,7 +65,44 @@ bool ApplicationTools::parameterExists(
 {
   return (params.find(parameterName) != params.end() && !TextTools::isEmpty(params[parameterName]));
 }
+
+/******************************************************************************/
   
+std::vector<std::string> ApplicationTools::matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params)
+{
+  vector<string> retv;
+
+  map<string, string>::iterator it;
+  for (it=params.begin(); it!=params.end(); it++)
+  {
+    StringTokenizer stj(pattern, "*", true, false);
+    size_t pos1, pos2;
+    string parn = it->first;
+    bool flag(true);
+    string g = stj.nextToken();
+    pos1 = parn.find(g);
+    if (pos1 != 0)
+      flag = false;
+    pos1 += g.length();
+    while (flag && stj.hasMoreToken())
+      {
+        g = stj.nextToken();
+        pos2 = parn.find(g, pos1);
+        if (pos2 == string::npos)
+          {
+            flag = false;
+            break;
+          }
+        pos1 = pos2 + g.length();
+      }
+    if (flag &&
+        ((g.length() == 0) || (pos1 == parn.length()) || (parn.rfind(g) == parn.length() - g.length())))
+      retv.push_back(parn);
+  }
+
+  return retv;
+}
+
 /******************************************************************************/
 
 std::string ApplicationTools::getAFilePath(
