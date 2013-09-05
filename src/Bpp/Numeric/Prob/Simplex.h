@@ -168,6 +168,10 @@ public:
 
   void setFrequencies(const std::vector<double>&);
 
+  const std::vector<double>& getFrequencies() const { return vProb_;}
+
+  std::vector<double>& getFrequencies() { return vProb_;}
+
   double prob(size_t i) const { return vProb_[i]; }
 
   unsigned short getMethod() const { return method_; }
