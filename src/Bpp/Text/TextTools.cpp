@@ -215,6 +215,9 @@ bool TextTools::isDecimalNumber(char c)
 
 bool TextTools::isDecimalNumber(const std::string& s, char dec, char scientificNotation)
 {
+  if (isEmpty(s))
+    return false;
+              
   size_t sepCount = 0;
   size_t sciCount = 0;
   size_t i = 0;
@@ -243,6 +246,9 @@ bool TextTools::isDecimalNumber(const std::string& s, char dec, char scientificN
 
 bool TextTools::isDecimalInteger(const std::string& s, char scientificNotation)
 {
+  if (isEmpty(s))
+    return false;
+              
   size_t sciCount = 0;
   size_t i = 0;
   if (s[0] == '-') i = 1;
