@@ -590,5 +590,32 @@ void DataTable::write(const DataTable& data, ostream& out, const string& sep, bo
   }
 }
 
+void DataTable::write(const DataTable& data, bpp::OutputStream& out, const string& sep, bool alignHeaders)
+{
+  size_t n = data.getNumberOfColumns();
+  if(n == 0) return;
+  if(data.hasColumnNames())
+    { //Write header
+      vector<string> colNames = data.getColumnNames();
+      if (alignHeaders && data.hasRowNames()) out << sep;
+      out << colNames[0];
+      for(size_t i = 1; i < n; i++) {
+        out << sep << colNames[i];
+      }
+      out.endLine();
+    }
+  //Now write each row:
+  for(size_t i = 0; i < data.getNumberOfRows(); i++)
+    {
+      if(data.hasRowNames()) out << data.getRowName(i) << sep;
+      out << data(i, 0);
+      for(size_t j = 1; j < n; j++)
+        {
+          out << sep << data(i, j);
+        }
+      out.endLine();
+    }
+}
+
 /******************************************************************************/
 

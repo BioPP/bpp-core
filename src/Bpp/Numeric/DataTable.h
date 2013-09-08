@@ -435,6 +435,7 @@ class DataTable:
      * @param alignHeaders If true, add a delimiter before the first column header if there is row names.
      */
     static void write(const DataTable& data, std::ostream& out, const std::string& sep = "\t", bool alignHeaders = false);
+  static void write(const DataTable& data, bpp::OutputStream& out, const std::string& sep = "\t", bool alignHeaders = false);
 };
 
 } //end of namespace bpp.
