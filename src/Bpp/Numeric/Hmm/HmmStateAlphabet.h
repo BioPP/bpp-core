@@ -74,12 +74,12 @@ namespace bpp {
        */
       virtual const Clonable& getState(unsigned int stateIndex) const throw (HmmBadStateException) = 0;
 
-      /**
-       * @param stateIndex The index of a hidden state.
-       * @return The corresponding hidden state.
-       * @see getNumberOfStates
-       */
-      virtual Clonable& getState(unsigned int stateIndex) throw (HmmBadStateException) = 0;
+      // /**
+      //  * @param stateIndex The index of a hidden state.
+      //  * @return The corresponding hidden state.
+      //  * @see getNumberOfStates
+      //  */
+      // virtual Clonable& getState(unsigned int stateIndex) throw (HmmBadStateException) = 0;
 
       virtual unsigned int getNumberOfStates() const = 0;
 

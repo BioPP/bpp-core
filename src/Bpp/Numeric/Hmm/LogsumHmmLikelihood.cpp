@@ -50,6 +50,7 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
     const std::string& prefix) throw (Exception):
+  AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
   transitionMatrix_(transitionMatrix),
@@ -57,6 +58,10 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
   logLikelihood_(),
   partialLogLikelihoods_(),
   logLik_(),
+  partialDLogLikelihoods_(),
+  partialD2LogLikelihoods_(),
+  backLogLikelihood_(),
+  backLogLikelihoodUpToDate_(false),
   breakPoints_(),
   nbStates_(),
   nbSites_()
@@ -85,6 +90,9 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
 
 void LogsumHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
+  dVariable_="";
+  d2Variable_="";
+
   bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
   bool transitionsChanged = transitionMatrix_->matchParametersValues(pl);
   bool emissionChanged    = emissionProbabilities_->matchParametersValues(pl);
@@ -95,6 +103,7 @@ void LogsumHmmLikelihood::fireParameterChanged(const ParameterList& pl)
   if (alphabetChanged && !emissionChanged) emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
   
   computeForward_();
+  backLogLikelihoodUpToDate_=false;
 }
 
 /***************************************************************************************************************************/
@@ -114,10 +123,12 @@ void LogsumHmmLikelihood::computeForward_()
 
   //Initialisation:
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
+  
   for (size_t j = 0; j < nbStates_; j++)
   {
     size_t jj = j * nbStates_;
     x = logTrans[jj] + log(transitionMatrix_->getEquilibriumFrequencies()[0]);
+    
     for (size_t k = 1; k < nbStates_; k++)
     {
       a = logTrans[k + jj] + log(transitionMatrix_->getEquilibriumFrequencies()[k]);
@@ -175,9 +186,10 @@ void LogsumHmmLikelihood::computeForward_()
       else nextBrkPt = nbSites_;
     }
   }
+
   //Termination:
   double tmpLog = logLikelihood_[(nbSites_ - 1) * nbStates_];
-  for (unsigned int k = 1; k < nbStates_; k++)
+  for (size_t k = 1; k < nbStates_; k++)
     tmpLog = NumTools::logsum(tmpLog, logLikelihood_[(nbSites_ - 1) * nbStates_ + k]);
   partialLogLikelihoods_.push_back(tmpLog);
   
@@ -191,13 +203,15 @@ void LogsumHmmLikelihood::computeForward_()
 
 /***************************************************************************************************************************/
 
-void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b) const
+void LogsumHmmLikelihood::computeBackward_() const
 {
-  b.resize(nbSites_);
-  for (size_t i = 0; i < nbSites_; i++)
+  if (backLogLikelihood_.size()==0)
   {
-    b[i].resize(nbStates_);
+    backLogLikelihood_.resize(nbSites_);
+    for (size_t i=0;i<nbSites_;i++)
+      backLogLikelihood_[i].resize(nbStates_);
   }
+  
   double x;
 
   //Transition probabilities:
@@ -218,7 +232,7 @@ void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b
   
   for (size_t k = 0; k < nbStates_; k++)
   {
-    b[nbSites_ - 1][k] = 0.;
+    backLogLikelihood_[nbSites_ - 1][k] = 0.;
   }
 
   //Recursion:
@@ -230,28 +244,86 @@ void LogsumHmmLikelihood::computeBackward_(std::vector< std::vector<double> >& b
       for (size_t j = 0; j < nbStates_; j++)
       {
         size_t jj = j * nbStates_;
-        x = log((*emissions)[0]) + logTrans[jj] + b[i][0];
+        x = log((*emissions)[0]) + logTrans[jj] + backLogLikelihood_[i][0];
         for (size_t k = 1; k < nbStates_; k++)
         {
-          x = NumTools::logsum(x, log((*emissions)[k]) + logTrans[jj + k] + b[i][k]);
+          x = NumTools::logsum(x, log((*emissions)[k]) + logTrans[jj + k] + backLogLikelihood_[i][k]);
         }
-        b[i - 1][j] = x;
+        backLogLikelihood_[i - 1][j] = x;
       }    
     }
     else //Reset markov chain
     {
       for (unsigned int j = 0; j < nbStates_; j++)
       {
-        b[i - 1][j] = 0.;
+        backLogLikelihood_[i - 1][j] = 0.;
       }    
       bpIt++;
       if (bpIt != breakPoints_.rend()) nextBrkPt = *bpIt;
       else nextBrkPt = 0;
     }
   }
+
+  backLogLikelihoodUpToDate_=true;
 }
 
+
 /***************************************************************************************************************************/
+
+double LogsumHmmLikelihood::getLikelihoodForASite(size_t site) const
+{
+  Vdouble probs=getHiddenStatesPosteriorProbabilitiesForASite(site);
+  double x=0;
+  for (size_t i=0;i<nbStates_;i++)
+    x+=probs[i]*(*emissionProbabilities_)(site,i);
+
+  return x;
+}
+
+Vdouble LogsumHmmLikelihood::getLikelihoodForEachSite() const
+{
+  std::vector< std::vector<double> > vv;
+  getHiddenStatesPosteriorProbabilities(vv);
+
+  Vdouble ret(nbSites_);
+  for (size_t i=0;i<nbSites_;i++)
+  {
+    ret[i]=0;
+    for (size_t j=0;j<nbStates_;j++)
+      ret[i]+=vv[i][j]*(*emissionProbabilities_)(i,j);
+  }
+
+  return ret;
+}
+
+
+/***************************************************************************************************************************/
+
+Vdouble LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const
+{
+  if (!backLogLikelihoodUpToDate_)
+    computeBackward_();
+
+  Vdouble probs(nbStates_);
+  
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
+  vector<double>::const_iterator logLikIt = partialLogLikelihoods_.begin();
+  while (bpIt != breakPoints_.end())
+  {
+    if (site>=(*bpIt))
+      logLikIt++;
+    else
+      break;
+    bpIt++;
+  }
+
+  for (size_t j = 0; j < nbStates_; j++)
+  {
+    probs[j] = exp(logLikelihood_[site * nbStates_ + j] + backLogLikelihood_[site][j] - *logLikIt);
+  }
+
+  return probs;
+}
 
 void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception)
 {
@@ -262,8 +334,8 @@ void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std
     probs[offset + i].resize(nbStates_);
   }
 
-  vector< vector<double> > logB;
-  computeBackward_(logB);
+  if (!backLogLikelihoodUpToDate_)
+    computeBackward_();
  
   size_t nextBrkPt = nbSites_; //next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
@@ -282,10 +354,222 @@ void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
     {
-      probs[offset + i][j] = exp(logLikelihood_[ii + j] + logB[i][j] - *logLikIt);
+      probs[offset + i][j] = exp(logLikelihood_[ii + j] + backLogLikelihood_[i][j] - *logLikIt);
     }
   }
 }
 
 /***************************************************************************************************************************/
 
+void LogsumHmmLikelihood::computeDForward_() const
+{
+  //Init arrays:
+  if (dLogLikelihood_.size()==0){
+    dLogLikelihood_.resize(nbSites_);
+    for (size_t i=0;i<nbSites_;i++)
+      dLogLikelihood_[i].resize(nbStates_);
+  }
+
+  partialDLogLikelihoods_.clear();
+
+  double x;
+
+  vector<double> num(nbStates_);
+
+  //Transition probabilities:
+  const ColMatrix<double> trans(transitionMatrix_->getPij());
+
+  //Initialisation:
+  const vector<double>* emissions = &(*emissionProbabilities_)(0);
+  const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
+  
+  for (size_t j = 0; j < nbStates_; j++)
+    dLogLikelihood_[0][j] = (*dEmissions)[j] / (*emissions)[j];
+
+  //Recursion:
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
+  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  partialDLogLikelihoods_.clear();
+ 
+  for (size_t i = 1; i < nbSites_; i++)
+  {
+    size_t iip = (i - 1) * nbStates_;
+
+    emissions = &(*emissionProbabilities_)(i);
+    dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
+
+    if (i < nextBrkPt)
+    {
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        x=(*dEmissions)[j]/(*emissions)[j];
+
+        for (size_t k = 0; k < nbStates_; k++)
+        {
+          for (size_t kp = 0; kp < nbStates_; kp++)
+            num[kp]=logLikelihood_[iip+kp]-logLikelihood_[iip+k];
+
+          x+=dLogLikelihood_[i-1][k]*trans(k,j)/VectorTools::sumExp(num,trans.getCol(j));
+        }
+        
+        dLogLikelihood_[i][j] = x;
+      }
+    }      
+    else //Reset markov chain:
+    {
+      //Termination of previous segment
+      x = 0;
+      for (size_t k = 0; k < nbStates_; k++)
+      {
+        for (size_t kp = 0; kp < nbStates_; kp++)
+          num[kp]=logLikelihood_[iip+kp]-logLikelihood_[iip+k];
+        
+        x += dLogLikelihood_[i-1][k] / VectorTools::sumExp(num);
+      }
+          
+      partialDLogLikelihoods_.push_back(x);
+
+      for (size_t j = 0; j < nbStates_; j++)
+        dLogLikelihood_[i][j] = (*dEmissions)[j] / (*emissions)[j];
+      
+      bpIt++;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
+    }
+  }
+  
+  //Termination:
+  x=0;
+  for (size_t k = 0; k < nbStates_; k++)
+  {
+    for (size_t kp = 0; kp < nbStates_; kp++)
+      num[kp]=logLikelihood_[nbStates_*(nbSites_-1)+kp]-logLikelihood_[nbStates_*(nbSites_-1)+k];
+            
+    x += dLogLikelihood_[nbSites_-1][k] / VectorTools::sumExp(num);
+  }
+          
+  partialDLogLikelihoods_.push_back(x);
+  
+  //Compute dLogLikelihood
+  
+  dLogLik_ = VectorTools::sum(partialDLogLikelihoods_);
+}
+
+/***************************************************************************************************************************/
+
+void LogsumHmmLikelihood::computeD2Forward_() const
+{
+  // Make sure that Dlikelihoods are correctly computed
+  getFirstOrderDerivative(d2Variable_);
+  
+  //Init arrays:
+  if (d2LogLikelihood_.size()==0){
+    d2LogLikelihood_.resize(nbSites_);
+    for (size_t i=0;i<nbSites_;i++)
+      d2LogLikelihood_[i].resize(nbStates_);
+  }
+
+  partialD2LogLikelihoods_.clear();
+  
+  double x, z, snum;
+
+  vector<double> num(nbStates_);
+  
+  //Transition probabilities:
+  const ColMatrix<double> trans(transitionMatrix_->getPij());
+  
+  //Initialisation:
+  const vector<double>* emissions = &(*emissionProbabilities_)(0);
+  const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
+  const vector<double>* d2Emissions = &emissionProbabilities_->getD2EmissionProbabilities(0);
+  
+  for (size_t j = 0; j < nbStates_; j++)
+    d2LogLikelihood_[0][j] = (*d2Emissions)[j] / (*emissions)[j] - pow((*dEmissions)[j] / (*emissions)[j],2);
+
+  //Recursion:
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
+  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  partialDLogLikelihoods_.clear();
+ 
+  for (size_t i = 1; i < nbSites_; i++)
+  {
+    size_t iip = (i - 1) * nbStates_;
+
+    emissions = &(*emissionProbabilities_)(i);
+    dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
+    d2Emissions = &emissionProbabilities_->getD2EmissionProbabilities(i);
+
+    if (i < nextBrkPt)
+    {
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        x=(*d2Emissions)[j] / (*emissions)[j] - pow((*dEmissions)[j] / (*emissions)[j],2);
+
+        for (size_t k = 0; k < nbStates_; k++)
+        {
+          for (size_t kp = 0; kp < nbStates_; kp++)
+            num[kp]=logLikelihood_[iip+kp]-logLikelihood_[iip+k];
+          snum=VectorTools::sumExp(num,trans.getCol(j));
+
+          
+          z=d2LogLikelihood_[i-1][k]+pow(dLogLikelihood_[i-1][k],2)
+            - dLogLikelihood_[i-1][k] * VectorTools::sumExp(num, trans.getCol(j) * dLogLikelihood_[i-1])/snum;
+
+          x += z * trans(k,j) / snum;
+        }
+
+        d2LogLikelihood_[i][j] = x;
+      }
+    }
+    else //Reset markov chain:
+    {
+      x=0;
+      
+      //Termination of previous segment:
+      for (size_t k = 1; k < nbStates_; k++)
+      {
+        for (size_t kp = 0; kp < nbStates_; kp++)
+          num[kp]=logLikelihood_[iip+kp]-logLikelihood_[iip+k];
+        
+        snum=VectorTools::sumExp(num);
+        
+        x += (d2LogLikelihood_[i-1][k]+pow(dLogLikelihood_[i-1][k],2)
+              - dLogLikelihood_[i-1][k] * VectorTools::sumExp(num, dLogLikelihood_[i-1])/snum)/snum;
+      }
+      
+      partialD2LogLikelihoods_.push_back(x);
+      
+      for (size_t j = 0; j < nbStates_; j++)
+        d2LogLikelihood_[i][j] = (*d2Emissions)[j] / (*emissions)[j] - pow((*dEmissions)[j] / (*emissions)[j],2);
+
+      
+      bpIt++;
+      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+      else nextBrkPt = nbSites_;
+    }
+  }  
+
+  //Termination:
+  x=0;
+  for (size_t k = 0; k < nbStates_; k++)
+  {
+    for (size_t kp = 0; kp < nbStates_; kp++)
+      num[kp]=logLikelihood_[nbStates_*(nbSites_-1)+kp]-logLikelihood_[nbStates_*(nbSites_-1)+k];
+    
+    snum=VectorTools::sumExp(num);
+    
+    x += (d2LogLikelihood_[nbSites_-1][k]+pow(dLogLikelihood_[nbSites_-1][k],2)
+          - dLogLikelihood_[nbSites_-1][k] * VectorTools::sumExp(num, dLogLikelihood_[nbSites_-1])/snum)/snum;
+  }
+
+  partialD2LogLikelihoods_.push_back(x);
+  
+  //Compute dLogLikelihood
+  
+  d2LogLik_ = VectorTools::sum(partialD2LogLikelihoods_);
+
+}

@@ -116,6 +116,7 @@ public:
   virtual void resize(size_t nRows, size_t nCols) = 0;
 };
 
+
 /**
  * @brief Matrix storage by row.
  *
@@ -190,6 +191,11 @@ public:
     return r;
   }
 
+  const std::vector<Scalar>& getRow(size_t i) const
+  {
+    return m_[i];
+  }
+
   std::vector<Scalar> col(size_t j) const
   {
     std::vector<Scalar> c(getNumberOfRows());
@@ -208,10 +214,114 @@ public:
 
   void addRow(const std::vector<Scalar>& newRow) throw (DimensionException)
   {
-    if (newRow.size() != getNumberOfColumns()) throw DimensionException("RowMatrix::addRow: invalid row dimension", newRow.size(), getNumberOfColumns());
+    if (getNumberOfColumns()!=0 && newRow.size() != getNumberOfColumns())
+      throw DimensionException("RowMatrix::addRow: invalid row dimension", newRow.size(), getNumberOfColumns());
     m_.push_back(newRow);
   }
 };
+
+/**
+ * @brief Matrix storage by column.
+ *
+ * This matrix is a vector of vector of Scalar.
+ * Column access is in \f$O(1)\f$ while row access is in \f$O(nCol)\f$.
+ */
+  template<class Scalar>
+  class ColMatrix :
+    public Matrix<Scalar>
+  {
+  private:
+    std::vector< std::vector<Scalar> > m_;
+
+  public:
+    ColMatrix() : m_() {}
+
+    ColMatrix(size_t nRow, size_t nCol) : m_(nCol)
+    {
+      for (size_t i = 0; i < nCol; i++)
+      {
+        m_[i].resize(nRow);
+      }
+    }
+
+    ColMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfColumns())
+    {
+      size_t nr = m.getNumberOfRows();
+      size_t nc = m.getNumberOfColumns();
+      for (size_t i = 0; i < nc; i++)
+      {
+        m_[i].resize(nr);
+        for (size_t j = 0; j < nr; j++)
+        {
+          m_[i][j] = m(j, i);
+        }
+      }
+    }
+
+    ColMatrix& operator=(const Matrix<Scalar>& m)
+    {
+      size_t nc = m.getNumberOfColumns();
+      m_.resize(nc);
+      size_t nr = m.getNumberOfRows();
+      for (size_t i = 0; i < nc; i++)
+      {
+        m_[i].resize(nr);
+        for (size_t j = 0; j < nr; j++)
+        {
+          m_[i][j] = m(j, i);
+        }
+      }
+      return *this;
+    }
+
+    virtual ~ColMatrix() {}
+
+  public:
+    ColMatrix* clone() const { return new ColMatrix(*this); }
+
+    const Scalar& operator()(size_t i, size_t j) const { return m_[j][i]; }
+
+    Scalar& operator()(size_t i, size_t j) { return m_[j][i]; }
+
+    size_t getNumberOfColumns() const { return m_.size(); }
+
+    size_t getNumberOfRows() const { return m_.size() == 0 ? 0 : m_[0].size(); }
+
+    std::vector<Scalar> row(size_t i) const
+    {
+      std::vector<Scalar> r(getNumberOfColumns());
+      for (size_t j = 0; j < getNumberOfColumns(); j++) { r[j] = operator()(i, j); }
+      return r;
+    }
+
+    const std::vector<Scalar>& getCol(size_t i) const
+    {
+      return m_[i];
+    }
+
+    std::vector<Scalar> col(size_t j) const
+    {
+      std::vector<Scalar> c(getNumberOfRows());
+      for (size_t i = 0; i < getNumberOfRows(); i++) { c[i] = operator()(i, j); }
+      return c;
+    }
+
+    void resize(size_t nRows, size_t nCols)
+    {
+      m_.resize(nCols);
+      for (size_t i = 0; i < nCols; i++)
+      {
+        m_[i].resize(nRows);
+      }
+    }
+
+    void addCol(const std::vector<Scalar>& newCol) throw (DimensionException)
+    {
+      if (getNumberOfRows()!=0 && newCol.size() != getNumberOfRows())
+        throw DimensionException("ColMatrix::addCol: invalid column dimension", newCol.size(), getNumberOfRows());
+      m_.push_back(newCol);
+    }
+  };
 
 /**
  * @brief Matrix storage in one vector.

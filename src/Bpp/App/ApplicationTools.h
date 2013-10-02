@@ -47,6 +47,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "../Text/StringTokenizer.h"
 #include "../Text/NestedStringTokenizer.h"
 
+#include "../Numeric/Matrix/Matrix.h"
+
 // From the STL:
 #include <map>
 #include <vector>
@@ -372,7 +374,68 @@ class ApplicationTools
       }
       return v;
     }
-   
+
+  /**
+   * @brief Get a RowMatrix. The input is made of embedded
+   * parenthesis, such as ((1,2),(3,4)), where the matrix is filled by
+   * lines. Here, the matrix would be:
+   * \f[
+   * \begin{pmatrix}
+   * 1 & 2 \\
+   * 3 & 4 \\
+   * \end{pmatrix}
+   * \f]
+   *
+   * @param parameterName    The name of the corresponding parameter.
+   * @param params           The attribute map where options may be found.
+   * @param separator        The character used to delimit values.
+   * @param defaultValue     The default value to use if the parameter is not found.
+   * @param suffix           A suffix to be applied to the parameter name.
+   * @param suffixIsOptional Tell if the suffix is absolutely required.
+   * @param warn             Tell if a warning must be sent in case the parameter is not found.
+   * @return The corresponding value.
+   */
+
+  template<class T> static RowMatrix<T> getMatrixParameter(
+                                                           const std::string& parameterName,
+                                                           std::map<std::string, std::string>& params,
+                                                           char separator,
+                                                           const std::string& defaultValue,
+                                                           const std::string& suffix = "",
+                                                           bool suffixIsOptional = true,
+                                                           bool warn = true)
+  {
+    RowMatrix<T> mat;
+
+    std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
+    if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
+    if (s[0] == '(' && s[s.size() - 1] == ')') {
+      //This is a delimited vector:
+      s = s.substr(1, s.size() - 2);
+      if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
+    }
+    
+    StringTokenizer st1(s, "()");
+    
+    while (st1.hasMoreToken())
+    {
+      std::string si=st1.nextToken();
+      StringTokenizer st2(si, TextTools::toString(separator));
+      size_t n = st2.numberOfRemainingTokens();
+
+      std::vector<T> v(n);
+      for (size_t i = 0; i < n; i++)
+      {
+        v[i] = TextTools::fromString<T>(st2.nextToken());
+      }
+      
+      if (v.size()!=0)
+        mat.addRow(v);
+    }
+    return mat;
+  }
+
+
     /**
      * @name Output methods.
      *
