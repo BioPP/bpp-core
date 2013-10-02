@@ -87,7 +87,6 @@ SET(CPACK_SOURCE_IGNORE_FILES
  ".*\\\\.deb"
  ".*\\\\.rpm"
  ".*\\\\.dmg"
- ".*\\\\.sh"
  ".*\\\\..*\\\\.swp"
  "src/\\\\..*"
  "src/libbpp*"

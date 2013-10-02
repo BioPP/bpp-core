@@ -90,7 +90,7 @@ namespace bpp {
     static double INF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
     static double PINF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
     static double MINF() { return std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min(); }
-    static double NaN() { return 3./0.; }
+    static double NaN() { return NAN; }
     /** @} */
 
     static double PI() { return 3.141593; }
