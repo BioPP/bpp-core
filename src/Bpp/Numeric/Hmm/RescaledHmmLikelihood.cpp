@@ -58,9 +58,13 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
   transitionMatrix_(transitionMatrix),
   emissionProbabilities_(emissionProbabilities),
   likelihood_(),
+  dLikelihood_(),
+  d2Likelihood_(),
   backLikelihood_(),
   backLikelihoodUpToDate_(false),
   scales_(),
+  dScales_(),
+  d2Scales_(),
   logLik_(),
   breakPoints_(),
   nbStates_(),
@@ -368,4 +372,206 @@ void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< s
 
 /***************************************************************************************************************************/
 
+void RescaledHmmLikelihood::computeDForward_() const
+{
+  //Init arrays:
+  if (dLikelihood_.size()==0){
+    dLikelihood_.resize(nbSites_);
+    for (size_t i=0;i<nbSites_;i++)
+      dLikelihood_[i].resize(nbStates_);
+  }
+  if (dScales_.size()==0)
+    dScales_.resize(nbSites_);
+  
+  double x;
+  vector<double> tmp(nbStates_), dTmp(nbStates_);
+  vector<double> dLScales(nbSites_);
+  
+  //Transition probabilities:
+  const ColMatrix<double> trans(transitionMatrix_->getPij());
 
+  //Initialisation:
+  dScales_[0] = 0;
+  const vector<double>* emissions = &(*emissionProbabilities_)(0);
+  const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
+
+  for (size_t j = 0; j < nbStates_; j++)
+  {
+    dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+    tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+
+    dScales_[0] += dTmp[j];
+  }
+
+  dLScales[0]=dScales_[0]/scales_[0];
+
+  
+  for (size_t j = 0; j < nbStates_; j++)
+    dLikelihood_[0][j] = (dTmp[j] * scales_[0] - tmp[j] * dScales_[0]) / pow(scales_[0],2);
+ 
+  //Recursion:
+
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
+  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  
+  for (size_t i = 1; i < nbSites_; i++)
+  {
+    size_t iip = (i - 1) * nbStates_;
+
+    dScales_[i] = 0 ;
+
+    emissions = &(*emissionProbabilities_)(i);
+    dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
+    
+    if (i < nextBrkPt)
+    {
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        x = 0;
+        for (size_t k = 0; k < nbStates_; k++)
+          x += trans(k,j) * likelihood_[iip + k];
+
+        tmp[j] = (*emissions)[j] * x;
+        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1]);
+          
+        dScales_[i] += dTmp[j];
+      }
+    }
+    else //Reset markov chain:
+    {
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+        tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+        
+        dScales_[i] += dTmp[j];
+      }
+      
+      bpIt++;
+      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+      else nextBrkPt = nbSites_;
+    }
+
+    dLScales[i]=dScales_[i]/scales_[i];
+
+    for (size_t j = 0; j < nbStates_; j++)
+      dLikelihood_[i][j] = (dTmp[j] * scales_[i] - tmp[j] * dScales_[i]) / pow(scales_[i],2);
+  }
+  
+  greater<double> cmp;
+  sort(dLScales.begin(), dLScales.end(), cmp);
+  dLogLik_ = 0;
+  for (size_t i = 0; i < nbSites_; ++i)
+  {
+    dLogLik_ += dLScales[i];
+  }
+}
+
+/***************************************************************************************************************************/
+
+
+void RescaledHmmLikelihood::computeD2Forward_() const
+{
+  //Init arrays:
+  if (d2Likelihood_.size()==0){
+    d2Likelihood_.resize(nbSites_);
+    for (size_t i=0;i<nbSites_;i++)
+      d2Likelihood_[i].resize(nbStates_);
+  }
+  if (d2Scales_.size()==0)
+    d2Scales_.resize(nbSites_);
+  
+  double x;
+  vector<double> tmp(nbStates_), dTmp(nbStates_), d2Tmp(nbStates_);
+  vector<double> d2LScales(nbSites_);
+  
+  //Transition probabilities:
+  const ColMatrix<double> trans(transitionMatrix_->getPij());
+
+  //Initialisation:
+  d2Scales_[0] = 0;
+  const vector<double>* emissions = &(*emissionProbabilities_)(0);
+  const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
+  const vector<double>* d2Emissions = &emissionProbabilities_->getD2EmissionProbabilities(0);
+
+  for (size_t j = 0; j < nbStates_; j++)
+  {
+    tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+    dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+    d2Tmp[j] = (*d2Emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+
+    d2Scales_[0] += d2Tmp[j];
+  }
+
+  d2LScales[0]=d2Scales_[0]/scales_[0]-pow(dScales_[0]/scales_[0],2);
+  
+  for (size_t j = 0; j < nbStates_; j++)
+    d2Likelihood_[0][j] = d2Tmp[j] / scales_[0] - (d2Scales_[0] * tmp[j] + 2 * dScales_[0] * dTmp[j]) / pow(scales_[0],2)
+      +  2 * pow(dScales_[0],2) * tmp[j] / pow(scales_[0],3);
+   
+  //Recursion:
+
+  size_t nextBrkPt = nbSites_; //next break point
+  vector<size_t>::const_iterator bpIt = breakPoints_.begin();
+  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  
+  for (size_t i = 1; i < nbSites_; i++)
+  {
+    dScales_[i] = 0 ;
+
+    emissions = &(*emissionProbabilities_)(i);
+    dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
+    d2Emissions = &emissionProbabilities_->getD2EmissionProbabilities(i);
+    
+    if (i < nextBrkPt)
+    {
+      size_t iip = (i - 1) * nbStates_;
+
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        x = 0;
+        for (size_t k = 0; k < nbStates_; k++)
+          x += trans(k,j) * likelihood_[iip + k];
+
+        tmp[j] = (*emissions)[j] * x;
+        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1]);
+        d2Tmp[j] = (*d2Emissions)[j] * x + 2 * (*dEmissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1])
+          + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * d2Likelihood_[i-1]);
+          
+        d2Scales_[i] += d2Tmp[j];
+      }
+    }
+    else //Reset markov chain:
+    {
+      for (size_t j = 0; j < nbStates_; j++)
+      {
+        tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+        dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+        d2Tmp[j] = (*d2Emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
+        
+        d2Scales_[i] += d2Tmp[j];
+      }
+      
+      bpIt++;
+      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+      else nextBrkPt = nbSites_;
+    }
+
+    d2LScales[i]=d2Scales_[i]/scales_[i]-pow(dScales_[i]/scales_[i],2);
+  
+    for (size_t j = 0; j < nbStates_; j++)
+      d2Likelihood_[i][j] = d2Tmp[j] / scales_[i] - (d2Scales_[i] * tmp[j] + 2 * dScales_[i] * dTmp[j]) / pow(scales_[i],2)
+        +  2 * pow(dScales_[i],2) * tmp[j] / pow(scales_[i],3);
+  }
+  
+  greater<double> cmp;
+  sort(d2LScales.begin(), d2LScales.end(), cmp);
+  dLogLik_ = 0;
+  for (size_t i = 0; i < nbSites_; ++i)
+  {
+    d2LogLik_ += d2LScales[i];
+  }
+}
+
+/***************************************************************************************************************************/

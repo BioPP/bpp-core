@@ -43,28 +43,22 @@ using namespace bpp;
 using namespace std;
 
 AbstractHmmLikelihood::AbstractHmmLikelihood() :
-  dLogLikelihood_(),
   dLogLik_(0),
   dVariable_(""),
-  d2LogLikelihood_(),
   d2LogLik_(0),
   d2Variable_("") {}
 
 AbstractHmmLikelihood::AbstractHmmLikelihood(const AbstractHmmLikelihood& adhlik) :
-  dLogLikelihood_(adhlik.dLogLikelihood_),
   dLogLik_(adhlik.dLogLik_),
   dVariable_(adhlik.dVariable_),
-  d2LogLikelihood_(adhlik.d2LogLikelihood_),
   d2LogLik_(adhlik.d2LogLik_),
   d2Variable_(adhlik.d2Variable_)
 {}
 
 AbstractHmmLikelihood& AbstractHmmLikelihood::operator=(const AbstractHmmLikelihood& adhlik)
 {
-  dLogLikelihood_=adhlik.dLogLikelihood_;
   dLogLik_=adhlik.dLogLik_;
   dVariable_=adhlik.dVariable_;
-  d2LogLikelihood_=adhlik.d2LogLikelihood_;
   d2LogLik_=adhlik.d2LogLik_;
   d2Variable_=adhlik.d2Variable_;
 

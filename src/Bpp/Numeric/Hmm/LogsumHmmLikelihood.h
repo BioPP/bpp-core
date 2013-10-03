@@ -85,18 +85,20 @@ namespace bpp {
     double logLik_;
 
     /**
-     * @brief The partialDlikelihood arrays.
+     * @brief The DLogLikelihood arrays.
      *
-     * dLikelihood_[i * nbStates_ + j] corresponds to d(Pr(x1...xi, yi=j)),
+     * dLogLikelihood_[i][j] corresponds to d(log(Pr(x1...xi, yi=j))),
      * where the x are the observed states, and y the hidden states.
      *
-     * d2Likelihood_[i * nbStates_ + j] corresponds to d2(Pr(x1...xi, yi=j)),
+     * d2LogLikelihood_[i][j] corresponds to d2(log(Pr(x1...xi, yi=j))),
      * where the x are the observed states, and y the hidden states.
      *
      */
-    
+
+    mutable std::vector< std::vector<double> > dLogLikelihood_;
     mutable std::vector<double> partialDLogLikelihoods_;
 
+    mutable std::vector< std::vector<double> > d2LogLikelihood_;
     mutable std::vector<double> partialD2LogLikelihoods_;
 
     /**
@@ -137,7 +139,9 @@ namespace bpp {
     logLikelihood_(lik.logLikelihood_),
     partialLogLikelihoods_(lik.partialLogLikelihoods_),
     logLik_(lik.logLik_),
+    dLogLikelihood_(lik.dLogLikelihood_),
     partialDLogLikelihoods_(lik.partialDLogLikelihoods_),
+    d2LogLikelihood_(lik.d2LogLikelihood_),
     partialD2LogLikelihoods_(lik.partialD2LogLikelihoods_),
     backLogLikelihood_(lik.backLogLikelihood_),
     backLogLikelihoodUpToDate_(lik.backLogLikelihoodUpToDate_),
@@ -159,7 +163,9 @@ namespace bpp {
       emissionProbabilities_ = std::auto_ptr<HmmEmissionProbabilities>(dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone()));
       logLikelihood_         = lik.logLikelihood_;
       partialLogLikelihoods_ = lik.partialLogLikelihoods_;
-      partialDLogLikelihoods_   = lik.partialDLogLikelihoods_;
+      dLogLikelihood_        = lik.dLogLikelihood_;
+      partialDLogLikelihoods_= lik.partialDLogLikelihoods_;
+      d2LogLikelihood_       = lik.d2LogLikelihood_;      
       partialD2LogLikelihoods_  = lik.partialD2LogLikelihoods_;
       backLogLikelihood_     = lik.backLogLikelihood_;
       backLogLikelihoodUpToDate_= lik.backLogLikelihoodUpToDate_;

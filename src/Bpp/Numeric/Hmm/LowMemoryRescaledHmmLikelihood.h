@@ -56,9 +56,13 @@ namespace bpp
  * This implementation is similar to the one used in the RescaledHmmLikelihood class,
  * but does not store the full likelihood array. The benefit of it is a significantly reduced
  * memory usage, allowing to compute likelihood for very large data sets.
- * The drawback is that this class can't compute posterior probabilities, and can hence only
- * be used to estimate parameters.
+ *
+ * The drawback is that this class can't compute posterior
+ * probabilities, neither derivatives of the likelihoods, and can
+ * hence only be used to compute likelihoods.
+ *
  */
+  
 class LowMemoryRescaledHmmLikelihood :
   public AbstractHmmLikelihood,
   public AbstractParametrizable

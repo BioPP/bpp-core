@@ -57,7 +57,7 @@ namespace bpp {
    * It also offer the possibility to specify "breakpoints", where the chain will be reset to the equilibrium frequencies.
    */
   class RescaledHmmLikelihood:
-    public AbstractHmmLikelihood,
+    public virtual AbstractHmmLikelihood,
     public AbstractParametrizable
   {
   private:
@@ -76,11 +76,21 @@ namespace bpp {
     /**
      * @brief forward likelihood
      *
-     * likelihood_[i * nbStates_ + j] corresponds to Pr(x_1...x_i, y_i=j),
+     * likelihood_[i * nbStates_ + j] corresponds to Pr(x_1...x_i, y_i=j)/Pr(x_1...x_i),
      * where the x are the observed states, and y the hidden states.
      */
 
     std::vector<double> likelihood_;
+
+    /**
+     * @brief derivatec of forward likelihood
+     *
+     * dlikelihood_[i][j] corresponds to d(Pr(x_1...x_i, y_i=j))/Pr(x_1...x_i)),
+     * where the x are the observed states, and y the hidden states.
+     */
+
+    mutable std::vector<std::vector<double> > dLikelihood_;
+    mutable std::vector<std::vector<double> > d2Likelihood_;
 
     /**
      * @brief backward likelihood
@@ -92,7 +102,17 @@ namespace bpp {
     mutable std::vector<std::vector<double> > backLikelihood_;
     mutable bool backLikelihoodUpToDate_;
     
+    /**
+     * @brief scales for likelihood computing
+     *
+     * scales_[i * nbStates_ + j] corresponds to Pr(x_1...x_i)/Pr(x_1...x_{i-1})
+     * where the x are the observed states.
+     */
+    
     std::vector<double> scales_;
+    
+    mutable std::vector<double> dScales_;
+    mutable std::vector<double> d2Scales_;
     double logLik_;
 
     std::vector<size_t> breakPoints_;
@@ -121,9 +141,13 @@ namespace bpp {
     transitionMatrix_(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone())),
     emissionProbabilities_(dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone())),
     likelihood_(lik.likelihood_),
+    dLikelihood_(lik.dLikelihood_),
+    d2Likelihood_(lik.d2Likelihood_),
     backLikelihood_(lik.backLikelihood_),
     backLikelihoodUpToDate_(lik.backLikelihoodUpToDate_),
     scales_(lik.scales_),
+    dScales_(lik.dScales_),
+    d2Scales_(lik.d2Scales_),
     logLik_(lik.logLik_),
     breakPoints_(lik.breakPoints_),
     nbStates_(lik.nbStates_),
@@ -142,9 +166,13 @@ namespace bpp {
       transitionMatrix_      = std::auto_ptr<HmmTransitionMatrix>(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone()));
       emissionProbabilities_ = std::auto_ptr<HmmEmissionProbabilities>(dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone()));
       likelihood_            = lik.likelihood_;
+      dLikelihood_           = lik.dLikelihood_;
+      d2Likelihood_          = lik.d2Likelihood_;
       backLikelihood_        = lik.backLikelihood_;
       backLikelihoodUpToDate_= lik.backLikelihoodUpToDate_;
       scales_                = lik.scales_;
+      dScales_               = lik.dScales_;
+      d2Scales_              = lik.d2Scales_;
       logLik_                = lik.logLik_;
       breakPoints_           = lik.breakPoints_;
       nbStates_              = lik.nbStates_;
@@ -218,9 +246,9 @@ namespace bpp {
       computeD2Forward_();
     }
 
-    void computeDForward_() const {};
-
-    void computeD2Forward_() const {};
+    void computeDForward_() const;
+    
+    void computeD2Forward_() const;
     
   };
 

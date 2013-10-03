@@ -58,7 +58,9 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
   logLikelihood_(),
   partialLogLikelihoods_(),
   logLik_(),
+  dLogLikelihood_(),
   partialDLogLikelihoods_(),
+  d2LogLikelihood_(),
   partialD2LogLikelihoods_(),
   backLogLikelihood_(),
   backLogLikelihoodUpToDate_(false),
@@ -455,7 +457,11 @@ void LogsumHmmLikelihood::computeDForward_() const
   
   //Compute dLogLikelihood
   
-  dLogLik_ = VectorTools::sum(partialDLogLikelihoods_);
+  dLogLik_ = 0;
+  vector<double> copy = partialDLogLikelihoods_; //We need to keep the original order for posterior decoding.
+  sort(copy.begin(), copy.end());
+  for (size_t i = copy.size(); i > 0; --i)
+    dLogLik_ += copy[i - 1];
 }
 
 /***************************************************************************************************************************/
@@ -570,6 +576,9 @@ void LogsumHmmLikelihood::computeD2Forward_() const
   
   //Compute dLogLikelihood
   
-  d2LogLik_ = VectorTools::sum(partialD2LogLikelihoods_);
-
+  d2LogLik_ = 0;
+  vector<double> copy = partialD2LogLikelihoods_; //We need to keep the original order for posterior decoding.
+  sort(copy.begin(), copy.end());
+  for (size_t i = copy.size(); i > 0; --i)
+    d2LogLik_ += copy[i - 1];
 }

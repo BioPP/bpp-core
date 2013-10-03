@@ -140,22 +140,10 @@ namespace bpp
     public virtual HmmLikelihood
   {
   protected:
-    /**
-     * @brief The DLogLikelihood arrays.
-     *
-     * dLogLikelihood_[i][j] corresponds to d(log(Pr(x1...xi, yi=j))),
-     * where the x are the observed states, and y the hidden states.
-     *
-     * d2LogLikelihood_[i][j] corresponds to d2(log(Pr(x1...xi, yi=j))),
-     * where the x are the observed states, and y the hidden states.
-     *
-     */
     
-    mutable std::vector< std::vector<double> > dLogLikelihood_;
     mutable double dLogLik_;
     mutable std::string dVariable_;
 
-    mutable std::vector< std::vector<double> > d2LogLikelihood_;
     mutable double d2LogLik_;
     mutable std::string d2Variable_;
 
