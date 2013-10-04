@@ -839,6 +839,7 @@ public:
   static std::string paste(const std::vector<T>& v, const std::string& delim = " ")
   {
     std::ostringstream out;
+    out.precision(12);
     for (size_t i = 0; i < v.size(); i++)
     {
       out << v[i];

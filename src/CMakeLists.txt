@@ -66,6 +66,7 @@ SET(CPP_FILES
   Bpp/Numeric/Function/SimpleNewtonMultiDimensions.cpp
   Bpp/Numeric/Function/ThreePointsNumericalDerivative.cpp
   Bpp/Numeric/Function/TwoPointsNumericalDerivative.cpp
+  Bpp/Numeric/Hmm/HmmLikelihood.cpp
   Bpp/Numeric/Hmm/LogsumHmmLikelihood.cpp
   Bpp/Numeric/Hmm/LowMemoryRescaledHmmLikelihood.cpp
   Bpp/Numeric/Hmm/RescaledHmmLikelihood.cpp

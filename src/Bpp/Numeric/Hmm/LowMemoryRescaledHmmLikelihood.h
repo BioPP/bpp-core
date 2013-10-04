@@ -56,11 +56,15 @@ namespace bpp
  * This implementation is similar to the one used in the RescaledHmmLikelihood class,
  * but does not store the full likelihood array. The benefit of it is a significantly reduced
  * memory usage, allowing to compute likelihood for very large data sets.
- * The drawback is that this class can't compute posterior probabilities, and can hence only
- * be used to estimate parameters.
+ *
+ * The drawback is that this class can't compute posterior
+ * probabilities, neither derivatives of the likelihoods, and can
+ * hence only be used to compute likelihoods.
+ *
  */
+  
 class LowMemoryRescaledHmmLikelihood :
-  public virtual HmmLikelihood,
+  public AbstractHmmLikelihood,
   public AbstractParametrizable
 {
 private:
@@ -109,6 +113,7 @@ public:
     size_t maxSize = 1000000) throw (Exception);
 
   LowMemoryRescaledHmmLikelihood(const LowMemoryRescaledHmmLikelihood& lik) :
+    AbstractHmmLikelihood(lik),
     AbstractParametrizable(lik),
     hiddenAlphabet_(dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone())),
     transitionMatrix_(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone())),
@@ -128,6 +133,7 @@ public:
 
   LowMemoryRescaledHmmLikelihood& operator=(const LowMemoryRescaledHmmLikelihood& lik)
   {
+    AbstractHmmLikelihood::operator=(lik);
     AbstractParametrizable::operator=(lik);
     hiddenAlphabet_        = std::auto_ptr<HmmStateAlphabet>(dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone()));
     transitionMatrix_      = std::auto_ptr<HmmTransitionMatrix>(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone()));
@@ -183,6 +189,23 @@ public:
 
   void fireParameterChanged(const ParameterList& pl);
 
+
+  double getLikelihoodForASite(size_t site) const
+  {
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+  }
+
+
+  Vdouble getLikelihoodForEachSite() const
+  {
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForEachSite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+  }
+
+  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const
+  {
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+  }
+
   void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const throw (NotImplementedException)
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
@@ -190,9 +213,19 @@ public:
 
 protected:
   void computeForward_();
+
+  void computeDLikelihood_() const
+  {
+    //    computeDForward_();
+  }
+
+  void computeD2Likelihood_() const
+  {
+    //    computeD2Forward_();
+  }
 };
 
 }
 
-#endif // _RESCALEDHMMLIKELIHOOD_H_
+#endif // _LOWMEMORYRESCALEDHMMLIKELIHOOD_H_
 
