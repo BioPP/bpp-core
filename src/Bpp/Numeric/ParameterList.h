@@ -284,11 +284,14 @@ public:
    * Only common parameters with <i>params</i> will be updated.
    *
    * @param params A list of parameters.
+   * @param updatedParameters An optional pointer toward a vector which will
+   * store the indices of parameters for which a value has changed.
+   * Indices are relative on the input parameter list "params".
    * @return true iff a least one parameter value has been changed.
    * @see setParameters(), setAllParameters()
    */
-  
-  virtual bool matchParametersValues(const ParameterList& params)
+
+  virtual bool matchParametersValues(const ParameterList& params, std::vector<size_t>* updatedParameters = 0)
     throw (ConstraintException);
 
   /**

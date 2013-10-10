@@ -360,7 +360,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
 
 /******************************************************************************/
 
-bool ParameterList::matchParametersValues(const ParameterList& params)
+bool ParameterList::matchParametersValues(const ParameterList& params, vector<size_t>* updatedParameters)
 throw (ConstraintException)
 {
   // First we check if all values are correct:
@@ -377,14 +377,18 @@ throw (ConstraintException)
   // If all values are ok, we set them:
   bool ch = 0;
 
+  size_t pos = 0;
   for (vector<Parameter*>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
       Parameter* p = &getParameter((*it)->getName());
-      if (p->getValue() != (*it)->getValue())
+      if (p->getValue() != (*it)->getValue()) {
         ch |= 1;
-      p->setValue((*it)->getValue());
+        p->setValue((*it)->getValue());
+        if (updatedParameters)
+          updatedParameters->push_back(pos++);
+      }
     }
   }
   return ch;
