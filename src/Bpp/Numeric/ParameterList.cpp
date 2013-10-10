@@ -454,11 +454,21 @@ void ParameterList::deleteParameter(const std::string& name) throw (ParameterNot
 }
 
 /******************************************************************************/
-void ParameterList::deleteParameters(const std::vector<std::string>& names) throw (ParameterNotFoundException)
+void ParameterList::deleteParameters(const std::vector<std::string>& names, bool mustExist) throw (ParameterNotFoundException)
 {
   for (unsigned int i = 0; i < names.size(); i++)
   {
-    deleteParameter(names[i]);
+    try
+    {
+      deleteParameter(names[i]);
+    }
+    catch (ParameterNotFoundException& e)
+    {
+      if (mustExist)
+        throw ParameterNotFoundException(e);
+      else
+        continue;
+    }
   }
 }
 

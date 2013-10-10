@@ -352,6 +352,11 @@ class ApplicationTools
       bool warn = true)
     {
       std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
+      if (s[0] == '(' && s[s.size() - 1] == ')') {
+        //This is a delimited vector:
+        s = s.substr(1, s.size() - 2);
+        if (TextTools::isEmpty(s)) return std::vector<T>(0);
+      }
       StringTokenizer st(s, TextTools::toString(separator));
       size_t n = st.numberOfRemainingTokens();
       std::vector<T> v;

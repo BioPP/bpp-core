@@ -106,7 +106,7 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
         if (printLocalAliases)
           {
             vector<string> aliases = parametrizable->getAlias(pname);
-            for (unsigned int j = 0; aliases.size(); j++)
+            for (unsigned int j = 0; j<aliases.size(); j++)
               {
                 out << ", " << aliases[j] << "=" << pname;
               }

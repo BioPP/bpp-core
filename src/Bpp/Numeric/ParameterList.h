@@ -287,6 +287,7 @@ public:
    * @return true iff a least one parameter value has been changed.
    * @see setParameters(), setAllParameters()
    */
+  
   virtual bool matchParametersValues(const ParameterList& params)
     throw (ConstraintException);
 
@@ -334,8 +335,11 @@ public:
    * @brief Delete several parameters from the list.
    *
    * @param names The names of the parameters to delete from the list.
+   * @param mustExist If true, an exception is thrown if a name does
+   *                    not match an extant parameter.
    */
-  virtual void deleteParameters(const std::vector<std::string>& names) throw (ParameterNotFoundException);
+  
+  virtual void deleteParameters(const std::vector<std::string>& names, bool mustExist = true) throw (ParameterNotFoundException);
 
   /**
    * @brief Delete a parameter from the list.
