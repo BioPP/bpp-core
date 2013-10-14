@@ -387,9 +387,10 @@ throw (ConstraintException)
         ch |= 1;
         p->setValue((*it)->getValue());
         if (updatedParameters)
-          updatedParameters->push_back(pos++);
+          updatedParameters->push_back(pos);
       }
     }
+    pos++;
   }
   return ch;
 }
