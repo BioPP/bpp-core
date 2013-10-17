@@ -155,7 +155,6 @@ namespace bpp
      * @param beta The beta parameter.
      * @param generator The uniform generator to use.
      */
-
     static double randBeta(double alpha, double beta, const RandomFactory& generator = *DEFAULT_GENERATOR);
   
     /**
@@ -273,7 +272,7 @@ namespace bpp
      * the result is a shuffle of the original vector.
      *
      * It has to be noted that in case of sampling without replacement,
-     * the effect of the weighting scheme will be lower as the sampe size becomes
+     * the effect of the weighting scheme will be weaker as the sample size becomes
      * close to the population size. In case the two are equal (pure permutations),
      * the weigths have no effect at all.
      *
@@ -285,7 +284,8 @@ namespace bpp
      * @throw IndexOutOfBoundException if the sample size exceeds the original
      * size when sampling without replacement.
      * @throw EmptyVectorException if the vector is empty.
-     *
+     * @warning: For large sampling with replacement, the function is not efficient,
+     * as it recomputes the some of weights for each element picked.
      * @author Julien Dutheil
      */
    template<class T> 

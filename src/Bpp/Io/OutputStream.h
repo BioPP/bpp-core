@@ -1,5 +1,5 @@
 //
-// File: BppStream.h
+// File: OutputStream.h
 // Created by: Julien Dutheil
 // Created on: Mon Jan 25 17:41 2010
 //
@@ -37,8 +37,8 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _BPPSTREAM_H_
-#define _BPPSTREAM_H_
+#ifndef _OUTPUTSTREAM_H_
+#define _OUTPUTSTREAM_H_
 
 #include "../Clonable.h"
 
@@ -350,5 +350,5 @@ public:
 
 } // end of namespace bpp;
 
-#endif //_BPPSTREAM_H_
+#endif //_OUTPUTSTREAM_H_
 

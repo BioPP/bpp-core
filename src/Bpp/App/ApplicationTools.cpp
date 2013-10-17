@@ -284,7 +284,7 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
     gauge = "[" + gauge + fill + "] " + TextTools::resizeLeft(TextTools::toString(100 * iter / total), 3) + "%";
     if (mes.size() > terminalWidth - gauge.size())
       info = TextTools::resizeRight(mes, terminalWidth - gauge.size());
-    if (x == 0) { *message << '\r' + info + gauge; message->flush(); }
+    if (x == 0 || iter == total) { *message << '\r' + info + gauge; message->flush(); }
   }
   else
   {
