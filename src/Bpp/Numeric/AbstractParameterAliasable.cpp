@@ -148,6 +148,53 @@ throw (ParameterNotFoundException, Exception)
 
 }
 
+void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedParams, bool verbose)
+{
+  ParameterList plpars, pl=getParameters();
+    
+  for (size_t i=0; i< pl.size(); i++)
+  {
+    if (unparsedParams.find(pl[i].getName())==unparsedParams.end())
+      plpars.addParameter(*pl[i].clone());
+  }
+
+  size_t unp_s=unparsedParams.size();  
+  while (unp_s!=0)
+  {
+    map<string, string>::iterator it;
+    for (it=unparsedParams.begin(); it!=unparsedParams.end(); it++)
+    {
+      Parameter* pp=0;
+      try {
+        pp=&plpars.getParameter(it->second);
+      }
+      catch (ParameterNotFoundException& e){
+        if (!pl.hasParameter(it->second))
+          throw ParameterNotFoundException("Unknown aliasing parameter", it->second);
+        continue;
+      }
+      auto_ptr<Parameter> p2(pp->clone());
+      p2->setName(it->first);
+      plpars.addParameter(p2.release());
+      plpars.getParameter(it->first);
+      aliasParameters(it->second, it->first);
+      if (verbose)
+        ApplicationTools::displayResult("Parameter alias found", it->first + " -> " + it->second + " = " + TextTools::toString(pp->getValue()));
+      unparsedParams.erase(it);
+    }
+
+    if (unparsedParams.size()==unp_s)
+      throw Exception("Error, there is a cycle in aliasing");
+    else
+      unp_s=unparsedParams.size();
+  }
+
+  matchParametersValues(plpars);
+}
+
+  
+
+
 void AbstractParameterAliasable::unaliasParameters(const std::string& p1, const std::string& p2)
 throw (ParameterNotFoundException, Exception)
 {
@@ -203,7 +250,7 @@ vector<string> AbstractParameterAliasable::getAlias(const string& name) const
        it != aliasListenersRegister_.end();
        it++)
   {
-    if (it->second->getName() == name)
+    if (it->second->getFrom() == name)
     {
       string alias = it->second->getAlias();
       aliases.push_back(alias);
@@ -213,6 +260,46 @@ vector<string> AbstractParameterAliasable::getAlias(const string& name) const
       }
     }
   }
+  return aliases;
+}
+
+ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterList& pl) const
+{
+  ParameterList aliases;
+  bool b=false;
+  
+  for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
+       it != aliasListenersRegister_.end();
+       it++)
+  {
+    if ((pl.hasParameter(it->second->getFrom()) ||
+         aliases.hasParameter(it->second->getFrom()))
+        && ! (aliases.hasParameter(it->second->getAlias()) ||
+              pl.hasParameter(it->second->getAlias())))
+    {
+      b=true;
+      aliases.addParameter(getParameter(it->second->getAlias()));
+    }
+  }
+  
+  while (b)
+  {
+    b=false;
+    
+    for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
+         it != aliasListenersRegister_.end();
+         it++)
+    {
+      if (aliases.hasParameter(it->second->getFrom())
+          && ! (aliases.hasParameter(it->second->getAlias()) ||
+                pl.hasParameter(it->second->getAlias())))
+      {
+        b=true;
+        aliases.addParameter(getParameter(it->second->getAlias()));
+      }
+    }
+  }
+  
   return aliases;
 }
 

@@ -113,7 +113,7 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + limit);
       string value = string(arg.begin() + limit + delimiter.size(), arg.end());
-      if (name == "param")
+      if ((name == "param") || (name == "params"))
       {
         //Recursive inclusion:
         getAttributesMapFromFile(value, am, delimiter);
@@ -239,7 +239,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
 
   // Look for a specified file with parameters:
   map<string, string> params;
-  if(cmdParams.find("param") != cmdParams.end())
+  if (cmdParams.find("param") != cmdParams.end())
   {
     string file = cmdParams["param"];
     if(!FileTools::fileExists(file))

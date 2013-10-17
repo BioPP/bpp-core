@@ -104,10 +104,10 @@ namespace bpp
  * @endcode
  * These pieces of code does the following:
  * - get all parameters from the command line and store them in a map,
- * - check if some parameter is called 'param'. If so, look for the file 
+ * - check if some parameter is called 'param' or 'params'. If so, look for the file 
  *   given as value and try to read some parameters from it.
  * - If an parameter file was found, update the parameter in it with those from
- *   the command line. This implies that when a parameter is found in bothe the
+ *   the command line. This implies that when a parameter is found in both the
  *   command line and the option file, the value from the command line will be
  *   retained.
  *

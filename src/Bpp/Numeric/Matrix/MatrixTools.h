@@ -44,6 +44,7 @@
 #include "Matrix.h"
 #include "LUDecomposition.h"
 #include "EigenValue.h"
+#include "../../Io/OutputStream.h"
 
 #include <cstdio>
 #include <iostream>
@@ -583,6 +584,32 @@ public:
       if (m.getNumberOfColumns() > 0) out << m(i, m.getNumberOfColumns() - 1) << "]" << std::endl;
     }
     out << "]" << std::endl;
+  }
+
+  /**
+   * @brief Print a matrix to a stream.
+   *
+   * @param m The matrix to print.
+   * @param out The stream to use.
+   */
+  template<class Matrix>
+  static void print(const Matrix& m, bpp::OutputStream& out, char pIn = '(', char pOut = ')')
+  {
+    out << pIn;
+    
+    for (size_t i = 0; i < m.getNumberOfRows(); i++)
+    {
+      if (i!=0)
+        out << ",";
+      
+      out << pIn;
+      for (size_t j = 0; j < m.getNumberOfColumns() - 1; j++)
+      {
+        out << m(i, j) << ", ";
+      }
+      if (m.getNumberOfColumns() > 0) out << m(i, m.getNumberOfColumns() - 1) << pOut;
+    }
+    out << pOut;
   }
 
   /**

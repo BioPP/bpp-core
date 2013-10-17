@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _PARAMETERALIASABLE_H_
@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 //From the STL:
 #include <string>
+#include <map>
 
 namespace bpp
 {
@@ -79,9 +80,9 @@ namespace bpp
  * @endcode
  * is equivallent to the previous example.
  */
-class ParameterAliasable :
-  public virtual Parametrizable
-{
+  class ParameterAliasable :
+    public virtual Parametrizable
+  {
   public:
     ParameterAliasable() {}
     virtual ~ParameterAliasable() {}
@@ -108,6 +109,19 @@ class ParameterAliasable :
     virtual void aliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) = 0; 
 
     /**
+     * @brief alias the parameters following the links described in a
+     * map, and update the object accordingly. Cycles in aliasing are
+     * detected and forbidden.
+     *
+     * @param unparsedParams the map of the links : <A,B> matches for A->B aliasing.
+     * @param verbose verbosity
+     *
+     **/
+    
+    virtual void aliasParameters(std::map<std::string, std::string>& unparsedParams, bool verbose) = 0;
+  
+
+    /**
      * @brief Detach two parameters previously set as 'aliased'.
      *
      * The values of the two parameters will now be independent.
@@ -115,7 +129,7 @@ class ParameterAliasable :
      * @param p2 Aliased parameter.
      * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
      * @throw Exception when trying to perform non-valid dissociation.
-      */
+     */
     virtual void unaliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception)  = 0;
 
     /**
@@ -133,7 +147,7 @@ class ParameterAliasable :
      * @param name The name of the parameter to look for.
      */
     virtual std::vector<std::string> getAlias(const std::string& name) const = 0;
-};
+  };
 
 
 
@@ -143,28 +157,28 @@ class ParameterAliasable :
  *
  * @see Parameter, ParameterList, ParameterAliasable
  */
-class ParameterAliasableAdapter:
-  public ParametrizableAdapter
-{
-	public:
-		ParameterAliasableAdapter() {}
-		virtual ~ParameterAliasableAdapter() {}
+  class ParameterAliasableAdapter:
+    public ParametrizableAdapter
+  {
+  public:
+    ParameterAliasableAdapter() {}
+    virtual ~ParameterAliasableAdapter() {}
 
-	public:
+  public:
 
-		/**
-		 * @name The ParameterAliasable interface.
-		 *
-		 * @{
-		 */
-		const ParameterList & getIndependentParameters() const { return getParameters(); }
+    /**
+     * @name The ParameterAliasable interface.
+     *
+     * @{
+     */
+    const ParameterList & getIndependentParameters() const { return getParameters(); }
     void aliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) {}
     void unaliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) {}
     unsigned int getNumberOfIndependentParameters() const{ return 0; }
     std::vector<std::string> getAlias(const std::string& name) const { return std::vector<std::string>(); }
-		/** @} */
+    /** @} */
 
-};
+  };
 
 } // end of namespace bpp.
 

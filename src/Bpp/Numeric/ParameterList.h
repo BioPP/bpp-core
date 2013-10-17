@@ -284,10 +284,14 @@ public:
    * Only common parameters with <i>params</i> will be updated.
    *
    * @param params A list of parameters.
+   * @param updatedParameters An optional pointer toward a vector which will
+   * store the indices of parameters for which a value has changed.
+   * Indices are relative on the input parameter list "params".
    * @return true iff a least one parameter value has been changed.
    * @see setParameters(), setAllParameters()
    */
-  virtual bool matchParametersValues(const ParameterList& params)
+
+  virtual bool matchParametersValues(const ParameterList& params, std::vector<size_t>* updatedParameters = 0)
     throw (ConstraintException);
 
   /**
@@ -334,8 +338,11 @@ public:
    * @brief Delete several parameters from the list.
    *
    * @param names The names of the parameters to delete from the list.
+   * @param mustExist If true, an exception is thrown if a name does
+   *                    not match an extant parameter.
    */
-  virtual void deleteParameters(const std::vector<std::string>& names) throw (ParameterNotFoundException);
+  
+  virtual void deleteParameters(const std::vector<std::string>& names, bool mustExist = true) throw (ParameterNotFoundException);
 
   /**
    * @brief Delete a parameter from the list.

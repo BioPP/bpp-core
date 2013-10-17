@@ -87,17 +87,17 @@ class HmmEmissionProbabilities:
      * @param pos The position of the sequential data to consider.
      * @param stateIndex The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
      */
-    virtual double getEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
-    virtual void getEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
-    virtual void getEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
+    // virtual double getEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
+    // virtual void getEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
+    // virtual void getEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
     
-    /**
-     * @param pos The position of the sequential data to consider.
-     * @param stateIndex The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
-     */
-    virtual double getLogEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
-    virtual void getLogEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
-    virtual void getLogEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
+    // /**
+    //  * @param pos The position of the sequential data to consider.
+    //  * @param stateIndex The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
+    //  */
+    // virtual double getLogEmissionProbability(size_t pos, size_t stateIndex) const throw (Exception) = 0;
+    // virtual void getLogEmissionProbabilities(size_t pos, std::vector<double>& probs) const throw (Exception) = 0;
+    // virtual void getLogEmissionProbabilitiesForEachPosition(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
 
     /**@} */
 
@@ -110,8 +110,29 @@ class HmmEmissionProbabilities:
      * @param pos The position of the sequential data to consider.
      * @param state The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
      */
+  
     virtual double operator()(size_t pos, size_t state) const = 0;
 
+  virtual void computeDEmissionProbabilities(std::string& variable) const
+  {
+    throw (NotImplementedException("HmmEmissionProbabilities::computeDEmissionProbabilities is not overdefined."));
+  }
+  
+  virtual void computeD2EmissionProbabilities(std::string& variable) const
+  {
+    throw (NotImplementedException("HmmEmissionProbabilities::computeD2EmissionProbabilities is not overdefined."));
+  }
+  
+  virtual const std::vector<double>& getDEmissionProbabilities(size_t pos) const
+  {
+    throw (NotImplementedException("HmmEmissionProbabilities::getDEmissionProbability is not overdefined."));
+  }
+  
+  virtual const std::vector<double>& getD2EmissionProbabilities(size_t pos) const
+  {
+    throw (NotImplementedException("HmmEmissionProbabilities::getD2EmissionProbability is not overdefined."));
+  }
+  
     /**
      * @brief Operator access to the emission probabilities.
      *
@@ -127,25 +148,6 @@ class HmmEmissionProbabilities:
      * @return The number of positions in the data.
      */
     virtual size_t getNumberOfPositions() const = 0;
-
-    /**
-     * @brief Get the index of a given state in the list of observed states.
-     * The indexing if up to the implementation of this interface.
-     * 
-     * @param pos The position of the observed state in the original sequence.
-     * @return The index of the observed state in the list.
-     */
-    virtual size_t getObservedStateIndex(size_t pos) const = 0;
-    
-    /**
-     * @brief Get all emission probabilities, in a compressed form.
-     *
-     * @return a 2-dimensions array E[i,j], where i is the index of the observed states (@see getObservedStateIndex), and j in the index of the hidden state.
-     * @param probs a 2-dimensional array which is going to be resized and filled with the emission probabilities.
-     */
-    virtual void getEmissionProbabilities(std::vector< std::vector<double> >& probs) const = 0;
-
-
 };
 
 } //end of namespace bpp.

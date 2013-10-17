@@ -51,6 +51,7 @@ LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
   HmmEmissionProbabilities* emissionProbabilities,
   const std::string& prefix,
   size_t maxSize) throw (Exception) :
+  AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
   transitionMatrix_(transitionMatrix),

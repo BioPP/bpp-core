@@ -111,9 +111,10 @@ class AbstractParametrizable:
     bool matchParametersValues(const ParameterList& parameters)
       throw (ConstraintException)
     {
-      bool test = parameters_.matchParametersValues(parameters);
+      std::auto_ptr< std::vector<size_t> >updatedParameters(new std::vector<size_t>());
+      bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
       if (test) 
-        fireParameterChanged(parameters);
+        fireParameterChanged(parameters.subList(*updatedParameters));
       return test;
     }
 
