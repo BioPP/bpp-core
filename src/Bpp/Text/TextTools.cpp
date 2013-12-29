@@ -299,9 +299,9 @@ std::string TextTools::toString(double d, int precision)
 
 /******************************************************************************/
 
-int TextTools::toInt(const std::string& s) throw (Exception)
+int TextTools::toInt(const std::string& s, char scientificNotation) throw (Exception)
 {
-  if (!isDecimalInteger(s)) throw Exception("TextTools::toInt(). Invalid number specification: " + s);
+  if (!isDecimalInteger(s, scientificNotation)) throw Exception("TextTools::toInt(). Invalid number specification: " + s);
   istringstream iss(s);
   int i;
   iss >> i;
@@ -310,9 +310,9 @@ int TextTools::toInt(const std::string& s) throw (Exception)
 
 /******************************************************************************/
 
-double TextTools::toDouble(const std::string& s) throw (Exception)
+double TextTools::toDouble(const std::string& s, char dec, char scientificNotation) throw (Exception)
 {
-  if (!isDecimalNumber(s)) throw Exception("TextTools::toDouble(). Invalid number specification: " + s);
+  if (!isDecimalNumber(s, dec, scientificNotation)) throw Exception("TextTools::toDouble(). Invalid number specification: " + s);
   istringstream iss(s);
   double d;
   iss >> d;

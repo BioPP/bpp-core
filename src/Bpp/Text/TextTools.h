@@ -251,19 +251,22 @@ namespace bpp
        * @brief Convert from string to int.
        *
        * @param s The string to parse.
+       * @param scientificNotation character to use for scientific notation (typically 'e' or 'E').
        * @return The integer corresponding to s.
        * @throw Exception if the string does not specify a valid number.
        */
-      static int toInt(const std::string& s) throw (Exception);
+      static int toInt(const std::string& s, char scientificNotation = 'e') throw (Exception);
 
       /**
        * @brief Convert from string to double.
        *
        * @param s The string to parse.
+       * @param dec The decimal separator.
+       * @param scientificNotation character to use for scientific notation (typically 'e' or 'E').
        * @return The double corresponding to s.
        * @throw Exception if the string does not specify a valid number.
        */
-      static double toDouble(const std::string& s) throw (Exception);
+      static double toDouble(const std::string& s, char dec = '.', char scientificNotation = 'e') throw (Exception);
 
       /**
        * @brief Template to string conversion.
