@@ -89,13 +89,6 @@ namespace bpp
     virtual double Pij(unsigned int i, unsigned int j) const = 0;
 
     /**
-     * @brief Set all transition probabilities from a matrix.
-     *
-     */
-
-    virtual void setTransitionProbabilities(const Matrix<double>& mat) = 0;
-
-    /**
      * @brief Get all transition probabilities as a matrix.
      *
      * @return A n*n matrix will all transition probabilities (n being the number of hidden states).

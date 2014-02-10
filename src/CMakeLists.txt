@@ -67,6 +67,9 @@ SET(CPP_FILES
   Bpp/Numeric/Function/ThreePointsNumericalDerivative.cpp
   Bpp/Numeric/Function/TwoPointsNumericalDerivative.cpp
   Bpp/Numeric/Hmm/HmmLikelihood.cpp
+  Bpp/Numeric/Hmm/AbstractHmmTransitionMatrix.cpp
+  Bpp/Numeric/Hmm/FullHmmTransitionMatrix.cpp
+  Bpp/Numeric/Hmm/AutoCorrelationTransitionMatrix.cpp
   Bpp/Numeric/Hmm/LogsumHmmLikelihood.cpp
   Bpp/Numeric/Hmm/LowMemoryRescaledHmmLikelihood.cpp
   Bpp/Numeric/Hmm/RescaledHmmLikelihood.cpp
@@ -191,6 +194,9 @@ SET(H_FILES
   Bpp/Numeric/Hmm/HmmLikelihood.h
   Bpp/Numeric/Hmm/HmmStateAlphabet.h
   Bpp/Numeric/Hmm/HmmTransitionMatrix.h
+  Bpp/Numeric/Hmm/AbstractHmmTransitionMatrix.h
+  Bpp/Numeric/Hmm/FullHmmTransitionMatrix.h
+  Bpp/Numeric/Hmm/AutoCorrelationTransitionMatrix.h
   Bpp/Numeric/Hmm/LogsumHmmLikelihood.h
   Bpp/Numeric/Hmm/LowMemoryRescaledHmmLikelihood.h
   Bpp/Numeric/Hmm/RescaledHmmLikelihood.h
