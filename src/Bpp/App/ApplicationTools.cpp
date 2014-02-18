@@ -66,6 +66,17 @@ bool ApplicationTools::parameterExists(
   return (params.find(parameterName) != params.end() && !TextTools::isEmpty(params[parameterName]));
 }
 
+bool ApplicationTools::parameterExists(
+  const std::string & parameterName,
+  std::vector<std::string>& params)
+{
+  for (size_t i=0;i<params.size();i++)
+    if (params[i]==parameterName)
+      return true;
+
+  return false;
+}
+
 /******************************************************************************/
   
 std::vector<std::string> ApplicationTools::matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params)
@@ -95,6 +106,40 @@ std::vector<std::string> ApplicationTools::matchingParameters(const std::string&
           }
         pos1 = pos2 + g.length();
       }
+    if (flag &&
+        ((g.length() == 0) || (pos1 == parn.length()) || (parn.rfind(g) == parn.length() - g.length())))
+      retv.push_back(parn);
+  }
+
+  return retv;
+}
+
+std::vector<std::string> ApplicationTools::matchingParameters(const std::string& pattern, std::vector<std::string>& params)
+{
+  vector<string> retv;
+
+  for (size_t i=0;i<params.size();i++)
+  {
+    StringTokenizer stj(pattern, "*", true, false);
+    size_t pos1, pos2;
+    string parn = params[i];
+    bool flag(true);
+    string g = stj.nextToken();
+    pos1 = parn.find(g);
+    if (pos1 != 0)
+      flag = false;
+    pos1 += g.length();
+    while (flag && stj.hasMoreToken())
+    {
+      g = stj.nextToken();
+      pos2 = parn.find(g, pos1);
+      if (pos2 == string::npos)
+      {
+        flag = false;
+        break;
+      }
+      pos1 = pos2 + g.length();
+    }
     if (flag &&
         ((g.length() == 0) || (pos1 == parn.length()) || (parn.rfind(g) == parn.length() - g.length())))
       retv.push_back(parn);

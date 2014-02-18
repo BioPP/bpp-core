@@ -47,6 +47,7 @@
 // From Utils:
 #include "../Clonable.h"
 #include "../Text/TextTools.h"
+#include "../Exceptions.h"
 
 #include "NumConstants.h"
 
@@ -115,6 +116,12 @@ public:
    * @return the intersection
    */
   virtual Constraint* operator&(const Constraint& c) const = 0;
+
+  /**
+   * @brief Tells if this constraints defines an empty set
+   */
+  
+  virtual bool isEmpty() const = 0;
 };
 
 /**
@@ -170,13 +177,30 @@ public:
    * @param incl Tell if the finite bound is included or not.
    * @param precision Parameter precision.
    */
+
   IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY()) :
     lowerBound_(isPositive ? bound : NumConstants::MINF()),
     upperBound_(isPositive ? NumConstants::PINF() : bound),
     inclLowerBound_(isPositive ? incl : false),
     inclUpperBound_(isPositive ? false : incl),
     precision_(precision) {}
- 
+
+  /**
+   * @brief Create an interval from a string description, using
+   * readDescription method.
+   *
+   **/
+
+  IntervalConstraint(std::string& desc) :
+    lowerBound_(NumConstants::MINF()),
+    upperBound_(NumConstants::PINF()),
+    inclLowerBound_(true),
+    inclUpperBound_(true),
+    precision_(NumConstants::TINY())
+  {
+    readDescription(desc);
+  }
+  
   virtual ~IntervalConstraint() {}
 
   IntervalConstraint* clone() const { return new IntervalConstraint(*this); }
@@ -249,11 +273,40 @@ public:
   {
     return (inclLowerBound_ ? "[ " : "]")
            + (finiteLowerBound() ? TextTools::toString(lowerBound_) : "-inf")
-           + ", "
+           + "; "
            + (finiteUpperBound() ? TextTools::toString(upperBound_) : "+inf")
            + (inclUpperBound_ ? "] " : "[");
   }
 
+  /**
+   *
+   * @brief Sets the bounds of the interval from a string.
+   *
+   * @param desc the description in interval-like syntax, with signs
+   * "[", ";", "]" as well as floats and "-inf" and "inf".
+   *
+   **/
+  
+  void readDescription(std::string& desc)
+  {
+    size_t pdp=desc.find(";");
+    size_t dc=desc.find_first_of("[]",1);
+
+    if (dc==std::string::npos || pdp==std::string::npos ||
+        (desc[0]!=']' && desc[0]!='[') || (pdp >=dc))
+      throw Exception("Constraints::readDescription. Wrong description:" + desc);
+
+    std::string deb=desc.substr(1,pdp-1);
+    std::string fin=desc.substr(pdp+1, dc-pdp-1);
+
+    inclLowerBound_=(desc[0]=='[');
+    inclUpperBound_=(desc[dc]==']');
+
+    lowerBound_ =  (deb=="-inf")?NumConstants::MINF():TextTools::toDouble(deb);
+    upperBound_ =  ((fin=="+inf") || (fin=="inf"))?NumConstants::PINF():TextTools::toDouble(fin);
+    
+  }
+  
   /**
    * @brief Intersect this IntervalConstraint with another one
    *
@@ -375,6 +428,18 @@ public:
     return lowerBound_ >= i.lowerBound_
            && upperBound_ <= i.upperBound_;
   }
+
+  /**
+   * @brief Tells if this interval is empty 
+   */
+  
+  bool isEmpty() const
+  {
+    return ((lowerBound_ > upperBound_) ||
+            ((lowerBound_ > upperBound_) &&
+             inclUpperBound_ && inclLowerBound_));
+  }
+
 };
 
 

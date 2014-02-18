@@ -282,7 +282,6 @@ namespace bpp
      *
      * @param constraint a pointer to the constraint (may be null)
      * @param attach says if the constraint is attached to the Parameter (default: false).
-     * @return A pointer toward the formerly used contraint.
      */
     
     virtual void setConstraint(Constraint* constraint, bool attach = false);

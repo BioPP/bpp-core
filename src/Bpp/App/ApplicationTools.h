@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide basal and 
-utilitary classes. This file belongs to the Bio++ Project.
+  This software is a computer program whose purpose is to provide basal and 
+  utilitary classes. This file belongs to the Bio++ Project.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _APPLICATIONTOOLS_H_
@@ -89,8 +89,8 @@ namespace bpp
  * containing the parameters (names are the keys of the map, and values are... the values of the map!).
  * These map objects may be obtained from the AttributesTools utilitary class.
  */
-class ApplicationTools
-{
+  class ApplicationTools
+  {
   public:
     
     /**
@@ -141,17 +141,21 @@ class ApplicationTools
      */
     static bool parameterExists(const std::string& parameterName, std::map<std::string, std::string>& params);
 
-  /**
-   * @brief Returns a vector of parameter names that match a given pattern.
-   *
-   * Only "*" wildcard is implemented now.
-   *
-   * @param pattern The pattern.
-   * @param params  The parameter list.
-   * @return a vector of matching names.
-   */
+    static bool parameterExists(const std::string& parameterName, std::vector<std::string>& params);
+
+    /**
+     * @brief Returns a vector of parameter names that match a given pattern.
+     *
+     * Only "*" wildcard is implemented now.
+     *
+     * @param pattern The pattern.
+     * @param params  The parameter list.
+     * @return a vector of matching names.
+     */
   
-  static std::vector<std::string> matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params);
+    static std::vector<std::string> matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params);
+
+    static std::vector<std::string> matchingParameters(const std::string& pattern, std::vector<std::string>& params);
 
     /**
      * @brief Get a double parameter.
@@ -380,65 +384,65 @@ class ApplicationTools
       return v;
     }
 
-  /**
-   * @brief Get a RowMatrix. The input is made of embedded
-   * parenthesis, such as ((1,2),(3,4)), where the matrix is filled by
-   * lines. Here, the matrix would be:
-   * \f[
-   * \begin{pmatrix}
-   * 1 & 2 \\
-   * 3 & 4 \\
-   * \end{pmatrix}
-   * \f]
-   *
-   * @param parameterName    The name of the corresponding parameter.
-   * @param params           The attribute map where options may be found.
-   * @param separator        The character used to delimit values.
-   * @param defaultValue     The default value to use if the parameter is not found.
-   * @param suffix           A suffix to be applied to the parameter name.
-   * @param suffixIsOptional Tell if the suffix is absolutely required.
-   * @param warn             Tell if a warning must be sent in case the parameter is not found.
-   * @return The corresponding value.
-   */
+    /**
+     * @brief Get a RowMatrix. The input is made of embedded
+     * parenthesis, such as ((1,2),(3,4)), where the matrix is filled by
+     * lines. Here, the matrix would be:
+     * \f[
+     * \begin{pmatrix}
+     * 1 & 2 \\
+     * 3 & 4 \\
+     * \end{pmatrix}
+     * \f]
+     *
+     * @param parameterName    The name of the corresponding parameter.
+     * @param params           The attribute map where options may be found.
+     * @param separator        The character used to delimit values.
+     * @param defaultValue     The default value to use if the parameter is not found.
+     * @param suffix           A suffix to be applied to the parameter name.
+     * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param warn             Tell if a warning must be sent in case the parameter is not found.
+     * @return The corresponding value.
+     */
 
-  template<class T> static RowMatrix<T> getMatrixParameter(
-                                                           const std::string& parameterName,
-                                                           std::map<std::string, std::string>& params,
-                                                           char separator,
-                                                           const std::string& defaultValue,
-                                                           const std::string& suffix = "",
-                                                           bool suffixIsOptional = true,
-                                                           bool warn = true)
-  {
-    RowMatrix<T> mat;
-
-    std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
-    if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
-    if (s[0] == '(' && s[s.size() - 1] == ')') {
-      //This is a delimited vector:
-      s = s.substr(1, s.size() - 2);
-      if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
-    }
-    
-    StringTokenizer st1(s, "()");
-    
-    while (st1.hasMoreToken())
+    template<class T> static RowMatrix<T> getMatrixParameter(
+      const std::string& parameterName,
+      std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true)
     {
-      std::string si=st1.nextToken();
-      StringTokenizer st2(si, TextTools::toString(separator));
-      size_t n = st2.numberOfRemainingTokens();
+      RowMatrix<T> mat;
 
-      std::vector<T> v(n);
-      for (size_t i = 0; i < n; i++)
-      {
-        v[i] = TextTools::fromString<T>(st2.nextToken());
+      std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
+      if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
+      if (s[0] == '(' && s[s.size() - 1] == ')') {
+        //This is a delimited vector:
+        s = s.substr(1, s.size() - 2);
+        if (TextTools::isEmpty(s)) return RowMatrix<T>(0,0);
       }
+    
+      StringTokenizer st1(s, "()");
+    
+      while (st1.hasMoreToken())
+      {
+        std::string si=st1.nextToken();
+        StringTokenizer st2(si, TextTools::toString(separator));
+        size_t n = st2.numberOfRemainingTokens();
+
+        std::vector<T> v(n);
+        for (size_t i = 0; i < n; i++)
+        {
+          v[i] = TextTools::fromString<T>(st2.nextToken());
+        }
       
-      if (v.size()!=0)
-        mat.addRow(v);
+        if (v.size()!=0)
+          mat.addRow(v);
+      }
+      return mat;
     }
-    return mat;
-  }
 
 
     /**
@@ -586,7 +590,7 @@ class ApplicationTools
      * @return The number of seconds from when timer was started.
      */
     static double getTime();
-};
+  };
 
 } //end of namespace bpp.
 
