@@ -42,7 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "AbstractHmmTransitionMatrix.h"
 
-#include <Bpp/Numeric/AbstractParameterAliasable.h>
+#include "../AbstractParameterAliasable.h"
 
 namespace bpp
 {

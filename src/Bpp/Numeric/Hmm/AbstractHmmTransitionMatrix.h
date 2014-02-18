@@ -43,7 +43,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "HmmStateAlphabet.h"
 #include "HmmTransitionMatrix.h"
 
-#include <Bpp/Numeric/VectorTools.h>
+#include "../VectorTools.h"
 
 namespace bpp
 {

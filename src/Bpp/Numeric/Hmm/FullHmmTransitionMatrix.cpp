@@ -39,10 +39,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "FullHmmTransitionMatrix.h"
 
-#include <Bpp/Text/TextTools.h>
+#include "../../Text/TextTools.h"
 
-#include <Bpp/Numeric/Matrix/MatrixTools.h>
-#include <Bpp/Numeric/VectorTools.h>
+#include "../Matrix/MatrixTools.h"
+#include "../VectorTools.h"
 
 using namespace bpp;
 using namespace std;
