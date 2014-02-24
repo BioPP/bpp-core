@@ -63,9 +63,11 @@ namespace bpp
      *  value
      *
      * @param value The value of the distribution.
+     * @param withParameter if the ConstantDistribution is parametrized
+     *        (default: true).
      *
      */
-    ConstantDistribution(double value);
+    ConstantDistribution(double value, bool withParameter = true);
 
     ConstantDistribution(const ConstantDistribution&);
 
@@ -79,6 +81,8 @@ namespace bpp
     }
   
   public:
+    void setValue(double value);
+        
     void fireParameterChanged(const ParameterList& parameters);
     
     double randC() const throw (Exception) { return value_; }
