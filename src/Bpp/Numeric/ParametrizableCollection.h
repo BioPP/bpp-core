@@ -178,7 +178,12 @@ namespace bpp
     {
       return vChanged_;
     }
-    
+
+    void clearChanged()
+    {
+      vChanged_.clear();
+    }
+
     /**
      * @return The current number of distinct discrete objects in this set.
      */

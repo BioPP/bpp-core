@@ -47,13 +47,12 @@ using namespace std;
 
 /******************************************************************************/
 
-ConstantDistribution::ConstantDistribution(double value, bool withParameter):
+ConstantDistribution::ConstantDistribution(double value):
   AbstractParameterAliasable("Constant."),
   AbstractDiscreteDistribution(1, "Constant."),
   value_(value)
 {
-  if (withParameter)
-    addParameter_(new Parameter("Constant.value", value)); 
+  addParameter_(new Parameter("Constant.value", value)); 
   distribution_[value_] = 1; //One single class  with probability 1.
 }
 
@@ -74,25 +73,13 @@ ConstantDistribution& ConstantDistribution::operator=(const ConstantDistribution
 
 /******************************************************************************/
 
-void ConstantDistribution::setValue(double value)
-{
-  if (hasParameter("value"))
-    setParameterValue("value", value);
-  else
-    value_=value;
-}
-
-  
-
 void ConstantDistribution::fireParameterChanged(const ParameterList& parameters) 
 {
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
-  
-  if (hasParameter("value")) {
-    value_=getParameterValue("value");
-    distribution_.clear();
-    distribution_[value_] = 1; //One single class of rate 1 with probability 1.
-  }
+
+  value_=getParameterValue("value");
+  distribution_.clear();
+  distribution_[value_] = 1; //One single class of rate 1 with probability 1.
 }
 
 /******************************************************************************/
@@ -113,4 +100,4 @@ void ConstantDistribution::restrictToConstraint(const Constraint& c)
 
   Parameter& p=getParameter_("value");
   p.setConstraint(intMinMax_.clone(),true);
-}
+ }

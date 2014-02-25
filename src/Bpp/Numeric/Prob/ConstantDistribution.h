@@ -56,18 +56,17 @@ namespace bpp
   
   private:
     double value_;
-  
+    
   public:
     /**
      * @brief Builds a new ConstantDistribution object from a
      *  value
      *
      * @param value The value of the distribution.
-     * @param withParameter if the ConstantDistribution is parametrized
-     *        (default: true).
      *
      */
-    ConstantDistribution(double value, bool withParameter = true);
+    
+    ConstantDistribution(double value);
 
     ConstantDistribution(const ConstantDistribution&);
 
@@ -81,8 +80,6 @@ namespace bpp
     }
   
   public:
-    void setValue(double value);
-        
     void fireParameterChanged(const ParameterList& parameters);
     
     double randC() const throw (Exception) { return value_; }
