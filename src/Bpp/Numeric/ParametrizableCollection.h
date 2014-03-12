@@ -253,7 +253,8 @@ namespace bpp
      * 
      * WARNING! The set will now be the owner of the pointer, and will destroy it if needed!
      * Copy the object first if you don't want it to be lost!
-     * @param number The number of the object in the Collection
+     *
+     * @param objectIndex The number of the object in the Collection
      * 
      */
 
