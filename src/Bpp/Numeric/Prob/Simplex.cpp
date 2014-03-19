@@ -155,12 +155,12 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
     }
     break;
   case 3:
-    addParameter_(new Parameter(name + "theta1", double(size_t(dim_ / 2)) / double(dim_), pc));
-
-    for (unsigned int i = 1; i < dim_ - 1; i++)
+    for (unsigned int i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), 0.5, pc));
     }
+    setFrequencies(vProb_);
+    
     break;
   }
 }
