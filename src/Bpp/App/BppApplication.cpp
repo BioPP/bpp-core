@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide basal and 
 utilitary classes. This file belongs to the Bio++ Project.
@@ -39,6 +39,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "BppApplication.h"
 #include "../Utils/AttributesTools.h"
+#include "../Numeric/Random/RandomTools.h"
 #include "ApplicationTools.h"
 
 // From the STL:
@@ -53,6 +54,11 @@ BppApplication::BppApplication(int argc, char* argv[], const std::string& name):
   params_ = AttributesTools::parseOptions(argc, argv);
   bool noint = ApplicationTools::getBooleanParameter("--noninteractive", params_, false, "", true, false);
   ApplicationTools::interactive = !noint;
+  long seed = ApplicationTools::getParameter<long>("--seed", params_, -1, "", true, false);
+  if (seed >= 0) {
+    RandomTools::setSeed(seed);
+    ApplicationTools::displayResult("Random seed set to", seed);
+  }
 }
 
 void BppApplication::startTimer()
