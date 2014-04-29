@@ -77,8 +77,8 @@ public:
   virtual OutputStream& operator<<(const bool& message) = 0;
   virtual OutputStream& endLine() = 0;
   virtual OutputStream& flush() = 0;
-  virtual OutputStream& setPrecision(unsigned int digit) = 0;
-  virtual unsigned int getPrecision() const = 0;
+  virtual OutputStream& setPrecision(int digit) = 0;
+  virtual int getPrecision() const = 0;
   virtual OutputStream& enableScientificNotation(bool yn) = 0;
   virtual bool isScientificNotationEnabled() const = 0;
 
@@ -105,19 +105,19 @@ class AbstractOutputStream :
   public virtual OutputStream
 {
 private:
-  unsigned int precision_;
+  int precision_;
   bool scienceNotation_;
 
 public:
   AbstractOutputStream() : precision_(6), scienceNotation_(false) {}
 
 public:
-  OutputStream& setPrecision(unsigned int digit)
+  OutputStream& setPrecision(int digit)
   {
     precision_ = digit;
     return *this;
   }
-  unsigned int getPrecision() const { return precision_; }
+  int getPrecision() const { return precision_; }
 
   virtual OutputStream& enableScientificNotation(bool yn) { scienceNotation_ = yn; return *this; }
   virtual bool isScientificNotationEnabled() const { return scienceNotation_; }

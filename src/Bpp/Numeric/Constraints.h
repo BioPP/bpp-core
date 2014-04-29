@@ -43,6 +43,7 @@
 // From the STL:
 #include <string>
 #include <iostream>
+#include <typeinfo>
 
 // From Utils:
 #include "../Clonable.h"
@@ -351,43 +352,31 @@ public:
   }
 
   /**
-   * @brief Intersect this IntervalConstraint with another one
+   * @brief Intersect this IntervalConstraint with another constraint
    *
-   * @param c the intersected IntervalConstraint
+   * @param c the intersected constraint
    * @return this IntervalConstraint modified, or not modified if c is not an
    * IntervalConstraint. The precision is set to the maximum of bith precisions.
    */
-  
   IntervalConstraint& operator&=(const Constraint& c)
   {
-    const IntervalConstraint* pi = dynamic_cast<const IntervalConstraint*>(&c);
+    try {
+      const IntervalConstraint& pi = dynamic_cast<const IntervalConstraint&>(c);
 
-    if (pi)
-    {
-      if (lowerBound_ <= pi->lowerBound_)
+      if (lowerBound_ <= pi.lowerBound_)
       {
-        lowerBound_ = pi->lowerBound_;
-        inclLowerBound_ = pi->inclLowerBound_;
-      }
-      else
-      {
-        lowerBound_ = lowerBound_;
-        inclLowerBound_ = inclLowerBound_;
+        lowerBound_ = pi.lowerBound_;
+        inclLowerBound_ = pi.inclLowerBound_;
       }
 
-      if (upperBound_ >= pi->upperBound_)
+      if (upperBound_ >= pi.upperBound_)
       {
-        upperBound_ = pi->upperBound_;
-        inclUpperBound_ = pi->inclUpperBound_;
+        upperBound_ = pi.upperBound_;
+        inclUpperBound_ = pi.inclUpperBound_;
       }
-      else
-      {
-        upperBound_ = upperBound_;
-        inclUpperBound_ = inclUpperBound_;
-      }
-      if (pi->getPrecision()>precision_)
-        precision_=pi->getPrecision();
-    }
+      if (pi.getPrecision() > precision_)
+        precision_ = pi.getPrecision();
+    } catch(std::bad_cast&) {}
 
     return *this;
   }
