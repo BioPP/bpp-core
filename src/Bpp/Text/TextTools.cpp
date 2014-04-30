@@ -361,8 +361,8 @@ throw (Exception)
 {
   string t = "";
   int blockCount = 0;
-  int begPos = 0;
-  for (unsigned int i = 0; i < s.size(); i++)
+  size_t begPos = 0;
+  for (size_t i = 0; i < s.size(); i++)
   {
     char current = s[i];
     if (current == blockBeginning)

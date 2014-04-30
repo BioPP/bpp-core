@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (January 12, 2011)
+Copyright or © or Copr. Bio++ Development Team, (January 12, 2011)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -65,7 +65,7 @@ BasicTNode& BasicTNode::operator=(const BasicTNode& node) {
 
 const BasicTNode* BasicTNode::getNeighbor(int pos) const {
   if (pos < 0 || pos > static_cast<int>(sons_.size())) {
-    throw IndexOutOfBoundsException("BasicTNode::getNeighbor() pos is out of bounds", pos, 0, static_cast<int>(sons_.size()));
+    throw IndexOutOfBoundsException("BasicTNode::getNeighbor() pos is out of bounds", static_cast<size_t>(pos), 0, sons_.size());
   }
   if (pos == 0)
     return father_;
@@ -103,14 +103,14 @@ BasicTNode* BasicTNode::operator[](int i) {
 
 const BasicTNode* BasicTNode::getFather(int pos) const {
   if (pos != 0) {
-    throw IndexOutOfBoundsException("BasicTNode::getFather() pos must be 0 for TNode", pos, 0, 0);
+    throw IndexOutOfBoundsException("BasicTNode::getFather() pos must be 0 for TNode", static_cast<size_t>(pos), 0, 0);
   }
   return getFather();
 }
 
 BasicTNode* BasicTNode::getFather(int pos) {
   if (pos != 0) {
-    throw IndexOutOfBoundsException("BasicTNode::getFather() pos must be 0 for TNode", pos, 0, 0);
+    throw IndexOutOfBoundsException("BasicTNode::getFather() pos must be 0 for TNode", static_cast<size_t>(pos), 0, 0);
   }
   return getFather();
 }
@@ -154,14 +154,14 @@ BasicTNode* BasicTNode::removeFather() {
 
 const BasicTNode* BasicTNode::getSon(int pos) const {
   if (pos < 0 || pos > static_cast<int>(sons_.size()) - 1) {
-    throw IndexOutOfBoundsException("BasicTNode::getSon() pos out of range", pos, 0, sons_.size() - 1);
+    throw IndexOutOfBoundsException("BasicTNode::getSon() pos out of range", static_cast<size_t>(pos), 0, sons_.size() - 1);
   }
   return sons_[static_cast<size_t>(pos)];
 }
 
 BasicTNode* BasicTNode::getSon(int pos) {
   if (pos < 0 || pos > static_cast<int>(sons_.size()) - 1) {
-    throw IndexOutOfBoundsException("BasicTNode::getSon() pos out of range", pos, 0, sons_.size() - 1);
+    throw IndexOutOfBoundsException("BasicTNode::getSon() pos out of range", static_cast<size_t>(pos), 0, sons_.size() - 1);
   }
   return sons_[static_cast<size_t>(pos)];
 }
@@ -196,7 +196,7 @@ void BasicTNode::removeSon(BasicTNode* node) {
 
 BasicTNode* BasicTNode::removeSon(int pos) {
   if (pos < 0 || pos > static_cast<int>(sons_.size() - 1))
-    throw IndexOutOfBoundsException("BasicTNode::removeSon() pos out of bound", pos, 0, sons_.size() - 1);
+    throw IndexOutOfBoundsException("BasicTNode::removeSon() pos out of bound", static_cast<size_t>(pos), 0, sons_.size() - 1);
   BasicTNode* node = sons_[static_cast<size_t>(pos)];
   sons_.erase(sons_.begin() + pos);
   node->removeFather();
