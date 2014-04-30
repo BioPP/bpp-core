@@ -54,22 +54,23 @@ void BppOParametrizableFormat::write(const Parametrizable* parametrizable,
                                      bool printComma) const
 {
   ParameterList pl = parametrizable->getParameters();
-  unsigned int p = out.getPrecision();
+  int p = out.getPrecision();
   out.setPrecision(12);
-  bool flag=printComma;
-  for (unsigned int i = 0; i < pl.size(); i++)
+  bool flag = printComma;
+  for (size_t i = 0; i < pl.size(); ++i)
+  {
+    if (find(writtenNames.begin(), writtenNames.end(), pl[i].getName()) == writtenNames.end())
     {
-      if (find(writtenNames.begin(),writtenNames.end(),pl[i].getName())==writtenNames.end()){
-        if (flag)
-          out << ",";
-        else
-          flag=true;
-        string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
+      if (flag)
+        out << ",";
+      else
+        flag = true;
+      string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
         
-        (out << pname << "=").enableScientificNotation(false) << pl[i].getValue();
+      (out << pname << "=").enableScientificNotation(false) << pl[i].getValue();
         
-      }
     }
+  }
   out.setPrecision(p);
 }
 
@@ -82,37 +83,38 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
                                      bool printComma) const
 {
   ParameterList pl = parametrizable->getIndependentParameters().subList(names);
-  unsigned int p = out.getPrecision();
+  int p = out.getPrecision();
   out.setPrecision(12);
-  bool flag=printComma;
-  for (unsigned int i = 0; i < pl.size(); i++)
+  bool flag = printComma;
+  for (size_t i = 0; i < pl.size(); ++i)
+  {
+    if (find(writtenNames.begin(), writtenNames.end(), pl[i].getName()) == writtenNames.end())
     {
-      if (find(writtenNames.begin(),writtenNames.end(),pl[i].getName())==writtenNames.end()){
-        if (flag)
-          out << ",";
-        else
-          flag=true;
-        string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
+      if (flag)
+        out << ",";
+      else
+        flag = true;
+      string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
       
-        // Check for global aliases:
-        if (globalAliases.find(pl[i].getName()) == globalAliases.end())
-          {
-            (out << pname << "=").enableScientificNotation(false) << pl[i].getValue();
-          }
-        else
-          out << pname << "=" << globalAliases[pl[i].getName()];
-      
-        // Now check for local aliases:
-        if (printLocalAliases)
-          {
-            vector<string> aliases = parametrizable->getAlias(pname);
-            for (unsigned int j = 0; j<aliases.size(); j++)
-              {
-                out << ", " << aliases[j] << "=" << pname;
-              }
-          }
-        writtenNames.push_back(pl[i].getName());
+      // Check for global aliases:
+      if (globalAliases.find(pl[i].getName()) == globalAliases.end())
+      {
+        (out << pname << "=").enableScientificNotation(false) << pl[i].getValue();
       }
+      else
+        out << pname << "=" << globalAliases[pl[i].getName()];
+      
+      // Now check for local aliases:
+      if (printLocalAliases)
+      {
+        vector<string> aliases = parametrizable->getAlias(pname);
+        for (size_t j = 0; j < aliases.size(); ++j)
+        {
+          out << ", " << aliases[j] << "=" << pname;
+        }
+      }
+      writtenNames.push_back(pl[i].getName());
     }
+  }
   out.setPrecision(p);
 }
