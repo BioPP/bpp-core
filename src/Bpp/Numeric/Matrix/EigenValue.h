@@ -181,11 +181,11 @@ class EigenValue
        if (scale == 0.0)
        {
          e_[i] = d_[i-1];
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
-           d_[j] = V_(i-1,j);
-           V_(i,j) = 0.0;
-           V_(j,i) = 0.0;
+           d_[j] = V_(i - 1, j);
+           V_(i, j) = 0.0;
+           V_(j, i) = 0.0;
          }
        }
        else
