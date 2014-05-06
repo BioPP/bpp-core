@@ -974,8 +974,8 @@ namespace bpp
      */
     template<class Scalar>
     static Scalar lap(Matrix<Scalar>& assignCost,
-                      std::vector<size_t> &rowSol, 
-                      std::vector<size_t> &colSol, 
+                      std::vector<int> &rowSol, 
+                      std::vector<int> &colSol, 
                       std::vector<Scalar> &u, 
                       std::vector<Scalar> &v) throw (Exception)
     {
@@ -1015,8 +1015,8 @@ namespace bpp
         if (++matches[iMin] == 1) 
         { 
           // init assignment if minimum row assigned for first time.
-          rowSol[iMin] = j - 1; 
-          colSol[j - 1] = iMin; 
+          rowSol[iMin] = static_cast<int>(j - 1); 
+          colSol[j - 1] = static_cast<int>(iMin); 
         }
         else
           colSol[j - 1] = -1;        // row already assigned, column not assigned.
@@ -1217,10 +1217,10 @@ namespace bpp
         do
         {
           i = pred[endOfPath]; 
-          colSol[endOfPath] = i; 
+          colSol[endOfPath] = static_cast<int>(i); 
           j1 = endOfPath; 
           endOfPath = rowSol[i]; 
-          rowSol[i] = j1;
+          rowSol[i] = static_cast<int>(j1);
         }
         while (i != freeRow);
       }

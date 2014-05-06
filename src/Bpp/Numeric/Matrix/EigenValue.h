@@ -168,13 +168,13 @@ class EigenValue
 
      // Householder reduction to tridiagonal form.
    
-     for (int i = static_cast<int>(n_)-1; i > 0; i--)
+     for (size_t i = n_-1; i > 0; i--)
      {
        // Scale to avoid under/overflow.
    
        Real scale = 0.0;
        Real h = 0.0;
-       for (int k = 0; k < i; k++)
+       for (size_t k = 0; k < i; ++k)
        {
          scale = scale + NumTools::abs<Real>(d_[k]);
        }
@@ -192,12 +192,12 @@ class EigenValue
        {
          // Generate Householder vector.
    
-         for (int k = 0; k < i; k++)
+         for (size_t k = 0; k < i; ++k)
          {
            d_[k] /= scale;
            h += d_[k] * d_[k];
          }
-         Real f = d_[i-1];
+         Real f = d_[i - 1];
          Real g = sqrt(h);
          if (f > 0)
          {
@@ -206,19 +206,19 @@ class EigenValue
          e_[i] = scale * g;
          h = h - f * g;
          d_[i-1] = f - g;
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
            e_[j] = 0.0;
          }
    
          // Apply similarity transformation to remaining columns.
    
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
            f = d_[j];
            V_(j,i) = f;
            g = e_[j] + V_(j,j) * f;
-           for (int k = j+1; k <= i-1; k++)
+           for (size_t k = j + 1; k <= i - 1; k++)
            {
              g += V_(k,j) * d_[k];
              e_[k] += V_(k,j) * f;
@@ -226,21 +226,21 @@ class EigenValue
            e_[j] = g;
          }
          f = 0.0;
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
            e_[j] /= h;
            f += e_[j] * d_[j];
          }
          Real hh = f / (h + h);
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
            e_[j] -= hh * d_[j];
          }
-         for (int j = 0; j < i; j++)
+         for (size_t j = 0; j < i; ++j)
          {
            f = d_[j];
            g = e_[j];
-           for (int k = j; k <= i-1; k++)
+           for (size_t k = j; k <= i-1; ++k)
            {
              V_(k,j) -= (f * e_[k] + g * d_[k]);
            }
@@ -303,22 +303,22 @@ class EigenValue
    {
      for (size_t i = 1; i < n_; i++)
      {
-       e_[i-1] = e_[i];
+       e_[i - 1] = e_[i];
      }
-     e_[n_-1] = 0.0;
+     e_[n_ - 1] = 0.0;
    
      Real f = 0.0;
      Real tst1 = 0.0;
      Real eps = pow(2.0,-52.0);
-     for (int l = 0; l < static_cast<int>(n_); l++)
+     for (size_t l = 0; l < n_; ++l)
      {
        // Find small subdiagonal element
    
        tst1 = std::max(tst1, NumTools::abs<Real>(d_[l]) + NumTools::abs<Real>(e_[l]));
-       int m = l;
+       size_t m = l;
 
        // Original while-loop from Java code
-       while (m < static_cast<int>(n_))
+       while (m < n_)
        {
          if (NumTools::abs<Real>(e_[m]) <= eps*tst1)
          {
@@ -340,7 +340,7 @@ class EigenValue
            // Compute implicit shift
    
            Real g = d_[l];
-           Real p = (d_[l+1] - g) / (2.0 * e_[l]);
+           Real p = (d_[l + 1] - g) / (2.0 * e_[l]);
            Real r = hypot(p,1.0);
            if (p < 0)
            {
@@ -348,9 +348,9 @@ class EigenValue
            }
            d_[l] = e_[l] / (p + r);
            d_[l + 1] = e_[l] * (p + r);
-           Real dl1 = d_[l+1];
+           Real dl1 = d_[l + 1];
            Real h = g - d_[l];
-           for (size_t i = static_cast<size_t>(l + 2); i < n_; i++)
+           for (size_t i = l + 2; i < n_; ++i)
            {
              d_[i] -= h;
            }
@@ -362,30 +362,32 @@ class EigenValue
            Real c = 1.0;
            Real c2 = c;
            Real c3 = c;
-           Real el1 = e_[l+1];
+           Real el1 = e_[l + 1];
            Real s = 0.0;
            Real s2 = 0.0;
-           for (int i = m - 1; i >= l; i--)
+           //for (size_t i = m - 1; i >= l; --i)
+           for (size_t ii = m; ii > l; --ii)
            {
+             size_t i = ii - 1; //to avoid infinite loop!
              c3 = c2;
              c2 = c;
              s2 = s;
              g = c * e_[i];
              h = c * p;
-             r = hypot(p,e_[i]);
-             e_[i+1] = s * r;
+             r = hypot(p, e_[i]);
+             e_[i + 1] = s * r;
              s = e_[i] / r;
              c = p / r;
              p = c * d_[i] - s * g;
-             d_[i+1] = h + s * (c * g + s * d_[i]);
+             d_[i + 1] = h + s * (c * g + s * d_[i]);
    
              // Accumulate transformation.
    
              for (size_t k = 0; k < n_; k++)
              {
-               h = V_(k,i+1);
-               V_(k,i+1) = s * V_(k,i) + c * h;
-               V_(k,i) = c * V_(k,i) - s * h;
+               h = V_(k, i + 1);
+               V_(k, i + 1) = s * V_(k, i) + c * h;
+               V_(k, i) = c * V_(k, i) - s * h;
              }
            }
            p = -s * s2 * c3 * el1 * e_[l] / dl1;
@@ -394,7 +396,7 @@ class EigenValue
    
            // Check for convergence.
    
-         } while (NumTools::abs<Real>(e_[l]) > eps*tst1);
+         } while (NumTools::abs<Real>(e_[l]) > eps * tst1);
        }
        d_[l] = d_[l] + f;
        e_[l] = 0.0;
@@ -420,8 +422,8 @@ class EigenValue
          d_[i] = p;
          for (size_t j = 0; j < n_; j++)
          {
-           p = V_(j,i);
-           V_(j,i) = V_(j,k);
+           p = V_(j, i);
+           V_(j,i) = V_(j, k);
            V_(j,k) = p;
          }
        }
@@ -436,28 +438,29 @@ class EigenValue
     * Vol.ii-Linear Algebra, and the corresponding
     * Fortran subroutines in EISPACK.
     */
-   void orthes ()
+   void orthes()
    {
-     int low = 0;
-     int high = static_cast<int>(n_)-1;
+     if (n_ == 0) return;
+     size_t low = 0;
+     size_t high = n_-1;
    
-     for (int m = low+1; m <= high-1; m++)
+     for (size_t m = low + 1; m <= high - 1; ++m)
      {
        // Scale column.
    
        Real scale = 0.0;
-       for (int i = m; i <= high; i++)
+       for (size_t i = m; i <= high; ++i)
        {
-         scale = scale + NumTools::abs<Real>(H_(i,m-1));
+         scale = scale + NumTools::abs<Real>(H_(i, m - 1));
        }
        if (scale != 0.0)
        {
          // Compute Householder transformation.
    
          Real h = 0.0;
-         for (int i = high; i >= m; i--)
+         for (size_t i = high; i >= m; --i)
          {
-           ort_[i] = H_(i,m-1)/scale;
+           ort_[i] = H_(i, m - 1)/scale;
            h += ort_[i] * ort_[i];
          }
          Real g = sqrt(h);
@@ -471,35 +474,35 @@ class EigenValue
          // Apply Householder similarity transformation
          // H = (I-u*u'/h)*H*(I-u*u')/h)
    
-         for (int j = m; j < static_cast<int>(n_); j++)
+         for (size_t j = m; j < n_; ++j)
          {
            Real f = 0.0;
-           for (int i = high; i >= m; i--)
+           for (size_t i = high; i >= m; --i)
            {
-             f += ort_[i]*H_(i,j);
+             f += ort_[i] * H_(i, j);
            }
            f = f/h;
-           for (int i = m; i <= high; i++)
+           for (size_t i = m; i <= high; ++i)
            {
              H_(i,j) -= f*ort_[i];
            }
          }
    
-         for (int i = 0; i <= high; i++)
+         for (size_t i = 0; i <= high; ++i)
          {
            Real f = 0.0;
-           for (int j = high; j >= m; j--)
+           for (size_t j = high; j >= m; --j)
            {
-             f += ort_[j]*H_(i,j);
+             f += ort_[j] * H_(i, j);
            }
            f = f/h;
-           for (int j = m; j <= high; j++)
+           for (size_t j = m; j <= high; ++j)
            {
-             H_(i,j) -= f*ort_[j];
+             H_(i,j) -= f * ort_[j];
            }
          }
-         ort_[m] = scale*ort_[m];
-         H_(m,m-1) = scale*g;
+         ort_[m] = scale * ort_[m];
+         H_(m, m - 1) = scale * g;
        }
      }
    
@@ -513,26 +516,26 @@ class EigenValue
        }
      }
 
-     for (int m = high-1; m >= low+1; m--)
+     for (size_t m = high - 1; m >= low + 1; --m)
      {
-       if (H_(m,m-1) != 0.0)
+       if (H_(m, m - 1) != 0.0)
        {
-         for (int i = m+1; i <= high; i++)
+         for (size_t i = m + 1; i <= high; ++i)
          {
-           ort_[i] = H_(i,m-1);
+           ort_[i] = H_(i, m - 1);
          }
-         for (int j = m; j <= high; j++)
+         for (size_t j = m; j <= high; ++j)
          {
            Real g = 0.0;
-           for (int i = m; i <= high; i++)
+           for (size_t i = m; i <= high; i++)
            {
-             g += ort_[i] * V_(i,j);
+             g += ort_[i] * V_(i, j);
            }
            // Double division avoids possible underflow
-           g = (g / ort_[m]) / H_(m,m-1);
-           for (int i = m; i <= high; i++)
+           g = (g / ort_[m]) / H_(m, m - 1);
+           for (size_t i = m; i <= high; ++i)
            {
-             V_(i,j) += g * ort_[i];
+             V_(i, j) += g * ort_[i];
            }
          }
        }
