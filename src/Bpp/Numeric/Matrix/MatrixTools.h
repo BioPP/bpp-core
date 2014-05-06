@@ -974,8 +974,8 @@ namespace bpp
      */
     template<class Scalar>
     static Scalar lap(Matrix<Scalar>& assignCost,
-                      std::vector<int> &rowSol, 
-                      std::vector<int> &colSol, 
+                      std::vector<size_t> &rowSol, 
+                      std::vector<size_t> &colSol, 
                       std::vector<Scalar> &u, 
                       std::vector<Scalar> &v) throw (Exception)
     {
@@ -1059,7 +1059,7 @@ namespace bpp
           // find minimum and second minimum reduced cost over columns.
           uMin = assignCost(i, 0) - v[0]; 
           j1 = 0; 
-          uSubMin = -log(0);
+          uSubMin = static_cast<size_t>(-log(0));
           for (j = 1; j < dim; j++) 
           {
             h = assignCost(i, j) - v[j];

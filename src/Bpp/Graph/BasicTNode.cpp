@@ -41,6 +41,10 @@ knowledge of the CeCILL license and that you accept its terms.
 
 using namespace bpp;
 
+#include <cstddef>
+
+using namespace std;
+
 BasicTNode::~BasicTNode() {
   if (father_) {
     father_->removeSon(this);
@@ -75,7 +79,7 @@ const BasicTNode* BasicTNode::getNeighbor(int pos) const {
 
 BasicTNode* BasicTNode::getNeighbor(int pos) {
   if (pos < 0 || pos > static_cast<int>(sons_.size())) {
-    throw IndexOutOfBoundsException("BasicTNode::getNeighbor() pos is out of bounds", pos, 0, static_cast<int>(sons_.size()));
+    throw IndexOutOfBoundsException("BasicTNode::getNeighbor() pos is out of bounds", static_cast<size_t>(pos), 0, sons_.size());
   }
   if (pos == 0)
     return father_;
@@ -188,7 +192,7 @@ void BasicTNode::removeSon(BasicTNode* node) {
     throw NullPointerException("BasicTNode::removeSon() Empty node given as input.");
   for (size_t i = 0 ; i < sons_.size() ; i++) {
     if (sons_[i] == node) {
-      sons_.erase(sons_.begin() + i);
+      sons_.erase(sons_.begin() + static_cast<ptrdiff_t>(i));
       node->removeFather();
     }
   }

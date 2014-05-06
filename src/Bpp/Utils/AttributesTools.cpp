@@ -57,7 +57,7 @@ using namespace bpp;
 std::vector<std::string> AttributesTools::getVector(int argc, char* argv[])
 {
   size_t n = static_cast<size_t>(argc);
-  vector<string> result(argc);
+  vector<string> result(n);
   for (size_t i = 1; i < n; ++i) result[i] = string(argv[i]);
   //Ignore first argc which is the program name!    
   return result;

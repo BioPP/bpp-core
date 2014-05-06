@@ -347,10 +347,10 @@ class EigenValue
              r = -r;
            }
            d_[l] = e_[l] / (p + r);
-           d_[l+1] = e_[l] * (p + r);
+           d_[l + 1] = e_[l] * (p + r);
            Real dl1 = d_[l+1];
            Real h = g - d_[l];
-           for (size_t i = l+2; i < n_; i++)
+           for (size_t i = static_cast<size_t>(l + 2); i < n_; i++)
            {
              d_[i] -= h;
            }
@@ -365,7 +365,7 @@ class EigenValue
            Real el1 = e_[l+1];
            Real s = 0.0;
            Real s2 = 0.0;
-           for (int i = m-1; i >= l; i--)
+           for (int i = m - 1; i >= l; i--)
            {
              c3 = c2;
              c2 = c;

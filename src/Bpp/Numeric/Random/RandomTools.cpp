@@ -256,7 +256,7 @@ double RandomTools::lnGamma (double alpha)
 
 double RandomTools::incompleteGamma (double x, double alpha, double ln_gamma_alpha)
 {
-  int i;
+  size_t i;
   double p = alpha, g = ln_gamma_alpha;
   double accurate = 1e-8, overflow = 1e30;
   double factor, gin = 0, rn = 0, a = 0, b = 0, an = 0, dif = 0, term = 0;
