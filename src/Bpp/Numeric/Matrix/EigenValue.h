@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #ifndef _EIGENVALUE_H_
 #define _EIGENVALUE_H_
+#define TOST(i) static_cast<size_t>(i)
 
 #include <algorithm>
 // for min(), max() below
@@ -592,8 +593,8 @@ class EigenValue
     {
       if ((i < low) || (i > high))
       {
-        d_[i] = H_(i,i);
-        e_[i] = 0.0;
+        d_[TOST(i)] = H_(i,i);
+        e_[TOST(i)] = 0.0;
       }
       for (int j = std::max(i-1,0); j < nn; j++)
       {
@@ -629,8 +630,8 @@ class EigenValue
       if (l == n)
       {
         H_(n,n) = H_(n,n) + exshift;
-        d_[n] = H_(n,n);
-        e_[n] = 0.0;
+        d_[TOST(n)] = H_(n,n);
+        e_[TOST(n)] = 0.0;
         n--;
         iter = 0;
   
@@ -659,14 +660,14 @@ class EigenValue
           {
             z = p - z;
           }
-          d_[n-1] = x + z;
-          d_[n] = d_[n-1];
+          d_[TOST(n - 1)] = x + z;
+          d_[TOST(n)] = d_[TOST(n - 1)];
           if (z != 0.0)
           {
-            d_[n] = x - w / z;
+            d_[TOST(n)] = x - w / z;
           }
-          e_[n-1] = 0.0;
-          e_[n] = 0.0;
+          e_[TOST(n - 1)] = 0.0;
+          e_[TOST(n)] = 0.0;
           x = H_(n,n-1);
           s = NumTools::abs<Real>(x) + NumTools::abs<Real>(z);
           p = x / s;
@@ -707,10 +708,10 @@ class EigenValue
         }
         else
         {
-          d_[n-1] = x + p;
-          d_[n] = x + p;
-          e_[n-1] = z;
-          e_[n] = -z;
+          d_[TOST(n - 1)] = x + p;
+          d_[TOST(n)] = x + p;
+          e_[TOST(n-1)] = z;
+          e_[TOST(n)] = -z;
         }
         n = n - 2;
         iter = 0;
@@ -922,7 +923,7 @@ class EigenValue
           {
             r = r + H_(i,j) * H_(j,n);
           }
-          if (e_[i] < 0.0)
+          if (e_[TOST(i)] < 0.0)
           {
             z = w;
             s = r;
@@ -930,7 +931,7 @@ class EigenValue
           else
           {
             l = i;
-            if (e_[i] == 0.0)
+            if (e_[TOST(i)] == 0.0)
             {
               if (w != 0.0)
               {
@@ -948,7 +949,7 @@ class EigenValue
             {
               x = H_(i,i+1);
               y = H_(i+1,i);
-              q = (d_[i] - p) * (d_[i] - p) + e_[i] * e_[i];
+              q = (d_[i] - p) * (d_[i] - p) + e_[TOST(i)] * e_[TOST(i)];
               t = (x * s - z * r) / q;
               H_(i,n) = t;
               if (NumTools::abs<Real>(x) > NumTools::abs<Real>(z))
@@ -1008,7 +1009,7 @@ class EigenValue
           }
           w = H_(i,i) - p;
    
-          if (e_[i] < 0.0)
+          if (e_[TOST(i)] < 0.0)
           {
             z = w;
             r = ra;
@@ -1017,7 +1018,7 @@ class EigenValue
           else
           {
             l = i;
-            if (e_[i] == 0)
+            if (e_[TOST(i)] == 0)
             {
               cdiv(-ra,-sa,w,q);
               H_(i,n-1) = cdivr;
@@ -1029,8 +1030,8 @@ class EigenValue
  
               x = H_(i,i+1);
               y = H_(i+1,i);
-              vr = (d_[i] - p) * (d_[i] - p) + e_[i] * e_[i] - q * q;
-              vi = (d_[i] - p) * 2.0 * q;
+              vr = (d_[TOST(i)] - p) * (d_[TOST(i)] - p) + e_[TOST(i)] * e_[TOST(i)] - q * q;
+              vi = (d_[TOST(i)] - p) * 2.0 * q;
               if ((vr == 0.0) && (vi == 0.0))
               {
                 vr = eps * norm * (NumTools::abs<Real>(w) + NumTools::abs<Real>(q) +
