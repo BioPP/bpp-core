@@ -593,12 +593,12 @@ class EigenValue
     {
       if ((i < low) || (i > high))
       {
-        d_[TOST(i)] = H_(i,i);
+        d_[TOST(i)] = H_(TOST(i),TOST(i));
         e_[TOST(i)] = 0.0;
       }
       for (int j = std::max(i-1,0); j < nn; j++)
       {
-        norm = norm + NumTools::abs<Real>(H_(i,j));
+        norm = norm + NumTools::abs<Real>(H_(TOST(i),TOST(j)));
       }
     }
    
@@ -629,8 +629,8 @@ class EigenValue
   
       if (l == n)
       {
-        H_(n,n) = H_(n,n) + exshift;
-        d_[TOST(n)] = H_(n,n);
+        H_(TOST(n),TOST(n)) = H_(TOST(n),TOST(n)) + exshift;
+        d_[TOST(n)] = H_(TOST(n),TOST(n));
         e_[TOST(n)] = 0.0;
         n--;
         iter = 0;
@@ -640,13 +640,13 @@ class EigenValue
       }
       else if (l == n-1)
       {
-        w = H_(n,n-1) * H_(n-1,n);
-        p = (H_(n-1,n-1) - H_(n,n)) / 2.0;
+        w = H_(TOST(n),TOST(n-1)) * H_(TOST(n-1),TOST(n));
+        p = (H_(TOST(n-1),TOST(n-1)) - H_(TOST(n),TOST(n))) / 2.0;
         q = p * p + w;
         z = sqrt(NumTools::abs<Real>(q));
-        H_(n,n) = H_(n,n) + exshift;
-        H_(n-1,n-1) = H_(n-1,n-1) + exshift;
-        x = H_(n,n);
+        H_(TOST(n),TOST(n)) = H_(TOST(n),TOST(n)) + exshift;
+        H_(TOST(n-1),TOST(n-1)) = H_(TOST(n-1),TOST(n-1)) + exshift;
+        x = H_(TOST(n),TOST(n));
   
         // Real pair
   
@@ -668,7 +668,7 @@ class EigenValue
           }
           e_[TOST(n - 1)] = 0.0;
           e_[TOST(n)] = 0.0;
-          x = H_(n,n-1);
+          x = H_(TOST(n),TOST(n-1));
           s = NumTools::abs<Real>(x) + NumTools::abs<Real>(z);
           p = x / s;
           q = z / s;
@@ -689,9 +689,9 @@ class EigenValue
   
           for (int i = 0; i <= n; i++)
           {
-            z = H_(i,n-1);
-            H_(i,n-1) = q * z + p * H_(i,n);
-            H_(i,n) = q * H_(i,n) - p * z;
+            z = H_(TOST(i),TOST(n-1));
+            H_(TOST(i),TOST(n-1)) = q * z + p * H_(TOST(i),TOST(n));
+            H_(TOST(i),TOST(n)) = q * H_(TOST(i),TOST(n)) - p * z;
           }
   
           // Accumulate transformations
@@ -723,13 +723,13 @@ class EigenValue
       {
         // Form shift
   
-        x = H_(n,n);
+        x = H_(TOST(n),TOST(n));
         y = 0.0;
         w = 0.0;
         if (l < n)
         {
-          y = H_(n-1,n-1);
-          w = H_(n,n-1) * H_(n-1,n);
+          y = H_(TOST(n-1),TOST(n-1));
+          w = H_(TOST(n),TOST(n-1)) * H_(TOST(n-1),TOST(n));
         }
   
         // Wilkinson's original ad hoc shift
@@ -739,9 +739,9 @@ class EigenValue
           exshift += x;
           for (int i = low; i <= n; i++)
           {
-            H_(i,i) -= x;
+            H_(TOST(i),TOST(i)) -= x;
           }
-          s = NumTools::abs<Real>(H_(n,n-1)) + NumTools::abs<Real>(H_(n-1,n-2));
+          s = NumTools::abs<Real>(H_(TOST(n),TOST(n-1))) + NumTools::abs<Real>(H_(TOST(n-1),TOST(n-2)));
           x = y = 0.75 * s;
           w = -0.4375 * s * s;
         }
@@ -761,7 +761,7 @@ class EigenValue
             s = x - w / ((y - x) / 2.0 + s);
             for (int i = low; i <= n; i++)
             {
-              H_(i,i) -= s;
+              H_(TOST(i),TOST(i)) -= s;
             }
             exshift += s;
             x = y = w = 0.964;
@@ -775,12 +775,12 @@ class EigenValue
         int m = n-2;
         while (m >= l)
         {
-          z = H_(m,m);
+          z = H_(TOST(m),TOST(m));
           r = x - z;
           s = y - z;
-          p = (r * s - w) / H_(m+1,m) + H_(m,m+1);
-          q = H_(m+1,m+1) - z - r - s;
-          r = H_(m+2,m+1);
+          p = (r * s - w) / H_(TOST(m+1),TOST(m)) + H_(TOST(m),TOST(m+1));
+          q = H_(TOST(m+1),TOST(m+1)) - z - r - s;
+          r = H_(TOST(m+2),TOST(m+1));
           s = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
           p = p / s;
           q = q / s;
@@ -791,7 +791,7 @@ class EigenValue
           }
           if (NumTools::abs<Real>(H_(m,m-1)) * (NumTools::abs<Real>(q) + NumTools::abs<Real>(r)) <
                eps * (NumTools::abs<Real>(p) * (NumTools::abs<Real>(H_(m-1,m-1)) + NumTools::abs<Real>(z) +
-               NumTools::abs<Real>(H_(m+1,m+1)))))
+               NumTools::abs<Real>(H_(TOST(m+1),TOST(m+1))))))
           {
             break;
           }
@@ -800,10 +800,10 @@ class EigenValue
   
         for (int i = m+2; i <= n; i++)
         {
-          H_(i,i-2) = 0.0;
+          H_(TOST(i),TOST(i-2)) = 0.0;
           if (i > m+2)
           {
-            H_(i,i-3) = 0.0;
+            H_(TOST(i),TOST(i-3)) = 0.0;
           }
         }
  
@@ -814,9 +814,9 @@ class EigenValue
           int notlast = (k != n-1);
           if (k != m)
           {
-            p = H_(k,k-1);
-            q = H_(k+1,k-1);
-            r = (notlast ? H_(k+2,k-1) : 0.0);
+            p = H_(TOST(k),TOST(k-1));
+            q = H_(TOST(k+1),TOST(k-1));
+            r = (notlast ? H_(TOST(k+2),TOST(k-1)) : 0.0);
             x = NumTools::abs<Real>(p) + NumTools::abs<Real>(q) + NumTools::abs<Real>(r);
             if (x != 0.0)
             {
@@ -838,11 +838,11 @@ class EigenValue
           {
             if (k != m)
             {
-              H_(k,k-1) = -s * x;
+              H_(TOST(k),TOST(k-1)) = -s * x;
             }
             else if (l != m)
             {
-              H_(k,k-1) = -H_(k,k-1);
+              H_(TOST(k),TOST(k-1)) = -H_(TOST(k),TOST(k-1));
             }
             p = p + s;
             x = p / s;
@@ -855,13 +855,13 @@ class EigenValue
    
             for (int j = k; j < nn; j++)
             {
-              p = H_(k,j) + q * H_(k+1,j);
+              p = H_(TOST(k),TOST(j)) + q * H_(k+1,j);
               if (notlast)
               {
                 p = p + r * H_(k+2,j);
                 H_(k+2,j) = H_(k+2,j) - p * z;
               }
-              H_(k,j) = H_(k,j) - p * x;
+              H_(TOST(k),TOST(j)) = H_(TOST(k),TOST(j)) - p * x;
               H_(k+1,j) = H_(k+1,j) - p * y;
             }
    
@@ -883,13 +883,13 @@ class EigenValue
    
             for (int i = low; i <= high; i++)
             {
-              p = x * V_(i,k) + y * V_(i,k+1);
+              p = x * H_(TOST(i),TOST(k)) + y * V_(i,k+1);
               if (notlast)
               {
                 p = p + z * V_(i,k+2);
                 V_(i,k+2) = V_(i,k+2) - p * r;
               }
-              V_(i,k) = V_(i,k) - p;
+              H_(TOST(i),TOST(k)) = H_(TOST(i),TOST(k)) - p;
               V_(i,k+1) = V_(i,k+1) - p * q;
             }
           }  // (s != 0)
@@ -914,14 +914,14 @@ class EigenValue
       if (q == 0)
       {
         int l = n;
-        H_(n,n) = 1.0;
+        H_(TOST(n),TOST(n)) = 1.0;
         for (int i = n-1; i >= 0; i--)
         {
-          w = H_(i,i) - p;
+          w = H_(TOST(i),TOST(i)) - p;
           r = 0.0;
           for (int j = l; j <= n; j++)
           {
-            r = r + H_(i,j) * H_(j,n);
+            r = r + H_(TOST(i),TOST(j)) * H_(TOST(j),TOST(n));
           }
           if (e_[TOST(i)] < 0.0)
           {
@@ -935,11 +935,11 @@ class EigenValue
             {
               if (w != 0.0)
               {
-                H_(i,n) = -r / w;
+                H_(TOST(i),TOST(n)) = -r / w;
               }
               else
               {
-                H_(i,n) = -r / (eps * norm);
+                H_(TOST(i),TOST(n)) = -r / (eps * norm);
               }
    
               // Solve real equations
@@ -951,25 +951,25 @@ class EigenValue
               y = H_(i+1,i);
               q = (d_[i] - p) * (d_[i] - p) + e_[TOST(i)] * e_[TOST(i)];
               t = (x * s - z * r) / q;
-              H_(i,n) = t;
+              H_(TOST(i),TOST(n)) = t;
               if (NumTools::abs<Real>(x) > NumTools::abs<Real>(z))
               {
-                H_(i+1,n) = (-r - w * t) / x;
+                H_(TOST(i+1),TOST(n)) = (-r - w * t) / x;
               }
               else
               {
-                H_(i+1,n) = (-s - y * t) / z;
+                H_(TOST(i+1),TOST(n)) = (-s - y * t) / z;
               }
             }
    
             // Overflow control
    
-            t = NumTools::abs<Real>(H_(i,n));
+            t = NumTools::abs<Real>(H_(TOST(i),TOST(n)));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
               {
-                H_(j,n) = H_(j,n) / t;
+                H_(TOST(j),TOST(n)) = H_(TOST(j),TOST(n)) / t;
               }
             }
           }
@@ -984,19 +984,19 @@ class EigenValue
 
         // Last vector component imaginary so matrix is triangular
    
-        if (NumTools::abs<Real>(H_(n,n-1)) > NumTools::abs<Real>(H_(n-1,n)))
+        if (NumTools::abs<Real>(H_(TOST(n),TOST(n-1))) > NumTools::abs<Real>(H_(TOST(n-1),TOST(n))))
         {
-          H_(n-1,n-1) = q / H_(n,n-1);
-          H_(n-1,n) = -(H_(n,n) - p) / H_(n,n-1);
+          H_(TOST(n-1),TOST(n-1)) = q / H_(TOST(n),TOST(n-1));
+          H_(TOST(n-1),TOST(n)) = -(H_(TOST(n),TOST(n)) - p) / H_(TOST(n),TOST(n-1));
         }
         else
         {
-          cdiv(0.0,-H_(n-1,n),H_(n-1,n-1)-p,q);
-          H_(n-1,n-1) = cdivr;
-          H_(n-1,n) = cdivi;
+          cdiv(0.0,-H_(TOST(n-1),TOST(n)),H_(TOST(n-1),TOST(n-1))-p,q);
+          H_(TOST(n-1),TOST(n-1)) = cdivr;
+          H_(TOST(n-1),TOST(n)) = cdivi;
         }
-        H_(n,n-1) = 0.0;
-        H_(n,n) = 1.0;
+        H_(TOST(n),TOST(n-1)) = 0.0;
+        H_(TOST(n),TOST(n)) = 1.0;
         for (int i = n-2; i >= 0; i--)
         {
           Real ra,sa,vr,vi;
@@ -1004,10 +1004,10 @@ class EigenValue
           sa = 0.0;
           for (int j = l; j <= n; j++)
           {
-            ra = ra + H_(i,j) * H_(j,n-1);
-            sa = sa + H_(i,j) * H_(j,n);
+            ra = ra + H_(TOST(i),TOST(j)) * H_(TOST(j),TOST(n-1));
+            sa = sa + H_(TOST(i),TOST(j)) * H_(TOST(j),TOST(n));
           }
-          w = H_(i,i) - p;
+          w = H_(TOST(i),TOST(i)) - p;
    
           if (e_[TOST(i)] < 0.0)
           {
@@ -1021,8 +1021,8 @@ class EigenValue
             if (e_[TOST(i)] == 0)
             {
               cdiv(-ra,-sa,w,q);
-              H_(i,n-1) = cdivr;
-              H_(i,n) = cdivi;
+              H_(TOST(i),TOST(n-1)) = cdivr;
+              H_(TOST(i),TOST(n)) = cdivi;
             }
             else
             {
@@ -1038,29 +1038,29 @@ class EigenValue
                 NumTools::abs<Real>(x) + NumTools::abs<Real>(y) + NumTools::abs<Real>(z));
               }
               cdiv(x*r-z*ra+q*sa,x*s-z*sa-q*ra,vr,vi);
-              H_(i,n-1) = cdivr;
-              H_(i,n) = cdivi;
+              H_(TOST(i),TOST(n-1)) = cdivr;
+              H_(TOST(i),TOST(n)) = cdivi;
               if (NumTools::abs<Real>(x) > (NumTools::abs<Real>(z) + NumTools::abs<Real>(q)))
               {
-                H_(i+1,n-1) = (-ra - w * H_(i,n-1) + q * H_(i,n)) / x;
-                H_(i+1,n) = (-sa - w * H_(i,n) - q * H_(i,n-1)) / x;
+                H_(i+1,n-1) = (-ra - w * H_(TOST(i),TOST(n-1)) + q * H_(TOST(i),TOST(n))) / x;
+                H_(TOST(i+1),TOST(n)) = (-sa - w * H_(TOST(i),TOST(n)) - q * H_(TOST(i),TOST(n-1))) / x;
               }
               else
               {
-                cdiv(-r-y*H_(i,n-1),-s-y*H_(i,n),z,q);
+                cdiv(-r-y*H_(TOST(i),TOST(n-1)),-s-y*H_(TOST(i),TOST(n)),z,q);
                 H_(i+1,n-1) = cdivr;
-                H_(i+1,n) = cdivi;
+                H_(TOST(i+1),TOST(n)) = cdivi;
               }
             }
  
             // Overflow control
-            t = std::max(NumTools::abs<Real>(H_(i,n-1)),NumTools::abs<Real>(H_(i,n)));
+            t = std::max(NumTools::abs<Real>(H_(TOST(i),TOST(n-1))),NumTools::abs<Real>(H_(TOST(i),TOST(n))));
             if ((eps * t) * t > 1)
             {
               for (int j = i; j <= n; j++)
               {
-                H_(j,n-1) = H_(j,n-1) / t;
-                H_(j,n) = H_(j,n) / t;
+                H_(TOST(j),TOST(n-1)) = H_(TOST(j),TOST(n-1)) / t;
+                H_(TOST(j),TOST(n)) = H_(TOST(j),TOST(n)) / t;
               }
             }
           }
@@ -1076,7 +1076,7 @@ class EigenValue
       {
         for (int j = i; j < nn; j++)
         {
-          V_(i,j) = H_(i,j);
+          V_(i,j) = H_(TOST(i),TOST(j));
         }
       }
     }
@@ -1090,7 +1090,7 @@ class EigenValue
         z = 0.0;
         for (int k = low; k <= std::min(j,high); k++)
         {
-          z = z + V_(i,k) * H_(k,j);
+          z = z + H_(TOST(i),TOST(k)) * H_(TOST(k),TOST(j));
         }
         V_(i,j) = z;
       }
