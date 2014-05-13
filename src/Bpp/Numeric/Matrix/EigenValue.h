@@ -1048,7 +1048,7 @@ class EigenValue
               else
               {
                 cdiv(-r-y*H_(TOST(i),TOST(n-1)),-s-y*H_(TOST(i),TOST(n)),z,q);
-                H_(i+1,n-1) = cdivr;
+                H_(TOST(i+1),TOST(n-1)) = cdivr;
                 H_(TOST(i+1),TOST(n)) = cdivi;
               }
             }
