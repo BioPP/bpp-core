@@ -883,13 +883,13 @@ class EigenValue
    
             for (int i = low; i <= high; i++)
             {
-              p = x * H_(TOST(i),TOST(k)) + y * V_(TOST(i),TOST(k+1));
+              p = x * V_(TOST(i),TOST(k)) + y * V_(TOST(i),TOST(k+1));
               if (notlast)
               {
                 p = p + z * V_(TOST(i),TOST(k+2));
                 V_(TOST(i),TOST(k+2)) = V_(TOST(i),TOST(k+2)) - p * r;
               }
-              H_(TOST(i),TOST(k)) = H_(TOST(i),TOST(k)) - p;
+              V_(TOST(i),TOST(k)) = V_(TOST(i),TOST(k)) - p;
               V_(TOST(i),TOST(k+1)) = V_(TOST(i),TOST(k+1)) - p * q;
             }
           }  // (s != 0)
@@ -1090,7 +1090,7 @@ class EigenValue
         z = 0.0;
         for (int k = low; k <= std::min(j,high); k++)
         {
-          z = z + H_(TOST(i),TOST(k)) * H_(TOST(k),TOST(j));
+          z = z + V_(TOST(i),TOST(k)) * H_(TOST(k),TOST(j));
         }
         V_(TOST(i),TOST(j)) = z;
       }
