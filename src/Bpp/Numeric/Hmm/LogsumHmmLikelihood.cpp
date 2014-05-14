@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 16, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for phylogenetic data analysis.
@@ -120,7 +120,7 @@ void LogsumHmmLikelihood::computeForward_()
   {
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
-      logTrans[ii + j] = log(transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i)));
+      logTrans[ii + j] = log(transitionMatrix_->Pij(j, i));
   }
 
   //Initialisation:
@@ -222,7 +222,7 @@ void LogsumHmmLikelihood::computeBackward_() const
   {
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
-      logTrans[ii + j] = log(transitionMatrix_->Pij(static_cast<int>(i), static_cast<int>(j)));
+      logTrans[ii + j] = log(transitionMatrix_->Pij(i, j));
   }
 
 

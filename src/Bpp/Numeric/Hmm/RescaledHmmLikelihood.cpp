@@ -123,7 +123,7 @@ void RescaledHmmLikelihood::computeForward_()
   {
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++) {
-      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i));
+      trans[ii + j] = transitionMatrix_->Pij(j, i);
       if (isnan(trans[ii + j]))
         throw Exception("RescaledHmmLikelihood::computeForward_. NaN transition probability");
       if (trans[ii + j] < 0)
@@ -254,7 +254,7 @@ void RescaledHmmLikelihood::computeBackward_() const
   {
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
-      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(i), static_cast<int>(j));
+      trans[ii + j] = transitionMatrix_->Pij(i, j);
   }
 
 

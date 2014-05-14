@@ -95,9 +95,9 @@ public:
    * @return The number of states in the model.
    */
 
-  unsigned int getNumberOfStates() const
+  size_t getNumberOfStates() const
   {
-    return (unsigned int)alph_->getNumberOfStates();
+    return alph_->getNumberOfStates();
   }
 
 };

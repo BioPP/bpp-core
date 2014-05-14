@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -60,11 +60,7 @@ double GoldenSectionSearch::GSSStopCondition::getCurrentTolerance() const
 {
   // NRC Test for done:
   const GoldenSectionSearch* gss = dynamic_cast<const GoldenSectionSearch*>(optimizer_);
-  double x0 = gss->x0;
-  double x1 = gss->x1;
-  double x2 = gss->x2;
-  double x3 = gss->x3;
-  return NumTools::abs(x3 - x0) / (NumTools::abs(x1) + NumTools::abs(x2));
+  return NumTools::abs(gss->x3 - gss->x0) / (NumTools::abs(gss->x1) + NumTools::abs(gss->x2));
 }
   
 /******************************************************************************/

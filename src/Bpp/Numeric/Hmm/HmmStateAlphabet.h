@@ -5,7 +5,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 16, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for phylogenetic data analysis.
@@ -72,10 +72,10 @@ namespace bpp {
      * @return The corresponding hidden state.
      * @see getNumberOfStates
      */
-    virtual const Clonable& getState(unsigned int stateIndex) const throw (HmmBadStateException) = 0;
+    virtual const Clonable& getState(size_t stateIndex) const throw (HmmBadStateException) = 0;
 
 
-    virtual unsigned int getNumberOfStates() const = 0;
+    virtual size_t getNumberOfStates() const = 0;
 
     /**
      * @brief Tell if this instance can work with the instance of alphabet given as input.
