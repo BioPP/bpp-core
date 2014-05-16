@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (January 12, 2011)
+Copyright or © or Copr. Bio++ Development Team, (January 12, 2011)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -40,4 +40,6 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "BasicONode.h"
 
 using namespace bpp;
+
+BasicONode::BasicONode() {}
 
