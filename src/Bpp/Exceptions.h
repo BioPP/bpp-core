@@ -44,6 +44,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include <stdexcept>
 #include <vector>
+#include <string>
 
 namespace bpp
 {

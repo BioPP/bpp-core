@@ -222,7 +222,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
       v = getParameterValue("V" + TextTools::toString(i + 1));
       if (distribution_.find(v) != distribution_.end())
       {
-        unsigned int j = 1;
+        int j = 1;
         int f = ((v + precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
         while (distribution_.find(v + f * j * precision()) != distribution_.end())
         {
@@ -240,7 +240,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     v = getParameterValue("V" + TextTools::toString(size));
     if (distribution_.find(v) != distribution_.end())
     {
-      unsigned int j = 1;
+      int j = 1;
       int f = ((v + precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
       while (distribution_.find(v + f * j * precision()) != distribution_.end())
       {

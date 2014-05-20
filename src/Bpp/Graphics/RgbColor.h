@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -140,12 +140,12 @@ class RGBColor:
       std::string hex = "";
       while (dec > 15)
       {
-        unsigned int tmp = dec - (int)floor((double)dec/16.)*16;
+        unsigned int tmp = dec - static_cast<unsigned int>(floor(static_cast<double>(dec)/16.)*16);
         hex = hexa[tmp] + hex;
-        dec=(int)floor((double)dec/16.);
+        dec = static_cast<unsigned int>(floor(static_cast<double>(dec)/16.));
       }
       hex = hexa[dec] + hex;
-      if(hex.size() == 1) hex = "0" + hex;
+      if (hex.size() == 1) hex = "0" + hex;
       return hex;
     }
 

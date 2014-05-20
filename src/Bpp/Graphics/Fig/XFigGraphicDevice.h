@@ -69,7 +69,7 @@ class XFigGraphicDevice:
     int fontCode_; 
     unsigned int fontSize_;
     unsigned int fontFlag_;
-    unsigned int lineTypeCode_;
+    short lineTypeCode_;
 
   public:
     XFigGraphicDevice(std::ostream& out):

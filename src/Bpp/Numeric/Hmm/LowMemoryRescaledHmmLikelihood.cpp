@@ -116,7 +116,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
    size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
     {
-      trans[ii + j] = transitionMatrix_->Pij(static_cast<int>(j), static_cast<int>(i));
+      trans[ii + j] = transitionMatrix_->Pij(j, i);
     }
   }
 
@@ -125,7 +125,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
   for (size_t j = 0; j < nbStates_; j++)
   {
-   size_t jj = j * nbStates_;
+    size_t jj = j * nbStates_;
     x = 0;
     for (size_t k = 0; k < nbStates_; k++)
     {
@@ -234,7 +234,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
       offset += maxSize_;
     }
   }
-  sort(lScales.begin(), lScales.begin() + nbSites_ - offset, cmp);
+  sort(lScales.begin(), lScales.begin() + static_cast<ptrdiff_t>(nbSites_ - offset), cmp);
   double partialLogLik = 0;
   for (size_t i = 0; i < nbSites_ - offset; ++i)
   {

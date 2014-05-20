@@ -63,12 +63,14 @@ public:
   virtual ~Matrix() {}
 
 public:
+
   /**
    * @return \f$m_{i,j}\f$.
    * @param i row index.
    * @param j column index.
    */
   virtual const Scalar& operator()(size_t i, size_t j) const = 0;
+  
   /**
    * @return \f$m_{i,j}\f$.
    * @param i row index.

@@ -85,11 +85,11 @@ AutoCorrelationTransitionMatrix& AutoCorrelationTransitionMatrix::operator=(cons
 const Matrix<double>& AutoCorrelationTransitionMatrix::getPij() const
  {
    if (!upToDate_){
-     for (size_t i=0; i<vAutocorrel_.size(); i++)
-       for (size_t j=0; j<vAutocorrel_.size(); j++)
-         pij_(i,j)=(i==j)?vAutocorrel_[i]:(1-vAutocorrel_[i])/(getNumberOfStates()-1);
+     for (size_t i = 0; i < vAutocorrel_.size(); ++i)
+       for (size_t j = 0; j < vAutocorrel_.size(); ++j)
+         pij_(i,j) = (i==j) ? vAutocorrel_[i] : (1 - vAutocorrel_[i]) / static_cast<double>(getNumberOfStates()-1);
 
-     upToDate_=true;
+     upToDate_ = true;
    }
    
    return pij_;

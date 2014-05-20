@@ -73,8 +73,8 @@ bool FileTools::directoryExists(const std::string& path)
 
 std::string FileTools::getFileName(const std::string& path, char dirSep)
 {
-  size_t end = path.find_last_of(".");
-  size_t begin = path.find_last_of(dirSep) + 1;
+  ptrdiff_t end = static_cast<ptrdiff_t>(path.find_last_of("."));
+  ptrdiff_t begin = static_cast<ptrdiff_t>(path.find_last_of(dirSep) + 1);
 
   // Return an empty string if specified string isn't a path
   if (begin > end) return "";
@@ -105,7 +105,7 @@ streampos FileTools::getFileSize(const std::string& filename)
 std::string FileTools::getParent(const std::string& path, char dirSep)
 {
   // Position of file name:
-  size_t begin = path.find_last_of(dirSep);
+  ptrdiff_t begin = static_cast<ptrdiff_t>(path.find_last_of(dirSep));
 
   // Copy string and delte filename:
   string result(path);
@@ -120,7 +120,7 @@ std::string FileTools::getParent(const std::string& path, char dirSep)
 std::string FileTools::getExtension(const std::string& path)
 {
   size_t end = path.find_last_of(".");
-  return path.substr(end+1);
+  return path.substr(end + 1);
 }
 
 /******************************************************************************/

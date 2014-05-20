@@ -105,7 +105,7 @@ void StringTokenizer::removeEmptyTokens()
 {
   for (size_t i = tokens_.size(); i > currentPosition_; i--)
   {
-    if (tokens_[i-1] == "") tokens_.erase(tokens_.begin() + i - 1);
+    if (tokens_[i - 1] == "") tokens_.erase(tokens_.begin() + static_cast<ptrdiff_t>(i - 1));
   }
 }
 

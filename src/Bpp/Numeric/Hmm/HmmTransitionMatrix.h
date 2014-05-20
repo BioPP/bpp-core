@@ -77,7 +77,7 @@ namespace bpp
     /**
      * @return The number of states in the model.
      */
-    virtual unsigned int getNumberOfStates() const = 0;
+    virtual size_t getNumberOfStates() const = 0;
 
     /**
      * @brief Get the transition probability between two states.
@@ -86,7 +86,7 @@ namespace bpp
      * @param j final state.
      * @return the transition probability between the two states.
      */
-    virtual double Pij(unsigned int i, unsigned int j) const = 0;
+    virtual double Pij(size_t i, size_t j) const = 0;
 
     /**
      * @brief Get all transition probabilities as a matrix.

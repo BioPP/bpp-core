@@ -56,8 +56,9 @@ using namespace bpp;
 
 std::vector<std::string> AttributesTools::getVector(int argc, char* argv[])
 {
-  vector<string> result(argc);
-  for (int i = 1; i < argc; i++) result[i] = string(argv[i]);
+  size_t n = static_cast<size_t>(argc);
+  vector<string> result(n);
+  for (size_t i = 1; i < n; ++i) result[i] = string(argv[i]);
   //Ignore first argc which is the program name!    
   return result;
 }
@@ -96,11 +97,11 @@ void AttributesTools::getAttributesMap(
   {
     string arg = argv2[i];
     if (arg == "") continue; //Skipping void line.
-    while (arg[arg.size()-1] == '\\')
+    while (arg[arg.size() - 1] == '\\')
     {
       //Splitted line
       i++;
-      arg = arg.substr(0, arg.length()-1) + argv2[i];
+      arg = arg.substr(0, arg.length() - 1) + argv2[i];
     }
     //Parsing:
     string::size_type limit = arg.find(delimiter, 0);
@@ -111,8 +112,8 @@ void AttributesTools::getAttributesMap(
     }
     else
     {
-      string name  = string(arg.begin(), arg.begin() + limit);
-      string value = string(arg.begin() + limit + delimiter.size(), arg.end());
+      string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
+      string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
       if ((name == "param") || (name == "params"))
       {
         //Recursive inclusion:
@@ -214,18 +215,18 @@ std::string AttributesTools::removeComments(
   do
   {
     string::size_type first = r.find(begin, last);
-    if(first == string::npos) return r; //No shell comment.
+    if (first == string::npos) return r; //No shell comment.
     //else:  
     last = r.find(end, first);
-    if(last == string::npos)
+    if (last == string::npos)
     {
-      r.erase(r.begin() + first, r.end());
+      r.erase(r.begin() + static_cast<ptrdiff_t>(first), r.end());
     }
     else
     {
-      r.erase(r.begin() + first, r.begin() + last);
+      r.erase(r.begin() + static_cast<ptrdiff_t>(first), r.begin() + static_cast<ptrdiff_t>(last));
     }
-  } while(last != string::npos);
+  } while (last != string::npos);
   return r;
 }
 

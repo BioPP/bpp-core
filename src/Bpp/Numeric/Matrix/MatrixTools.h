@@ -985,7 +985,8 @@ namespace bpp
   
       bool unassignedFound;
       size_t i, iMin;
-      size_t numFree = 0, previousNumFree, f, i0, k, freeRow;
+      size_t numFree = 0, previousNumFree, f, k, freeRow;
+      int i0;
       std::vector<size_t> free(dim); // list of unassigned rows.
       std::vector<size_t> pred(dim); // row-predecessor of column in augmenting/alternating path.
       size_t j, j1, j2, endOfPath, last, low, up;
@@ -1015,8 +1016,8 @@ namespace bpp
         if (++matches[iMin] == 1) 
         { 
           // init assignment if minimum row assigned for first time.
-          rowSol[iMin] = j - 1; 
-          colSol[j - 1] = iMin; 
+          rowSol[iMin] = static_cast<int>(j - 1); 
+          colSol[j - 1] = static_cast<int>(iMin); 
         }
         else
           colSol[j - 1] = -1;        // row already assigned, column not assigned.
@@ -1029,7 +1030,7 @@ namespace bpp
         else {
           if (matches[i] == 1)   // transfer reduction from rows that are assigned once.
           {
-            j1 = rowSol[i]; 
+            j1 = static_cast<size_t>(rowSol[i]); //rowSol[i] is >= 0 here 
             min = -log(0);
             for (j = 0; j < dim; j++)  
               if (j != j1)
@@ -1059,7 +1060,7 @@ namespace bpp
           // find minimum and second minimum reduced cost over columns.
           uMin = assignCost(i, 0) - v[0]; 
           j1 = 0; 
-          uSubMin = -log(0);
+          uSubMin = static_cast<size_t>(-log(0));
           for (j = 1; j < dim; j++) 
           {
             h = assignCost(i, j) - v[j];
@@ -1094,18 +1095,18 @@ namespace bpp
           }
 
           // (re-)assign i to j1, possibly de-assigning an i0.
-          rowSol[i] = j1; 
-          colSol[j1] = i;
+          rowSol[i] = static_cast<int>(j1); 
+          colSol[j1] = static_cast<int>(i);
 
           if (i0 >= 0) {          // minimum column j1 assigned earlier.
             if (uMin < uSubMin) {
               // put in current k, and go back to that k.
               // continue augmenting path i - j1 with i0.
-              free[--k] = i0; 
+              free[--k] = static_cast<size_t>(i0); 
             } else { 
               // no further augmenting reduction possible.
               // store i0 in list of free rows for next phase.
-              free[numFree++] = i0; 
+              free[numFree++] = static_cast<size_t>(i0); 
             }
           }
         }
@@ -1174,7 +1175,7 @@ namespace bpp
             // update 'distances' between freerow and all unscanned columns, via next scanned column.
             j1 = colList[low]; 
             low++; 
-            i = colSol[j1]; 
+            i = static_cast<size_t>(colSol[j1]); 
             h = assignCost(i, j1) - v[j1] - min;
 
             for (k = up; k < dim; k++) 
@@ -1217,10 +1218,10 @@ namespace bpp
         do
         {
           i = pred[endOfPath]; 
-          colSol[endOfPath] = i; 
+          colSol[endOfPath] = static_cast<int>(i); 
           j1 = endOfPath; 
-          endOfPath = rowSol[i]; 
-          rowSol[i] = j1;
+          endOfPath = static_cast<size_t>(rowSol[i]); 
+          rowSol[i] = static_cast<int>(j1);
         }
         while (i != freeRow);
       }
@@ -1229,7 +1230,7 @@ namespace bpp
       Scalar lapCost = 0;
       for (i = 0; i < dim; i++)  
       {
-        j = rowSol[i];
+        j = static_cast<size_t>(rowSol[i]);
         u[i] = assignCost(i, j) - v[j];
         lapCost = lapCost + assignCost(i, j); 
       }

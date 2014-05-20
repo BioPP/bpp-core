@@ -158,7 +158,7 @@ Vdouble AbstractDiscreteDistribution::getCategories() const
 Vdouble AbstractDiscreteDistribution::getProbabilities() const
 {
   Vdouble result(distribution_.size());
-  int i = 0;
+  size_t i = 0;
   for (map<double, double>::const_iterator it = distribution_.begin();
        it != distribution_.end();
        it++)
@@ -425,7 +425,7 @@ void AbstractDiscreteDistribution::discretize()
   {
     if (distribution_.find(values[i]) != distribution_.end())
     {
-      unsigned int j = 1;
+      int j = 1;
       int f = ((values[i] + NumConstants::TINY()) >= intMinMax_.getUpperBound()) ? -1 : 1;
       while (distribution_.find(values[i] + f * j * precision()) != distribution_.end())
       {

@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. Julien Dutheil, (November 19, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -483,7 +483,7 @@ void ParameterList::deleteParameter(size_t index) throw (IndexOutOfBoundsExcepti
   if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
   Parameter* p = parameters_[index];
   delete p;
-  parameters_.erase(parameters_.begin() + index);
+  parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
 }
 
 /******************************************************************************/
@@ -497,7 +497,7 @@ void ParameterList::deleteParameters(const std::vector<size_t>& indices) throw (
     if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
     Parameter* p = parameters_[index];
     delete p;
-    parameters_.erase(parameters_.begin() + index);
+    parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
   }
 }
 

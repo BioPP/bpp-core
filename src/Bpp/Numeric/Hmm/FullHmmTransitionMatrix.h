@@ -95,7 +95,7 @@ public:
    * @return the transition probability between the two states.
    */
 
-  double Pij(unsigned int i, unsigned int j) const
+  double Pij(size_t i, size_t j) const
   {
     return vSimplex_[i].prob(j);
   }

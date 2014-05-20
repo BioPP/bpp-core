@@ -83,10 +83,9 @@ public:
    * @param j final state.
    * @return the transition probability between the two states.
    */
-
-  double Pij(unsigned int i, unsigned int j) const
+  double Pij(size_t i, size_t j) const
   {
-    return (i==j)?vAutocorrel_[i]:(1-vAutocorrel_[i])/(getNumberOfStates()-1);
+    return (i == j) ? vAutocorrel_[i] : (1 - vAutocorrel_[i]) / static_cast<double>(getNumberOfStates() - 1);
   }
 
   /**

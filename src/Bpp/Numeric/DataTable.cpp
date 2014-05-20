@@ -5,7 +5,7 @@
 //
 
 /*
-   Copyright or © or Copr. CNRS, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
    This software is a computer program whose purpose is to provide classes
    for numerical calculus.
@@ -398,22 +398,22 @@ throw (IndexOutOfBoundsException)
 {
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::deleteColumn(size_t).", index, 0, nCol_ - 1);
-  data_.erase(data_.begin() + index);
-  if (colNames_ != NULL)
-    colNames_->erase(colNames_->begin() + index);
+  data_.erase(data_.begin() + static_cast<ptrdiff_t>(index));
+  if (colNames_)
+    colNames_->erase(colNames_->begin() + static_cast<ptrdiff_t>(index));
   nCol_--;
 }
 
 void DataTable::deleteColumn(const string& colName)
 throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
-  if (colNames_ == NULL)
+  if (!colNames_)
     throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
   try
   {
     size_t colIndex = VectorTools::which(*colNames_, colName);
-    data_.erase(data_.begin() + colIndex);
-    colNames_->erase(colNames_->begin() + colIndex);
+    data_.erase(data_.begin() + static_cast<ptrdiff_t>(colIndex));
+    colNames_->erase(colNames_->begin() + static_cast<ptrdiff_t>(colIndex));
     nCol_--;
   }
   catch (ElementNotFoundException<string>& ex)
@@ -510,17 +510,17 @@ throw (IndexOutOfBoundsException)
     vector<string>* column = &data_[j];
     if (index >= column->size())
       throw IndexOutOfBoundsException("DataTable::deleteRow(size_t).", index, 0, column->size() - 1);
-    column->erase(column->begin() + index);
+    column->erase(column->begin() + static_cast<ptrdiff_t>(index));
   }
-  if (rowNames_ != NULL)
-    rowNames_->erase(rowNames_->begin() + index);
+  if (rowNames_)
+    rowNames_->erase(rowNames_->begin() + static_cast<ptrdiff_t>(index));
   nRow_--;
 }
 
 void DataTable::deleteRow(const string& rowName)
 throw (NoTableRowNamesException, TableRowNameNotFoundException)
 {
-  if (rowNames_ == NULL)
+  if (!rowNames_)
     throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
   try
   {
@@ -528,9 +528,9 @@ throw (NoTableRowNamesException, TableRowNameNotFoundException)
     for (size_t j = 0; j < nCol_; j++)
     {
       vector<string>* column = &data_[j];
-      column->erase(column->begin() + rowIndex);
+      column->erase(column->begin() + static_cast<ptrdiff_t>(rowIndex));
     }
-    rowNames_->erase(rowNames_->begin() + rowIndex);
+    rowNames_->erase(rowNames_->begin() + static_cast<ptrdiff_t>(rowIndex));
     nRow_--;
   }
   catch (ElementNotFoundException<string>& ex)
@@ -638,11 +638,11 @@ throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameExce
   // Row names:
   if (rowNames > -1)
   {
-    if ((size_t)rowNames >= nCol)
-      throw IndexOutOfBoundsException("DataTable::read(...). Invalid column specified for row names.", rowNames, 0, nCol - 1);
-    vector<string> col = dt->getColumn((size_t)rowNames);
+    if (static_cast<size_t>(rowNames) >= nCol)
+      throw IndexOutOfBoundsException("DataTable::read(...). Invalid column specified for row names.", static_cast<size_t>(rowNames), 0, nCol - 1);
+    vector<string> col = dt->getColumn(static_cast<size_t>(rowNames));
     dt->setRowNames(col);
-    dt->deleteColumn(rowNames);
+    dt->deleteColumn(static_cast<size_t>(rowNames));
   }
 
   return dt;

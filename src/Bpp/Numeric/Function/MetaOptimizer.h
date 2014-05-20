@@ -8,7 +8,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
   This software is a computer program whose purpose is to provide classes
   for phylogenetic data analysis.
@@ -116,7 +116,7 @@ namespace bpp
      * @param derivatives 0, 1 or 2: does this parameter use no, first order or second order derivatives?
      * @param type For each optimization step, shall we perform a full optimization with this optimizer or only one step?
      */
-    virtual void addOptimizer(const std::string & name, Optimizer * optimizer, const std::vector<std::string> & params, const short derivatives = 0, const std::string & type = IT_TYPE_STEP)
+    virtual void addOptimizer(const std::string & name, Optimizer * optimizer, const std::vector<std::string> & params, unsigned short derivatives = 0, const std::string & type = IT_TYPE_STEP)
     {
       names_.push_back(name);
       optimizers_.push_back(optimizer);
@@ -128,43 +128,43 @@ namespace bpp
     /**
      * @return The display name of the ith optimizer in the set.
      */
-    virtual const std::string& getName(unsigned int i) const { return names_[i]; }
+    virtual const std::string& getName(size_t i) const { return names_[i]; }
     
     /**
      * @return The ith optimizer in the set.
      */
-    virtual Optimizer* getOptimizer(unsigned int i) { return optimizers_[i]; }
+    virtual Optimizer* getOptimizer(size_t i) { return optimizers_[i]; }
     /**
      * @return The ith optimizer in the set.
      */
-    virtual const Optimizer* getOptimizer(unsigned int i) const { return optimizers_[i]; }
+    virtual const Optimizer* getOptimizer(size_t i) const { return optimizers_[i]; }
 
     /**
      * @return The parameter names associated to the ith optimizer in the set.
      */
-    virtual std::vector<std::string>& getParameterNames(unsigned int i) { return parameterNames_[i]; }
+    virtual std::vector<std::string>& getParameterNames(size_t i) { return parameterNames_[i]; }
     /**
      * @return The parameter names associated to the ith optimizer in the set.
      */
-    virtual const std::vector<std::string>& getParameterNames(unsigned int i) const { return parameterNames_[i]; }
+    virtual const std::vector<std::string>& getParameterNames(size_t i) const { return parameterNames_[i]; }
 
     /**
      * @return The type of iteration to perform for the ith optimizer in the set.
      */
-    virtual std::string& getIterationType(unsigned int i) { return itTypes_[i]; }
+    virtual std::string& getIterationType(size_t i) { return itTypes_[i]; }
     /**
      * @return The type of iteration to perform for the ith optimizer in the set.
      */
-    virtual const std::string& getIterationType(unsigned int i) const { return itTypes_[i]; }
+    virtual const std::string& getIterationType(size_t i) const { return itTypes_[i]; }
 
     /**
      * @return True if the ith optimizer in the set requires first order derivatives.
      */
-    virtual bool requiresFirstOrderDerivatives(unsigned int i) const { return derivatives_[i] > 0; }  
+    virtual bool requiresFirstOrderDerivatives(size_t i) const { return derivatives_[i] > 0; }  
     /**
      * @return True if the ith optimizer in the set requires second order derivatives.
      */
-    virtual bool requiresSecondOrderDerivatives(unsigned int i) const { return derivatives_[i] > 1; }  
+    virtual bool requiresSecondOrderDerivatives(size_t i) const { return derivatives_[i] > 1; }  
 
     /**
      * @return The number of optimizers in the set.

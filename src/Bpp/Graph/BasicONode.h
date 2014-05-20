@@ -5,7 +5,7 @@
 // 
 
 /*
-Copyright or © or Copr. CNRS, (January 12, 2011)
+Copyright or © or Copr. Bio++ Development Team, (January 12, 2011)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -53,6 +53,8 @@ namespace bpp {
    * @author Sylvain Gaillard
    */
   class BasicONode: public ONode {
+    public:
+      BasicONode();
   };
 }
 
