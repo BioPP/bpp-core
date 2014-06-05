@@ -47,26 +47,31 @@ throw (ParameterNotFoundException, ConstraintException)
 {
   if (computeD1_ && variables_.size() > 0)
   {
-    if (function1_) function1_->enableFirstOrderDerivatives(false);
-    if (function2_) function2_->enableSecondOrderDerivatives(false);
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(false);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(false);
     function_->setParameters(parameters);
     f2_ = function_->getValue();
-    if ((abs(f2_) >= NumConstants::VERY_BIG()) || isnan(f2_)){
-      for (unsigned int i = 0; i < variables_.size(); i++){
-        der1_[i]=log(-1);
-        der2_[i]=log(-1);
+    if ((abs(f2_) >= NumConstants::VERY_BIG()) || isnan(f2_))
+    {
+      for (size_t i = 0; i < variables_.size(); ++i)
+      {
+        der1_[i] = log(-1);
+        der2_[i] = log(-1);
       }
       return;
     }
-      
+
     string lastVar;
     bool functionChanged = false;
     ParameterList p;
     bool start = true;
-    for (unsigned int i = 0; i < variables_.size(); i++)
+    for (size_t i = 0; i < variables_.size(); ++i)
     {
       string var = variables_[i];
-      if (!parameters.hasParameter(var)) continue;
+      if (!parameters.hasParameter(var))
+        continue;
       if (!start)
       {
         vector<string> vars(2);
@@ -83,91 +88,93 @@ throw (ParameterNotFoundException, ConstraintException)
       functionChanged = true;
       double value = function_->getParameterValue(var);
       double h = -(1. + std::abs(value)) * h_;
-      if (abs(h)<p[0].getPrecision())
-        h=h<0?-p[0].getPrecision():p[0].getPrecision();
+      if (abs(h) < p[0].getPrecision())
+        h = h < 0 ? -p[0].getPrecision() : p[0].getPrecision();
       double hf1(0), hf3(0);
-      unsigned int nbtry=0;
-      
-      //Compute f1_
-      while (hf1==0){
+      unsigned int nbtry = 0;
+
+      // Compute f1_
+      while (hf1 == 0)
+      {
         try
-          {
-            p[0].setValue(value + h);
-            function_->setParameters(p); //also reset previous parameter...
-            
-            p = p.subList(0);
-            f1_ = function_->getValue();
-            if ((abs(f1_) >= NumConstants::VERY_BIG()) || isnan(f1_))
-              throw ConstraintException("f1_ too large", &p[0], f1_);
-            else
-              hf1=h;
-          }
+        {
+          p[0].setValue(value + h);
+          function_->setParameters(p); // also reset previous parameter...
+
+          p = p.subList(0);
+          f1_ = function_->getValue();
+          if ((abs(f1_) >= NumConstants::VERY_BIG()) || isnan(f1_))
+            throw ConstraintException("f1_ too large", &p[0], f1_);
+          else
+            hf1 = h;
+        }
         catch (ConstraintException& ce)
-          {
-            if (++nbtry==10) // no possibility to compute derivatives
-              break;
-            else
-              if (h<0)
-                h=-h;  // try on the right
-              else
-                h/=-2; // try again on the left with smaller interval
-          }
-      }
-
-      if (hf1!=0){
-        //Compute f3_ 
-        if (h<0)
-          h=-h;  // on the right 
-        else
-          h/=2; //  on the left with smaller interval
-
-        nbtry=0;
-        while (hf3==0){
-          try
-            {
-              p[0].setValue(value + h);
-              function_->setParameters(p); //also reset previous parameter...
-            
-              p = p.subList(0);
-              f3_ = function_->getValue();
-              if ((abs(f3_) >= NumConstants::VERY_BIG()) || isnan(f3_))
-                throw ConstraintException("f3_ too large", &p[0], f3_);
-              else
-                hf3=h;
-            }
-          catch (ConstraintException& ce)
-            {
-              if (++nbtry==10) // no possibility to compute derivatives
-                break;
-              else
-                if (h<0)
-                  h=-h;  // try on the right
-                else
-                  h/=-2; // try again on the left with smaller interval
-            }
+        {
+          if (++nbtry == 10) // no possibility to compute derivatives
+            break;
+          else if (h < 0)
+            h = -h;  // try on the right
+          else
+            h /= -2;  // try again on the left with smaller interval
         }
       }
-      
-      if (hf3==0){
-          der1_[i]=log(-1);
-          der2_[i]=log(-1);
+
+      if (hf1 != 0)
+      {
+        // Compute f3_
+        if (h < 0)
+          h = -h;  // on the right
+        else
+          h /= 2;  //  on the left with smaller interval
+
+        nbtry = 0;
+        while (hf3 == 0)
+        {
+          try
+          {
+            p[0].setValue(value + h);
+            function_->setParameters(p); // also reset previous parameter...
+
+            p = p.subList(0);
+            f3_ = function_->getValue();
+            if ((abs(f3_) >= NumConstants::VERY_BIG()) || isnan(f3_))
+              throw ConstraintException("f3_ too large", &p[0], f3_);
+            else
+              hf3 = h;
+          }
+          catch (ConstraintException& ce)
+          {
+            if (++nbtry == 10) // no possibility to compute derivatives
+              break;
+            else if (h < 0)
+              h = -h;  // try on the right
+            else
+              h /= -2;  // try again on the left with smaller interval
+          }
+        }
       }
-      else {
-        der1_[i] = (f1_ - f3_) / (hf1-hf3);
-        der2_[i] = ((f1_ - f2_)/hf1 - (f3_ - f2_)/hf3)*2/(hf1-hf3);
+
+      if (hf3 == 0)
+      {
+        der1_[i] = log(-1);
+        der2_[i] = log(-1);
+      }
+      else
+      {
+        der1_[i] = (f1_ - f3_) / (hf1 - hf3);
+        der2_[i] = ((f1_ - f2_) / hf1 - (f3_ - f2_) / hf3) * 2 / (hf1 - hf3);
       }
     }
 
 
-    
-    
     if (computeCrossD2_)
     {
       string lastVar1, lastVar2;
       for (unsigned int i = 0; i < variables_.size(); i++)
       {
         string var1 = variables_[i];
-        if (!parameters.hasParameter(var1)) continue;
+        if (!parameters.hasParameter(var1))
+          continue;
         for (unsigned int j = 0; j < variables_.size(); j++)
         {
           if (j == i)
@@ -176,15 +183,18 @@ throw (ParameterNotFoundException, ConstraintException)
             continue;
           }
           string var2 = variables_[j];
-          if (!parameters.hasParameter(var2)) continue;
+          if (!parameters.hasParameter(var2))
+            continue;
 
           vector<string> vars(2);
           vars[0] = var1;
           vars[1] = var2;
           if (i > 0 && j > 0)
           {
-            if (lastVar1 != var1 && lastVar1 != var2) vars.push_back(lastVar1);
-            if (lastVar2 != var1 && lastVar2 != var2) vars.push_back(lastVar2);
+            if (lastVar1 != var1 && lastVar1 != var2)
+              vars.push_back(lastVar1);
+            if (lastVar2 != var1 && lastVar2 != var2)
+              vars.push_back(lastVar2);
           }
           p = parameters.subList(vars);
 
@@ -193,16 +203,16 @@ throw (ParameterNotFoundException, ConstraintException)
           double h1 = (1. + std::abs(value1)) * h_;
           double h2 = (1. + std::abs(value2)) * h_;
 
-          //Compute 4 additional points:
+          // Compute 4 additional points:
           try
           {
             p[0].setValue(value1 - h1);
             p[1].setValue(value2 - h2);
-            function_->setParameters(p); //also reset previous parameter...
+            function_->setParameters(p); // also reset previous parameter...
             vector<size_t> tmp(2);
             tmp[0] = 0;
             tmp[1] = 1;
-            p = p.subList(tmp); //removed the previous parameters.
+            p = p.subList(tmp); // removed the previous parameters.
             f11_ = function_->getValue();
 
             p[1].setValue(value2 + h2);
@@ -230,19 +240,23 @@ throw (ParameterNotFoundException, ConstraintException)
       }
     }
 
-    //Reset last parameter and compute analytical derivatives if any.
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    // Reset last parameter and compute analytical derivatives if any.
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(computeD2_);
     if (functionChanged)
       function_->setParameters(parameters.subList(lastVar));
   }
   else
   {
-    //Reset initial value and compute analytical derivatives if any.
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    // Reset initial value and compute analytical derivatives if any.
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(computeD2_);
     function_->setParameters(parameters);
-    //Just in case derivatives are not computed:
+    // Just in case derivatives are not computed:
     f2_ = function_->getValue();
   }
 }
