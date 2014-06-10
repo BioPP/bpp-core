@@ -55,6 +55,7 @@ namespace bpp
       std::string appName_;
       mutable std::map<std::string, std::string> params_;
       bool timerStarted_;
+      int warningLevel_;
 
     public:
       BppApplication(int argc, char* argv[], const std::string& name);
@@ -72,6 +73,8 @@ namespace bpp
       }
       
       std::string& getParam(const std::string& name) { return params_[name]; }
+
+      bool warn(int level) const { return level <= warningLevel_; }
   };
 
 } //end of namespace bpp;
