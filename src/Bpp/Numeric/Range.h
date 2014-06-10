@@ -47,8 +47,8 @@
 #include <string>
 #include <set>
 #include <algorithm>
-
 #include <iostream>
+#include <cstddef>
 
 namespace bpp {
 
@@ -428,7 +428,7 @@ template<class T> class MultiRange:
           ranges_[overlappingPositions[0]]->expandWith(*ranges_[overlappingPositions[i]]);
           //Then removes this range:
           delete ranges_[overlappingPositions[i]];
-          ranges_.erase(ranges_.begin() + overlappingPositions[i]);
+          ranges_.erase(ranges_.begin() + static_cast<ptrdiff_t>(overlappingPositions[i]));
         }
       }
       clean_();

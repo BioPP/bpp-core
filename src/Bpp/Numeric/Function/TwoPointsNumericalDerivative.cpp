@@ -47,8 +47,10 @@ throw (ParameterNotFoundException, ConstraintException)
 {
   if (computeD1_ && variables_.size() > 0)
   {
-    if (function1_) function1_->enableFirstOrderDerivatives(false);
-    if (function2_) function2_->enableSecondOrderDerivatives(false);
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(false);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(false);
     function_->setParameters(parameters);
     f1_ = function_->getValue();
     string lastVar;
@@ -57,7 +59,8 @@ throw (ParameterNotFoundException, ConstraintException)
     for (unsigned int i = 0; i < variables_.size(); i++)
     {
       string var = variables_[i];
-      if (!parameters.hasParameter(var)) continue;
+      if (!parameters.hasParameter(var))
+        continue;
       ParameterList p;
       if (!start)
       {
@@ -77,7 +80,7 @@ throw (ParameterNotFoundException, ConstraintException)
       }
       double value = function_->getParameterValue(var);
       double h = (1 + std::abs(value)) * h_;
-      //Compute one other point:
+      // Compute one other point:
       try
       {
         p[0].setValue(value + h);
@@ -86,7 +89,7 @@ throw (ParameterNotFoundException, ConstraintException)
       }
       catch (ConstraintException& ce1)
       {
-        //Right limit raised, use backward approximation:
+        // Right limit raised, use backward approximation:
         try
         {
           p[0].setValue(value - h);
@@ -96,24 +99,27 @@ throw (ParameterNotFoundException, ConstraintException)
         }
         catch (ConstraintException& ce2)
         {
-          //PB: can't compute derivative, because of a two narrow interval (lower than h)
+          // PB: can't compute derivative, because of a two narrow interval (lower than h)
           throw ce2;
         }
       }
-      //No limit raised, use forward approximation:
+      // No limit raised, use forward approximation:
       der1_[i] = (f2_ - f1_) / h;
     }
-    //Reset last parameter and compute analytical derivatives if any:
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
+    // Reset last parameter and compute analytical derivatives if any:
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
     if (functionChanged)
       function_->setParameters(parameters.subList(lastVar));
   }
   else
   {
-    //Reset initial value and compute analytical derivatives if any.
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
-    //Just in case derivatives are not computed:
+    // Reset initial value and compute analytical derivatives if any.
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(computeD2_);
+    // Just in case derivatives are not computed:
     function_->setParameters(parameters);
     f1_ = function_->getValue();
   }
