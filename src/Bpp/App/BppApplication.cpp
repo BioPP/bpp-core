@@ -48,7 +48,9 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-BppApplication::BppApplication(int argc, char* argv[], const std::string& name): appName_(name), params_(), timerStarted_(false), warningLevel_(3)
+int BppApplication::warningLevel_ = 3;
+
+BppApplication::BppApplication(int argc, char* argv[], const std::string& name): appName_(name), params_(), timerStarted_(false)
 {
   cout << "Parsing options:" << endl;  
   params_ = AttributesTools::parseOptions(argc, argv);
