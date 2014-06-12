@@ -1,3 +1,6 @@
+12/06/14 Julien Dutheil
+* Added --warning argument to BppApplication + new gestion of warnings.
+
 14/04/14 Julien Dutheil
 * Added --seed argument to BppApplication to set random seed.
 
