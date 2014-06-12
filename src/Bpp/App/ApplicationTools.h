@@ -125,7 +125,12 @@ namespace bpp
      * @brief Tell if the program is interactive (typically run in foreground). Default to yes.
      */
     static bool interactive;
-  
+ 
+    /**
+     * @brief Specify the amount of warning to display.
+     */
+    static int warningLevel;
+
   public:
     ApplicationTools() {}
     virtual ~ApplicationTools() {}
@@ -151,8 +156,7 @@ namespace bpp
      * @param pattern The pattern.
      * @param params  The parameter list.
      * @return a vector of matching names.
-     */
-  
+     */  
     static std::vector<std::string> matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params);
 
     static std::vector<std::string> matchingParameters(const std::string& pattern, std::vector<std::string>& params);
@@ -174,7 +178,7 @@ namespace bpp
       double defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true);
+      int warn = 0);
   
     /**
      * @brief Get an integer parameter.
@@ -193,7 +197,7 @@ namespace bpp
       int defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true);
+      int warn = 0);
   
     /**
      * @brief Get a string parameter.
@@ -212,7 +216,7 @@ namespace bpp
       const std::string& defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true);
+      int warn = 0);
 
     /**
      * @brief Get a boolean parameter.
@@ -231,7 +235,7 @@ namespace bpp
       bool defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true);
+      int warn = 0);
 
     /**
      * @brief Get a parameter.
@@ -250,17 +254,18 @@ namespace bpp
       T defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true)
+      int warn = 0)
     {
       T tParam = defaultValue;
-      if(parameterExists(parameterName + suffix, params))
+      if (parameterExists(parameterName + suffix, params))
       {
         tParam = TextTools::to<T>(params[parameterName + suffix]);
       }
-      else if(suffixIsOptional && parameterExists(parameterName, params))
+      else if (suffixIsOptional && parameterExists(parameterName, params))
       {
         tParam = TextTools::to<T>(params[parameterName]);
-      } else if(warn)
+      }
+      else if (warn <= warningLevel)
       {
         displayWarning("Parameter " + parameterName + suffix + " not specified. Default used instead: " + TextTools::toString(defaultValue));
       }
@@ -279,6 +284,7 @@ namespace bpp
      * @param mustExist        Tell if the corresponding file must already exist.
      * @param suffix           A suffix to be applied to the parameter name.
      * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param warn             Tell if a warning must be sent in case the parameter is not found.
      * @throw Exception        If no file path is specified and isRequired is
      *                         true, or the file does not exist and mustExist
      *                         is set to true.
@@ -289,7 +295,8 @@ namespace bpp
       bool isRequired = true,
       bool mustExist = true,
       const std::string& suffix = "",
-      bool suffixIsOptional = false) throw (Exception);
+      bool suffixIsOptional = false,
+      int warn = 0) throw (Exception);
 
     /**
      * @brief Get a vector.

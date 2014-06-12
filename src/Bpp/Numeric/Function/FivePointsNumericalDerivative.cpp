@@ -46,8 +46,10 @@ throw (ParameterNotFoundException, ConstraintException)
 {
   if (computeD1_ && variables_.size() > 0)
   {
-    if (function1_) function1_->enableFirstOrderDerivatives(false);
-    if (function2_) function2_->enableSecondOrderDerivatives(false);
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(false);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(false);
     function_->setParameters(parameters);
     f3_ = function_->getValue();
     string lastVar;
@@ -57,7 +59,8 @@ throw (ParameterNotFoundException, ConstraintException)
     for (unsigned int i = 0; i < variables_.size(); i++)
     {
       string var = variables_[i];
-      if (!parameters.hasParameter(var)) continue;
+      if (!parameters.hasParameter(var))
+        continue;
       if (!start)
       {
         vector<string> vars(2);
@@ -74,7 +77,7 @@ throw (ParameterNotFoundException, ConstraintException)
       functionChanged = true;
       double value = function_->getParameterValue(var);
       double h = (1. + std::abs(value)) * h_;
-      //Compute four other points:
+      // Compute four other points:
       try
       {
         p[0].setValue(value - 2 * h);
@@ -85,7 +88,7 @@ throw (ParameterNotFoundException, ConstraintException)
           p[0].setValue(value + 2 * h);
           function_->setParameters(p);
           f5_ = function_->getValue();
-          //No limit raised, use central approximation:
+          // No limit raised, use central approximation:
           p[0].setValue(value - h);
           function_->setParameters(p);
           f2_ = function_->getValue();
@@ -97,7 +100,7 @@ throw (ParameterNotFoundException, ConstraintException)
         }
         catch (ConstraintException& ce)
         {
-          //Right limit raised, use backward approximation:
+          // Right limit raised, use backward approximation:
           p[0].setValue(value - h);
           function_->setParameters(p);
           f2_ = function_->getValue();
@@ -110,7 +113,7 @@ throw (ParameterNotFoundException, ConstraintException)
       }
       catch (ConstraintException& ce)
       {
-        //Left limit raised, use forward approximation:
+        // Left limit raised, use forward approximation:
         p[0].setValue(value + h);
         function_->setParameters(p);
         f4_ = function_->getValue();
@@ -121,19 +124,23 @@ throw (ParameterNotFoundException, ConstraintException)
         der2_[i] = (f5_ - 2. * f4_ + f3_) / (h * h);
       }
     }
-    //Reset last parameter and compute analytical derivatives if any.
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    // Reset last parameter and compute analytical derivatives if any.
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(computeD2_);
     if (functionChanged)
       function_->setParameters(parameters.subList(lastVar));
   }
   else
   {
-    //Reset initial value and compute analytical derivatives if any.
-    if (function1_) function1_->enableFirstOrderDerivatives(computeD1_);
-    if (function2_) function2_->enableSecondOrderDerivatives(computeD2_);
+    // Reset initial value and compute analytical derivatives if any.
+    if (function1_)
+      function1_->enableFirstOrderDerivatives(computeD1_);
+    if (function2_)
+      function2_->enableSecondOrderDerivatives(computeD2_);
     function_->setParameters(parameters);
-    //Just in  case derivatives are not computed:
+    // Just in  case derivatives are not computed:
     f3_ = function_->getValue();
   }
 }

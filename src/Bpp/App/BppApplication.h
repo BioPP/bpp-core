@@ -72,6 +72,7 @@ namespace bpp
       }
       
       std::string& getParam(const std::string& name) { return params_[name]; }
+
   };
 
 } //end of namespace bpp;

@@ -52,9 +52,10 @@ BppApplication::BppApplication(int argc, char* argv[], const std::string& name):
 {
   cout << "Parsing options:" << endl;  
   params_ = AttributesTools::parseOptions(argc, argv);
-  bool noint = ApplicationTools::getBooleanParameter("--noninteractive", params_, false, "", true, false);
+  ApplicationTools::warningLevel = ApplicationTools::getIntParameter("--warning", params_, 0, "", true, 3);
+  bool noint = ApplicationTools::getBooleanParameter("--noninteractive", params_, false, "", true, 3);
   ApplicationTools::interactive = !noint;
-  long seed = ApplicationTools::getParameter<long>("--seed", params_, -1, "", true, false);
+  long seed = ApplicationTools::getParameter<long>("--seed", params_, -1, "", true, 3);
   if (seed >= 0) {
     RandomTools::setSeed(seed);
     ApplicationTools::displayResult("Random seed set to", seed);

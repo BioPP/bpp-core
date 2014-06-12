@@ -56,6 +56,7 @@ time_t ApplicationTools::startTime;
 size_t ApplicationTools::terminalWidth = 80;
 float ApplicationTools::terminalSplit = 0.5;
 bool ApplicationTools::interactive = true;
+int ApplicationTools::warningLevel = 0;
 
 /******************************************************************************/
 
@@ -70,8 +71,8 @@ bool ApplicationTools::parameterExists(
   const std::string & parameterName,
   std::vector<std::string>& params)
 {
-  for (size_t i=0;i<params.size();i++)
-    if (params[i]==parameterName)
+  for (size_t i = 0; i < params.size(); ++i)
+    if (params[i] == parameterName)
       return true;
 
   return false;
@@ -156,9 +157,10 @@ std::string ApplicationTools::getAFilePath(
   bool isRequired,
   bool mustExist,
   const std::string& suffix,
-  bool suffixIsOptional) throw (Exception)
+  bool suffixIsOptional,
+  int warn) throw (Exception)
 {
-  string filePath = getStringParameter(parameter, params, "none", suffix, suffixIsOptional, false);
+  string filePath = getStringParameter(parameter, params, "none", suffix, suffixIsOptional, warn);
   if (filePath == "") filePath = "none";
   if (filePath == "none" && isRequired)
   {
@@ -175,12 +177,12 @@ std::string ApplicationTools::getAFilePath(
 /******************************************************************************/
 
 double ApplicationTools::getDoubleParameter(
-  const std::string & parameterName,
-  std::map<std::string, std::string> & params,
+  const std::string& parameterName,
+  std::map<std::string, std::string>& params,
   double defaultValue,
-  const std::string & suffix,
+  const std::string& suffix,
   bool suffixIsOptional,
-  bool warn)
+  int warn)
 {
   double dParam = defaultValue;
   if (parameterExists(parameterName + suffix, params))
@@ -191,7 +193,7 @@ double ApplicationTools::getDoubleParameter(
   {
     dParam = TextTools::toDouble(params[parameterName]);
   }
-  else if(warn)
+  else if(warn <= warningLevel)
   {
     displayWarning("Parameter " + parameterName + suffix + " not specified. Default used instead: " + TextTools::toString(defaultValue));
   }
@@ -206,14 +208,14 @@ int ApplicationTools::getIntParameter(
   int defaultValue,
   const std::string & suffix,
   bool suffixIsOptional,
-  bool warn)
+  int warn)
 {
   int iParam = defaultValue;
   if (parameterExists(parameterName + suffix, params)) {
     iParam = TextTools::toInt(params[parameterName + suffix]);
   } else if(suffixIsOptional && parameterExists(parameterName, params)) {
     iParam = TextTools::toInt(params[parameterName]);
-  } else if (warn) {
+  } else if (warn <= warningLevel) {
     displayWarning("Parameter " + parameterName + suffix + " not specified. Default used instead: " + TextTools::toString(defaultValue));
   }
   return iParam;
@@ -227,14 +229,14 @@ std::string ApplicationTools::getStringParameter(
   const std::string& defaultValue,
   const std::string& suffix,
   bool suffixIsOptional,
-  bool warn)
+  int warn)
 {
   string sParam = defaultValue;
   if (parameterExists(parameterName + suffix, params)) {
     sParam = params[parameterName + suffix];
   } else if (suffixIsOptional && parameterExists(parameterName, params)) {
     sParam = params[parameterName];
-  } else if (warn) {
+  } else if (warn <= warningLevel) {
     displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + defaultValue);
   }
   return sParam;
@@ -248,7 +250,7 @@ bool ApplicationTools::getBooleanParameter(
   bool defaultValue,
   const std::string& suffix,
   bool suffixIsOptional,
-  bool warn)
+  int warn)
 {
   string sParam;
   bool bParam = defaultValue;
@@ -261,7 +263,7 @@ bool ApplicationTools::getBooleanParameter(
     sParam = params[parameterName];
   }
   else {
-    if (warn)
+    if (warn <= warningLevel)
     {
       displayWarning("Parameter " + parameterName + " not specified. Default used instead: " + TextTools::toString(defaultValue));
     }
