@@ -284,6 +284,7 @@ namespace bpp
      * @param mustExist        Tell if the corresponding file must already exist.
      * @param suffix           A suffix to be applied to the parameter name.
      * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param defaultPath      Path to use if no argument is provided.
      * @param warn             Tell if a warning must be sent in case the parameter is not found.
      * @throw Exception        If no file path is specified and isRequired is
      *                         true, or the file does not exist and mustExist
@@ -296,6 +297,7 @@ namespace bpp
       bool mustExist = true,
       const std::string& suffix = "",
       bool suffixIsOptional = false,
+      const std::string& defaultPath = "none", 
       int warn = 0) throw (Exception);
 
     /**

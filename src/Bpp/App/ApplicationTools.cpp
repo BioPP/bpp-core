@@ -151,16 +151,17 @@ std::vector<std::string> ApplicationTools::matchingParameters(const std::string&
 
 /******************************************************************************/
 
-std::string ApplicationTools::getAFilePath(
-  const std::string& parameter,
-  std::map<std::string, std::string>& params,
+string ApplicationTools::getAFilePath(
+  const string& parameter,
+  map<string, string>& params,
   bool isRequired,
   bool mustExist,
-  const std::string& suffix,
+  const string& suffix,
   bool suffixIsOptional,
+  const string& defaultPath, 
   int warn) throw (Exception)
 {
-  string filePath = getStringParameter(parameter, params, "none", suffix, suffixIsOptional, warn);
+  string filePath = getStringParameter(parameter, params, defaultPath, suffix, suffixIsOptional, warn);
   if (filePath == "") filePath = "none";
   if (filePath == "none" && isRequired)
   {
