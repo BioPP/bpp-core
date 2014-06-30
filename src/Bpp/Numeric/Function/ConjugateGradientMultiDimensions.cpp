@@ -101,10 +101,14 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
     return f;
   }
   gam = dgg / gg;
-  for(unsigned int j = 0; j < n; j++)
+
+  if (!(std::isnan(gam) || std::isinf(gam)))
   {
-    g_[j] = -xi_[j];
-    xi_[j] = h_[j] = g_[j] + gam * h_[j];
+    for(unsigned int j = 0; j < n; j++)
+    {
+      g_[j] = -xi_[j];
+      xi_[j] = h_[j] = g_[j] + gam * h_[j];
+    }
   }
   
   return f;
