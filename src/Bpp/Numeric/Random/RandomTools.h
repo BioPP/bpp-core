@@ -117,7 +117,10 @@ namespace bpp
      * @param entry Max number to reach.
      * @param generator Random number generator to use.
      */
-    static int giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory& generator = *DEFAULT_GENERATOR);
+    template<class intType>
+    static intType giveIntRandomNumberBetweenZeroAndEntry(intType entry, const RandomFactory& generator = *DEFAULT_GENERATOR) {
+      return static_cast<intType>(giveRandomNumberBetweenZeroAndEntry(entry, generator));
+    }
 
     /**
      * @brief Set the default generator seed.

@@ -72,13 +72,6 @@ bool RandomTools::flipCoin(const RandomFactory& generator)
   return (RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator) - 0.5) > 0;
 }
 
-// Method to get a integer random value (between 0 and specified range)
-// Note : the number you get is between 0 and entry not including entry !
-int RandomTools::giveIntRandomNumberBetweenZeroAndEntry(int entry, const RandomFactory& generator)
-{
-  return static_cast<int>(giveRandomNumberBetweenZeroAndEntry(entry, generator));
-}
-
 double RandomTools::randGaussian(double mean, double variance, const RandomFactory& generator)
 {
   return RandomTools::qNorm(generator.drawNumber(), mean, sqrt(variance));
