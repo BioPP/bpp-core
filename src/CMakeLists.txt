@@ -20,6 +20,8 @@ SET(CPP_FILES
   Bpp/Text/TextTools.cpp
   Bpp/Graph/BasicONode.cpp
   Bpp/Graph/BasicTNode.cpp
+  Bpp/Graph/Graph.cpp
+  Bpp/Graph/GraphObserver.cpp
   Bpp/Graphics/ColorTools.cpp
   Bpp/Graphics/GraphicDevice.cpp
   Bpp/Graphics/Fig/XFigGraphicDevice.cpp
@@ -107,6 +109,8 @@ SET(H_FILES
   Bpp/Graph/TNode.h
   Bpp/Graph/BasicONode.h
   Bpp/Graph/BasicTNode.h
+  Bpp/Graph/Graph.hpp
+  Bpp/Graph/GraphObserver.hpp
   Bpp/Graphics/AbstractGraphicDevice.h
   Bpp/Graphics/ColorManager.h
   Bpp/Graphics/ColorSet.h
