@@ -89,6 +89,8 @@ void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,
   for (vector<string>::iterator it = tokens.begin(); it != tokens.end(); it++)
   {
     singleKeyval(*it, key, val);
+    key=TextTools::removeSurroundingWhiteSpaces(key);
+    val=TextTools::removeSurroundingWhiteSpaces(val);
     keyvals[key] = val;
   }
 }
