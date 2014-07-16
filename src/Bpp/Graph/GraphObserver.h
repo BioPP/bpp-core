@@ -57,28 +57,26 @@ namespace bpp
     private:
       
       /**
-      * List of edged, stored at the same ID than the corresponding edges
-      * in the bserved graph
+      * List of edges, stored at the same ID than the corresponding edges
+      * in the bserved graph.
       */
-      std::vector<E*> edges;
+      std::vector<E*> edgesToObjects;
       
       /**
       * List of nodes, stored at the same ID than the corresponding nodes
-      * in the observed graph
+      * in the observed graph.
       */
-      std::vector<N*> nodes;
+      std::vector<N*> nodesToObjects;
       
       /**
-      * List of edged, stored at the same ID than the corresponding edges
-      * in the observed graph
+      * Can find an Edge with the corresponding object.
       */
-      std::map<E*,Graph::Edge> edgesID;
+      std::map<E*,Graph::Edge> objectsToEdges;
       
       /**
-      * List of nodes, stored at the same ID than the corresponding nodes
-      * in the observed graph
+      * Can find a Node with the corresponding object.
       */
-      std::map<N*,Graph::Node> nodesID;
+      std::map<N*,Graph::Node> objectsToNodes;
       
       
       
@@ -152,7 +150,7 @@ namespace bpp
       * @param nodeB target node (or second node if undirected)
       * @return the new edge
       */
-      void link(N* nodeA, N* nodeB, E* edge);
+      void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject);
       
       /**
       * Creates a link between two existing nodes.
@@ -160,7 +158,7 @@ namespace bpp
       * @param nodeA source node (or first node if undirected)
       * @param nodeB target node (or second node if undirected)
       */
-      void unlink(N* nodeA, N* nodeB);
+      void unlink(N* nodeObjectA, N* nodeObjectB);
       
       /**
       * Deletes a node
@@ -177,18 +175,18 @@ namespace bpp
       
       /**
       * Associate a N or E object to a node or an edge in the graph.
-      * @param objectNode object to associate
+      * @param nodeObject object to associate
       * @param node/edge existing node/edge to be associated
       */
-      void associate(N* objectNode, Graph::Node node);
-      void associate(E* objectNode, Graph::Edge edge);
+      void associate(N* nodeObject, Graph::Node node);
+      void associate(E* nodeObject, Graph::Edge edge);
       
       /**
       * Dissociate a N or E object to a node or an edge in the graph.
-      * @param objectNode object to dissociate
+      * @param nodeObject object to dissociate
       */
-      void dissociate(N* objectNode);
-      void dissociate(E* objectNode);
+      void forget(N* nodeObject);
+      void forget(E* edgeObject);
       
       
       

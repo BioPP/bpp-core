@@ -143,6 +143,13 @@ private:
     
     
 public:
+  
+  /** @name General Management
+    *  Misc & constructors
+    */
+    ///@{
+
+  
     /**
     * Constructor
     * @param directed true if the graph is directed.
@@ -160,6 +167,20 @@ public:
     * @param graph the graph to be copied
     */
     Graph* clone() const;
+    
+    
+    /**
+      * get the Highest Node ID (for vector sizing)
+      */
+    unsigned int getHighestNodeID();
+    
+    /**
+      * get the Highest Node ID (for vector sizing)
+      */
+    unsigned int getHighestEdgeID();
+    
+    
+    ///@}
 
 
     /** @name Relations management
@@ -206,6 +227,8 @@ public:
     /** @name Observers Management
     *  Managing communication with the observers: subscribe, unsubscribe.
     */
+    ///@{
+
     /**
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
@@ -257,6 +280,7 @@ public:
     * @return a vector containing the leaves
     */
     const std::vector<Node> getLeaves();
+    
     ///@}
 
 

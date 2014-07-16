@@ -80,7 +80,7 @@ const Graph::Edge Graph::link(Graph::Node nodeA, Graph::Node nodeB)
   rawLink(nodeA, nodeB, edgeID, false);
   rawLink(nodeB, nodeA, edgeID, directed);
 
-  
+  return edgeID;
 }
 
 void Graph::checkNodeExistence(const Node node, string name)
@@ -209,3 +209,15 @@ void Graph::isolate(Graph::Node node)
     unlink(node,*currNeighbor);
   }
 }
+
+unsigned int Graph::getHighestNodeID()
+{
+  return highestNodeID;
+}
+
+
+unsigned int Graph::getHighestEdgeID()
+{
+  return highestEdgeID;
+}
+
