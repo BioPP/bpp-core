@@ -119,7 +119,7 @@ namespace bpp
      */
     template<class intType>
     static intType giveIntRandomNumberBetweenZeroAndEntry(intType entry, const RandomFactory& generator = *DEFAULT_GENERATOR) {
-      return static_cast<intType>(giveRandomNumberBetweenZeroAndEntry(entry, generator));
+      return static_cast<intType>(giveRandomNumberBetweenZeroAndEntry(static_cast<double>(entry), generator));
     }
 
     /**
