@@ -319,7 +319,7 @@ namespace bpp
       const std::string& defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
-      bool warn = true)
+      int warn = 0)
     {
       std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
       if (TextTools::isEmpty(s)) return std::vector<T>(0);
