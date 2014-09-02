@@ -98,7 +98,7 @@ const vector<N&> GraphObserver<N,E>::getOutgoingNeighbors(N& node)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associate(N* nodeObject, Graph::Node node)
+void GraphObserver<N,E>::associate(N& nodeObject, Graph::Node node)
 {
   
   // nodes vector must be the right size. Eg: to store a node with

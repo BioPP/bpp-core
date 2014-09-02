@@ -144,10 +144,10 @@ namespace bpp
       
       /**
       * Creates an node linked to an existing node.
-      * @param objectNewNode the N object associated to the node in the graph.
       * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
+      * @param objectNewNode the N object associated to the node in the graph.
       */
-      void createNode(N& objectOriginNode, N& objectNewNode);
+      void createNode(N& objectNewNode, N& objectOriginNode);
       
       /**
       * Creates a link between two existing nodes.
