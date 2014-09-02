@@ -99,6 +99,12 @@ namespace bpp
       
       /**
       * Constructor
+      * @param directed is the graph directed
+      */
+      GraphObserver(bool directed = false);
+      
+      /**
+      * Constructor
       * @param subjectGraph the graph which is observed
       */
       GraphObserver(bpp::Graph* subjectGraph = 00);
@@ -134,14 +140,14 @@ namespace bpp
       * @param objectNewNode the N object associated to the node in the graph.
       * 
       */
-      void createNode(N* objectNewNode);
+      void createNode(N& objectNewNode);
       
       /**
       * Creates an node linked to an existing node.
       * @param objectNewNode the N object associated to the node in the graph.
       * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
       */
-      void createNode(N* objectOriginNode, N* objectNewNode);
+      void createNode(N& objectOriginNode, N& objectNewNode);
       
       /**
       * Creates a link between two existing nodes.
@@ -150,7 +156,7 @@ namespace bpp
       * @param nodeB target node (or second node if undirected)
       * @return the new edge
       */
-      void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject);
+      void link(N& nodeObjectA, N& nodeObjectB, E& edgeObject);
       
       /**
       * Creates a link between two existing nodes.
@@ -158,13 +164,13 @@ namespace bpp
       * @param nodeA source node (or first node if undirected)
       * @param nodeB target node (or second node if undirected)
       */
-      void unlink(N* nodeObjectA, N* nodeObjectB);
+      void unlink(N& nodeObjectA, N& nodeObjectB);
       
       /**
       * Deletes a node
       * @param node node to be deleted
       */
-      void deleteNode(N* node);
+      void deleteNode(N& node);
       
       
       ///@}
@@ -178,15 +184,15 @@ namespace bpp
       * @param nodeObject object to associate
       * @param node/edge existing node/edge to be associated
       */
-      void associate(N* nodeObject, Graph::Node node);
-      void associate(E* nodeObject, Graph::Edge edge);
+      void associate(N& nodeObject, Graph::Node node);
+      void associate(E& nodeObject, Graph::Edge edge);
       
       /**
       * Dissociate a N or E object to a node or an edge in the graph.
       * @param nodeObject object to dissociate
       */
-      void forget(N* nodeObject);
-      void forget(E* edgeObject);
+      void forget(N& nodeObject);
+      void forget(E& edgeObject);
       
       
       
@@ -202,21 +208,21 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      const std::vector<N*> getNeighbors(N* node);
+      const std::vector<N&> getNeighbors(N& node);
       /**
       * In an directed graph, get all the neighbors which
       * are leaving a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      const std::vector<N*> getOutgoingNeighbors(N* node);
+      const std::vector<N&> getOutgoingNeighbors(N& node);
       /**
       * In an directed graph, get all the neighbors which
       * are coming to a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      const std::vector<N*> getIncomingNeighbors(N* node);
+      const std::vector<N&> getIncomingNeighbors(N& node);
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
       * starting from a peculiar node.
@@ -224,12 +230,12 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth);
+      const std::vector<N&> getLeavesFromNode(N& node, unsigned int maxDepth);
       /**
       * Get all the leaves of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeaves();
+      const std::vector<N&> getLeaves();
       ///@}
       
       
@@ -243,14 +249,14 @@ namespace bpp
       * graph nodeA then nodeB)
       * @return the edge between these two nodes
       */
-      const E* getEdge(std::pair<N*,N*> nodes);
+      const E& getEdge(N& nodeA, N& nodeB);
       /**
       * Returns the Edge between two nodes
       * @param nodes a pair of implied nodes
       * (if directed graph nodeA then nodeB)
       * @return the edge between these two nodes
       */
-      const std::vector<E*> getEdges(N* node);
+      const std::vector<E&> getEdges(N& node);
       ///@}
       
       

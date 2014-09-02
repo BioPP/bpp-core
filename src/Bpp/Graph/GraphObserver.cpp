@@ -10,7 +10,7 @@ using namespace std;
 
 
 template <class N, class E>
-void GraphObserver<N,E>::createNode(N* objectNewNode)
+void GraphObserver<N,E>::createNode(N& objectNewNode)
 {
   Graph::Node newGraphNode = subjectGraph->createNode();
   
@@ -19,24 +19,24 @@ void GraphObserver<N,E>::createNode(N* objectNewNode)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::createNode(N* objectOriginNode, N* objectNewNode)
+void GraphObserver<N,E>::createNode(N& objectOriginNode, N& objectNewNode)
 {
   createNode(objectNewNode);
   link(objectOriginNode,objectNewNode);
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
+void GraphObserver<N,E>::link(N& nodeObjectA, N& nodeObjectB, E& edgeObject)
 {
   // checking the nodes
   typename map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
-  foundNodeA = objectsToNodes.find(nodeObjectA);
-  foundNodeB = objectsToNodes.find(nodeObjectB);
+  foundNodeA = objectsToNodes.find(&nodeObjectA);
+  foundNodeB = objectsToNodes.find(&nodeObjectB);
   if(foundNodeA == objectsToNodes.end() || foundNodeB == objectsToNodes.end())
     throw Exception("One of the nodes is not in the graph observer.");
   
   //checking if the edge is not already in the GraphObserver
-  if(edgesToObjects.find(edgeObject) != edgesToObjects.end())
+  if(edgesToObjects.find(&edgeObject) != edgesToObjects.end())
     throw Exception("The given edge is already associated to a relation in the subjectGraph.");
   
   Graph::Edge newGraphEdge = subjectGraph->link(foundNodeA->second,foundNodeB->second);
@@ -49,12 +49,12 @@ void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
+void GraphObserver<N,E>::unlink(N& nodeObjectA, N& nodeObjectB)
 {
   //checking the nodes
   typename map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
-  foundNodeA = objectsToNodes.find(nodeObjectA);
-  foundNodeB = objectsToNodes.find(nodeObjectB);
+  foundNodeA = objectsToNodes.find(&nodeObjectA);
+  foundNodeB = objectsToNodes.find(&nodeObjectB);
   if(foundNodeA == objectsToNodes.end() || foundNodeB == objectsToNodes.end())
     throw Exception("One of the nodes is not in the graph observer.");
   
@@ -85,9 +85,9 @@ void GraphObserver<N,E>::update_removeDeletedNodes(std::vector<Graph::Node> node
 }
 
 template <class N, class E>
-const vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* node)
+const vector<N&> GraphObserver<N,E>::getOutgoingNeighbors(N& node)
 {
-  Graph::Node graphNode = objectsToNodes.at(node);
+  Graph::Node graphNode = objectsToNodes.at(&node);
   vector<Graph::Node> graphNodes = subjectGraph->getOutgoingNeighbors(graphNode);
   vector<N*> result;
   for(vector<Graph::Node>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
@@ -106,12 +106,12 @@ void GraphObserver<N,E>::associate(N* nodeObject, Graph::Node node)
   nodesToObjects.resize(subjectGraph->getHighestNodeID()+1);
 
   // now storing the node
-  nodesToObjects.at(node) = nodeObject;
-  objectsToNodes[nodeObject] = node;
+  nodesToObjects.at(node) = &nodeObject;
+  objectsToNodes[&nodeObject] = node;
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associate(E* edgeObject, Graph::Edge edge)
+void GraphObserver<N,E>::associate(E& edgeObject, Graph::Edge edge)
 {
   
   // nodes vector must be the right size. Eg: to store an edge with
@@ -119,22 +119,22 @@ void GraphObserver<N,E>::associate(E* edgeObject, Graph::Edge edge)
   edgesToObjects.resize(subjectGraph->getHighestEdgeID()+1);
   
   // now storing the edge
-  edgesToObjects.at(edge) = edgeObject;
-  objectsToNodes[edgeObject] = edge;
+  edgesToObjects.at(edge) = &edgeObject;
+  objectsToNodes[&edgeObject] = edge;
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::forget(N* nodeObject)
+void GraphObserver<N,E>::forget(N& nodeObject)
 {
-  typename map<N*,Graph::Node>::iterator nodeToForget = objectsToNodes.find(nodeObject);
+  typename map<N*,Graph::Node>::iterator nodeToForget = objectsToNodes.find(&nodeObject);
   nodesToObjects.erase(nodeToForget->second);
   objectsToNodes.erase(nodeToForget);
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::forget(E* edgeObject)
+void GraphObserver<N,E>::forget(E& edgeObject)
 {
-  typename map<E*,Graph::Edge>::iterator edgeToForget = objectsToEdges.find(edgeObject);
+  typename map<E*,Graph::Edge>::iterator edgeToForget = objectsToEdges.find(&edgeObject);
   edgesToObjects.erase(edgeToForget->second);
   objectsToEdges.erase(edgeToForget);
 }

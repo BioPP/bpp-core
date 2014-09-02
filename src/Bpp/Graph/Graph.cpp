@@ -193,6 +193,17 @@ const vector< Graph::Node > Graph::getOutgoingNeighbors(Graph::Node node)
   return getInOrOutGoingNeighbors(node,true);
 }
 
+const vector< Graph::Node > Graph::getNeighbors(Graph::Node node)
+{
+  vector<Graph::Node> result;
+  vector<Graph::Node> neighborsToInsert;
+  neighborsToInsert = getInOrOutGoingNeighbors(node,false);
+  result.insert(result.end(),neighborsToInsert.begin(),neighborsToInsert.end());
+  neighborsToInsert = getInOrOutGoingNeighbors(node,true);
+  result.insert(result.end(),neighborsToInsert.begin(),neighborsToInsert.end());
+  return(result);
+}
+
 void Graph::deleteNode(Graph::Node node)
 {
   //checking the node
