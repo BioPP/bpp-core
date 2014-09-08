@@ -3,8 +3,12 @@
 
 #include "Graph.h"
 
+#include "../Exceptions.h"
+
+
 #include <vector>
 #include <map>
+#include <iostream>
 
 
 namespace bpp
@@ -23,7 +27,7 @@ namespace bpp
     // interface
     
     class GraphObserverI:
-    public bpp::Clonable
+    public virtual bpp::Clonable
     {
     
     public:
@@ -93,6 +97,9 @@ namespace bpp
       */
       void observe(bpp::Graph subjectGraph);
       
+      //is the graph directed
+      bool directed;
+      
       
         
     public:
@@ -115,11 +122,25 @@ namespace bpp
       */
       GraphObserver(bpp::GraphObserver<N,E> const& graphObserver);
       
+      
+      /**
+      * Destructor
+      * @param graphObserver the graphObserver to be copied
+      */
+      ~GraphObserver();
+      
+      
+      
       /**
       * clone function
       * @param graphObserver the graphObserver to be copied
       */
-      GraphObserver<N,E>* clone();
+      #ifdef NO_VIRTUAL_COV
+        Clonable*
+      #else
+        GraphObserver<N,E>*
+      #endif
+      clone() const { return new GraphObserver<N,E>(*this); };
       
       
       /**
@@ -140,14 +161,14 @@ namespace bpp
       * @param objectNewNode the N object associated to the node in the graph.
       * 
       */
-      void createNode(N& objectNewNode);
+      void createNode(N* objectNewNode);
       
       /**
       * Creates an node linked to an existing node.
       * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
       * @param objectNewNode the N object associated to the node in the graph.
       */
-      void createNode(N& objectNewNode, N& objectOriginNode);
+      void createNode(N* objectNewNode, N* objectOriginNode);
       
       /**
       * Creates a link between two existing nodes.
@@ -156,7 +177,7 @@ namespace bpp
       * @param nodeB target node (or second node if undirected)
       * @return the new edge
       */
-      void link(N& nodeObjectA, N& nodeObjectB, E& edgeObject);
+      void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject = 00);
       
       /**
       * Creates a link between two existing nodes.
@@ -164,13 +185,13 @@ namespace bpp
       * @param nodeA source node (or first node if undirected)
       * @param nodeB target node (or second node if undirected)
       */
-      void unlink(N& nodeObjectA, N& nodeObjectB);
+      void unlink(N* nodeObjectA, N* nodeObjectB);
       
       /**
       * Deletes a node
       * @param node node to be deleted
       */
-      void deleteNode(N& node);
+      void deleteNode(N* node);
       
       
       ///@}
@@ -184,15 +205,15 @@ namespace bpp
       * @param nodeObject object to associate
       * @param node/edge existing node/edge to be associated
       */
-      void associate(N& nodeObject, Graph::Node node);
-      void associate(E& nodeObject, Graph::Edge edge);
+      void associate(N* nodeObject, Graph::Node node);
+      void associate(E* nodeObject, Graph::Edge edge);
       
       /**
       * Dissociate a N or E object to a node or an edge in the graph.
       * @param nodeObject object to dissociate
       */
-      void forget(N& nodeObject);
-      void forget(E& edgeObject);
+      void forget(N* nodeObject);
+      void forget(E* edgeObject);
       
       
       
@@ -208,21 +229,21 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      const std::vector<N&> getNeighbors(N& node);
+      const std::vector<N*> getNeighbors(N* node);
       /**
       * In an directed graph, get all the neighbors which
       * are leaving a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      const std::vector<N&> getOutgoingNeighbors(N& node);
+      const std::vector<N*> getOutgoingNeighbors(N* node);
       /**
       * In an directed graph, get all the neighbors which
       * are coming to a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      const std::vector<N&> getIncomingNeighbors(N& node);
+      const std::vector<N*> getIncomingNeighbors(N* node);
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
       * starting from a peculiar node.
@@ -230,12 +251,12 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      const std::vector<N&> getLeavesFromNode(N& node, unsigned int maxDepth);
+      const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth);
       /**
       * Get all the leaves of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      const std::vector<N&> getLeaves();
+      const std::vector<N*> getLeaves();
       ///@}
       
       
@@ -249,14 +270,14 @@ namespace bpp
       * graph nodeA then nodeB)
       * @return the edge between these two nodes
       */
-      const E& getEdge(N& nodeA, N& nodeB);
+      const E* getEdge(N* nodeA, N* nodeB);
       /**
       * Returns the Edge between two nodes
       * @param nodes a pair of implied nodes
       * (if directed graph nodeA then nodeB)
       * @return the edge between these two nodes
       */
-      const std::vector<E&> getEdges(N& node);
+      const std::vector<E*> getEdges(N* node);
       ///@}
       
       
@@ -280,8 +301,170 @@ namespace bpp
       ///@}
       
     };
+    
+    
+template <class N, class E>
+void GraphObserver<N,E>::createNode(N* nodeObject)
+{
+  Graph::Node newGraphNode = subjectGraph->createNode();
+  
+  associate(nodeObject, newGraphNode);
   
 }
+
+template <class N, class E>
+GraphObserver<N,E>::GraphObserver(bool directed_p)
+{
+  this->directed = directed_p;
+  this->subjectGraph = new Graph(directed);
+  this->subjectGraph->attach(this);
+}
+
+template <class N, class E>
+GraphObserver<N,E>::~GraphObserver()
+{
+  this->subjectGraph->detach(this);
+}
+
+template <class N, class E>
+GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver)
+{
+  this->directed = graphObserver.directed;
+  this->edgesToObjects = graphObserver.edgesToObjects;
+  this->nodesToObjects = graphObserver.nodesToObjects;
+  this->objectsToEdges = graphObserver.objectsToEdges;
+  this->objectsToNodes = graphObserver.objectsToNodes;
+  this->subjectGraph = graphObserver.subjectGraph;
+}
+
+
+template <class N, class E>
+void GraphObserver<N,E>::createNode(N* objectNewNode,N* objectOriginNode)
+{
+  createNode(objectNewNode);
+  link(objectOriginNode,objectNewNode);
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
+{
+  // checking the nodes
+  typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
+  foundNodeA = objectsToNodes.find(nodeObjectA);
+  foundNodeB = objectsToNodes.find(nodeObjectB);
+  if(foundNodeA == objectsToNodes.end() || foundNodeB == objectsToNodes.end())
+    throw Exception("One of the nodes is not in the graph observer.");
+  
+  //checking if the edge is not already in the GraphObserver
+  if(edgeObject != 00 && objectsToEdges.find(edgeObject) != objectsToEdges.end())
+    throw Exception("The given edge is already associated to a relation in the subjectGraph.");
+  
+  std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
+  Graph::Edge newGraphEdge = subjectGraph->link(foundNodeA->second,foundNodeB->second);
+  
+  if(edgesToObjects.size() < newGraphEdge+1)
+    edgesToObjects.resize(newGraphEdge+1);
+  edgesToObjects.at(newGraphEdge) = edgeObject;
+  
+  objectsToEdges[edgeObject] = newGraphEdge;
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
+{
+  //checking the nodes
+  typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
+  foundNodeA = objectsToNodes.find(nodeObjectA);
+  foundNodeB = objectsToNodes.find(nodeObjectB);
+  if(foundNodeA == objectsToNodes.end() || foundNodeB == objectsToNodes.end())
+    throw Exception("One of the nodes is not in the graph observer.");
+  
+  subjectGraph->unlink(foundNodeA->second,foundNodeB->second);
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::update_removeDeletedEdges(std::vector<Graph::Edge> edgesToDelete)
+{
+  for(std::vector<Graph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
+    E* edgeObject = edgesToObjects.at(*currEdge);
+    edgesToObjects.at(*currEdge) = 00;
+    
+    objectsToEdges.erase(edgeObject);
+    
+  }
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::update_removeDeletedNodes(std::vector<Graph::Node> nodesToDelete){
+  for(std::vector<Graph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
+    N* nodeObject = nodesToObjects.at(*currNode);
+    nodesToObjects.at(*currNode) = 00;
+    
+    objectsToNodes.erase(nodeObject);
+    
+  }
+}
+
+template <class N, class E>
+const std::vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
+{
+  Graph::Node graphNode = objectsToNodes.at(nodeObject);
+  std::vector<Graph::Node> graphNodes = subjectGraph->getOutgoingNeighbors(graphNode);
+  std::vector<N*> result;
+  for(std::vector<Graph::Node>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
+  {
+    result.push_back(nodesToObjects.at(*currGraphNode));
+  }
+  return result;
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::associate(N* nodeObject, Graph::Node graphNode)
+{
+  
+  // nodes vector must be the right size. Eg: to store a node with
+  // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+  nodesToObjects.resize(subjectGraph->getHighestNodeID()+1);
+
+  // now storing the node
+  nodesToObjects.at(graphNode) = nodeObject;
+  objectsToNodes[nodeObject] = graphNode;
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::associate(E* edgeObject, Graph::Edge graphEdge)
+{
+  
+  // nodes vector must be the right size. Eg: to store an edge with
+  // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+  edgesToObjects.resize(subjectGraph->getHighestEdgeID()+1);
+  
+  // now storing the edge
+  edgesToObjects.at(graphEdge) = edgeObject;
+  objectsToNodes[edgeObject] = graphEdge;
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::forget(N* nodeObject)
+{
+  typename std::map<N*,Graph::Node>::iterator nodeToForget = objectsToNodes.find(nodeObject);
+  nodesToObjects.erase(nodeToForget->second);
+  objectsToNodes.erase(nodeToForget);
+}
+
+template <class N, class E>
+void GraphObserver<N,E>::forget(E* edgeObject)
+{
+  typename std::map<E*,Graph::Edge>::iterator edgeToForget = objectsToEdges.find(edgeObject);
+  edgesToObjects.erase(edgeToForget->second);
+  objectsToEdges.erase(edgeToForget);
+}
+
+  
+}
+
+
+
 
 #else
 

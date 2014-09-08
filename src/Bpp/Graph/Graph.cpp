@@ -85,7 +85,7 @@ const Graph::Edge Graph::link(Graph::Node nodeA, Graph::Node nodeB)
 
 void Graph::checkNodeExistence(const Node node, string name)
 {
-  if(nodes.find(node) != nodes.end()){
+  if(nodes.find(node) == nodes.end()){
     ostringstream errMessage;
     errMessage << "This node must exist: " << node << " as " << name << ".";
     throw(Exception(errMessage.str()));
@@ -122,10 +122,8 @@ Graph::Edge Graph::rawUnLink(Graph::Node nodeA, Graph::Node nodeB, bool toBackwa
 void Graph::rawLink(Graph::Node nodeA, Graph::Node nodeB, Graph::Edge edge, bool toBackwards)
 {
   structure_type &currStruct = (toBackwards? backwardsStructure: structure);
-  structure_type::iterator foundNodeA = currStruct.find(nodeA);
-  map<Node,Edge>::iterator foundRelation = foundNodeA->second.find(nodeB);
-  Edge foundEdge = foundRelation->second;
-  foundNodeA->second.erase(foundRelation);
+  structure_type::iterator foundNodeArow = currStruct.find(nodeA);
+  foundNodeArow->second.insert(pair<Graph::Node,Graph::Edge>(nodeB,edge));
 }
 
 const Graph::Node Graph::createNode()

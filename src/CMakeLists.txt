@@ -21,7 +21,6 @@ SET(CPP_FILES
   Bpp/Graph/BasicONode.cpp
   Bpp/Graph/BasicTNode.cpp
   Bpp/Graph/Graph.cpp
-  Bpp/Graph/GraphObserver.cpp
   Bpp/Graphics/ColorTools.cpp
   Bpp/Graphics/GraphicDevice.cpp
   Bpp/Graphics/Fig/XFigGraphicDevice.cpp
