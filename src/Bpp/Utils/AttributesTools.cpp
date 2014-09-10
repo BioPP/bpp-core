@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -114,12 +115,13 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
       string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
-      if ((name == "param") || (name == "params"))
-      {
-        //Recursive inclusion:
-        getAttributesMapFromFile(value, am, delimiter);
-      }
-      else am[name] = value;
+      // if ((name == "param") || (name == "params"))
+      // {
+      //   //Recursive inclusion:
+      //   getAttributesMapFromFile(value, am, delimiter);
+      // }
+      // else 
+        am[name] = value;
     }
   }
 }
@@ -156,7 +158,8 @@ void AttributesTools::actualizeAttributesMap(
 {
   for(map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
   {
-    attMap[i->first] = i->second;
+    if ((i->first!="param") && (i->first!="params"))
+      attMap[i->first] = i->second;
   }
 }
 
@@ -240,6 +243,8 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
 
   // Look for a specified file with parameters:
   map<string, string> params;
+  std::map<std::string, std::string>::iterator it;
+
   if (cmdParams.find("param") != cmdParams.end())
   {
     string file = cmdParams["param"];
@@ -260,6 +265,41 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
   }
   // Resolve variables:
   resolveVariables(params);
+
+  std::vector<string> mapfile;
+  std::vector<string>::iterator imapfile;
+  string file;
+  
+  while (true){
+    it=params.find("param");
+    if (it != params.end()){
+      file=it->second;      
+      if (std::find(mapfile.begin(), mapfile.end(), file)==mapfile.end()){
+        params.erase(it);
+        mapfile.push_back(file);
+        getAttributesMapFromFile(file, params, "=");
+        resolveVariables(params);
+        continue;
+      }
+      else
+        throw Exception("parsing error : Already used file " + file);
+    }
+    it=params.find("params");
+    if (it != params.end()){
+      file=it->second;      
+      if (find(mapfile.begin(), mapfile.end(), file)==mapfile.end()){
+        params.erase(it);
+        mapfile.push_back(file);
+        getAttributesMapFromFile(file, params, "=");
+        resolveVariables(params);
+        continue;
+      }
+      else
+        throw Exception("parsing error : Already used file " + file);
+    }
+    break;
+  }
+  
   return params;
 }
 
