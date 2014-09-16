@@ -45,7 +45,7 @@ using namespace std;
 
 void ReparametrizationFunctionWrapper::init_(bool verbose)
 {
-  for (unsigned int i = 0; i < functionParameters_.size(); i++)
+  for (size_t i = 0; i < functionParameters_.size(); i++)
   {
     Parameter& p = functionParameters_[i];
     Constraint* constraint = p.getConstraint();
@@ -177,7 +177,7 @@ void ReparametrizationFunctionWrapper::fireParameterChanged(const ParameterList&
   // but that would implied a quick sort on parameter names (nlog(n))
   // whereas using a loop over the set is in o(n). It should hence be
   // more efficient in most cases.
-  for (unsigned int i = 0; i < getNumberOfParameters(); i++)
+  for (size_t i = 0; i < getNumberOfParameters(); ++i)
   {
     double x = dynamic_cast<TransformedParameter&>(getParameter_(i)).getOriginalValue();
     try
