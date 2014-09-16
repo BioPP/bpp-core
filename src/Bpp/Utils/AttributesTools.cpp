@@ -158,7 +158,7 @@ void AttributesTools::actualizeAttributesMap(
 {
   for(map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
   {
-    if ((i->first!="param") && (i->first!="params"))
+    if ((i->first != "param") && (i->first != "params"))
       attMap[i->first] = i->second;
   }
 }
@@ -209,9 +209,9 @@ throw (Exception)
 /******************************************************************************/
 
 std::string AttributesTools::removeComments(
-  const std::string & s,
-  const std::string & begin,
-  const std::string & end)
+  const std::string& s,
+  const std::string& begin,
+  const std::string& end)
 {
   string r = s;
   string::size_type last = 0;
@@ -272,9 +272,11 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
   
   while (true){
     it=params.find("param");
-    if (it != params.end()){
-      file=it->second;      
-      if (std::find(mapfile.begin(), mapfile.end(), file)==mapfile.end()){
+    if (it != params.end()) 
+    {
+      file = it->second;      
+      if (std::find(mapfile.begin(), mapfile.end(), file) == mapfile.end())
+      {
         params.erase(it);
         mapfile.push_back(file);
         getAttributesMapFromFile(file, params, "=");
@@ -284,10 +286,12 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char 
       else
         throw Exception("parsing error : Already used file " + file);
     }
-    it=params.find("params");
-    if (it != params.end()){
-      file=it->second;      
-      if (find(mapfile.begin(), mapfile.end(), file)==mapfile.end()){
+    it = params.find("params");
+    if (it != params.end())
+    {
+      file = it->second;      
+      if (find(mapfile.begin(), mapfile.end(), file) == mapfile.end())
+      {
         params.erase(it);
         mapfile.push_back(file);
         getAttributesMapFromFile(file, params, "=");
