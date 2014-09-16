@@ -1,8 +1,9 @@
 21/07/14 -*- Version 2.2.0 -*-
 
 16/09/14 Julien Dutheil
-* Fixed bug in transfroemed parameters!
+* Fixed bug in transformed parameters!
   Derivative of tanh was incorrectly set to 1/cosh(x^2) instead of 1 / cosh^2(x) :s
+* Bug #88 fixed.
 
 12/06/14 Julien Dutheil
 * Added --warning argument to BppApplication + new gestion of warnings.

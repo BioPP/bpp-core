@@ -54,7 +54,7 @@ char FileTools::DIR_SEP = '/';
 bool FileTools::fileExists(const std::string& filename)
 {
   ifstream file(filename.c_str());
-  bool test = file;
+  bool test = file ? true : false; //needed for CLang.
   file.close();
   return test;
 }
@@ -64,7 +64,7 @@ bool FileTools::fileExists(const std::string& filename)
 bool FileTools::directoryExists(const std::string& path)
 {
   ifstream file(path.c_str());
-  bool test = file;
+  bool test = file ? true : false; //needed for CLang.
   file.close();
   return test;
 }
