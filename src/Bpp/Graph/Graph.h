@@ -85,7 +85,7 @@ private:
     /**
     * Usualy the first node of a graph. Used for algorithmic purposes.
     */
-    Node masterNode;
+    Node root;
     /**
     * Tell all the observers to get the last updates.
     * Calls the method update of all the subscribers.
@@ -139,6 +139,17 @@ private:
     * @param node node to isolate
     */
     void isolate(Node node);
+    
+  /**
+    * Get leaves from a starting node, filling a vector (private version).
+    * @param startingNode root node
+    * @param foundLeaves a vector containing all the found leaves
+    * @param originNode the node where we come from, not to explore
+    */
+    void fillListOfLeaves(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0);
+    
+    
+    
 
     
     
@@ -274,7 +285,7 @@ public:
     * @param maxDepth the maximum number of allowed depth, 0 means no max.
     * @return a vector containing the leaves
     */
-    const std::vector<Node> getLeavesFromNode(Node node,unsigned int maxDepth);
+    const std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth = 0);
     /**
     * Get all the leaves of a graph, ie, nodes with only one neighbor,
     * @return a vector containing the leaves
@@ -322,6 +333,7 @@ public:
 
 
     ///@}
+    
 };
 
 }

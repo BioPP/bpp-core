@@ -15,7 +15,7 @@ Graph::Graph(bool directed_p):
   numberOfNodes(0),
   highestNodeID(0),
   highestEdgeID(0),
-  masterNode(0)
+  root(0)
 {
  
 }
@@ -29,7 +29,7 @@ Graph::Graph(const Graph& graph):
   nodes(graph.nodes),
   structure(graph.structure),
   backwardsStructure(graph.backwardsStructure),
-  masterNode(graph.masterNode)
+  root(graph.root)
 {
  
 }
@@ -230,3 +230,35 @@ unsigned int Graph::getHighestEdgeID()
   return highestEdgeID;
 }
 
+vector<Node> getLeaves()
+{
+  vector<Node> listOfLeaves;
+  fillListOfLeaves(root,listOfLeaves,root);
+  return listOfLeaves;
+}
+
+void fillListOfLeaves(Node startingNode, vector<Node>& foundLeaves, Node originNode, bool limitedRecursions, unsigned int maxRecursions)
+{
+  vector<Node> neighbors = startingNode.getNeighbors();
+  if (neighbors.size() > 1)
+  {
+    if(!limitedRecursions || maxRecursions > 0)
+      for(vector<Node>::iterator currNeighbor = neighbors.begin(); currNeighbor != neighbors.end(); currNeighbor++)
+      {
+        if (*currNeighbor != originNode)
+          fillListOfLeaves(*currNeighbor, foundLeaves, startingNode, limitedRecursions, maxRecursions-1);
+      }
+  }
+  else
+  {
+    foundLeaves.push_back(startingNode);
+  }
+}
+
+
+const std::vector<Node> getLeavesFromNode(Node node,unsigned int maxDepth)
+{
+  vector<Node> listOfLeaves;
+  fillListOfLeaves(node,listOfLeaves,node,(maxDepth!=0),maxDepth);
+  return listOfLeaves;
+}

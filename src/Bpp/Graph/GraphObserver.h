@@ -257,6 +257,14 @@ namespace bpp
       * @return a vector containing the leaves
       */
       const std::vector<N*> getLeaves();
+      
+      /**
+      * Get all the defined nodes of a graphO,
+      * @return a vector containing the nodesObjects
+      */
+      const std::vector<N*> getNodes();
+      
+      
       ///@}
       
       
@@ -299,6 +307,33 @@ namespace bpp
       void update_removeDeletedNodes(std::vector< bpp::Graph::Node > nodesToDelete);
       
       ///@}
+      
+       /** @name General Info
+      *  General information about the graph
+      */
+      ///@{
+      /**
+      * Return the number of defined nodes, ie nodes that have a corresponding object
+      * in this GraphObserver
+      * @return the number of nodes
+      */
+      size_t getNumberOfNodes();
+      
+      /**
+      * Return the number of defined leaves, ie leaves that have a corresponding object
+      * in this GraphObserver
+      * @return the number of leaves
+      */
+      size_t getNumberOfLeaves();
+      
+      /**
+      * Return all the leaveObjects
+      * @return a vector containing all the leave objects
+      */
+      std::vector<N*> getLeaves();
+      
+      ///@}
+      
       
     };
     
@@ -460,11 +495,54 @@ void GraphObserver<N,E>::forget(E* edgeObject)
   objectsToEdges.erase(edgeToForget);
 }
 
-  
+template <class N, class E>
+size_t GraphObserver<N,E>::getNumberOfNodes()
+{
+  return(nodesToObjects.size());
 }
 
 
+template <class N, class E>
+std::vector<N*> GraphObserver<N,E>::getLeaves()
+{
+  std::vector<N*> leavesToReturn;
+  // fetching all the graph Leaves
+  std::vector<Node> graphLeaves = subjectGraph->getLeaves();
+  // testing if they are defined in this observer
+  for(std::vector<Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
+  {
+    N* foundLeafObject = nodesToObjects.at(currGraphLeave*);
+    if(foundLeafObject != 00)
+      leavesToReturn.push_back(foundLeafObject);
+  }
+  return leavesToReturn;
+}
 
+template <class N, class E>
+std::vector<N*> GraphObserver<N,E>::getNodes()
+{
+  std::vector<N*> nodesToReturn;
+  for(std::vector<N*>::iterator currNodeObject = nodesToObjects.begin(); currNodeObject != nodesToObjects.end(); currNodeObject++)
+  {
+    if(currNodeObject* != 00)
+    {
+      nodesToReturn.push_back(currNodeObject*);
+    }
+  }
+  return nodesToReturn;
+}
+
+template <class N, class E>
+size_t GraphObserver<N,E>::getNumberOfNodes(){
+  return objectsToNodes.size();
+}
+ 
+template <class N, class E>
+size_t GraphObserver<N,E>::getNumberOfLeaves(){
+  return getLeaves().size();
+}
+ 
+}
 
 #else
 
