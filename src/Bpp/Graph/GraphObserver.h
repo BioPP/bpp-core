@@ -41,13 +41,13 @@ namespace bpp
       * Delete unused object edges, since they have been deleted in the graph
       * @param edgesToDelete a vector of Edges to delete
       */
-      virtual void update_removeDeletedEdges(std::vector< bpp::Graph::Edge > edgesToDelete) = 0;
+      virtual void update_removeDeletedEdges(std::vector< bpp::Graph::Edge >& edgesToDelete) = 0;
       
       /**
       * Delete unused object nodes, since they have been deleted in the graph
       * @param nodesToDelete a vector of N to delete
       */
-      virtual void update_removeDeletedNodes(std::vector< bpp::Graph::Node > nodesToDelete) = 0;
+      virtual void update_removeDeletedNodes(std::vector< bpp::Graph::Node >& nodesToDelete) = 0;
       
       ///@}
       
@@ -298,13 +298,13 @@ namespace bpp
       * Delete unused object edges, since they have been deleted in the graph
       * @param edgesToDelete a vector of Edges to delete
       */
-      void update_removeDeletedEdges(std::vector< bpp::Graph::Edge > edgesToDelete);
+      void update_removeDeletedEdges(std::vector< bpp::Graph::Edge >& edgesToDelete);
       
       /**
       * Delete unused object nodes, since they have been deleted in the graph
       * @param nodesToDelete a vector of N to delete
       */
-      void update_removeDeletedNodes(std::vector< bpp::Graph::Node > nodesToDelete);
+      void update_removeDeletedNodes(std::vector< bpp::Graph::Node >& nodesToDelete);
       
       ///@}
       

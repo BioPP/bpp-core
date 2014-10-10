@@ -123,7 +123,7 @@ private:
     * @param node node that has to be checked
     * @param name common name to give to the user (eg: "first node")
     */
-    void checkNodeExistence(const Node node, std::string name);
+    void checkNodeExistence(Node node, std::string name);
 
 
     /**

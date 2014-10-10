@@ -83,7 +83,7 @@ const Graph::Edge Graph::link(Graph::Node nodeA, Graph::Node nodeB)
   return edgeID;
 }
 
-void Graph::checkNodeExistence(const Node node, string name)
+void Graph::checkNodeExistence(Node node, string name)
 {
   if(nodes.find(node) == nodes.end()){
     ostringstream errMessage;
