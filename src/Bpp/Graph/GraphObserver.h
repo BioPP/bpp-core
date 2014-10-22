@@ -206,7 +206,7 @@ namespace bpp
       * @param node/edge existing node/edge to be associated
       */
       void associate(N* nodeObject, Graph::Node node);
-      void associate(E* nodeObject, Graph::Edge edge);
+      void associate(E* edgeObject, Graph::Edge edge);
       
       /**
       * Dissociate a N or E object to a node or an edge in the graph.
