@@ -253,7 +253,7 @@ namespace bpp
       */
       const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth);
       /**
-      * Get all the leaves of a graph, ie, nodes with only one neighbor,
+      * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
       const std::vector<N*> getLeaves();
@@ -326,11 +326,6 @@ namespace bpp
       */
       size_t getNumberOfLeaves();
       
-      /**
-      * Return all the leaveObjects
-      * @return a vector containing all the leave objects
-      */
-      std::vector<N*> getLeaves();
       
       ///@}
       
@@ -418,7 +413,7 @@ void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::update_removeDeletedEdges(std::vector<Graph::Edge> edgesToDelete)
+void GraphObserver<N,E>::update_removeDeletedEdges(std::vector<Graph::Edge>& edgesToDelete)
 {
   for(std::vector<Graph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
     E* edgeObject = edgesToObjects.at(*currEdge);
@@ -430,7 +425,7 @@ void GraphObserver<N,E>::update_removeDeletedEdges(std::vector<Graph::Edge> edge
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::update_removeDeletedNodes(std::vector<Graph::Node> nodesToDelete){
+void GraphObserver<N,E>::update_removeDeletedNodes(std::vector<Graph::Node>& nodesToDelete){
   for(std::vector<Graph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
     N* nodeObject = nodesToObjects.at(*currNode);
     nodesToObjects.at(*currNode) = 00;
@@ -495,23 +490,17 @@ void GraphObserver<N,E>::forget(E* edgeObject)
   objectsToEdges.erase(edgeToForget);
 }
 
-template <class N, class E>
-size_t GraphObserver<N,E>::getNumberOfNodes()
-{
-  return(nodesToObjects.size());
-}
-
 
 template <class N, class E>
-std::vector<N*> GraphObserver<N,E>::getLeaves()
+const std::vector<N*> GraphObserver<N,E>::getLeaves()
 {
   std::vector<N*> leavesToReturn;
   // fetching all the graph Leaves
-  std::vector<Node> graphLeaves = subjectGraph->getLeaves();
+  std::vector<Graph::Node> graphLeaves = subjectGraph->getLeaves();
   // testing if they are defined in this observer
-  for(std::vector<Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
+  for(std::vector<Graph::Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
   {
-    N* foundLeafObject = nodesToObjects.at(currGraphLeave*);
+    N* foundLeafObject = nodesToObjects.at(*currGraphLeave);
     if(foundLeafObject != 00)
       leavesToReturn.push_back(foundLeafObject);
   }
@@ -519,14 +508,14 @@ std::vector<N*> GraphObserver<N,E>::getLeaves()
 }
 
 template <class N, class E>
-std::vector<N*> GraphObserver<N,E>::getNodes()
+const std::vector<N*> GraphObserver<N,E>::getNodes()
 {
   std::vector<N*> nodesToReturn;
-  for(std::vector<N*>::iterator currNodeObject = nodesToObjects.begin(); currNodeObject != nodesToObjects.end(); currNodeObject++)
+  for(typename std::vector<N*>::iterator currNodeObject = nodesToObjects.begin(); currNodeObject != nodesToObjects.end(); currNodeObject++)
   {
-    if(currNodeObject* != 00)
+    if(*currNodeObject != 00)
     {
-      nodesToReturn.push_back(currNodeObject*);
+      nodesToReturn.push_back(*currNodeObject);
     }
   }
   return nodesToReturn;
