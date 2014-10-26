@@ -124,7 +124,7 @@ void RescaledHmmLikelihood::computeForward_()
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++) {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
-      if (isnan(trans[ii + j]))
+      if (std::isnan(trans[ii + j]))
         throw Exception("RescaledHmmLikelihood::computeForward_. NaN transition probability");
       if (trans[ii + j] < 0)
         throw Exception("RescaledHmmLikelihood::computeForward_. Negative transition probability: " + TextTools::toString(trans[ii + j]));
