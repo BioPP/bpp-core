@@ -13,16 +13,6 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 SET(CMAKE_CXX_FLAGS " -std=c++0x -Wall -Weffc++ -Wshadow -Wconversion")
 
-IF(NOT NO_DEP_CHECK)
-  SET(NO_DEP_CHECK FALSE CACHE BOOL
-      "Disable dependencies check for building distribution only."
-      FORCE)
-ENDIF(NOT NO_DEP_CHECK)
-
-IF(NO_DEP_CHECK)
-  MESSAGE("-- Dependencies checking disabled. Only distribution can be built.")
-ELSE(NO_DEP_CHECK)
-
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
 # current:  The most recent interface number that this library implements.
