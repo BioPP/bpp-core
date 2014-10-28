@@ -145,6 +145,11 @@ class AbstractParametrizable:
       parameters_.addParameters(parameters);
     }
 
+  void includeParameters_(const ParameterList& parameters)
+  {
+    parameters_.includeParameters(parameters);
+  }
+
   void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
     {
       if (index >= parameters_.size())
