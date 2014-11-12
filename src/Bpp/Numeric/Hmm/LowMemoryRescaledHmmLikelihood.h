@@ -187,8 +187,9 @@ public:
 
   double getLogLikelihood() const { return logLik_; }
 
-  void fireParameterChanged(const ParameterList& pl);
+  void setNamespace(const std::string& nameSpace);
 
+  void fireParameterChanged(const ParameterList& pl);
 
   double getLikelihoodForASite(size_t site) const
   {

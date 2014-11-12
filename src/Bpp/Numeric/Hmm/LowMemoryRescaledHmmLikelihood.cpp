@@ -87,6 +87,15 @@ LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
   computeForward_();
 }
 
+void LowMemoryRescaledHmmLikelihood::setNamespace(const std::string& nameSpace)
+{
+  AbstractParametrizable::setNamespace(nameSpace);
+
+  hiddenAlphabet_->setNamespace(nameSpace);
+  transitionMatrix_->setNamespace(nameSpace);
+  emissionProbabilities_->setNamespace(nameSpace);
+}
+
 void LowMemoryRescaledHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
    bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);

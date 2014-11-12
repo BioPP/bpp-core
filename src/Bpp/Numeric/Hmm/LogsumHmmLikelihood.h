@@ -220,7 +220,9 @@ namespace bpp {
 
     Vdouble getLikelihoodForEachSite() const;
 
-    virtual void fireParameterChanged(const ParameterList& pl);
+    void setNamespace(const std::string& nameSpace);
+
+    void fireParameterChanged(const ParameterList& pl);
     
     Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const;
 

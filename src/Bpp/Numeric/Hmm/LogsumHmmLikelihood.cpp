@@ -90,6 +90,15 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
   computeForward_();
 }
 
+void LogsumHmmLikelihood::setNamespace(const std::string& nameSpace)
+{
+  AbstractParametrizable::setNamespace(nameSpace);
+
+  hiddenAlphabet_->setNamespace(nameSpace);
+  transitionMatrix_->setNamespace(nameSpace);
+  emissionProbabilities_->setNamespace(nameSpace);
+}
+
 void LogsumHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
   dVariable_="";

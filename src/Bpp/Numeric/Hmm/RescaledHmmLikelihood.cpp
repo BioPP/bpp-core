@@ -94,6 +94,15 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
   computeForward_();
 }
 
+void RescaledHmmLikelihood::setNamespace(const std::string& nameSpace)
+{
+  AbstractParametrizable::setNamespace(nameSpace);
+
+  hiddenAlphabet_->setNamespace(nameSpace);
+  transitionMatrix_->setNamespace(nameSpace);
+  emissionProbabilities_->setNamespace(nameSpace);
+}
+
 void RescaledHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
   bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
