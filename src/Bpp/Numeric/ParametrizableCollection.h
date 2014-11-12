@@ -245,6 +245,32 @@ namespace bpp
     }
   
     /**
+     * @brief Get the paramters of the Collection corresponding to an
+     * object from the set knowing its index.
+     *
+     * @param objectIndex Index of the object in the set.
+     * @return A ParameterList
+     */
+
+    ParameterList getParametersForObject(size_t objectIndex) const
+    {
+      ParameterList pl;
+      typename std::map<size_t, N*>::const_iterator it=objectsSet_.find(objectIndex);
+
+      if (it!=objectsSet_.end())
+      {
+        if (dynamic_cast<const ParameterAliasable*>(it->second)!=NULL)
+          pl = dynamic_cast<const ParameterAliasable*>(it->second)->getIndependentParameters();
+        else
+          pl = it->second->getParameters();
+        
+        for (size_t i=0; i<pl.size();i++)
+          pl[i].setName(pl[i].getName()+"_"+TextTools::toString(objectIndex));
+      }
+      return pl;
+    }
+    
+    /**
      * @brief Add a new object to the set with a given number.
      *
      * @throw Exception if the number is already used. See replace function instead.
