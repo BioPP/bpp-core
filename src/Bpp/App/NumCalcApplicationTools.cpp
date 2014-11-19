@@ -52,6 +52,7 @@ vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const s
   while (st->hasMoreToken())
   {
     StringTokenizer * st2 = new StringTokenizer(st->nextToken(), seqdelim, true);
+
     if (st2->numberOfRemainingTokens() > 1)
     {
       vector<int> tmp = VectorTools::seq(TextTools::toInt(st2->getToken(0)), TextTools::toInt(st2->getToken(1)), 1);

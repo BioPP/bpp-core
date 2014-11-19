@@ -169,7 +169,9 @@ double BrentOneDimension::doStep() throw (Exception)
   // Function evaluaton:
   ParameterList pl = getParameters();
   pl[0].setValue(u);
+
   fu = getFunction()->f(pl);
+
   if (fu <= fx)
   {
     if (u >= x) a = x; else b = x;
