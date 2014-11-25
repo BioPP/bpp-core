@@ -40,6 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "ConjugateGradientMultiDimensions.h"
 #include "OneDimensionOptimizationTools.h"
 
+#include "../VectorTools.h"
+
 using namespace bpp;
 
 /******************************************************************************/
@@ -81,13 +83,16 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
   nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
       getParameters_(), xi_, getStopCondition()->getTolerance(),
       0, 0, getVerbose() > 0 ? getVerbose() - 1 : 0);
+
   getFunction_()->enableFirstOrderDerivatives(true);
   f = getFunction()->f(getParameters());
+
   if (tolIsReached_)
   {
     return f;
   }
   getGradient(xi_);
+
   dgg = gg = 0.0;
   for (unsigned j = 0; j < n; j++)
   {
@@ -95,6 +100,7 @@ double ConjugateGradientMultiDimensions::doStep() throw (Exception)
     /* dgg += xi[j] * xi[j]; */ //This statement for Fletcher-Reeves.
     dgg += (xi_[j] + g_[j]) * xi_[j]; //This statement for Polak-Ribiere.
   }
+  
   if (gg == 0.0)
   { 
     //Unlikely. If gradient is exactly zero then

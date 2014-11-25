@@ -72,6 +72,13 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
   parameters[0].setValue(bracket.a.x); bracket.a.f = function->f(parameters);
   bracket.b.x = b;
   parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+
+  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  {
+    bracket.b.x /= 1.1;
+    parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+  }
+  
   if (bracket.b.f > bracket.a.f)
   {
     // Switch roles of first and second point so that we can go downhill
@@ -83,6 +90,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
   // First guess for third point:
   bracket.c.x = bracket.b.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.b.x - bracket.a.x);
   parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
+
 
   // Keep returning here until we bracket:
   while (bracket.b.f > bracket.c.f)
