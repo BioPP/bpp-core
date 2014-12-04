@@ -184,7 +184,7 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
     }
 
     if (unparsedParams.size()==unp_s)
-      throw Exception("Error, there is a cycle in aliasing");
+      throw Exception("Error, there is a cycle in aliasing starting with " + unparsedParams.begin()->first);
     else
       unp_s=unparsedParams.size();
   }
