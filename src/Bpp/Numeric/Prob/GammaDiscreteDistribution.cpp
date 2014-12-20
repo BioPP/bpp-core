@@ -51,11 +51,12 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, double beta, double minimumAlpha, double minimumBeta) :
+GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, double beta, double minimumAlpha, double minimumBeta, bool paramOffset, double offset) :
   AbstractParameterAliasable("Gamma."),
   AbstractDiscreteDistribution(n, "Gamma."),
   alpha_(alpha),
   beta_(beta),
+  offset_(offset),
   ga1_(1)
 {
   // We use a lower bound of 0.0001 for alpha and beta to prohibe errors due to computer
@@ -65,9 +66,12 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, dou
   // algorithms.
   addParameter_(new Parameter("Gamma.alpha", alpha, new IntervalConstraint(1, minimumAlpha, true), true));
   addParameter_(new Parameter("Gamma.beta", beta, new IntervalConstraint(1, minimumBeta, true), true));
+  if (paramOffset)
+    addParameter_(new Parameter("Gamma.offset", offset));
+  
   ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
 
-  intMinMax_.setLowerBound(0, true);
+  intMinMax_.setLowerBound(offset_, true);
   discretize();
 }
 
@@ -76,6 +80,7 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(const GammaDiscreteDistribu
   AbstractDiscreteDistribution(gdd),
   alpha_(gdd.alpha_),
   beta_(gdd.beta_),
+  offset_(gdd.offset_),
   ga1_(gdd.ga1_)
 {
 }
@@ -86,6 +91,7 @@ GammaDiscreteDistribution& GammaDiscreteDistribution::operator=(const GammaDiscr
   AbstractDiscreteDistribution::operator=(gdd);
   alpha_=gdd.alpha_;
   beta_=gdd.beta_;
+  offset_=gdd.offset_;
   ga1_=gdd.ga1_;
 
   return *this;
@@ -100,6 +106,8 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parame
   AbstractDiscreteDistribution::fireParameterChanged(parameters);
   alpha_ = getParameterValue("alpha");
   beta_ = getParameterValue("beta");
+  if (hasParameter("offset"))
+      offset_ = getParameterValue("offset");
   ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
 
   discretize();
@@ -111,17 +119,17 @@ void GammaDiscreteDistribution::fireParameterChanged(const ParameterList& parame
 
 double GammaDiscreteDistribution::qProb(double x) const
 {
-  return RandomTools::qGamma(x, alpha_, beta_);
+  return offset_+RandomTools::qGamma(x, alpha_, beta_);
 }
 
 
 double GammaDiscreteDistribution::pProb(double x) const
 {
-  return RandomTools::pGamma(x, alpha_, beta_);
+  return RandomTools::pGamma(x-offset_, alpha_, beta_);
 }
 
 double GammaDiscreteDistribution::Expectation(double a) const
 {
-  return RandomTools::pGamma(a, alpha_ + 1, beta_) / beta_ * ga1_;
+  return RandomTools::pGamma(a-offset_, alpha_ + 1, beta_) / beta_ * ga1_ + (offset_)?offset_*RandomTools::pGamma(a-offset_, alpha_, beta_):0;
 }
 

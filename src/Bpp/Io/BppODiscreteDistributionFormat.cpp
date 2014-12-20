@@ -208,11 +208,26 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(
 
     if (distName == "Gamma")
     {
-      rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1));
+      double offset=0;
+
+      if (args.find("offset") != args.end())
+        try
+        {
+          offset=TextTools::toDouble(args["offset"]);
+        }
+        catch (Exception& e) {}
+      
+      if (args.find("ParamOffset") != args.end())        
+        rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, true, offset));
+      else
+        rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, false, offset));
+      
       if (args.find("alpha") != args.end())
         unparsedArguments_["Gamma.alpha"] = args["alpha"];
       if (args.find("beta") != args.end())
         unparsedArguments_["Gamma.beta"] = args["beta"];
+      if (args.find("offset") != args.end())
+        unparsedArguments_["Gamma.offset"] = args["offset"];
     }
     else if (distName == "Gaussian")
     {

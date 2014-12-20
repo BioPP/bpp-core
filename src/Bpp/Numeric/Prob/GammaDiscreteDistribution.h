@@ -48,7 +48,7 @@ namespace bpp
 {
 
   /**
-   * @brief Discretized Gamma distribution.
+   * @brief Discretized Gamma distribution with an offset.
    *
    * @author Julien Dutheil, Laurent Guéguen, with original code from Tal Pupko and Ziheng Yang.
    */
@@ -60,6 +60,8 @@ namespace bpp
 
     double alpha_, beta_;
 
+    double offset_;
+    
     // To prevent useless computations
     double ga1_;
     
@@ -73,14 +75,20 @@ namespace bpp
      * @param beta The beta parameter (rate)
      * @param minimumAlpha The minimum allowed value for parameter alpha.
      * @param minimumBeta The minimum allowed value for parameter beta.
+     * @param paramOffset bool if the distribution has an offset
+     *               parameter (default: false).
+     * @param offset The distribution is offset + Gamma (default 0).
+     *         P(X<x)=pGamma(x-offset,alpha,beta)
      *
      * The Parameters are: alpha and beta @f$ \in [minimumBound;\infty[ @f$.
      * Small values of alpha and/or beta can lead to discretization issues.
      *
+     * 
      * If @f$ alpha > 1 @f$, the minimum value of the distribution is
-     * set to 1e-12, otherwise it is 0.
+     * set to offset+1e-12, otherwise it is offset.
      */
-    GammaDiscreteDistribution(size_t n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05);
+    
+    GammaDiscreteDistribution(size_t n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05, bool paramOffset = false, double offset = 0);
 
     GammaDiscreteDistribution(const GammaDiscreteDistribution&);
 
@@ -99,7 +107,8 @@ namespace bpp
       while (!intMinMax_.isCorrect(x))
         x= RandomTools::randGamma(getParameterValue("alpha"),
                                   getParameterValue("beta"));
-      return x;
+      
+      return x + offset_;
     }
 
     double qProb(double x) const;
