@@ -95,6 +95,80 @@ void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,
   }
 }
 
+std::string KeyvalTools::changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split, bool nested) throw (KeyvalException)
+{
+  string::size_type begin = desc.find_first_of("(");
+  string::size_type end = desc.find_last_of(")");
+
+  if (begin == string::npos && end == string::npos)
+  {
+    //Empty procedure:
+    return desc;
+  }
+  if (begin == string::npos && end != string::npos)
+    throw KeyvalException("Bad keyval procedure, missing opening parenthesis.");
+  if (begin == string::npos && end != string::npos)
+    throw KeyvalException("Bad keyval procedure, missing closing parenthesis.");
+  
+  if (!TextTools::isEmpty(desc.substr(end + 1)))
+    throw KeyvalException("Bad keyval procedure, extra characters after closing parenthesis: " + desc.substr(end + 1));
+  //Get the procedure name (without leading spaces):
+
+  string newDesc= TextTools::removeFirstWhiteSpaces(desc.substr(0, begin))+"(";
+
+  string desckv=desc.substr(begin + 1, end - begin - 1);
+
+  auto_ptr<StringTokenizer> st;
+  if (nested)
+    st.reset(new NestedStringTokenizer(desckv, "(", ")", split));
+  else
+    st.reset(new StringTokenizer(desckv, split));
+  string key, val;
+  vector<string> tokens;
+  //Check tokens:
+  string token;
+  
+  while (st->hasMoreToken())
+  {
+    token = st->nextToken();
+    if (token == "=")
+    {
+      //We need to merge the next token with the last one:
+      if (tokens.size() == 0)
+        throw KeyvalException("Invalid syntax, found '=' without argument name.");
+      if (!st->hasMoreToken())
+        throw KeyvalException("Invalid syntax, found '=' without argument value.");
+      string nextToken = st->nextToken();
+      if (nextToken == "=")
+        throw KeyvalException("Invalid syntax, found a double '='.");
+      tokens[tokens.size() - 1] += "=" + nextToken;
+    }
+    else
+    {
+      tokens.push_back(token);
+    }
+  }
+
+  for (vector<string>::iterator it = tokens.begin(); it != tokens.end(); it++)
+  {
+    singleKeyval(*it, key, val);
+    key=TextTools::removeSurroundingWhiteSpaces(key);
+    if (it!=tokens.begin())
+      newDesc+=split;
+
+    map<string, string>::const_iterator iter=newkeyvals.find(key);
+    
+    if (iter!=newkeyvals.end())
+      newDesc+=key+"="+iter->second;
+    else
+      newDesc+=*it;
+  }
+
+  newDesc+=")";
+  
+  return newDesc;
+}
+
 void KeyvalTools::parseProcedure(const std::string& desc, std::string& name, std::map<std::string, std::string>& args) throw (KeyvalException)
 {
   string::size_type begin = desc.find_first_of("(");

@@ -87,7 +87,8 @@ class KeyvalTools
      * @param split [in]  The delimiter. Default is '=' but ':' can be used.
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
-    static void singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split = "=") throw (KeyvalException);
+
+  static void singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split = "=") throw (KeyvalException);
     
     /**
      * @brief Split a string into several keys and corresponding values (General purpose function).
@@ -98,7 +99,27 @@ class KeyvalTools
      * @param nested [in] Tell if nested keyval procedures are expected.
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
+  
     static void multipleKeyvals(const std::string& desc, std::map<std::string, std::string>& keyvals, const std::string& split = ",", bool nested = true) throw (KeyvalException);
+
+  /**
+   * @brief Change several keys to new corresponding values (General
+   * purpose function).
+   *
+   * @param desc [in]  A string descibing the keyval, with format
+   * key1=val1,key2=val2,etc (space are considered normal character,
+   * that's up to you to deal with that afterwards!).
+   * @param newkeyvals [in] contains the text of the keys to be changed
+   * and their new corresponding values. If a key is not in desc, it
+   * is not added.
+   * @param split [in] The keyval delimiter. The default is a coma,
+   * but a space character can be used for instance.
+   * @param nested [in] Tell if nested keyval procedures are expected.
+   * @return the string with the changed values.
+   * @throw KeyvalException If the syntax describing the keyval is not correct.
+   */
+  
+  static std::string changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split = ",", bool nested = true) throw (KeyvalException);
 
     /**
      * @brief Parse (not recursively) a procedure string.
