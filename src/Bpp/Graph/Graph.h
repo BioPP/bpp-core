@@ -6,7 +6,7 @@
 #include<string>
 #include<vector>
 
-#include <Bpp/Clonable.h>
+#include "../Clonable.h"
 
 
 // forward declaration to avoid circular dependancies.
@@ -38,25 +38,25 @@ private:
     /**
     * is the graph directed
     */
-    bool directed;
+    bool directed_;
 
     /**
     * List of all the subscribers.
     */
-    std::set<GraphObserverI*> observers;
+    std::set<GraphObserverI*> observers_;
 
     /**
     * Number of nodes.
     */
-    unsigned int numberOfNodes;
+    unsigned int numberOfNodes_;
     /**
     * Highest used available ID for a Node.
     */
-    unsigned int highestNodeID;
+    unsigned int highestNodeID_;
     /**
     * Highest used available ID for an Edge.
     */
-    unsigned int highestEdgeID;
+    unsigned int highestEdgeID_;
 
     /**
     * The structure type, used for more clarity
@@ -67,7 +67,7 @@ private:
     /**
     * Set of existing nodes in this Graph
     */
-    std::set<Node> nodes;
+    std::set<Node> nodes_;
 
 
     /**
@@ -75,47 +75,47 @@ private:
     * TODO: explain the relation coding
     * nodeA -> [(nodeB, relationID),…]
     */
-    structure_type structure;
+    structure_type structure_;
     /**
     * Nodes and their relations in the backwards direction, for directed graph only.
     * TODO: explain the relation coding
     * nodeA -> [(nodeB, relationID),…]
     */
-    structure_type backwardsStructure;
+    structure_type backwardsStructure_;
     /**
     * Usualy the first node of a graph. Used for algorithmic purposes.
     */
-    Node root;
+    Node root_;
     /**
     * Tell all the observers to get the last updates.
     * Calls the method update of all the subscribers.
     */
-    void notify();
+    void notify_();
 
 
 
     /**
     * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
-    * Private version of link, do not check for the reciprocity.
+    * Private version of link, does not check for the reciprocity.
     * Mainly called by link().
     * @param nodeA source node (or first node if undirected)
     * @param nodeB target node (or second node if undirected)
     * @param edge the ID of the relation
     * @param toBackwards if this link has to be done in the backwardsStructure (for directed graphs)
     */
-    void rawLink(Node nodeA, Node nodeB, Edge edge, bool toBackwards);
+    void link_(Node nodeA, Node nodeB, Edge edge, bool toBackwards);
 
 
     /**
     * Erase a link between two existing nodes. If directed graph: nodeA -> nodeB.
-    * Private version of unLink, do not check for the reciprocity.
+    * Private version of unLink, does not check for the reciprocity.
     * Mainly called by unLink().
     * @param nodeA source node (or first node if undirected)
     * @param nodeB target node (or second node if undirected)
     * @param toBackwards if this link has to be UNdone in the backwardsStructure (for directed graphs)
     * @return the ID of the erased relation
     */
-    Edge rawUnLink(Node nodeA, Node nodeB, bool toBackwards);
+    Edge unlink_(Node nodeA, Node nodeB, bool toBackwards);
 
 
     /**
@@ -123,7 +123,7 @@ private:
     * @param node node that has to be checked
     * @param name common name to give to the user (eg: "first node")
     */
-    void checkNodeExistence(Node node, std::string name);
+    void checkNodeExistence_(Node node, std::string name);
 
 
     /**
@@ -132,13 +132,13 @@ private:
     * @param node node to find in or outgoing neighbors
     * @param outgoing boolean: if tue, outgoing; else incoming
     */
-    const std::vector<Node> getInOrOutGoingNeighbors(Node node,bool outgoing=true);
+    const std::vector<Node> getInOrOutGoingNeighbors_(Node node,bool outgoing=true);
 
   /**
     * Separate a node from all its neighbors.
     * @param node node to isolate
     */
-    void isolate(Node node);
+    void isolate_(Node node);
     
   /**
     * Get leaves from a starting node, filling a vector (private version).
@@ -146,7 +146,7 @@ private:
     * @param foundLeaves a vector containing all the found leaves
     * @param originNode the node where we come from, not to explore
     */
-    void fillListOfLeaves(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0);
+    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0);
     
     
     
@@ -244,12 +244,12 @@ public:
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
     */
-    void attach(bpp::GraphObserverI* observer);
+    void addObserver(bpp::GraphObserverI* observer);
     /**
     * Detach an observer from this Graph.
     * The observer will not be warned of changes anymore.
     */
-    void detach(bpp::GraphObserverI* observer);
+    void removeObserver(bpp::GraphObserverI* observer);
     ///@}
 
 
@@ -323,13 +323,13 @@ public:
     * Trigger E objects deleting on the observers
     * @param edgesToDelete list of edges to delete
     */
-    void tellObservers_removeDeletedEdges(std::vector<Graph::Edge> edgesToDelete);
+    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete);
 
     /**
     * Trigger N objects deleting on the observers
     * @param nodesToDelete list of edges to delete
     */
-    void tellObservers_removeDeletedNodes(std::vector< Graph::Node > nodesToDelete);
+    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete);
 
 
     ///@}
