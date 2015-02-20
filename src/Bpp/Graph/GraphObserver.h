@@ -41,13 +41,13 @@ namespace bpp
       * Delete unused object edges, since they have been deleted in the graph
       * @param edgesToDelete a vector of Edges to delete
       */
-      virtual void deletedEdgesUpdate(std::vector< bpp::Graph::Edge >& edgesToDelete) = 0;
+      virtual void deletedEdgesUpdate(std::vector< bpp::SimpleGraph::Edge >& edgesToDelete) = 0;
       
       /**
       * Delete unused object nodes, since they have been deleted in the graph
       * @param nodesToDelete a vector of N to delete
       */
-      virtual void deletedNodesUpdate(std::vector< bpp::Graph::Node >& nodesToDelete) = 0;
+      virtual void deletedNodesUpdate(std::vector< bpp::SimpleGraph::Node >& nodesToDelete) = 0;
       
       ///@}
       
@@ -77,12 +77,12 @@ namespace bpp
       /**
       * Can find an Edge with the corresponding object.
       */
-      std::map<E*,Graph::Edge> objectsToEdges_;
+      std::map<E*,SimpleGraph::Edge> objectsToEdges_;
       
       /**
       * Can find a Node with the corresponding object.
       */
-      std::map<N*,Graph::Node> objectsToNodes_;
+      std::map<N*,SimpleGraph::Node> objectsToNodes_;
       
       
       
@@ -91,13 +91,13 @@ namespace bpp
       * The observed Graph. Anytime this graph is observed,
       * the current object will be warned to take changes into account.
       */
-      bpp::Graph* subjectGraph_;
+      bpp::SimpleGraph* subjectGraph_;
       
       /**
       * Set the observed Graph
       * @param subjectGraph the graph which is observed
       */
-      void observe_(bpp::Graph subjectGraph);
+      void observe_(bpp::SimpleGraph subjectGraph);
       
 
       
@@ -115,7 +115,7 @@ namespace bpp
       * Constructor
       * @param subjectGraph the graph which is observed
       */
-      GraphObserver(bpp::Graph* subjectGraph = 00);
+      GraphObserver(bpp::SimpleGraph* subjectGraph = 00);
       
       /**
       * Copy Constructor
@@ -213,8 +213,8 @@ namespace bpp
       * @param nodeObject object to associate
       * @param node/edge existing node/edge to be associated
       */
-      void associateNode(N* nodeObject, Graph::Node node);
-      void associateEdge(E* edgeObject, Graph::Edge edge);
+      void associateNode(N* nodeObject, SimpleGraph::Node node);
+      void associateEdge(E* edgeObject, SimpleGraph::Edge edge);
       
       /**
       * Dissociate a N or E object to a node or an edge in the graph.
@@ -306,13 +306,13 @@ namespace bpp
       * Delete unused object edges, since they have been deleted in the graph
       * @param edgesToDelete a vector of Edges to delete
       */
-      void deletedEdgesUpdate(std::vector< bpp::Graph::Edge >& edgesToDelete);
+      void deletedEdgesUpdate(std::vector< bpp::SimpleGraph::Edge >& edgesToDelete);
       
       /**
       * Delete unused object nodes, since they have been deleted in the graph
       * @param nodesToDelete a vector of N to delete
       */
-      void deletedNodesUpdate(std::vector< bpp::Graph::Node >& nodesToDelete);
+      void deletedNodesUpdate(std::vector< bpp::SimpleGraph::Node >& nodesToDelete);
       
       ///@}
       
@@ -344,7 +344,7 @@ namespace bpp
 template <class N, class E>
 void GraphObserver<N,E>::createNode(N* nodeObject)
 {
-  Graph::Node newGraphNode = subjectGraph_->createNode();
+  SimpleGraph::Node newGraphNode = subjectGraph_->createNode();
   
   associateNode(nodeObject, newGraphNode);
   
@@ -355,9 +355,9 @@ GraphObserver<N,E>::GraphObserver(bool directed_p):
   directed_(directed_p),
   edgesToObjects_(std::vector<E*>()),
   nodesToObjects_(std::vector<N*>()),
-  objectsToEdges_(std::map<E*,Graph::Node>()),
-  objectsToNodes_(std::map<N*,Graph::Node>()),
-  subjectGraph_(new Graph(directed_p))
+  objectsToEdges_(std::map<E*,SimpleGraph::Node>()),
+  objectsToNodes_(std::map<N*,SimpleGraph::Node>()),
+  subjectGraph_(new SimpleGraph(directed_p))
 {
   this->subjectGraph_->registerObserver(this);
 }
@@ -402,7 +402,7 @@ template <class N, class E>
 void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
 {
   // checking the nodes
-  typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
+  typename std::map<N*,SimpleGraph::Node>::iterator foundNodeA, foundNodeB;
   foundNodeA = objectsToNodes_.find(nodeObjectA);
   foundNodeB = objectsToNodes_.find(nodeObjectB);
   if(foundNodeA == objectsToNodes_.end() || foundNodeB == objectsToNodes_.end())
@@ -413,7 +413,7 @@ void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
     throw Exception("The given edge is already associated to a relation in the subjectGraph.");
   
   std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
-  Graph::Edge newGraphEdge = subjectGraph_->link(foundNodeA->second,foundNodeB->second);
+  SimpleGraph::Edge newGraphEdge = subjectGraph_->link(foundNodeA->second,foundNodeB->second);
   
   if(edgesToObjects_.size() < newGraphEdge+1)
     edgesToObjects_.resize(newGraphEdge+1);
@@ -426,7 +426,7 @@ template <class N, class E>
 void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 {
   //checking the nodes
-  typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
+  typename std::map<N*,SimpleGraph::Node>::iterator foundNodeA, foundNodeB;
   foundNodeA = objectsToNodes_.find(nodeObjectA);
   foundNodeB = objectsToNodes_.find(nodeObjectB);
   if(foundNodeA == objectsToNodes_.end() || foundNodeB == objectsToNodes_.end())
@@ -436,9 +436,9 @@ void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::deletedEdgesUpdate(std::vector<Graph::Edge>& edgesToDelete)
+void GraphObserver<N,E>::deletedEdgesUpdate(std::vector<SimpleGraph::Edge>& edgesToDelete)
 {
-  for(std::vector<Graph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
+  for(std::vector<SimpleGraph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
     E* edgeObject = edgesToObjects_.at(*currEdge);
     edgesToObjects_.at(*currEdge) = 00;
     
@@ -448,8 +448,8 @@ void GraphObserver<N,E>::deletedEdgesUpdate(std::vector<Graph::Edge>& edgesToDel
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::deletedNodesUpdate(std::vector<Graph::Node>& nodesToDelete){
-  for(std::vector<Graph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
+void GraphObserver<N,E>::deletedNodesUpdate(std::vector<SimpleGraph::Node>& nodesToDelete){
+  for(std::vector<SimpleGraph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
     N* nodeObject = nodesToObjects_.at(*currNode);
     nodesToObjects_.at(*currNode) = 00;
     
@@ -461,10 +461,10 @@ void GraphObserver<N,E>::deletedNodesUpdate(std::vector<Graph::Node>& nodesToDel
 template <class N, class E>
 const std::vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
 {
-  Graph::Node graphNode = objectsToNodes_.at(nodeObject);
-  std::vector<Graph::Node> graphNodes = subjectGraph_->getOutgoingNeighbors(graphNode);
+  SimpleGraph::Node graphNode = objectsToNodes_.at(nodeObject);
+  std::vector<SimpleGraph::Node> graphNodes = subjectGraph_->getOutgoingNeighbors(graphNode);
   std::vector<N*> result;
-  for(std::vector<Graph::Node>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
+  for(std::vector<SimpleGraph::Node>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
   {
     result.push_back(nodesToObjects_.at(*currGraphNode));
   }
@@ -472,7 +472,7 @@ const std::vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associateNode(N* nodeObject, Graph::Node graphNode)
+void GraphObserver<N,E>::associateNode(N* nodeObject, SimpleGraph::Node graphNode)
 {
   
   // nodes vector must be the right size. Eg: to store a node with
@@ -485,7 +485,7 @@ void GraphObserver<N,E>::associateNode(N* nodeObject, Graph::Node graphNode)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associateEdge(E* edgeObject, Graph::Edge graphEdge)
+void GraphObserver<N,E>::associateEdge(E* edgeObject, SimpleGraph::Edge graphEdge)
 {
   
   // nodes vector must be the right size. Eg: to store an edge with
@@ -500,7 +500,7 @@ void GraphObserver<N,E>::associateEdge(E* edgeObject, Graph::Edge graphEdge)
 template <class N, class E>
 void GraphObserver<N,E>::forgetNode(N* nodeObject)
 {
-  typename std::map<N*,Graph::Node>::iterator nodeToForget = objectsToNodes_.find(nodeObject);
+  typename std::map<N*,SimpleGraph::Node>::iterator nodeToForget = objectsToNodes_.find(nodeObject);
   nodesToObjects_.erase(nodeToForget->second);
   objectsToNodes_.erase(nodeToForget);
 }
@@ -508,7 +508,7 @@ void GraphObserver<N,E>::forgetNode(N* nodeObject)
 template <class N, class E>
 void GraphObserver<N,E>::forgetEdge(E* edgeObject)
 {
-  typename std::map<E*,Graph::Edge>::iterator edgeToForget = objectsToEdges_.find(edgeObject);
+  typename std::map<E*,SimpleGraph::Edge>::iterator edgeToForget = objectsToEdges_.find(edgeObject);
   edgesToObjects_.erase(edgeToForget->second);
   objectsToEdges_.erase(edgeToForget);
 }
@@ -519,9 +519,9 @@ const std::vector<N*> GraphObserver<N,E>::getLeaves()
 {
   std::vector<N*> leavesToReturn;
   // fetching all the graph Leaves
-  std::vector<Graph::Node> graphLeaves = subjectGraph_->getLeaves();
+  std::vector<SimpleGraph::Node> graphLeaves = subjectGraph_->getLeaves();
   // testing if they are defined in this observer
-  for(std::vector<Graph::Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
+  for(std::vector<SimpleGraph::Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
   {
     N* foundLeafObject = nodesToObjects_.at(*currGraphLeave);
     if(foundLeafObject != 00)

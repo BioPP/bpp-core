@@ -17,6 +17,16 @@ class GraphObserverI;
 
 namespace bpp
 {
+  class Graph
+  {
+  public:
+    Graph() {}
+    virtual ~Graph() {}
+  };
+}
+
+namespace bpp
+{
 /**
  * @brief Defines a Graph. Contains edges and nodes. This class just define the structure of the graph
  * the content itself is contained in a GraphObserver template.
@@ -25,7 +35,8 @@ namespace bpp
  * @author Thomas Bigot
  */
 
-class Graph
+class SimpleGraph:
+public virtual Graph
 {
 public:
     typedef unsigned int Node;
@@ -163,7 +174,7 @@ public:
     * Constructor
     * @param directed true if the graph is directed.
     */
-    Graph(bool directed=false);
+    SimpleGraph(bool directed=false);
    
     
     /**
@@ -201,7 +212,7 @@ public:
     * @param nodeB target node (or second node if undirected)
     * @return the new edge
     */
-    const Edge link(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
+    const Edge link(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
     /**
     * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
     * @param nodeA source node (or first node if undirected)
@@ -290,7 +301,7 @@ public:
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
     * @return the edge between these two nodes
     */
-    const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
+    const Edge getEdge(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
     /**
     * Returns the Edge between two nodes
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
@@ -309,13 +320,13 @@ public:
     * Trigger E objects deleting on the observers
     * @param edgesToDelete list of edges to delete
     */
-    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete);
+    void notifyDeletedEdges(std::vector<SimpleGraph::Edge> edgesToDelete);
 
     /**
     * Trigger N objects deleting on the observers
     * @param nodesToDelete list of edges to delete
     */
-    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete);
+    void notifyDeletedNodes(std::vector< SimpleGraph::Node > nodesToDelete);
 
 
     ///@}
