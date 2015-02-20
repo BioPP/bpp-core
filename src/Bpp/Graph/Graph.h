@@ -6,7 +6,6 @@
 #include<string>
 #include<vector>
 
-#include "../Clonable.h"
 
 
 // forward declaration to avoid circular dependancies.
@@ -26,8 +25,7 @@ namespace bpp
  * @author Thomas Bigot
  */
 
-class Graph:
-    public virtual bpp::Clonable
+class Graph
 {
 public:
     typedef unsigned int Node;
@@ -166,19 +164,7 @@ public:
     * @param directed true if the graph is directed.
     */
     Graph(bool directed=false);
-
-    /**
-    * Copy Constructor
-    * @param graph the graph to be copied
-    */
-    Graph(const Graph &graph);
-
-    /**
-    * clone
-    * @param graph the graph to be copied
-    */
-    Graph* clone() const;
-    
+   
     
     /**
       * get the Highest Node ID (for vector sizing)
@@ -244,12 +230,12 @@ public:
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
     */
-    void addObserver(bpp::GraphObserverI* observer);
+    void registerObserver(bpp::GraphObserverI* observer);
     /**
     * Detach an observer from this Graph.
     * The observer will not be warned of changes anymore.
     */
-    void removeObserver(bpp::GraphObserverI* observer);
+    void unregisterObserver(bpp::GraphObserverI* observer);
     ///@}
 
 

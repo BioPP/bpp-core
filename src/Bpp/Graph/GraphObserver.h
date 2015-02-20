@@ -4,7 +4,7 @@
 #include "Graph.h"
 
 #include "../Exceptions.h"
-
+#include "../Clonable.h"
 
 #include <vector>
 #include <map>
@@ -59,6 +59,8 @@ namespace bpp
     public GraphObserverI
     {
     private:
+      //is the graph directed
+      bool directed_;
       
       /**
       * List of edges, stored at the same ID than the corresponding edges
@@ -97,8 +99,7 @@ namespace bpp
       */
       void observe_(bpp::Graph subjectGraph);
       
-      //is the graph directed
-      bool directed_;
+
       
       
         
@@ -121,6 +122,13 @@ namespace bpp
       * @param graphObserver the graphObserver to be copied
       */
       GraphObserver(bpp::GraphObserver<N,E> const& graphObserver);
+      
+      /**
+      * = Operator
+      * @param graphObserver the graphObserver we want to copy the values
+      */
+      GraphObserver<N,E> operator=(bpp::GraphObserver<N,E> const& graphObserver);
+      
       
       
       /**
@@ -343,21 +351,37 @@ void GraphObserver<N,E>::createNode(N* nodeObject)
 }
 
 template <class N, class E>
-GraphObserver<N,E>::GraphObserver(bool directed_p)
+GraphObserver<N,E>::GraphObserver(bool directed_p):
+  directed_(directed_p),
+  edgesToObjects_(std::vector<E*>()),
+  nodesToObjects_(std::vector<N*>()),
+  objectsToEdges_(std::map<E*,Graph::Node>()),
+  objectsToNodes_(std::map<N*,Graph::Node>()),
+  subjectGraph_(new Graph(directed_p))
 {
-  this->directed_ = directed_p;
-  this->subjectGraph_ = new Graph(directed_);
-  this->subjectGraph_->addObserver(this);
+  this->subjectGraph_->registerObserver(this);
 }
 
 template <class N, class E>
 GraphObserver<N,E>::~GraphObserver()
 {
-  this->subjectGraph_->removeObserver(this);
+  this->subjectGraph_->unregisterObserver(this);
 }
 
 template <class N, class E>
-GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver)
+GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver):
+  directed_(graphObserver.directed_),
+  edgesToObjects_(graphObserver.edgesToObjects_),
+  nodesToObjects_(graphObserver.nodesToObjects_),
+  objectsToEdges_(graphObserver.objectsToEdges_),
+  objectsToNodes_(graphObserver.objectsToNodes_),
+  subjectGraph_(graphObserver.subjectGraph_)
+{
+}
+
+
+template <class N, class E>
+GraphObserver<N,E> GraphObserver<N,E>::operator=(GraphObserver<N,E> const& graphObserver)
 {
   this->directed_ = graphObserver.directed_;
   this->edgesToObjects_ = graphObserver.edgesToObjects_;
@@ -366,7 +390,6 @@ GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver)
   this->objectsToNodes_ = graphObserver.objectsToNodes_;
   this->subjectGraph_ = graphObserver.subjectGraph_;
 }
-
 
 template <class N, class E>
 void GraphObserver<N,E>::createNode(N* objectNewNode,N* objectOriginNode)

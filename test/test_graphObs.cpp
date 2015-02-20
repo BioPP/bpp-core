@@ -48,8 +48,6 @@ int main() {
   string one = "one";
   string two = "two";
   string three = "three";
-  unsigned int r1 = 1;
-  unsigned int r2 = 2;
   unsigned int r3 = 3;
   cout << "Creating node one." << endl;
   gos.createNode(&one);

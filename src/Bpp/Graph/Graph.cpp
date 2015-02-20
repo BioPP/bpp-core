@@ -12,45 +12,27 @@ using namespace std;
 
 Graph::Graph(bool directed_p):
   directed_(directed_p),
+  observers_(set<GraphObserverI*>()),
   numberOfNodes_(0),
   highestNodeID_(0),
   highestEdgeID_(0),
+  nodes_(set<Graph::Node>()),
+  structure_(structure_type()),
+  backwardsStructure_(structure_type()),
+  
   root_(0)
 {
  
 }
 
 
-Graph::Graph(const Graph& graph):
-  directed_(graph.directed_),
-  numberOfNodes_(graph.numberOfNodes_),
-  highestNodeID_(graph.highestNodeID_),
-  highestEdgeID_(graph.highestEdgeID_),
-  nodes_(graph.nodes_),
-  structure_(graph.structure_),
-  backwardsStructure_(graph.backwardsStructure_),
-  root_(graph.root_)
-{
- 
-}
-
-#ifdef NO_VIRTUAL_COV
-  Clonable*
-#else
-  Graph*
-#endif
-Graph::clone() const
-{
-  return new Graph(*this);
-}
-
-void Graph::addObserver(GraphObserverI* observer)
+void Graph::registerObserver(GraphObserverI* observer)
 {
   if(!observers_.insert(observer).second)
     throw(Exception("This GraphObserver was already an observer of this Graph"));;
 }
 
-void Graph::removeObserver(GraphObserverI* observer)
+void Graph::unregisterObserver(GraphObserverI* observer)
 {
   if(!observers_.erase(observer))
     throw(Exception("This GraphObserver was not an observer of this Graph"));
