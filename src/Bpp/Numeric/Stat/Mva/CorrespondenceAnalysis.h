@@ -45,6 +45,8 @@
 #include "DualityDiagram.h"
 
 namespace bpp
+{
+
 /**
  * @brief This class allows to perform a correspondence analysis.
  *
@@ -53,7 +55,7 @@ namespace bpp
  *
  * The code of this class is deeply inspired from the R code of the dudi.coa function available in the ade4 package.
  */
-{
+
 class CorrespondenceAnalysis:
   public DualityDiagram
 {
