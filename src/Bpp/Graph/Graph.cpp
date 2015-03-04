@@ -12,7 +12,7 @@ using namespace std;
 
 SimpleGraph::SimpleGraph(bool directed_p):
   directed_(directed_p),
-  observers_(set<GraphObserverI*>()),
+  observers_(set<GraphObserver*>()),
   numberOfNodes_(0),
   highestNodeID_(0),
   highestEdgeID_(0),
@@ -26,13 +26,13 @@ SimpleGraph::SimpleGraph(bool directed_p):
 }
 
 
-void SimpleGraph::registerObserver(GraphObserverI* observer)
+void SimpleGraph::registerObserver(GraphObserver* observer)
 {
   if(!observers_.insert(observer).second)
     throw(Exception("This GraphObserver was already an observer of this Graph"));;
 }
 
-void SimpleGraph::unregisterObserver(GraphObserverI* observer)
+void SimpleGraph::unregisterObserver(GraphObserver* observer)
 {
   if(!observers_.erase(observer))
     throw(Exception("This GraphObserver was not an observer of this Graph"));
@@ -131,7 +131,7 @@ const SimpleGraph::Node SimpleGraph::createNode(SimpleGraph::Node origin)
 
 void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 {
-  for(set<GraphObserverI*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedEdgesUpdate(edgesToDelete);
   }
@@ -139,7 +139,7 @@ void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 
 void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete)
 {
-  for(set<GraphObserverI*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedNodesUpdate(nodesToDelete);
   }

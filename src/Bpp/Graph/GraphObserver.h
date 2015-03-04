@@ -26,7 +26,7 @@ namespace bpp
   
     // interface
     
-    class GraphObserverI:
+    class GraphObserver:
     public virtual bpp::Clonable
     {
     
@@ -55,8 +55,8 @@ namespace bpp
 
   
     template<class N, class E>
-    class GraphObserver:
-    public GraphObserverI
+    class SimpleGraphObserver:
+    public GraphObserver
     {
     private:
       //is the graph directed
@@ -109,25 +109,25 @@ namespace bpp
       * Constructor
       * @param directed is the graph directed
       */
-      GraphObserver(bool directed = false);
+      SimpleGraphObserver(bool directed = false);
       
       /**
       * Constructor
       * @param subjectGraph the graph which is observed
       */
-      GraphObserver(bpp::SimpleGraph* subjectGraph = 00);
+      SimpleGraphObserver(bpp::SimpleGraph* subjectGraph = 00);
       
       /**
       * Copy Constructor
       * @param graphObserver the graphObserver to be copied
       */
-      GraphObserver(bpp::GraphObserver<N,E> const& graphObserver);
+      SimpleGraphObserver(bpp::SimpleGraphObserver<N,E> const& graphObserver);
       
       /**
       * = Operator
       * @param graphObserver the graphObserver we want to copy the values
       */
-      GraphObserver<N,E> operator=(bpp::GraphObserver<N,E> const& graphObserver);
+      SimpleGraphObserver<N,E> operator=(bpp::SimpleGraphObserver<N,E> const& graphObserver);
       
       
       
@@ -135,7 +135,7 @@ namespace bpp
       * Destructor
       * @param graphObserver the graphObserver to be copied
       */
-      ~GraphObserver();
+      ~SimpleGraphObserver();
       
       
       
@@ -146,9 +146,9 @@ namespace bpp
       #ifdef NO_VIRTUAL_COV
         Clonable*
       #else
-        GraphObserver<N,E>*
+        SimpleGraphObserver<N,E>*
       #endif
-      clone() const { return new GraphObserver<N,E>(*this); };
+      clone() const { return new SimpleGraphObserver<N,E>(*this); };
       
       
       /**
@@ -342,7 +342,7 @@ namespace bpp
     
     
 template <class N, class E>
-void GraphObserver<N,E>::createNode(N* nodeObject)
+void SimpleGraphObserver<N,E>::createNode(N* nodeObject)
 {
   SimpleGraph::Node newGraphNode = subjectGraph_->createNode();
   
@@ -351,7 +351,7 @@ void GraphObserver<N,E>::createNode(N* nodeObject)
 }
 
 template <class N, class E>
-GraphObserver<N,E>::GraphObserver(bool directed_p):
+SimpleGraphObserver<N,E>::SimpleGraphObserver(bool directed_p):
   directed_(directed_p),
   edgesToObjects_(std::vector<E*>()),
   nodesToObjects_(std::vector<N*>()),
@@ -363,13 +363,13 @@ GraphObserver<N,E>::GraphObserver(bool directed_p):
 }
 
 template <class N, class E>
-GraphObserver<N,E>::~GraphObserver()
+SimpleGraphObserver<N,E>::~SimpleGraphObserver()
 {
   this->subjectGraph_->unregisterObserver(this);
 }
 
 template <class N, class E>
-GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver):
+SimpleGraphObserver<N,E>::SimpleGraphObserver(SimpleGraphObserver<N,E> const& graphObserver):
   directed_(graphObserver.directed_),
   edgesToObjects_(graphObserver.edgesToObjects_),
   nodesToObjects_(graphObserver.nodesToObjects_),
@@ -381,7 +381,7 @@ GraphObserver<N,E>::GraphObserver(GraphObserver<N,E> const& graphObserver):
 
 
 template <class N, class E>
-GraphObserver<N,E> GraphObserver<N,E>::operator=(GraphObserver<N,E> const& graphObserver)
+SimpleGraphObserver<N,E> SimpleGraphObserver<N,E>::operator=(SimpleGraphObserver<N,E> const& graphObserver)
 {
   this->directed_ = graphObserver.directed_;
   this->edgesToObjects_ = graphObserver.edgesToObjects_;
@@ -392,14 +392,14 @@ GraphObserver<N,E> GraphObserver<N,E>::operator=(GraphObserver<N,E> const& graph
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::createNode(N* objectNewNode,N* objectOriginNode)
+void SimpleGraphObserver<N,E>::createNode(N* objectNewNode,N* objectOriginNode)
 {
   createNode(objectNewNode);
   link(objectOriginNode,objectNewNode);
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
+void SimpleGraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
 {
   // checking the nodes
   typename std::map<N*,SimpleGraph::Node>::iterator foundNodeA, foundNodeB;
@@ -423,7 +423,7 @@ void GraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
+void SimpleGraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 {
   //checking the nodes
   typename std::map<N*,SimpleGraph::Node>::iterator foundNodeA, foundNodeB;
@@ -436,7 +436,7 @@ void GraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::deletedEdgesUpdate(std::vector<SimpleGraph::Edge>& edgesToDelete)
+void SimpleGraphObserver<N,E>::deletedEdgesUpdate(std::vector<SimpleGraph::Edge>& edgesToDelete)
 {
   for(std::vector<SimpleGraph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
     E* edgeObject = edgesToObjects_.at(*currEdge);
@@ -448,7 +448,7 @@ void GraphObserver<N,E>::deletedEdgesUpdate(std::vector<SimpleGraph::Edge>& edge
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::deletedNodesUpdate(std::vector<SimpleGraph::Node>& nodesToDelete){
+void SimpleGraphObserver<N,E>::deletedNodesUpdate(std::vector<SimpleGraph::Node>& nodesToDelete){
   for(std::vector<SimpleGraph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
     N* nodeObject = nodesToObjects_.at(*currNode);
     nodesToObjects_.at(*currNode) = 00;
@@ -459,7 +459,7 @@ void GraphObserver<N,E>::deletedNodesUpdate(std::vector<SimpleGraph::Node>& node
 }
 
 template <class N, class E>
-const std::vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
+const std::vector<N*> SimpleGraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
 {
   SimpleGraph::Node graphNode = objectsToNodes_.at(nodeObject);
   std::vector<SimpleGraph::Node> graphNodes = subjectGraph_->getOutgoingNeighbors(graphNode);
@@ -472,7 +472,7 @@ const std::vector<N*> GraphObserver<N,E>::getOutgoingNeighbors(N* nodeObject)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associateNode(N* nodeObject, SimpleGraph::Node graphNode)
+void SimpleGraphObserver<N,E>::associateNode(N* nodeObject, SimpleGraph::Node graphNode)
 {
   
   // nodes vector must be the right size. Eg: to store a node with
@@ -485,7 +485,7 @@ void GraphObserver<N,E>::associateNode(N* nodeObject, SimpleGraph::Node graphNod
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::associateEdge(E* edgeObject, SimpleGraph::Edge graphEdge)
+void SimpleGraphObserver<N,E>::associateEdge(E* edgeObject, SimpleGraph::Edge graphEdge)
 {
   
   // nodes vector must be the right size. Eg: to store an edge with
@@ -498,7 +498,7 @@ void GraphObserver<N,E>::associateEdge(E* edgeObject, SimpleGraph::Edge graphEdg
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::forgetNode(N* nodeObject)
+void SimpleGraphObserver<N,E>::forgetNode(N* nodeObject)
 {
   typename std::map<N*,SimpleGraph::Node>::iterator nodeToForget = objectsToNodes_.find(nodeObject);
   nodesToObjects_.erase(nodeToForget->second);
@@ -506,7 +506,7 @@ void GraphObserver<N,E>::forgetNode(N* nodeObject)
 }
 
 template <class N, class E>
-void GraphObserver<N,E>::forgetEdge(E* edgeObject)
+void SimpleGraphObserver<N,E>::forgetEdge(E* edgeObject)
 {
   typename std::map<E*,SimpleGraph::Edge>::iterator edgeToForget = objectsToEdges_.find(edgeObject);
   edgesToObjects_.erase(edgeToForget->second);
@@ -515,7 +515,7 @@ void GraphObserver<N,E>::forgetEdge(E* edgeObject)
 
 
 template <class N, class E>
-const std::vector<N*> GraphObserver<N,E>::getLeaves()
+const std::vector<N*> SimpleGraphObserver<N,E>::getLeaves()
 {
   std::vector<N*> leavesToReturn;
   // fetching all the graph Leaves
@@ -531,7 +531,7 @@ const std::vector<N*> GraphObserver<N,E>::getLeaves()
 }
 
 template <class N, class E>
-const std::vector<N*> GraphObserver<N,E>::getNodes()
+const std::vector<N*> SimpleGraphObserver<N,E>::getNodes()
 {
   std::vector<N*> nodesToReturn;
   for(typename std::vector<N*>::iterator currNodeObject = nodesToObjects_.begin(); currNodeObject != nodesToObjects_.end(); currNodeObject++)
@@ -545,12 +545,12 @@ const std::vector<N*> GraphObserver<N,E>::getNodes()
 }
 
 template <class N, class E>
-size_t GraphObserver<N,E>::getNumberOfNodes(){
+size_t SimpleGraphObserver<N,E>::getNumberOfNodes(){
   return objectsToNodes_.size();
 }
  
 template <class N, class E>
-size_t GraphObserver<N,E>::getNumberOfLeaves(){
+size_t SimpleGraphObserver<N,E>::getNumberOfLeaves(){
   return getLeaves().size();
 }
  

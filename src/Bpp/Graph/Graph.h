@@ -12,7 +12,7 @@
 // since we do not need its size in this header file (only using pointers to it)
 namespace bpp
 {
-class GraphObserverI;
+class GraphObserver;
 }
 
 namespace bpp
@@ -52,7 +52,7 @@ private:
     /**
     * List of all the subscribers.
     */
-    std::set<GraphObserverI*> observers_;
+    std::set<GraphObserver*> observers_;
 
     /**
     * Number of nodes.
@@ -241,12 +241,12 @@ public:
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
     */
-    void registerObserver(bpp::GraphObserverI* observer);
+    void registerObserver(bpp::GraphObserver* observer);
     /**
     * Detach an observer from this Graph.
     * The observer will not be warned of changes anymore.
     */
-    void unregisterObserver(bpp::GraphObserverI* observer);
+    void unregisterObserver(bpp::GraphObserver* observer);
     ///@}
 
 
