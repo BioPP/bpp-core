@@ -90,16 +90,14 @@ private:
     
     /**
     * Nodes and their relations.
-    * TODO: explain the relation coding
-    * nodeA -> [(nodeB, relationID),…]
+    * see nodeStructureType documentation
     */
     nodeStructureType nodeStructure_;
     
     
     /**
     * Edges and their relations in the forward direction..
-    * TODO: explain the relation coding
-    * edgeA -> nodeA
+    * see edgeStructureType documentation
     */
     edgeStructureType edgeStructure_;
     

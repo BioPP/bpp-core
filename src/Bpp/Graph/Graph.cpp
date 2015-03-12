@@ -67,12 +67,24 @@ const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::
 
 void SimpleGraph::checkNodeExistence_(Node node, string name)
 {
-  if(nodeStructure_.find(node) == nodeStructure_.end()){
+  if(nodeStructure_.find(node) == nodeStructure_.end())
+  {
     ostringstream errMessage;
     errMessage << "This node must exist: " << node << " as " << name << ".";
     throw(Exception(errMessage.str()));
   }
 }
+
+void SimpleGraph::checkEdgeExistence_(SimpleGraph::Edge edge, string name)
+{
+  if(edgeStructure_.find(edge) != edgeStructure_.end())
+  {
+    ostringstream errMessage;
+    errMessage << "This edge must exist: " << edge << " as " << name << ".";
+    throw(Exception(errMessage.str()));
+  }
+}
+
 
 const std::vector<SimpleGraph::Edge> SimpleGraph::unlink(const Node nodeA, const Node nodeB)
 {
@@ -176,6 +188,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromEdge(SimpleGraph::Edge origin
   
   return newNode;
 }
+
 
 void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 {
