@@ -359,12 +359,6 @@ public:
     */
     const Edge getEdge(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
     
-    /**
-    * Returns the Edge between two nodes
-    * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
-    * @return the edge between these two nodes
-    */
-    const std::vector<Edge> getEdges(Node node);
     ///@}
 
 
