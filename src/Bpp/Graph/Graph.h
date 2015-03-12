@@ -1,10 +1,12 @@
-#ifndef _GRAPH_HPP_
-#define _GRAPH_HPP_
+#ifndef _GRAPH_H_
+#define _GRAPH_H_
 
 #include<set>
 #include<map>
 #include<string>
 #include<vector>
+#include<utility>
+#include<ostream>
 
 
 
@@ -20,8 +22,9 @@ namespace bpp
   class Graph
   {
   public:
-    Graph() {}
     virtual ~Graph() {}
+
+    
   };
 }
 
@@ -68,11 +71,23 @@ private:
     unsigned int highestEdgeID_;
 
     /**
-    * The structure type, used for more clarity
+    * The node structure type
+    * Node -> ("toNodes" [DestNode,Edge],"fromNodes" [DestNode,Edge])
+    * directed example: (N1)-E1->(N2)-E2->(N3) is coded as
+    *     N1 -> ((N2,E1),())
+    *     N2 -> ((N3,E3),(N1,E1))
+    *     N3 -> ((),(N2,E2))
     */
-    typedef std::map<Node,std::map<Node,Edge> > structure_type;
+    typedef std::map<Node,std::pair<std::map<Node,Edge>,std::map<Node,Edge> > > nodeStructureType;
 
+   /**
+    * The edge structure type
+    * directed example: N1--E1-->N2 is coded as E1 -> (N1,N2)
+    * undirected example: N1--E1--N2 is coded as E1 -> (N1,N2)
+    */
+    typedef std::map<Edge,std::pair<Node,Node> > edgeStructureType;
 
+    
     /**
     * Set of existing nodes in this Graph
     */
@@ -84,13 +99,16 @@ private:
     * TODO: explain the relation coding
     * nodeA -> [(nodeB, relationID),…]
     */
-    structure_type structure_;
+    nodeStructureType nodeStructure_;
+    
+    
     /**
-    * Nodes and their relations in the backwards direction, for directed graph only.
+    * Edges and their relations in the forward direction..
     * TODO: explain the relation coding
-    * nodeA -> [(nodeB, relationID),…]
+    * edgeA -> nodeA
     */
-    structure_type backwardsStructure_;
+    edgeStructureType edgeStructure_;
+    
     /**
     * Usualy the first node of a graph. Used for algorithmic purposes.
     */
@@ -112,7 +130,17 @@ private:
     * @param edge the ID of the relation
     * @param toBackwards if this link has to be done in the backwardsStructure (for directed graphs)
     */
-    void link_(Node nodeA, Node nodeB, Edge edge, bool toBackwards);
+    void linkInNodeStructure_(Node nodeA, Node nodeB, Edge edge, bool toBackwards);
+    
+    /**
+    * Creates a link between two existing nodes in the edge structure.
+    * If directed graph: nodeA -> nodeB.
+    * Mainly called by link().
+    * @param nodeA source node (or first node if undirected)
+    * @param nodeB target node (or second node if undirected)
+    * @param edge the ID of the relation
+    */
+    void linkInEdgeStructure_(Node nodeA, Node nodeB, Edge edge);
 
 
     /**
@@ -124,16 +152,29 @@ private:
     * @param toBackwards if this link has to be UNdone in the backwardsStructure (for directed graphs)
     * @return the ID of the erased relation
     */
-    Edge unlink_(Node nodeA, Node nodeB, bool toBackwards);
+    Edge unlinkInNodeStructure_(Node nodeA, Node nodeB, bool toBackwards);
 
-
+    /**
+    * Erase a link between two existing nodes in the Edge structure.
+    * Mainly called by unLink().
+    * @param edge the edge to unregister
+    */
+    void unlinkInEdgeStructure_(Edge edge);
+    
+    
     /**
     * Check that a node exists. If not, throw an exception.
     * @param node node that has to be checked
-    * @param name common name to give to the user (eg: "first node")
+    * @param name common name to give to the user in case of failure (eg: "first node")
     */
     void checkNodeExistence_(Node node, std::string name);
-
+    
+  /**
+    * Check that a edge exists. If not, throw an exception.
+    * @param edge edge that has to be checked
+    * @param name common name to give to the user in case of failure (eg: "first node")
+    */
+    void checkEdgeExistence_(Edge edge, std::string name);
 
     /**
     * Private version of getIncomingNeighbors or getOutgoingNeighbors.
@@ -159,7 +200,11 @@ private:
     
     
     
-
+  /**
+   * output a node to DOT format (recursive)
+   */
+  
+  void nodeToDot(Node node, std::ostream &out);
     
     
 public:
@@ -195,17 +240,34 @@ public:
     *  Modificating the structure of the graph.
     */
     ///@{
+    
     /**
     * Creates an orphaned node.
     * @return the new node
     */
     const Node createNode();
+    
     /**
-    * Creates an node linked to an existing node.
+    * Creates a node linked to an existing node.
     * @param origin existing node. In a directed graph: origin -> newNode.
     * @return the new node
     */
-    const Node createNode(Node origin);
+    const Node createNodeFromNode(Node origin);
+    
+    /**
+    * Creates new node on an existing Edge. A -> B will be A -> N -> B
+    * @param edge existing edge.
+    * @return the new node
+    */
+    const Node createNodeOnEdge(Edge edge);
+    
+    /**
+    * Creates a node linked to new node, splitting an edge.
+    * @param origin existing edge. In a directed graph: origin -> newNode.
+    * @return the new node
+    */
+    const Node createNodeFromEdge(Edge origin);
+    
     /**
     * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
     * @param nodeA source node (or first node if undirected)
@@ -213,6 +275,7 @@ public:
     * @return the new edge
     */
     const Edge link(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
+    
     /**
     * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
     * @param nodeA source node (or first node if undirected)
@@ -296,12 +359,14 @@ public:
     *  These methodes of the graph concern the edges.
     */
     ///@{
+    
     /**
     * Returns the Edge between two nodes
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
     * @return the edge between these two nodes
     */
     const Edge getEdge(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
+    
     /**
     * Returns the Edge between two nodes
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
@@ -330,6 +395,11 @@ public:
 
 
     ///@}
+    
+    /**
+     * Output the graph in DOT format
+     */
+    void outputToDot(std::ostream &out);
     
 };
 
