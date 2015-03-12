@@ -89,12 +89,6 @@ private:
 
     
     /**
-    * Set of existing nodes in this Graph
-    */
-    std::set<Node> nodes_;
-
-
-    /**
     * Nodes and their relations.
     * TODO: explain the relation coding
     * nodeA -> [(nodeB, relationID),…]

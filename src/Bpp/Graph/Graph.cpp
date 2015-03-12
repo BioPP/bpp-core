@@ -16,7 +16,6 @@ SimpleGraph::SimpleGraph(bool directed_p):
   numberOfNodes_(0),
   highestNodeID_(0),
   highestEdgeID_(0),
-  nodes_(set<SimpleGraph::Node>()),
   nodeStructure_(nodeStructureType()),
   edgeStructure_(edgeStructureType()),
   
@@ -68,7 +67,7 @@ const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::
 
 void SimpleGraph::checkNodeExistence_(Node node, string name)
 {
-  if(nodes_.find(node) == nodes_.end()){
+  if(nodeStructure_.find(node) == nodeStructure_.end()){
     ostringstream errMessage;
     errMessage << "This node must exist: " << node << " as " << name << ".";
     throw(Exception(errMessage.str()));
@@ -129,7 +128,6 @@ void SimpleGraph::linkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Nod
 const SimpleGraph::Node SimpleGraph::createNode()
 {
   Node newNode = highestNodeID_++;
-  nodes_.insert(newNode);
   nodeStructure_[newNode];
   numberOfNodes_++;
   return newNode;
@@ -237,7 +235,8 @@ void SimpleGraph::deleteNode(SimpleGraph::Node node)
   //checking the node
   checkNodeExistence_(node,"node to delete");
   isolate_(node);
-  nodes_.erase(node);
+  nodeStructureType::iterator found = nodeStructure_.find(node);
+  nodeStructure_.erase(found);
   numberOfNodes_--;
 }
 
