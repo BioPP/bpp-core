@@ -293,7 +293,7 @@ const std::vector<SimpleGraph::Node> SimpleGraph::getLeavesFromNode(SimpleGraph:
   return listOfLeaves;
 }
 
-void SimpleGraph::nodeToDot(SimpleGraph::Node node, ostream& out)
+void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out)
 {
   std::map<Node,Edge> &children = nodeStructure_[node].first;
   out << node;
@@ -301,7 +301,7 @@ void SimpleGraph::nodeToDot(SimpleGraph::Node node, ostream& out)
   lastChild--;
   for(map<Node,Edge>::iterator currChild = children.begin();currChild != children.end();currChild++)
   {
-    nodeToDot(currChild->first,out);
+    nodeToDot_(currChild->first,out);
     if(currChild != lastChild)
       out << (directed_? "->":"--");
   }
@@ -310,5 +310,5 @@ void SimpleGraph::nodeToDot(SimpleGraph::Node node, ostream& out)
 
 void SimpleGraph::outputToDot(ostream& out)
 {
-  nodeToDot(root_,out);
+  nodeToDot_(root_,out);
 }

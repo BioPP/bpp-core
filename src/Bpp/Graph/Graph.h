@@ -204,7 +204,7 @@ private:
    * output a node to DOT format (recursive)
    */
   
-  void nodeToDot(Node node, std::ostream &out);
+  void nodeToDot_(Node node, std::ostream &out);
     
     
 public:
