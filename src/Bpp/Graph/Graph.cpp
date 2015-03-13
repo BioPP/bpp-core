@@ -313,8 +313,8 @@ void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<Nod
   lastChild--;
   for(map<Node,Edge>::iterator currChild = children.begin();currChild != children.end();currChild++)
   {
-    if(alreadyExplored.find(*currChild) == alreadyExplored.end())
-      nodeToDot_(currChild->first,out);
+    if(alreadyExplored.find(currChild->first) == alreadyExplored.end())
+      nodeToDot_(currChild->first,out,alreadyExplored);
     if(currChild != lastChild)
       out << (directed_? "->":"--");
   }

@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <ostream>
 
 
 namespace bpp
@@ -338,6 +339,11 @@ namespace bpp
       ///@}
       
       
+    };
+    
+    class GraphObserverTools
+    {
+      static void outputToDot(SimpleGraphObserver<std::string,void>,std::ostream &out);
     };
     
     
