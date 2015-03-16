@@ -384,8 +384,10 @@ public:
     
     /**
      * Output the graph in DOT format
+     * @param out a ostream where the DOT format will be output
+     * @param name a string naming the graph
      */
-    void outputToDot(std::ostream &out);
+    void outputToDot(std::ostream &out, std::string name);
     
 };
 

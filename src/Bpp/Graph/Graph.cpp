@@ -322,9 +322,9 @@ void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<std
     out << node << ";\n    " ;
 }
 
-void SimpleGraph::outputToDot(ostream& out)
+void SimpleGraph::outputToDot(ostream& out, std::string name)
 {
-  out << (directed_?"digraph":"graph") << " noname {\n    ";
+  out << (directed_?"digraph":"graph") << " "<< name <<" {\n    ";
   set<pair<Node,Node> > alreadyFigured;
   nodeToDot_(root_,out,alreadyFigured);
   out << "\r}" << endl;

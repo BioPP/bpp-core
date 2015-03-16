@@ -44,26 +44,26 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  SimpleGraphObserver<string,unsigned int> gos(true);
+  SimpleGraphObserver<string,unsigned int> grObs(true);
   string zero = "zero";
   string one = "one";
   string two = "two";
   string three = "three";
   unsigned int r3 = 3;
   cout << "Creating node zero." << endl;
-  gos.createNode(&zero);
+  grObs.createNode(&zero);
   cout << "Creating node one from the number zero." << endl;
-  gos.createNode(&one,&zero);
+  grObs.createNode(&one,&zero);
   cout << "Creating node two from the number one." << endl;
-  gos.createNode(&two,&one);
+  grObs.createNode(&two,&one);
   cout << "Linking two to one." << endl;
-  gos.link(&two,&zero,&r3);
+  grObs.link(&two,&zero,&r3);
   cout << "Linking one to three." << endl;
-  gos.createNode(&three,&one);
+  grObs.createNode(&three,&one);
   // so now we have zero -> one -> two -> zero ...
-  vector<string*> fromOne = gos.getOutgoingNeighbors(&zero);
-  vector<string*> fromThree = gos.getOutgoingNeighbors(&two);
+  vector<string*> fromOne = grObs.getOutgoingNeighbors(&zero);
+  vector<string*> fromThree = grObs.getOutgoingNeighbors(&two);
   bool test = (*(fromOne.begin()) == &one) && (*(fromThree.begin()) == &zero);
-  gos.getGraph()->outputToDot(std::cout);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   return (test ? 0 : 1);
 }
