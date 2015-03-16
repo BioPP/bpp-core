@@ -44,22 +44,26 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  GraphObserver<string,unsigned int> gos(true);
+  SimpleGraphObserver<string,unsigned int> gos(true);
+  string zero = "zero";
   string one = "one";
   string two = "two";
   string three = "three";
   unsigned int r3 = 3;
-  cout << "Creating node one." << endl;
-  gos.createNode(&one);
+  cout << "Creating node zero." << endl;
+  gos.createNode(&zero);
+  cout << "Creating node one from the number zero." << endl;
+  gos.createNode(&one,&zero);
   cout << "Creating node two from the number one." << endl;
   gos.createNode(&two,&one);
-  cout << "Creating node three from the number two." << endl;
-  gos.createNode(&three,&two);
-  cout << "Linking three to two." << endl;
-  gos.link(&three,&one,&r3);
-  // so now we have one -> two -> three -> one ...
-  vector<string*> fromOne = gos.getOutgoingNeighbors(&one);
-  vector<string*> fromThree = gos.getOutgoingNeighbors(&three);
-  bool test = (*(fromOne.begin()) == &two) && (*(fromThree.begin()) == &one);
+  cout << "Linking two to one." << endl;
+  gos.link(&two,&zero,&r3);
+  cout << "Linking one to three." << endl;
+  gos.createNode(&three,&one);
+  // so now we have zero -> one -> two -> zero ...
+  vector<string*> fromOne = gos.getOutgoingNeighbors(&zero);
+  vector<string*> fromThree = gos.getOutgoingNeighbors(&two);
+  bool test = (*(fromOne.begin()) == &one) && (*(fromThree.begin()) == &zero);
+  gos.getGraph()->outputToDot(std::cout);
   return (test ? 0 : 1);
 }

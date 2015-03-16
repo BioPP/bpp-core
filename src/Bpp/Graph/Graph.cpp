@@ -305,25 +305,27 @@ const std::vector<SimpleGraph::Node> SimpleGraph::getLeavesFromNode(SimpleGraph:
   return listOfLeaves;
 }
 
-void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<Node> &alreadyExplored)
+void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<std::pair<Node,Node> > &alreadyFigured)
 {
+  bool theEnd = true;
   std::map<Node,Edge> &children = nodeStructure_[node].first;
-  out << node;
-  map<Node,Edge>::iterator lastChild = children.end();
-  lastChild--;
   for(map<Node,Edge>::iterator currChild = children.begin();currChild != children.end();currChild++)
   {
-    if(alreadyExplored.find(currChild->first) == alreadyExplored.end())
-      nodeToDot_(currChild->first,out,alreadyExplored);
-    if(currChild != lastChild)
-      out << (directed_? "->":"--");
+     if(alreadyFigured.find(pair<Node,Node>(node,currChild->first))!=alreadyFigured.end() || (!directed_ &&alreadyFigured.find(pair<Node,Node>(currChild->first,node))!=alreadyFigured.end()))
+      continue;
+    alreadyFigured.insert(pair<Node,Node>(node,currChild->first));
+    theEnd = false;
+    out << node << (directed_? " -> ":" -- ");
+    nodeToDot_(currChild->first,out,alreadyFigured);
   }
-  alreadyExplored.insert(node);
-  out << endl;
+  if(theEnd)
+    out << node << ";\n    " ;
 }
 
 void SimpleGraph::outputToDot(ostream& out)
 {
-  set<Node> alreadyExplored;
-  nodeToDot_(root_,out,alreadyExplored);
+  out << (directed_?"digraph":"graph") << " noname {\n    ";
+  set<pair<Node,Node> > alreadyFigured;
+  nodeToDot_(root_,out,alreadyFigured);
+  out << "\r}" << endl;
 }

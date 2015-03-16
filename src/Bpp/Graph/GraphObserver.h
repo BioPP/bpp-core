@@ -152,6 +152,8 @@ namespace bpp
       clone() const { return new SimpleGraphObserver<N,E>(*this); };
       
       
+      SimpleGraph* getGraph();
+      
       /**
       * This function is called to tell the observer that the subject
       * has changed and hence the observer has to take the changes
@@ -551,13 +553,21 @@ const std::vector<N*> SimpleGraphObserver<N,E>::getNodes()
 }
 
 template <class N, class E>
-size_t SimpleGraphObserver<N,E>::getNumberOfNodes(){
+size_t SimpleGraphObserver<N,E>::getNumberOfNodes()
+{
   return objectsToNodes_.size();
 }
  
 template <class N, class E>
-size_t SimpleGraphObserver<N,E>::getNumberOfLeaves(){
+size_t SimpleGraphObserver<N,E>::getNumberOfLeaves()
+{
   return getLeaves().size();
+}
+ 
+template <class N, class E>
+SimpleGraph* SimpleGraphObserver<N,E>::getGraph()
+{
+  return subjectGraph_;
 }
  
 }
