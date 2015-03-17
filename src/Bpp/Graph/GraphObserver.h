@@ -227,7 +227,19 @@ namespace bpp
       void forgetEdge(E* edgeObject);
       
       
+      /**
+      * Return the associated Node ID
+      * @param nodeObject object which to return the node ID
+      * @return a node ID
+      */
+      SimpleGraph::Node getNodeId(N* nodeObject);
       
+      /**
+      * Return the associated Node ID
+      * @param nodeObject object which to return the node ID
+      * @return a node ID
+      */
+      SimpleGraph::Edge getEdgeId(E* edgeObject);
       
       ///@}      
       
