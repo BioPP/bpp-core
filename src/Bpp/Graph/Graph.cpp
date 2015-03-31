@@ -12,7 +12,7 @@ using namespace std;
 
 SimpleGraph::SimpleGraph(bool directed_p):
   directed_(directed_p),
-  observers_(set<GraphObserver*>()),
+  observers_(set<UpdatableGraphObserver*>()),
   numberOfNodes_(0),
   highestNodeID_(0),
   highestEdgeID_(0),
@@ -25,13 +25,13 @@ SimpleGraph::SimpleGraph(bool directed_p):
 }
 
 
-void SimpleGraph::registerObserver(GraphObserver* observer)
+void SimpleGraph::registerObserver(UpdatableGraphObserver* observer)
 {
   if(!observers_.insert(observer).second)
     throw(Exception("This GraphObserver was already an observer of this Graph"));;
 }
 
-void SimpleGraph::unregisterObserver(GraphObserver* observer)
+void SimpleGraph::unregisterObserver(UpdatableGraphObserver* observer)
 {
   if(!observers_.erase(observer))
     throw(Exception("This GraphObserver was not an observer of this Graph"));
@@ -192,7 +192,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromEdge(SimpleGraph::Edge origin
 
 void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 {
-  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<UpdatableGraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedEdgesUpdate(edgesToDelete);
   }
@@ -200,13 +200,13 @@ void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 
 void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete)
 {
-  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<UpdatableGraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedNodesUpdate(nodesToDelete);
   }
 }
 
-const std::vector< SimpleGraph::Node > SimpleGraph::getInOrOutGoingNeighbors_(SimpleGraph::Node node, bool outgoing)
+const std::vector< SimpleGraph::Node > SimpleGraph::getNeighbors_(SimpleGraph::Node node, bool outgoing)
 {
   checkNodeExistence_(node,"");
   nodeStructureType::iterator foundNode = nodeStructure_.find(node);
@@ -224,21 +224,21 @@ const std::vector< SimpleGraph::Node > SimpleGraph::getInOrOutGoingNeighbors_(Si
 
 const vector< SimpleGraph::Node > SimpleGraph::getIncomingNeighbors(SimpleGraph::Node node)
 {
-  return getInOrOutGoingNeighbors_(node,false);
+  return getNeighbors_(node,false);
 }
 
 const vector< SimpleGraph::Node > SimpleGraph::getOutgoingNeighbors(SimpleGraph::Node node)
 {
-  return getInOrOutGoingNeighbors_(node,true);
+  return getNeighbors_(node,true);
 }
 
 const vector< SimpleGraph::Node > SimpleGraph::getNeighbors(SimpleGraph::Node node)
 {
   vector<SimpleGraph::Node> result;
   vector<SimpleGraph::Node> neighborsToInsert;
-  neighborsToInsert = getInOrOutGoingNeighbors_(node,false);
+  neighborsToInsert = getNeighbors_(node,false);
   result.insert(result.end(),neighborsToInsert.begin(),neighborsToInsert.end());
-  neighborsToInsert = getInOrOutGoingNeighbors_(node,true);
+  neighborsToInsert = getNeighbors_(node,true);
   result.insert(result.end(),neighborsToInsert.begin(),neighborsToInsert.end());
   return(result);
 }

@@ -60,6 +60,8 @@ int main() {
   grObs.link(&two,&zero,&r3);
   cout << "Linking one to three." << endl;
   grObs.createNode(&three,&one);
+  cout << "Linking three to zero." << endl;
+  grObs.link(&three,&zero);
   // so now we have zero -> one -> two -> zero ...
   vector<string*> fromOne = grObs.getOutgoingNeighbors(&zero);
   vector<string*> fromThree = grObs.getOutgoingNeighbors(&two);

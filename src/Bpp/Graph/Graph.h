@@ -14,7 +14,7 @@
 // since we do not need its size in this header file (only using pointers to it)
 namespace bpp
 {
-class GraphObserver;
+class UpdatableGraphObserver;
 }
 
 namespace bpp
@@ -22,6 +22,8 @@ namespace bpp
   class Graph
   {
   public:
+    typedef unsigned int Node;
+    typedef unsigned int Edge;
     virtual ~Graph() {}
 
     
@@ -41,9 +43,6 @@ namespace bpp
 class SimpleGraph:
 public virtual Graph
 {
-public:
-    typedef unsigned int Node;
-    typedef unsigned int Edge;
 
 private:
 
@@ -55,7 +54,7 @@ private:
     /**
     * List of all the subscribers.
     */
-    std::set<GraphObserver*> observers_;
+    std::set<UpdatableGraphObserver*> observers_;
 
     /**
     * Number of nodes.
@@ -174,7 +173,7 @@ private:
     * @param node node to find in or outgoing neighbors
     * @param outgoing boolean: if tue, outgoing; else incoming
     */
-    const std::vector<Node> getInOrOutGoingNeighbors_(Node node,bool outgoing=true);
+    const std::vector<Node> getNeighbors_(Node node,bool outgoing=true);
 
   /**
     * Separate a node from all its neighbors.
@@ -266,7 +265,7 @@ public:
     * @param nodeB target node (or second node if undirected)
     * @return the new edge
     */
-    const Edge link(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
+    const Edge link(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
     
     /**
     * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
@@ -280,7 +279,7 @@ public:
     * Delete one node
     * @param node node to be deleted
     */
-    void deleteNode(Node node);
+    void deleteNode(Graph::Node node);
 
     ///@}
 
@@ -296,12 +295,12 @@ public:
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
     */
-    void registerObserver(bpp::GraphObserver* observer);
+    void registerObserver(bpp::UpdatableGraphObserver* observer);
     /**
     * Detach an observer from this Graph.
     * The observer will not be warned of changes anymore.
     */
-    void unregisterObserver(bpp::GraphObserver* observer);
+    void unregisterObserver(bpp::UpdatableGraphObserver* observer);
     ///@}
 
 
@@ -357,7 +356,7 @@ public:
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
     * @return the edge between these two nodes
     */
-    const Edge getEdge(bpp::SimpleGraph::Node nodeA, bpp::SimpleGraph::Node nodeB);
+    const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
     
     ///@}
 
@@ -371,13 +370,13 @@ public:
     * Trigger E objects deleting on the observers
     * @param edgesToDelete list of edges to delete
     */
-    void notifyDeletedEdges(std::vector<SimpleGraph::Edge> edgesToDelete);
+    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete);
 
     /**
     * Trigger N objects deleting on the observers
     * @param nodesToDelete list of edges to delete
     */
-    void notifyDeletedNodes(std::vector< SimpleGraph::Node > nodesToDelete);
+    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete);
 
 
     ///@}
