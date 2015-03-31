@@ -69,7 +69,7 @@ namespace bpp
     
     template<class N, class E>
     class GraphWrapper:
-    public virtual bpp::Clonable
+    public virtual UpdatableGraphObserver
     {
     
     public:
@@ -222,7 +222,6 @@ namespace bpp
     
     template<class N, class E>
     class GraphObserver:
-    public virtual UpdatableGraphObserver,
     public virtual GraphWrapper<N,E>
     {
     };
