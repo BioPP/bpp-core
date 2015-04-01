@@ -68,9 +68,13 @@ namespace bpp
     // interface
     
     template<class N, class E>
-    class GraphWrapper:
+    class GraphWrapperObserver:
     public virtual UpdatableGraphObserver
     {
+      
+            
+    typedef unsigned int NodeIndex;
+    typedef unsigned int EdgeIndex;
     
     public:
       
@@ -157,6 +161,45 @@ namespace bpp
       
       ///@}
       
+      
+       /** @name Object Indexation
+      *  Get or set indexes to nodes and edges
+      */
+      ///@{
+      
+     /**
+      * Return the associated Node index
+      * @param nodeObject object which to return the node index
+      * @return a node index
+      */
+      virtual GraphWrapperObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject) = 0;
+      
+            
+      /**
+      * Return the associated Node index
+      * @param edgeObject object which to return the node index
+      * @return a node index
+      */
+      virtual GraphWrapperObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject) = 0;
+     
+      /**
+      * Set an index associated to a node
+      * @param nodeObject object to which one want to set the index
+      * @param index intex to be given, 0 to get the first free index
+      * @return the given index
+      */
+      virtual unsigned int setNodeIndex(E* nodeObject, unsigned int index = 0) = 0;
+      
+      /**
+      * Set an index associated to an edge
+      * @param edgeObject object to which one want to set the index
+      * @param index intex to be given, 0 to get the first free index
+      * @return the given index
+      */
+      virtual unsigned int setEdgeIndex(E* edgeObject, unsigned int index = 0) = 0;
+      
+      ///@}    
+      
       /** @name Topology exploration
       *  These methodes of the graph concern the topology exploration.
       */
@@ -221,40 +264,59 @@ namespace bpp
     
     
     template<class N, class E>
-    class GraphObserver:
-    public virtual GraphWrapper<N,E>
+    class SimpleGraphObserver: public virtual GraphWrapperObserver<N,E>
     {
-    };
-    
-    
-    template<class N, class E>
-    class SimpleGraphObserver: public virtual GraphObserver<N,E>
-    {
+
     private:
       //is the graph directed
       bool directed_;
       
-      /**
-      * List of edges, stored at the same ID than the corresponding edges
-      * in the bserved graph.
-      */
-      std::vector<E*> edgesToObjects_;
+      //index management
+      typename GraphWrapperObserver<N,E>::NodeIndex highestNodeIndex_;
+      typename GraphWrapperObserver<N,E>::EdgeIndex highestEdgeIndex_;
       
       /**
       * List of nodes, stored at the same ID than the corresponding nodes
       * in the observed graph.
       */
-      std::vector<N*> nodesToObjects_;
+      std::vector<N*> nodeToObject_;
       
       /**
-      * Can find an Edge with the corresponding object.
+      * List of edges, stored at the same ID than the corresponding edges
+      * in the bserved graph.
       */
-      std::map<E*,Graph::Edge> objectsToEdges_;
+      std::vector<E*> edgeToObject_;
       
       /**
       * Can find a Node with the corresponding object.
       */
-      std::map<N*,Graph::Node> objectsToNodes_;
+      std::map<N*,Graph::Node> objectToNode_;
+      
+      /**
+      * Can find an Edge with the corresponding object.
+      */
+      std::map<E*,Graph::Edge> objectToEdge_;
+      
+      
+      /**
+      * List of edges, stored at a given index.
+      */
+      std::vector<E*> indexToNodeObject_;
+      
+      /**
+      * List of nodes, stored at a given index.
+      */
+      std::vector<N*> indexToEdgeObject_;
+      
+      /**
+      * Can find a Node index with the corresponding object.
+      */
+      std::map<N*,typename GraphWrapperObserver<N,E>::NodeIndex> nodeObjectToIndex_;
+      
+      /**
+      * Can find an Edge index with the corresponding object.
+      */
+      std::map<E*,typename GraphWrapperObserver<N,E>::EdgeIndex> edgeObjectToIndex_;
       
       /**
        * defines a type of neighbors : incoming and/or outgoing
@@ -421,16 +483,54 @@ namespace bpp
       * @return a node ID
       */
       Graph::Node getNodeId(N* nodeObject);
-      
+
       /**
       * Return the associated Node ID
       * @param nodeObject object which to return the node ID
       * @return a node ID
       */
       Graph::Edge getEdgeId(E* edgeObject);
-
       
-      ///@}      
+      
+      ///@}   
+      
+      /** @name Object Indexation
+      *  Get or set indexes to nodes and edges
+      */
+      ///@{
+      
+     /**
+      * Return the associated Node index
+      * @param nodeObject object which to return the node index
+      * @return a node index
+      */
+      typename GraphWrapperObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject);
+      
+            
+      /**
+      * Return the associated Node index
+      * @param edgeObject object which to return the node index
+      * @return a node index
+      */
+      typename GraphWrapperObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject);
+      
+      /**
+      * Set an index associated to a node
+      * @param nodeObject object to which one want to set the index
+      * @param index intex to be given, 0 to get the first free index
+      * @return the given index
+      */
+      unsigned int setNodeIndex(E* nodeObject, typename GraphWrapperObserver<N,E>::NodeIndex index = 0);
+      
+      /**
+      * Set an index associated to an edge
+      * @param edgeObject object to which one want to set the index
+      * @param index intex to be given, 0 to get the first free index
+      * @return the given index
+      */
+      unsigned int setEdgeIndex(E* edgeObject, typename GraphWrapperObserver<N,E>::EdgeIndex index = 0);
+      
+      ///@}    
       
       /** @name Topology exploration
       *  These methodes of the graph concern the topology exploration.
@@ -541,13 +641,13 @@ namespace bpp
 template <class N, class E>
 N* SimpleGraphObserver<N,E>::getNodeObject_(Graph::Node node)
 {
-  return nodesToObjects_.at(node); 
+  return nodeToObject_.at(node); 
 }
 
 template <class N, class E>
 E* SimpleGraphObserver<N,E>::getEdgeObject_(Graph::Edge edge)
 {
-  return edgesToObjects_.at(edge); 
+  return edgeToObject_.at(edge); 
 }
 
 template <class N, class E>
@@ -556,7 +656,7 @@ std::vector<N*> SimpleGraphObserver<N,E>::getNodeObjects_(std::vector<Graph::Nod
   std::vector<N*> nodeObjects;
   for(std::vector<Graph::Node>::iterator currNode = nodes.begin(); currNode != nodes.end(); currNode++)
   {
-    nodeObjects.push_back(nodesToObjects_(*currNode));
+    nodeObjects.push_back(nodeToObject_(*currNode));
   }
   return nodeObjects;
 }
@@ -567,7 +667,7 @@ std::vector<E*> SimpleGraphObserver<N,E>::getEdgeObjects_(std::vector<Graph::Edg
   std::vector<N*> edgeObjects;
   for(std::vector<Graph::Node>::iterator currEdge = edges.begin(); currEdge != edges.end(); currEdge++)
   {
-    edgeObjects.push_back(edgesToObjects_(*currEdge));
+    edgeObjects.push_back(edgeToObject_(*currEdge));
   }
   return edgeObjects;
 }
@@ -584,10 +684,16 @@ void SimpleGraphObserver<N,E>::createNode(N* nodeObject)
 template <class N, class E>
 SimpleGraphObserver<N,E>::SimpleGraphObserver(bool directed_p):
   directed_(directed_p),
-  edgesToObjects_(std::vector<E*>()),
-  nodesToObjects_(std::vector<N*>()),
-  objectsToEdges_(std::map<E*,Graph::Node>()),
-  objectsToNodes_(std::map<N*,Graph::Node>()),
+  highestNodeIndex_(0),
+  highestEdgeIndex_(0),
+  nodeToObject_(std::vector<N*>()),
+  edgeToObject_(std::vector<E*>()),
+  objectToNode_(std::map<N*,Graph::Node>()),
+  objectToEdge_(std::map<E*,Graph::Node>()),
+  indexToNodeObject_(std::vector<E*>()),
+  indexToEdgeObject_(std::vector<N*>()),
+  nodeObjectToIndex_(std::map<N*,typename GraphWrapperObserver<N,E>::NodeIndex>()),
+  edgeObjectToIndex_(std::map<E*,typename GraphWrapperObserver<N,E>::EdgeIndex>()),
   subjectGraph_(new SimpleGraph(directed_p))
 {
   this->subjectGraph_->registerObserver(this);
@@ -602,10 +708,16 @@ SimpleGraphObserver<N,E>::~SimpleGraphObserver()
 template <class N, class E>
 SimpleGraphObserver<N,E>::SimpleGraphObserver(SimpleGraphObserver<N,E> const& graphObserver):
   directed_(graphObserver.directed_),
-  edgesToObjects_(graphObserver.edgesToObjects_),
-  nodesToObjects_(graphObserver.nodesToObjects_),
-  objectsToEdges_(graphObserver.objectsToEdges_),
-  objectsToNodes_(graphObserver.objectsToNodes_),
+  highestNodeIndex_(0),
+  highestEdgeIndex_(0),
+  edgeToObject_(graphObserver.edgeToObject_),
+  nodeToObject_(graphObserver.nodeToObject_),
+  objectToEdge_(graphObserver.objectToEdge_),
+  objectToNode_(graphObserver.objectToNode_),
+  indexToNodeObject_(std::vector<E*>()),
+  indexToEdgeObject_(std::vector<N*>()),
+  nodeObjectToIndex_(std::map<N*,typename GraphWrapperObserver<N,E>::NodeIndex>()),
+  edgeObjectToIndex_(std::map<E*,typename GraphWrapperObserver<N,E>::EdgeIndex>()),
   subjectGraph_(graphObserver.subjectGraph_)
 {
 }
@@ -615,10 +727,15 @@ template <class N, class E>
 SimpleGraphObserver<N,E> SimpleGraphObserver<N,E>::operator=(SimpleGraphObserver<N,E> const& graphObserver)
 {
   this->directed_ = graphObserver.directed_;
-  this->edgesToObjects_ = graphObserver.edgesToObjects_;
-  this->nodesToObjects_ = graphObserver.nodesToObjects_;
-  this->objectsToEdges_ = graphObserver.objectsToEdges_;
-  this->objectsToNodes_ = graphObserver.objectsToNodes_;
+  this->highestEdgeIndex_ = graphObserver.highestEdgeIndex_;
+  this->edgeToObject_ = graphObserver.edgeToObject_;
+  this->nodeToObject_ = graphObserver.nodeToObject_;
+  this->objectToEdge_ = graphObserver.objectToEdge_;
+  this->objectToNode_ = graphObserver.objectToNode_;
+  this->indexToNodeObject_ = graphObserver.indexToNodeObject_;
+  this->indexToEdgeObject_ = graphObserver.indexToEdgeObject_;
+  this->nodeObjectToIndex_ = graphObserver.nodeObjectToIndex_;
+  this->edgeObjectToIndex_ = graphObserver.edgeObjectToIndex_;
   this->subjectGraph_ = graphObserver.subjectGraph_;
 }
 
@@ -634,23 +751,23 @@ void SimpleGraphObserver<N,E>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObjec
 {
   // checking the nodes
   typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
-  foundNodeA = objectsToNodes_.find(nodeObjectA);
-  foundNodeB = objectsToNodes_.find(nodeObjectB);
-  if(foundNodeA == objectsToNodes_.end() || foundNodeB == objectsToNodes_.end())
+  foundNodeA = objectToNode_.find(nodeObjectA);
+  foundNodeB = objectToNode_.find(nodeObjectB);
+  if(foundNodeA == objectToNode_.end() || foundNodeB == objectToNode_.end())
     throw Exception("One of the nodes is not in the graph observer.");
   
   //checking if the edge is not already in the GraphObserver
-  if(edgeObject != 00 && objectsToEdges_.find(edgeObject) != objectsToEdges_.end())
+  if(edgeObject != 00 && objectToEdge_.find(edgeObject) != objectToEdge_.end())
     throw Exception("The given edge is already associated to a relation in the subjectGraph.");
   
   std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
   Graph::Edge newGraphEdge = subjectGraph_->link(foundNodeA->second,foundNodeB->second);
   
-  if(edgesToObjects_.size() < newGraphEdge+1)
-    edgesToObjects_.resize(newGraphEdge+1);
-  edgesToObjects_.at(newGraphEdge) = edgeObject;
+  if(edgeToObject_.size() < newGraphEdge+1)
+    edgeToObject_.resize(newGraphEdge+1);
+  edgeToObject_.at(newGraphEdge) = edgeObject;
   
-  objectsToEdges_[edgeObject] = newGraphEdge;
+  objectToEdge_[edgeObject] = newGraphEdge;
 }
 
 template <class N, class E>
@@ -658,9 +775,9 @@ void SimpleGraphObserver<N,E>::unlink(N* nodeObjectA, N* nodeObjectB)
 {
   //checking the nodes
   typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
-  foundNodeA = objectsToNodes_.find(nodeObjectA);
-  foundNodeB = objectsToNodes_.find(nodeObjectB);
-  if(foundNodeA == objectsToNodes_.end() || foundNodeB == objectsToNodes_.end())
+  foundNodeA = objectToNode_.find(nodeObjectA);
+  foundNodeB = objectToNode_.find(nodeObjectB);
+  if(foundNodeA == objectToNode_.end() || foundNodeB == objectToNode_.end())
     throw Exception("One of the nodes is not in the graph observer.");
   
   subjectGraph_->unlink(foundNodeA->second,foundNodeB->second);
@@ -670,10 +787,10 @@ template <class N, class E>
 void SimpleGraphObserver<N,E>::deletedEdgesUpdate(std::vector<Graph::Edge>& edgesToDelete)
 {
   for(std::vector<Graph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
-    E* edgeObject = edgesToObjects_.at(*currEdge);
-    edgesToObjects_.at(*currEdge) = 00;
+    E* edgeObject = edgeToObject_.at(*currEdge);
+    edgeToObject_.at(*currEdge) = 00;
     
-    objectsToEdges_.erase(edgeObject);
+    objectToEdge_.erase(edgeObject);
     
   }
 }
@@ -681,10 +798,10 @@ void SimpleGraphObserver<N,E>::deletedEdgesUpdate(std::vector<Graph::Edge>& edge
 template <class N, class E>
 void SimpleGraphObserver<N,E>::deletedNodesUpdate(std::vector<Graph::Node>& nodesToDelete){
   for(std::vector<Graph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
-    N* nodeObject = nodesToObjects_.at(*currNode);
-    nodesToObjects_.at(*currNode) = 00;
+    N* nodeObject = nodeToObject_.at(*currNode);
+    nodeToObject_.at(*currNode) = 00;
     
-    objectsToNodes_.erase(nodeObject);
+    objectToNode_.erase(nodeObject);
     
   }
 }
@@ -692,43 +809,79 @@ void SimpleGraphObserver<N,E>::deletedNodesUpdate(std::vector<Graph::Node>& node
 template <class N, class E>
 void SimpleGraphObserver<N,E>::associateNode(N* nodeObject, Graph::Node graphNode)
 {
-  
   // nodes vector must be the right size. Eg: to store a node with
   // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
-  nodesToObjects_.resize(subjectGraph_->getHighestNodeID()+1);
+  nodeToObject_.resize(subjectGraph_->getHighestNodeID()+1);
 
   // now storing the node
-  nodesToObjects_.at(graphNode) = nodeObject;
-  objectsToNodes_[nodeObject] = graphNode;
+  nodeToObject_.at(graphNode) = nodeObject;
+  objectToNode_[nodeObject] = graphNode;
 }
 
 template <class N, class E>
 void SimpleGraphObserver<N,E>::associateEdge(E* edgeObject, Graph::Edge graphEdge)
 {
-  
   // nodes vector must be the right size. Eg: to store an edge with
   // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
-  edgesToObjects_.resize(subjectGraph_->getHighestEdgeID()+1);
+  edgeToObject_.resize(subjectGraph_->getHighestEdgeID()+1);
   
   // now storing the edge
-  edgesToObjects_.at(graphEdge) = edgeObject;
-  objectsToEdges_[edgeObject] = graphEdge;
+  edgeToObject_.at(graphEdge) = edgeObject;
+  objectToEdge_[edgeObject] = graphEdge;
+}
+
+template <class N, class E>
+unsigned int SimpleGraphObserver<N,E>::setEdgeIndex(E* edgeObject, typename GraphWrapperObserver<N,E>::EdgeIndex index)
+{
+  //TODO: check if this object has already an index?
+  if(index == 0)
+    index == ++highestEdgeIndex_;
+  // nodes vector must be the right size. Eg: to store an edge with
+  // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+  if(index > highestEdgeIndex_){
+    highestEdgeIndex_ = index;
+  }
+  indexToEdgeObject_.resize(highestEdgeIndex_+1);
+  
+  // now storing the edge
+  indexToEdgeObject_.at(index) = edgeObject;
+  edgeObjectToIndex_[edgeObject] = index;
+  return index;
 }
 
 template <class N, class E>
 void SimpleGraphObserver<N,E>::forgetNode(N* nodeObject)
 {
-  typename std::map<N*,Graph::Node>::iterator nodeToForget = objectsToNodes_.find(nodeObject);
-  nodesToObjects_.at(nodeToForget->second) = 00;
-  objectsToNodes_.erase(nodeToForget);
+  typename std::map<N*,Graph::Node>::iterator nodeToForget = objectToNode_.find(nodeObject);
+  nodeToObject_.at(nodeToForget->second) = 00;
+  objectToNode_.erase(nodeToForget);
+}
+
+template <class N, class E>
+unsigned int SimpleGraphObserver<N,E>::setNodeIndex(E* nodeObject, typename GraphWrapperObserver<N,E>::NodeIndex index)
+{
+  //TODO: check if this object has already an index?
+  if(index == 0)
+    index == ++highestNodeIndex_;
+  // nodes vector must be the right size. Eg: to store a node with
+  // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+  if(index > highestNodeIndex_){
+    highestNodeIndex_ = index;
+  }
+  indexToNodeObject_.resize(highestNodeIndex_+1);
+  
+  // now storing the node
+  indexToNodeObject_.at(index) = nodeObject;
+  nodeObjectToIndex_[nodeObject] = index;
+  return index;
 }
 
 template <class N, class E>
 void SimpleGraphObserver<N,E>::forgetEdge(E* edgeObject)
 {
-  typename std::map<E*,Graph::Edge>::iterator edgeToForget = objectsToEdges_.find(edgeObject);
-  edgesToObjects_.at(edgeToForget->second) = 00;
-  objectsToEdges_.erase(edgeToForget);
+  typename std::map<E*,Graph::Edge>::iterator edgeToForget = objectToEdge_.find(edgeObject);
+  edgeToObject_.at(edgeToForget->second) = 00;
+  objectToEdge_.erase(edgeToForget);
 }
 
 
@@ -741,7 +894,7 @@ const std::vector<N*> SimpleGraphObserver<N,E>::getLeaves()
   // testing if they are defined in this observer
   for(std::vector<Graph::Node>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
   {
-    N* foundLeafObject = nodesToObjects_.at(*currGraphLeave);
+    N* foundLeafObject = nodeToObject_.at(*currGraphLeave);
     if(foundLeafObject != 00)
       leavesToReturn.push_back(foundLeafObject);
   }
@@ -752,7 +905,7 @@ template <class N, class E>
 const std::vector<N*> SimpleGraphObserver<N,E>::getNodes()
 {
   std::vector<N*> nodesToReturn;
-  for(typename std::vector<N*>::iterator currNodeObject = nodesToObjects_.begin(); currNodeObject != nodesToObjects_.end(); currNodeObject++)
+  for(typename std::vector<N*>::iterator currNodeObject = nodeToObject_.begin(); currNodeObject != nodeToObject_.end(); currNodeObject++)
   {
     if(*currNodeObject != 00)
     {
@@ -765,7 +918,7 @@ const std::vector<N*> SimpleGraphObserver<N,E>::getNodes()
 template <class N, class E>
 size_t SimpleGraphObserver<N,E>::getNumberOfNodes()
 {
-  return objectsToNodes_.size();
+  return objectToNode_.size();
 }
  
 template <class N, class E>
@@ -792,8 +945,17 @@ void SimpleGraphObserver<N,E>::deleteNode(N* node)
 template <class N, class E>
 Graph::Node SimpleGraphObserver<N,E>::getNodeId(N* nodeObject)
 {
-  typename std::map<N*,Graph::Node>::iterator found = objectsToNodes_.find(nodeObject);
-  if(found == objectsToNodes_.end())
+  typename std::map<N*,Graph::Node>::iterator found = objectToNode_.find(nodeObject);
+  if(found == objectToNode_.end())
+    throw Exception("Unexisting node object.");
+  return found->second;
+}
+
+template <class N, class E>
+typename GraphWrapperObserver<N,E>::NodeIndex SimpleGraphObserver<N,E>::getNodeIndex(N* nodeObject)
+{
+  typename std::map<N*,typename GraphWrapperObserver<N,E>::NodeIndex>::iterator found = nodeObjectToIndex_.find(nodeObject);
+  if(found == nodeObjectToIndex_.end())
     throw Exception("Unexisting node object.");
   return found->second;
 }
@@ -801,8 +963,17 @@ Graph::Node SimpleGraphObserver<N,E>::getNodeId(N* nodeObject)
 template <class N, class E>
 Graph::Edge SimpleGraphObserver<N,E>::getEdgeId(E* edgeObject)
 {
-  typename std::map<E*,Graph::Edge>::iterator found = objectsToEdges_.find(edgeObject);
-  if(found == objectsToEdges_.end())
+  typename std::map<E*,Graph::Edge>::iterator found = objectToEdge_.find(edgeObject);
+  if(found == objectToEdge_.end())
+    throw Exception("Unexisting edge object.");
+  return found->second;
+}
+
+template <class N, class E>
+typename GraphWrapperObserver<N,E>::EdgeIndex SimpleGraphObserver<N,E>::getEdgeIndex(E* edgeObject)
+{
+  typename std::map<E*,typename GraphWrapperObserver<N,E>::EdgeIndex>::iterator found = edgeObjectToIndex_.find(edgeObject);
+  if(found == edgeObjectToIndex_.end())
     throw Exception("Unexisting edge object.");
   return found->second;
 }
@@ -828,7 +999,7 @@ std::vector< N* > SimpleGraphObserver<N,E>::getNeighbors_(N* objectNode, neighbo
   // PHASE 2: transforming into nodeObjects
   std::vector<N*> objectNeighbors;
   for(std::vector<Graph::Node>::iterator currNeighbor = neighbors.begin(); currNeighbor != neighbors.end(); currNeighbor++){
-    objectNeighbors.push_back(nodesToObjects_.at(*currNeighbor));
+    objectNeighbors.push_back(nodeToObject_.at(*currNeighbor));
   }
   return objectNeighbors;
 }
