@@ -85,19 +85,19 @@ namespace bpp
       
       /**
       * Creates an orphaned node from a NodeClass object.
-      * @param objectNewNode the N object associated to the node in the graph.
+      * @param newNodeObject the N object associated to the node in the graph.
       * 
       */
-      virtual void createNode(N* objectNewNode) = 0;
+      virtual void createNode(N* newNodeObject) = 0;
       
       
       /**
       * Creates an node linked to an existing node. Order of parameters match
       * the link method.
-      * @param objectNewNode the N object associated to the node in the graph.
+      * @param newNodeObject the N object associated to the node in the graph.
       * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
       */
-      virtual void createNode(N* objectOriginNode, N* objectNewNode) = 0;
+      virtual void createNode(N* objectOriginNode, N* newNodeObject) = 0;
       
       /**
       * Creates a link between two existing nodes.
@@ -417,18 +417,18 @@ namespace bpp
       
       /**
       * Creates an orphaned node from a NodeClass object.
-      * @param objectNewNode the N object associated to the node in the graph.
+      * @param newNodeObject the N object associated to the node in the graph.
       * 
       */
-      void createNode(N* objectNewNode);
+      void createNode(N* newNodeObject);
       
       /**
       * Creates an node linked to an existing node. Order of parameters match
       * the link method.
-      * @param objectNewNode the N object associated to the node in the graph.
+      * @param newNodeObject the N object associated to the node in the graph.
       * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
       */
-      void createNode(N* objectOriginNode, N* objectNewNode);
+      void createNode(N* objectOriginNode, N* newNodeObject);
       
       /**
       * Creates a link between two existing nodes.
@@ -740,10 +740,10 @@ SimpleGraphObserver<N,E> SimpleGraphObserver<N,E>::operator=(SimpleGraphObserver
 }
 
 template <class N, class E>
-void SimpleGraphObserver<N,E>::createNode(N* objectOriginNode,N* objectNewNode)
+void SimpleGraphObserver<N,E>::createNode(N* objectOriginNode,N* newNodeObject)
 {
-  createNode(objectNewNode);
-  link(objectOriginNode,objectNewNode);
+  createNode(newNodeObject);
+  link(objectOriginNode,newNodeObject);
 }
 
 template <class N, class E>
