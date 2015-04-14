@@ -14,7 +14,7 @@
 // since we do not need its size in this header file (only using pointers to it)
 namespace bpp
 {
-class UpdatableGraphObserver;
+class GraphObserver;
 }
 
 namespace bpp
@@ -54,7 +54,7 @@ private:
     /**
     * List of all the subscribers.
     */
-    std::set<UpdatableGraphObserver*> observers_;
+    std::set<GraphObserver*> observers_;
 
     /**
     * Number of nodes.
@@ -189,7 +189,13 @@ private:
     */
     void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0);
     
-    
+   /** 
+    * Check that nodes are only met once to define if the graph is cyclic.
+    * @param node the node to explore
+    * @param metNode a set containing all the nodes we met
+    * @param originNode the node where we come from, not to explore
+    */
+    bool nodesAreMetOnlyOnce_(Graph::Node node, std::set<Graph::Node>& metNodes, Graph::Node originNode);
     
   /**
    * output a node to DOT format (recursive)
@@ -295,12 +301,12 @@ public:
     * Attach a new observer to this Graph.
     * As a subscriber, the observer will be warned of all the changes.
     */
-    void registerObserver(bpp::UpdatableGraphObserver* observer);
+    void registerObserver(bpp::GraphObserver* observer);
     /**
     * Detach an observer from this Graph.
     * The observer will not be warned of changes anymore.
     */
-    void unregisterObserver(bpp::UpdatableGraphObserver* observer);
+    void unregisterObserver(bpp::GraphObserver* observer);
     ///@}
 
 
@@ -309,12 +315,14 @@ public:
     *  These methodes of the graph concern the node management.
     */
     ///@{
+    
     /**
     * Get all the neighbors of a node in the graph.
     * @param node the node one wants to get its neighbors
     * @return a vector containing the neighbors
     */
     const std::vector<Node> getNeighbors(Node node);
+    
     /**
     * In an directed graph, get all the neighbors which
     * are leaving a node in the graph.
@@ -322,6 +330,7 @@ public:
     * @return a vector containing the outgoing neighbors
     */
     const std::vector<Node> getOutgoingNeighbors(Node node);
+    
     /**
     * In an directed graph, get all the neighbors which
     * are coming to a node in the graph.
@@ -329,6 +338,7 @@ public:
     * @return a vector containing the incoming neighbors
     */
     const std::vector<Node> getIncomingNeighbors(Node node);
+    
     /**
     * Get the leaves of a graph, ie, nodes with only one neighbor,
     * starting from a peculiar node.
@@ -337,11 +347,26 @@ public:
     * @return a vector containing the leaves
     */
     const std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth = 0);
+    
     /**
     * Get all the leaves of a graph, ie, nodes with only one neighbor,
     * @return a vector containing the leaves
     */
     const std::vector<Node> getLeaves();
+    
+    ///@}
+    
+    /** @name Topological Properties
+    *  These methodes check some topological properties.
+    */
+    ///@{
+    
+    /**
+    * Is the graph a tree?
+    * @return true if a node is met more than one time browsing the graph
+    */
+    bool isTree();
+    
     
     ///@}
 

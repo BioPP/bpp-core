@@ -12,7 +12,7 @@ using namespace std;
 
 SimpleGraph::SimpleGraph(bool directed_p):
   directed_(directed_p),
-  observers_(set<UpdatableGraphObserver*>()),
+  observers_(set<GraphObserver*>()),
   numberOfNodes_(0),
   highestNodeID_(0),
   highestEdgeID_(0),
@@ -25,13 +25,13 @@ SimpleGraph::SimpleGraph(bool directed_p):
 }
 
 
-void SimpleGraph::registerObserver(UpdatableGraphObserver* observer)
+void SimpleGraph::registerObserver(GraphObserver* observer)
 {
   if(!observers_.insert(observer).second)
     throw(Exception("This GraphObserver was already an observer of this Graph"));;
 }
 
-void SimpleGraph::unregisterObserver(UpdatableGraphObserver* observer)
+void SimpleGraph::unregisterObserver(GraphObserver* observer)
 {
   if(!observers_.erase(observer))
     throw(Exception("This GraphObserver was not an observer of this Graph"));
@@ -192,7 +192,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromEdge(SimpleGraph::Edge origin
 
 void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 {
-  for(set<UpdatableGraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedEdgesUpdate(edgesToDelete);
   }
@@ -200,7 +200,7 @@ void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
 
 void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete)
 {
-  for(set<UpdatableGraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
+  for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
     (*currObserver)->deletedNodesUpdate(nodesToDelete);
   }
@@ -328,4 +328,24 @@ void SimpleGraph::outputToDot(ostream& out, std::string name)
   set<pair<Node,Node> > alreadyFigured;
   nodeToDot_(root_,out,alreadyFigured);
   out << "\r}" << endl;
+}
+
+bool SimpleGraph::isTree()
+{
+  set<Graph::Node> metNode;
+  return nodesAreMetOnlyOnce_(root_,metNode,root_);
+}
+
+bool SimpleGraph::nodesAreMetOnlyOnce_(Graph::Node node, set< Graph::Node >& metNodes, Graph::Node originNode)
+{
+  //insert().sencond <=> not yet in the set
+  bool neverMetANodeMoreThanOnce = metNodes.insert(node).second;
+  vector<Graph::Node> neighbors = getOutgoingNeighbors(node);
+  for(vector<Graph::Node>::iterator currNeighbor = neighbors.begin(); neverMetANodeMoreThanOnce && currNeighbor != neighbors.end(); currNeighbor++)
+  {
+    if(*currNeighbor==originNode)
+      continue;
+    neverMetANodeMoreThanOnce = nodesAreMetOnlyOnce_(*currNeighbor,metNodes,node);
+  }
+  return neverMetANodeMoreThanOnce;
 }
