@@ -110,8 +110,6 @@ private:
     */
     void notify_();
 
-
-
     /**
     * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
     * Private version of link, does not check for the reciprocity.
@@ -366,6 +364,14 @@ public:
     * @return true if a node is met more than one time browsing the graph
     */
     bool isTree();
+    
+    
+    /**
+    * Is the graph directed?
+    * @return true the type of the graph is directed
+    */
+    bool isDirected() const;
+
     
     
     ///@}

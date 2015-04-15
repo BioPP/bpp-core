@@ -349,3 +349,8 @@ bool SimpleGraph::nodesAreMetOnlyOnce_(Graph::Node node, set< Graph::Node >& met
   }
   return neverMetANodeMoreThanOnce;
 }
+
+bool SimpleGraph::isDirected() const
+{
+  return(directed_);
+}
