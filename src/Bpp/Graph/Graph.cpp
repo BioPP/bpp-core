@@ -58,8 +58,10 @@ const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::
   unsigned int edgeID = ++highestEdgeID_;
   
   // writing the new relation to the structure
-  linkInNodeStructure_(nodeA, nodeB, edgeID, false);
-  linkInNodeStructure_(nodeB, nodeA, edgeID, directed_);
+  linkInNodeStructure_(nodeA, nodeB, edgeID);
+  if(!directed_){
+    linkInNodeStructure_(nodeB, nodeA, edgeID);
+  }
   linkInEdgeStructure_(nodeA, nodeB, edgeID);
 
   return edgeID;
@@ -94,8 +96,7 @@ const std::vector<SimpleGraph::Edge> SimpleGraph::unlink(const Node nodeA, const
   
   // unlinking in the structure
   vector<Edge> deletedEdges; //what edges ID are affected by this unlinking
-  deletedEdges.push_back(unlinkInNodeStructure_(nodeA, nodeB, false));
-  deletedEdges.push_back(unlinkInNodeStructure_(nodeB, nodeA, directed_));
+  deletedEdges.push_back(unlinkInNodeStructure_(nodeA, nodeB));
   for(vector<Edge>::iterator currEdgeToDelete = deletedEdges.begin(); currEdgeToDelete != deletedEdges.end();currEdgeToDelete++)
   {
     unlinkInEdgeStructure_(*currEdgeToDelete);
@@ -120,21 +121,25 @@ void SimpleGraph::linkInEdgeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Nod
 
 
 
-SimpleGraph::Edge SimpleGraph::unlinkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB, bool toBackwards)
+SimpleGraph::Edge SimpleGraph::unlinkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB)
 {
-  nodeStructureType::iterator foundNodeA = nodeStructure_.find(nodeA);
-  std::map<Node,Edge> &forOrBack = (toBackwards?foundNodeA->second.second:foundNodeA->second.first);
-  map<Node,Edge>::iterator foundRelation = forOrBack.find(nodeB);
-  Edge foundEdge = foundRelation->second;
-  forOrBack.erase(foundRelation);
+  // Forward
+  nodeStructureType::iterator nodeARow = nodeStructure_.find(nodeA);
+  map<Node,Edge>::iterator foundForwardRelation = nodeARow->second.first.find(nodeB);
+  Edge foundEdge = foundForwardRelation->second;
+  nodeARow->second.first.erase(foundForwardRelation);
+  // Backwards
+  nodeStructureType::iterator nodeBRow = nodeStructure_.find(nodeB);
+  map<Node,Edge>::iterator foundBackwardsRelation = nodeBRow->second.second.find(nodeA);
+  nodeBRow->second.second.erase(foundBackwardsRelation);
+  
   return foundEdge;
 }
 
-void SimpleGraph::linkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB, SimpleGraph::Edge edge, bool toBackwards)
+void SimpleGraph::linkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB, SimpleGraph::Edge edge)
 {
-  nodeStructureType::iterator foundNodeArrow = nodeStructure_.find(nodeA);
-  std::map<Node,Edge> &forOrBack = (toBackwards?foundNodeArrow->second.second:foundNodeArrow->second.first);
-  forOrBack.insert(pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeB,edge));
+  nodeStructure_.find(nodeA)->second.first.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeB,edge));
+  nodeStructure_.find(nodeB)->second.second.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeA,edge));
 }
 
 const SimpleGraph::Node SimpleGraph::createNode()

@@ -71,6 +71,8 @@ void SimpleTreeGraph::propagateNewDirection_(Graph::Node node)
     Node father = getFather(node);
     unlink(father,node);
     link(node,father);
+    propagateNewDirection_(father);
   }
   
 }
+

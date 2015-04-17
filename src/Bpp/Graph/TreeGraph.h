@@ -70,10 +70,14 @@ namespace bpp
     bool hasFather(Graph::Node node);
     
     /**
-     * Will re-root the tree with the new root
+     * Re-root the tree with the new root
      */
     void reRoot(Graph::Node newRoot);
     
+     /**
+     * Set a node as a new outgroup
+     */
+    void newOutGroup(Graph::Node newOutGroup);
     
     
   };

@@ -114,12 +114,11 @@ private:
     * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
     * Private version of link, does not check for the reciprocity.
     * Mainly called by link().
-    * @param nodeA source node (or first node if undirected)
-    * @param nodeB target node (or second node if undirected)
+    * @param nodeA source node
+    * @param nodeB target node
     * @param edge the ID of the relation
-    * @param toBackwards if this link has to be done in the backwardsStructure (for directed graphs)
     */
-    void linkInNodeStructure_(Node nodeA, Node nodeB, Edge edge, bool toBackwards);
+    void linkInNodeStructure_(Node nodeA, Node nodeB, Edge edge);
     
     /**
     * Creates a link between two existing nodes in the edge structure.
@@ -136,12 +135,11 @@ private:
     * Erase a link between two existing nodes. If directed graph: nodeA -> nodeB.
     * Private version of unLink, does not check for the reciprocity.
     * Mainly called by unLink().
-    * @param nodeA source node (or first node if undirected)
-    * @param nodeB target node (or second node if undirected)
-    * @param toBackwards if this link has to be UNdone in the backwardsStructure (for directed graphs)
+    * @param nodeA source node
+    * @param nodeB target node
     * @return the ID of the erased relation
     */
-    Edge unlinkInNodeStructure_(Node nodeA, Node nodeB, bool toBackwards);
+    Edge unlinkInNodeStructure_(Node nodeA, Node nodeB);
 
     /**
     * Erase a link between two existing nodes in the Edge structure.
