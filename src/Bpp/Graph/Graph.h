@@ -156,14 +156,14 @@ private:
     * @param node node that has to be checked
     * @param name common name to give to the user in case of failure (eg: "first node")
     */
-    void checkNodeExistence_(Node node, std::string name);
+    void nodeMustExist_(Node node, std::string name="");
     
   /**
     * Check that a edge exists. If not, throw an exception.
     * @param edge edge that has to be checked
     * @param name common name to give to the user in case of failure (eg: "first node")
     */
-    void checkEdgeExistence_(Edge edge, std::string name);
+    void edgeMustExist_(Edge edge, std::string name="");
 
     /**
     * Private version of getIncomingNeighbors or getOutgoingNeighbors.
@@ -227,6 +227,16 @@ public:
       */
     unsigned int getHighestEdgeID();
     
+    /**
+      * set the root node to an existing node. Will not affect the topology.
+      * @param node the new root
+      */
+    void setRoot(Graph::Node newRoot);
+    
+    /**
+      * get the root node
+      */
+    Node getRoot();
     
     ///@}
 

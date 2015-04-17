@@ -51,8 +51,8 @@ const SimpleGraph::Edge SimpleGraph::getEdge(SimpleGraph::Node nodeA, SimpleGrap
 const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB)
 {
   // the nodes must exist
-  checkNodeExistence_(nodeA, "first node");
-  checkNodeExistence_(nodeB, "second node");
+  nodeMustExist_(nodeA, "first node");
+  nodeMustExist_(nodeB, "second node");
   
   // which ID is available?
   unsigned int edgeID = ++highestEdgeID_;
@@ -65,7 +65,7 @@ const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::
   return edgeID;
 }
 
-void SimpleGraph::checkNodeExistence_(Node node, string name)
+void SimpleGraph::nodeMustExist_(Node node, string name)
 {
   if(nodeStructure_.find(node) == nodeStructure_.end())
   {
@@ -75,7 +75,7 @@ void SimpleGraph::checkNodeExistence_(Node node, string name)
   }
 }
 
-void SimpleGraph::checkEdgeExistence_(SimpleGraph::Edge edge, string name)
+void SimpleGraph::edgeMustExist_(SimpleGraph::Edge edge, string name)
 {
   if(edgeStructure_.find(edge) != edgeStructure_.end())
   {
@@ -89,8 +89,8 @@ void SimpleGraph::checkEdgeExistence_(SimpleGraph::Edge edge, string name)
 const std::vector<SimpleGraph::Edge> SimpleGraph::unlink(const Node nodeA, const Node nodeB)
 {
   // the nodes must exist
-  checkNodeExistence_(nodeA, "first node");
-  checkNodeExistence_(nodeB, "second node");
+  nodeMustExist_(nodeA, "first node");
+  nodeMustExist_(nodeB, "second node");
   
   // unlinking in the structure
   vector<Edge> deletedEdges; //what edges ID are affected by this unlinking
@@ -148,7 +148,7 @@ const SimpleGraph::Node SimpleGraph::createNode()
 const SimpleGraph::Node SimpleGraph::createNodeFromNode(SimpleGraph::Node origin)
 {
   //origin must be an existing node
-  checkNodeExistence_(origin,"origin node");
+  nodeMustExist_(origin,"origin node");
   
   Node newNode = createNode();
   link(origin,newNode);
@@ -158,7 +158,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromNode(SimpleGraph::Node origin
 const SimpleGraph::Node SimpleGraph::createNodeOnEdge(SimpleGraph::Edge edge)
 {
   //origin must be an existing edge
-  checkEdgeExistence_(edge,"");
+  edgeMustExist_(edge,"");
   
   Node newNode = createNode();
   
@@ -179,7 +179,7 @@ const SimpleGraph::Node SimpleGraph::createNodeOnEdge(SimpleGraph::Edge edge)
 const SimpleGraph::Node SimpleGraph::createNodeFromEdge(SimpleGraph::Edge origin)
 {
   //origin must be an existing edge
-  checkEdgeExistence_(origin,"origin edge");
+  edgeMustExist_(origin,"origin edge");
   
   // splitting the edge
   Node anchor = createNodeOnEdge(origin);
@@ -208,7 +208,7 @@ void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete)
 
 const std::vector< SimpleGraph::Node > SimpleGraph::getNeighbors_(SimpleGraph::Node node, bool outgoing)
 {
-  checkNodeExistence_(node,"");
+  nodeMustExist_(node,"");
   nodeStructureType::iterator foundNode = nodeStructure_.find(node);
   if(foundNode == nodeStructure_.end())
     throw(Exception("The requested node is not in the structure."));
@@ -246,7 +246,7 @@ const vector< SimpleGraph::Node > SimpleGraph::getNeighbors(SimpleGraph::Node no
 void SimpleGraph::deleteNode(SimpleGraph::Node node)
 {
   //checking the node
-  checkNodeExistence_(node,"node to delete");
+  nodeMustExist_(node,"node to delete");
   isolate_(node);
   nodeStructureType::iterator found = nodeStructure_.find(node);
   nodeStructure_.erase(found);
@@ -333,7 +333,14 @@ void SimpleGraph::outputToDot(ostream& out, std::string name)
 bool SimpleGraph::isTree()
 {
   set<Graph::Node> metNode;
-  return nodesAreMetOnlyOnce_(root_,metNode,root_);
+  bool nodesAreMetOnlyOnce = nodesAreMetOnlyOnce_(root_,metNode,root_);
+  if(!nodesAreMetOnlyOnce)
+    return false;
+  // now they have only been met once, they have to be met at least once
+  bool noNodeMissing = true;
+  for(nodeStructureType::iterator currNode = nodeStructure_.begin(); noNodeMissing && currNode != nodeStructure_.end(); currNode++)
+    noNodeMissing = (metNode.find(currNode->first) != metNode.end());
+  return noNodeMissing;
 }
 
 bool SimpleGraph::nodesAreMetOnlyOnce_(Graph::Node node, set< Graph::Node >& metNodes, Graph::Node originNode)
@@ -349,6 +356,18 @@ bool SimpleGraph::nodesAreMetOnlyOnce_(Graph::Node node, set< Graph::Node >& met
   }
   return neverMetANodeMoreThanOnce;
 }
+
+void SimpleGraph::setRoot(Graph::Node newRoot)
+{
+  nodeMustExist_(newRoot,"new root");
+  root_ = newRoot;
+}
+
+Graph::Node SimpleGraph::getRoot()
+{
+  return(root_);
+}
+
 
 bool SimpleGraph::isDirected() const
 {

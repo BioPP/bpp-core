@@ -29,11 +29,19 @@ namespace bpp
     bool isValid_;
     
     // will throw an exception if the tree is not valid
-    void mustBeValid_() const;
+    void mustBeValid_();
     
     // will throw an exception if the tree is not rooted
-    void mustBeRooted_() const;
+    void mustBeRooted_();
     
+    // test the validity of the tree
+    bool validate_();
+    
+    /**
+     * Reorient all the edges starting from a node:
+     * the father node becomes a son, and so on.
+     */
+    void propagateNewDirection_(Node node);
     
   public:
     
@@ -54,6 +62,19 @@ namespace bpp
     * @return true if rooted
     */
     Graph::Node getFather(Graph::Node node);
+    
+    /**
+    * Get the father node of a node in a rooted tree
+    * @return true if rooted
+    */
+    bool hasFather(Graph::Node node);
+    
+    /**
+     * Will re-root the tree with the new root
+     */
+    void reRoot(Graph::Node newRoot);
+    
+    
     
   };
   
