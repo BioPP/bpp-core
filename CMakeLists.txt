@@ -105,7 +105,10 @@ SET(CPACK_SOURCE_IGNORE_FILES
  "DartConfiguration.tcl"
  ${CPACK_SOURCE_IGNORE_FILES}
 )
-IF (MACOS)
+IF (APPLE)
+  SET(CPACK_BUNDLE_NAME "libbpp-core")
+  SET(CPACK_BUNDLE_PLIST "bpp-core-Info.plist")
+  SET(CPACK_BUNDLE_ICON "BppIcon.icns")
   SET(CPACK_GENERATOR "Bundle")
 ENDIF()
 
