@@ -26,16 +26,16 @@ namespace bpp
     /**
     * Is the graph a tree? Set to false when structure is modified, true after validation.
     */
-    bool isValid_;
+    mutable bool isValid_;
     
     // will throw an exception if the tree is not valid
-    void mustBeValid_();
+    void mustBeValid_() const;
     
     // will throw an exception if the tree is not rooted
-    void mustBeRooted_();
+    void mustBeRooted_() const;
     
     // test the validity of the tree
-    bool validate_();
+    bool validate_() const;
     
     /**
      * Reorient all the edges starting from a node:

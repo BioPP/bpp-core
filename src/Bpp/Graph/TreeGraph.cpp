@@ -34,13 +34,13 @@ bool SimpleTreeGraph::hasFather(Graph::Node node)
   return incomers.size() == 1;
 }
 
-void SimpleTreeGraph::mustBeRooted_()
+void SimpleTreeGraph::mustBeRooted_() const
 {
   if(!isRooted())
     throw Exception("SimpleTreeGraph: The tree must be rooted.");
 }
 
-void SimpleTreeGraph::mustBeValid_()
+void SimpleTreeGraph::mustBeValid_() const
 {
   if(!isValid()||!validate_())
     throw Exception("SimpleTreeGraph: The tree is not valid.");
@@ -51,7 +51,7 @@ bool SimpleTreeGraph::isRooted() const
   return(SimpleGraph::isDirected());
 }
 
-bool SimpleTreeGraph::validate_()
+bool SimpleTreeGraph::validate_() const
 {
   isValid_ = SimpleGraph::isTree();
   return(isValid());

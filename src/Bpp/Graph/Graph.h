@@ -154,14 +154,14 @@ private:
     * @param node node that has to be checked
     * @param name common name to give to the user in case of failure (eg: "first node")
     */
-    void nodeMustExist_(Node node, std::string name="");
+    void nodeMustExist_(Node node, std::string name="") const;
     
   /**
     * Check that a edge exists. If not, throw an exception.
     * @param edge edge that has to be checked
     * @param name common name to give to the user in case of failure (eg: "first node")
     */
-    void edgeMustExist_(Edge edge, std::string name="");
+    void edgeMustExist_(Edge edge, std::string name="") const;
 
     /**
     * Private version of getIncomingNeighbors or getOutgoingNeighbors.
@@ -169,7 +169,7 @@ private:
     * @param node node to find in or outgoing neighbors
     * @param outgoing boolean: if tue, outgoing; else incoming
     */
-    const std::vector<Node> getNeighbors_(Node node,bool outgoing=true);
+    std::vector<Node> getNeighbors_(Node node,bool outgoing=true) const;
 
   /**
     * Separate a node from all its neighbors.
@@ -183,7 +183,7 @@ private:
     * @param foundLeaves a vector containing all the found leaves
     * @param originNode the node where we come from, not to explore
     */
-    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0);
+    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0) const;
     
    /** 
     * Check that nodes are only met once to define if the graph is cyclic.
@@ -191,7 +191,7 @@ private:
     * @param metNode a set containing all the nodes we met
     * @param originNode the node where we come from, not to explore
     */
-    bool nodesAreMetOnlyOnce_(Graph::Node node, std::set<Graph::Node>& metNodes, Graph::Node originNode);
+    bool nodesAreMetOnlyOnce_(Graph::Node node, std::set<Graph::Node>& metNodes, Graph::Node originNode) const;
     
   /**
    * output a node to DOT format (recursive)
@@ -235,6 +235,25 @@ public:
       * get the root node
       */
     Node getRoot();
+    
+    /**
+      * Make the graph directed
+      * - changes the property
+      * - de-duplicate the edges:
+      *  eg: A - B in undirected is represented as A->B and B->A
+      *  in directed, becomes A->B only
+      * 
+      * Please note that the resulting directions are totaly arbritrary.
+      * One might consider to use the makeLocalRoot method.
+      */
+    void makeDirected();
+    
+    /**
+      * Make the graph directed
+      * - changes the property
+      * - de-duplicate the edges 
+      */
+    void makeUndirected();
     
     ///@}
 
@@ -285,7 +304,7 @@ public:
     * @param nodeB target node (or second node if undirected)
     * @return vector of deleted edges
     */
-    const std::vector<Edge> unlink(Node nodeA, Node nodeB);
+    std::vector<Edge> unlink(Node nodeA, Node nodeB);
 
     /**
     * Delete one node
@@ -327,7 +346,7 @@ public:
     * @param node the node one wants to get its neighbors
     * @return a vector containing the neighbors
     */
-    const std::vector<Node> getNeighbors(Node node);
+    std::vector<Node> getNeighbors(Node node) const;
     
     /**
     * In an directed graph, get all the neighbors which
@@ -335,7 +354,7 @@ public:
     * @param node the node one wants to get its neighbors
     * @return a vector containing the outgoing neighbors
     */
-    const std::vector<Node> getOutgoingNeighbors(Node node);
+    std::vector<Node> getOutgoingNeighbors(Node node) const;
     
     /**
     * In an directed graph, get all the neighbors which
@@ -343,7 +362,7 @@ public:
     * @param node the node one wants to get its neighbors
     * @return a vector containing the incoming neighbors
     */
-    const std::vector<Node> getIncomingNeighbors(Node node);
+    std::vector<Node> getIncomingNeighbors(Node node) const;
     
     /**
     * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -352,13 +371,13 @@ public:
     * @param maxDepth the maximum number of allowed depth, 0 means no max.
     * @return a vector containing the leaves
     */
-    const std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth = 0);
+    std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth = 0) const;
     
     /**
     * Get all the leaves of a graph, ie, nodes with only one neighbor,
     * @return a vector containing the leaves
     */
-    const std::vector<Node> getLeaves();
+    std::vector<Node> getLeaves() const;
     
     ///@}
     
@@ -371,7 +390,7 @@ public:
     * Is the graph a tree?
     * @return true if a node is met more than one time browsing the graph
     */
-    bool isTree();
+    bool isTree() const;
     
     
     /**
