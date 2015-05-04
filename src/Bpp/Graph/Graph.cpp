@@ -404,3 +404,46 @@ void SimpleGraph::makeDirected()
   }
   directed_=true;
 }
+
+void SimpleGraph::makeUndirected()
+{
+  if(!directed_)
+    return;
+  if(containsReciprocalRelations())
+    throw Exception("Cannot make an undirected graph from a directed one containing reciprocal relations.");
+  // save and clean the undirectedStructure
+  nodeStructureType directedStructure = nodeStructure_;
+  nodeStructure_.clear();
+  // copy each relation twice, making the reciprocal link
+  // eg: A - B in directed is represented as A->B
+  //     in undirected, becomes A->B and B->A
+  for(nodeStructureType::iterator currNodeRow = directedStructure.begin(); currNodeRow != directedStructure.end(); currNodeRow++){
+    Node nodeA = currNodeRow->first;
+    for(map<Node,Edge>::iterator currRelation = currNodeRow->second.first.begin(); currRelation != currNodeRow->second.first.end(); currRelation++)
+    {
+      Node nodeB = currRelation->first;
+      Edge edge = currRelation->second;
+      linkInNodeStructure_(nodeA,nodeB,edge);
+      linkInNodeStructure_(nodeB,nodeA,edge);
+    }
+  }
+  directed_=false;
+}
+
+bool SimpleGraph::containsReciprocalRelations() const
+{
+  if(!directed_)
+    throw Exception("Cannot state reciprocal link in an undirected graph.");
+  std::set<pair<Node,Node> > alreadyMetRelations;
+  for(nodeStructureType::const_iterator currNodeRow = nodeStructure_.begin(); currNodeRow != nodeStructure_.end(); currNodeRow++){
+    Node nodeA = currNodeRow->first;
+    for(map<Node,Edge>::const_iterator currRelation = currNodeRow->second.first.begin(); currRelation != currNodeRow->second.first.end(); currRelation++)
+    {
+      Node nodeB = currRelation->first;
+      if(!alreadyMetRelations.insert(pair<Node,Node>(min(nodeA,nodeB),max(nodeA,nodeB))).second)
+        return true;
+    }
+  }
+  return false;
+}
+

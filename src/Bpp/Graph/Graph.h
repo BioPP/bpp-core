@@ -239,7 +239,7 @@ public:
     /**
       * Make the graph directed
       * - changes the property
-      * - de-duplicate the edges:
+      * - de-duplicate the relations:
       *  eg: A - B in undirected is represented as A->B and B->A
       *  in directed, becomes A->B only
       * 
@@ -251,7 +251,11 @@ public:
     /**
       * Make the graph directed
       * - changes the property
-      * - de-duplicate the edges 
+      * - de-duplicate the relations:
+      *    eg: A - B in directed is represented as A->B
+      *        in undirected, becomes A->B and B->A
+      * If the directed graph already contains reciprocal relations,
+      * such as A->B and B->A, the method will throw an exception.
       */
     void makeUndirected();
     
@@ -398,7 +402,13 @@ public:
     * @return true the type of the graph is directed
     */
     bool isDirected() const;
-
+    
+    
+     /**
+    * Does the graph contain reciprocal relations such as A->B and B->A?
+    * @return true if one of them is seen in the structure
+    */
+    bool containsReciprocalRelations() const;
     
     
     ///@}
