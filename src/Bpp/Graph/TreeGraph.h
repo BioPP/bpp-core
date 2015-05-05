@@ -41,7 +41,7 @@ namespace bpp
      * Reorient all the edges starting from a node:
      * the father node becomes a son, and so on.
      */
-    void propagateNewDirection_(Node node);
+    void propagateDirection_(Node node);
     
   public:
     
@@ -70,12 +70,29 @@ namespace bpp
     bool hasFather(Graph::Node node);
     
     /**
+    * Get the father node of a node in a rooted tree
+    * @return true if rooted
+    */
+    std::vector<Graph::Node> getSons(Graph::Node node);
+    
+    
+    
+    
+    /**
      * Re-root the tree with the new root
      */
-    void reRoot(Graph::Node newRoot);
+    void rootAt(Graph::Node newRoot);
+    
+    /**
+     * Set the tree to its flat unrooted version.
+     * As an algorithmical convenience, a root node is kept, but it has
+     * no logical significance.
+     */
+    void unRoot(bool joinRootSons);
     
      /**
-     * Set a node as a new outgroup
+     * Set a node as a new outgroup in a rooted tree, will make a root between
+     * the given node and its father.
      */
     void newOutGroup(Graph::Node newOutGroup);
     

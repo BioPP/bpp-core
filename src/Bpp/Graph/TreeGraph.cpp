@@ -57,22 +57,44 @@ bool SimpleTreeGraph::validate_() const
   return(isValid());
 }
 
-void SimpleTreeGraph::reRoot(Graph::Node newRoot)
+void SimpleTreeGraph::rootAt(Graph::Node newRoot)
 {
+  makeDirected();
   // set the new root on the Graph
   SimpleGraph::setRoot(newRoot);
   // change edge direction between the new node and the former one
-  propagateNewDirection_(newRoot);
+  propagateDirection_(newRoot);
 }
 
-void SimpleTreeGraph::propagateNewDirection_(Graph::Node node)
+void SimpleTreeGraph::propagateDirection_(Graph::Node node)
 {
   if(hasFather(node)){
     Node father = getFather(node);
     unlink(father,node);
     link(node,father);
-    propagateNewDirection_(father);
+    propagateDirection_(father);
   }
   
 }
 
+void SimpleTreeGraph::unRoot(bool joinRootSons)
+{
+  if(joinRootSons){
+    // the root must have exactly two joinRootSons
+    vector<Node> sons = getSons(getRoot());
+    if(sons.size() != 2)
+      throw Exception("The root must have two sons to join them.");
+    unlink(getRoot(),sons.at(0));
+    unlink(getRoot(),sons.at(1));
+    link(sons.at(0),sons.at(1));
+    setRoot(sons.at(0));
+  }
+  makeUndirected();
+}
+
+void SimpleTreeGraph::newOutGroup(Graph::Node newOutGroup)
+{
+  mustBeRooted_();
+  Node newRoot = createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
+  rootAt(newRoot);
+}
