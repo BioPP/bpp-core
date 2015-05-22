@@ -222,6 +222,10 @@ namespace bpp {
 
     double getLikelihoodForASite(size_t site) const;
 
+    double getDLogLikelihoodForASite(size_t site) const;
+
+    double getD2LogLikelihoodForASite(size_t site) const;
+    
     Vdouble getLikelihoodForEachSite() const;
 
     void setNamespace(const std::string& nameSpace);

@@ -473,6 +473,11 @@ void LogsumHmmLikelihood::computeDForward_() const
     dLogLik_ += copy[i - 1];
 }
 
+double LogsumHmmLikelihood::getDLogLikelihoodForASite(size_t site) const
+{
+  return partialDLogLikelihoods_[site];
+}
+
 /***************************************************************************************************************************/
 
 void LogsumHmmLikelihood::computeD2Forward_() const
@@ -590,4 +595,9 @@ void LogsumHmmLikelihood::computeD2Forward_() const
   sort(copy.begin(), copy.end());
   for (size_t i = copy.size(); i > 0; --i)
     d2LogLik_ += copy[i - 1];
+}
+
+double LogsumHmmLikelihood::getD2LogLikelihoodForASite(size_t site) const
+{
+  return partialD2LogLikelihoods_[site];
 }

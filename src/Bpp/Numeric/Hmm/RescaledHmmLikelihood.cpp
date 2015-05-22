@@ -477,6 +477,11 @@ void RescaledHmmLikelihood::computeDForward_() const
   }
 }
 
+double RescaledHmmLikelihood::getDLogLikelihoodForASite(size_t site) const
+{
+  return dScales_[site]/scales_[site];
+}
+
 /***************************************************************************************************************************/
 
 
@@ -584,3 +589,9 @@ void RescaledHmmLikelihood::computeD2Forward_() const
 }
 
 /***************************************************************************************************************************/
+
+double RescaledHmmLikelihood::getD2LogLikelihoodForASite(size_t site) const
+{
+  return d2Scales_[site]/scales_[site]-pow(dScales_[site]/scales_[site],2);
+}
+

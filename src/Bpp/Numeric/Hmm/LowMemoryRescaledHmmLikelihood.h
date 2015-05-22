@@ -217,13 +217,26 @@ protected:
 
   void computeDLikelihood_() const
   {
-    //    computeDForward_();
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::computeDLikelihood_. Use RescaledHmmLikelihood instead."));
   }
 
   void computeD2Likelihood_() const
   {
-    //    computeD2Forward_();
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::computeD2Likelihood_. Use RescaledHmmLikelihood instead."));
   }
+
+  double getDLogLikelihoodForASite(size_t site) const
+  {
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getDLogLikelihoodForASite. Use RescaledHmmLikelihood instead."));
+    return 0;
+  }
+
+  double getD2LogLikelihoodForASite(size_t site) const
+  {
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getD2LogLikelihoodForASite. Use RescaledHmmLikelihood instead."));
+    return 0;
+  }
+
 };
 
 }

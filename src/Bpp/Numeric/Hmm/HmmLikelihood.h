@@ -102,8 +102,8 @@ namespace bpp
 
     virtual double getD2LogLikelihood() const = 0;
 
-  /**
-     * @brief Get the likelihood for a site.
+    /**
+     * @brief Get the likelihood for a site, and its derivatives.
      *
      * @param site The site index to analyse.
      * @return The likelihood for site <i>site</i>.
@@ -111,6 +111,9 @@ namespace bpp
   
     virtual double getLikelihoodForASite(size_t site) const = 0;
 
+    virtual double getDLogLikelihoodForASite(size_t site) const = 0;
+
+    virtual double getD2LogLikelihoodForASite(size_t site) const = 0;
     /**
      * @brief Get the likelihood for each site.
      *
