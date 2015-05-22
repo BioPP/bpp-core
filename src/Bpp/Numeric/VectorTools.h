@@ -867,6 +867,31 @@ public:
     out.endLine();
   }
 
+  template<class T>
+  static void printRange(const std::vector<T>& v1, OutputStream& out = * ApplicationTools::message, const std::string& delim = ",", const std::string& rangeDelim = "-")
+  {
+    size_t vs=v1.size();
+    
+    for (size_t i = 0; i < vs; i++)
+    {
+      out << v1[i];
+      size_t j=i+1;
+      
+      while (j<vs)
+        if (v1[j]==v1[j-1]+1)
+          j++;
+        else
+          break;
+      
+      if (j>i+2)
+        out << rangeDelim << v1[j-1];
+      i=j-1;
+      if (i<vs-1)
+        out << delim;
+    }
+  }
+
+
   /**
    * @brief Print a std::vector to a stream in R format
    * @param v1 A std::vector.
