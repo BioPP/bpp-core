@@ -194,7 +194,14 @@ namespace bpp
      * @param name The name of the parameter to look for.
      */
     
-    std::vector<std::string> getAlias(const std::string& name) const;
+    virtual std::vector<std::string> getAlias(const std::string& name) const;
+
+    /**
+     * @return the map of the aliases.
+     *
+     **/
+
+    virtual std::map<std::string, std::string> getAliases() const;
 
     /**
      * @return The name of the parameter from which a given parameter is aliased.
@@ -220,6 +227,13 @@ namespace bpp
       AbstractParametrizable::addParameters_(parameters);
       independentParameters_.addParameters(parameters);
     }
+
+    void includeParameters_(const ParameterList& parameters)
+    {
+      AbstractParametrizable::includeParameters_(parameters);
+      independentParameters_.includeParameters(parameters);
+    }
+
 
     void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
     {

@@ -263,6 +263,26 @@ vector<string> AbstractParameterAliasable::getAlias(const string& name) const
   return aliases;
 }
 
+
+std::map<std::string, std::string> AbstractParameterAliasable::getAliases() const
+{
+  map<string, string> aliases;
+
+  for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
+       it != aliasListenersRegister_.end();
+       it++)
+  {
+    string name=it->second->getFrom();
+
+    vector<string> alias=getAlias(name);
+
+    for (size_t i=0;i<alias.size();i++)
+      aliases[alias[i]]=name;
+  }
+
+  return aliases;
+}
+
 ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterList& pl) const
 {
   ParameterList aliases;

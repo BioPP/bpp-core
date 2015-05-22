@@ -119,7 +119,6 @@ namespace bpp
      **/
     
     virtual void aliasParameters(std::map<std::string, std::string>& unparsedParams, bool verbose) = 0;
-  
 
     /**
      * @brief Detach two parameters previously set as 'aliased'.
@@ -147,6 +146,14 @@ namespace bpp
      * @param name The name of the parameter to look for.
      */
     virtual std::vector<std::string> getAlias(const std::string& name) const = 0;
+
+    /**
+     * @return the map of the aliases.
+     *
+     **/
+    
+    virtual std::map<std::string, std::string> getAliases() const = 0;
+
   };
 
 
@@ -176,6 +183,7 @@ namespace bpp
     void unaliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) {}
     unsigned int getNumberOfIndependentParameters() const{ return 0; }
     std::vector<std::string> getAlias(const std::string& name) const { return std::vector<std::string>(); }
+    std::map<std::string, std::string> getAliases() const { return std::map<std::string, std::string>(); }
     /** @} */
 
   };
