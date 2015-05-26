@@ -41,6 +41,7 @@ knowledge of the CeCILL license and that you accept its terms.
 
 #include "../Matrix/MatrixTools.h"
 #include "../VectorTools.h"
+#include "../Random/RandomTools.h"
 
 using namespace bpp;
 using namespace std;
@@ -82,3 +83,47 @@ void AbstractHmmTransitionMatrix::setHmmStateAlphabet(const HmmStateAlphabet* st
   alph_=stateAlphabet;
 }
 
+vector<size_t> AbstractHmmTransitionMatrix::sample(size_t size) const
+{
+  vector<size_t> vres;
+  if (size==0)
+    return vres;
+
+  size_t nbStates=getHmmStateAlphabet()->getNumberOfStates();
+
+  // update pij_
+  getPij();
+    
+  size_t sta=0, stb;
+  double prob = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+
+  for (size_t i = 0; i < nbStates; ++i) {
+    prob-=eqFreq_[i];
+    if (prob < 0) {
+      sta=i;
+      break;
+    }
+  }
+        
+  vres.push_back(sta);
+
+  for (size_t pos=1;pos<size;pos++)
+  {
+    prob = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+
+    const vector<double>& row=pij_.getRow(sta);
+
+    for (size_t i = 0; i < nbStates; ++i) {
+      prob-=row[i];
+      if (prob < 0) {
+        stb=i;
+        break;
+      }
+    }
+    vres.push_back(stb);
+    sta=stb;
+  }
+  return vres;
+}
+
+  

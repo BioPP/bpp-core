@@ -70,10 +70,18 @@ namespace bpp {
     /**
      * @brief The alphabet describing the hidden states.
      */
-    std::auto_ptr<HmmStateAlphabet> hiddenAlphabet_;
-    std::auto_ptr<HmmTransitionMatrix> transitionMatrix_;
-    std::auto_ptr<HmmEmissionProbabilities> emissionProbabilities_;
 
+    HmmStateAlphabet* hiddenAlphabet_;
+    HmmTransitionMatrix* transitionMatrix_;
+    HmmEmissionProbabilities* emissionProbabilities_;
+
+    /**
+     * @brief Owns previous objects
+     *
+     */
+
+    bool ownsPointers_;
+    
     /**
      * @brief The likelihood array.
      *
@@ -119,48 +127,81 @@ namespace bpp {
     /**
      * @brief Build a new LogsumHmmLikelihood object.
      *
-     * @warning the HmmTransitionMatrix and HmmEmissionProbabilities object passed as argument must be non-null
-     * and point toward the same HmmStateAlphabet instance. The three object will be copied if needed, and
-     * deleted when the hmm likelihood objet is deleted. You should secure a copy before if you don't want them to
-     * be destroyed with this object.
+     * @warning the HmmTransitionMatrix and HmmEmissionProbabilities
+     * object passed as argument must be non-null and point toward the
+     * same HmmStateAlphabet instance.
+     *
+     * @warning If ownsPointers_, The three object will be copied if
+     * needed, and deleted when the hmm likelihood objet is deleted.
+     * You should secure a copy before if you don't want them to be
+     * destroyed with this object.
      */
+    
     LogsumHmmLikelihood(
-                        HmmStateAlphabet* hiddenAlphabet,
-                        HmmTransitionMatrix* transitionMatrix,
-                        HmmEmissionProbabilities* emissionProbabilities,
-                        const std::string& prefix) throw (Exception);
+      HmmStateAlphabet* hiddenAlphabet,
+      HmmTransitionMatrix* transitionMatrix,
+      HmmEmissionProbabilities* emissionProbabilities,
+      bool ownsPointers_ = true,
+      const std::string& prefix = "") throw (Exception);
 
     LogsumHmmLikelihood(const LogsumHmmLikelihood& lik):
-    AbstractHmmLikelihood(lik),
-    AbstractParametrizable(lik),
-    hiddenAlphabet_(dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone())),
-    transitionMatrix_(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone())),
-    emissionProbabilities_(dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone())),
-    logLikelihood_(lik.logLikelihood_),
-    partialLogLikelihoods_(lik.partialLogLikelihoods_),
-    logLik_(lik.logLik_),
-    dLogLikelihood_(lik.dLogLikelihood_),
-    partialDLogLikelihoods_(lik.partialDLogLikelihoods_),
-    d2LogLikelihood_(lik.d2LogLikelihood_),
-    partialD2LogLikelihoods_(lik.partialD2LogLikelihoods_),
-    backLogLikelihood_(lik.backLogLikelihood_),
-    backLogLikelihoodUpToDate_(lik.backLogLikelihoodUpToDate_),
-    breakPoints_(lik.breakPoints_),
-    nbStates_(lik.nbStates_),
-    nbSites_(lik.nbSites_)
+      AbstractHmmLikelihood(lik),
+      AbstractParametrizable(lik),
+      hiddenAlphabet_(),
+      transitionMatrix_(),
+      emissionProbabilities_(),
+      ownsPointers_(lik.ownsPointers_),
+      logLikelihood_(lik.logLikelihood_),
+      partialLogLikelihoods_(lik.partialLogLikelihoods_),
+      logLik_(lik.logLik_),
+      dLogLikelihood_(lik.dLogLikelihood_),
+      partialDLogLikelihoods_(lik.partialDLogLikelihoods_),
+      d2LogLikelihood_(lik.d2LogLikelihood_),
+      partialD2LogLikelihoods_(lik.partialD2LogLikelihoods_),
+      backLogLikelihood_(lik.backLogLikelihood_),
+      backLogLikelihoodUpToDate_(lik.backLogLikelihoodUpToDate_),
+      breakPoints_(lik.breakPoints_),
+      nbStates_(lik.nbStates_),
+      nbSites_(lik.nbSites_)
     {
+      if (ownsPointers_)
+      {
+        hiddenAlphabet_=dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone());
+        transitionMatrix_=dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone());
+        emissionProbabilities_=dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone());
+      }
+      else
+      {
+        hiddenAlphabet_=lik.hiddenAlphabet_;
+        transitionMatrix_=lik.transitionMatrix_;
+        emissionProbabilities_=lik.emissionProbabilities_;
+      }
+  
       // Now adjust pointers:
-      transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-      emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+      transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+      emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
     }
 
     LogsumHmmLikelihood& operator=(const LogsumHmmLikelihood& lik)
     {
       AbstractHmmLikelihood::operator=(lik);
       AbstractParametrizable::operator =(lik);
-      hiddenAlphabet_        = std::auto_ptr<HmmStateAlphabet>(dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone()));
-      transitionMatrix_      = std::auto_ptr<HmmTransitionMatrix>(dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone()));
-      emissionProbabilities_ = std::auto_ptr<HmmEmissionProbabilities>(dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone()));
+
+      ownsPointers_=lik.ownsPointers_;
+      
+      if (ownsPointers_)
+      {
+        hiddenAlphabet_        = dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone());
+        transitionMatrix_      = dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone());
+        emissionProbabilities_ = dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone());
+      }
+      else
+      {
+        hiddenAlphabet_=lik.hiddenAlphabet_;
+        transitionMatrix_=lik.transitionMatrix_;
+        emissionProbabilities_=lik.emissionProbabilities_;
+      }
+          
       logLikelihood_         = lik.logLikelihood_;
       partialLogLikelihoods_ = lik.partialLogLikelihoods_;
       dLogLikelihood_        = lik.dLogLikelihood_;
@@ -175,12 +216,20 @@ namespace bpp {
       nbSites_               = lik.nbSites_;
 
       // Now adjust pointers:
-      transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-      emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+      transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+      emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
       return *this;
     }
 
-    virtual ~LogsumHmmLikelihood() {}
+    virtual ~LogsumHmmLikelihood() {
+      if (ownsPointers_)
+      {
+        delete hiddenAlphabet_;
+        delete transitionMatrix_;
+        delete emissionProbabilities_;
+      }
+    }
+    
 
 #ifndef NO_VIRTUAL_COV
     LogsumHmmLikelihood*

@@ -49,12 +49,14 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
     HmmStateAlphabet* hiddenAlphabet,
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
+    bool ownsPointers,
     const std::string& prefix) throw (Exception):
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
   transitionMatrix_(transitionMatrix),
   emissionProbabilities_(emissionProbabilities),
+  ownsPointers_(ownsPointers),
   logLikelihood_(),
   partialLogLikelihoods_(),
   logLik_(),
@@ -71,9 +73,10 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
   if (!hiddenAlphabet)        throw Exception("LogsumHmmLikelihood: null pointer passed for HmmStateAlphabet.");
   if (!transitionMatrix)      throw Exception("LogsumHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
   if (!emissionProbabilities) throw Exception("LogsumHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
-  if (!hiddenAlphabet_->worksWith(transitionMatrix->getHmmStateAlphabet()))
+
+  if (!hiddenAlphabet_->worksWith(transitionMatrix_->getHmmStateAlphabet()))
     throw Exception("LogsumHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
-  if (!hiddenAlphabet_->worksWith(emissionProbabilities->getHmmStateAlphabet()))
+  if (!hiddenAlphabet_->worksWith(emissionProbabilities_->getHmmStateAlphabet()))
     throw Exception("LogsumHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   nbStates_ = hiddenAlphabet_->getNumberOfStates();
   nbSites_ = emissionProbabilities_->getNumberOfPositions();
@@ -85,7 +88,7 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
 
   //Init arrays:
   logLikelihood_.resize(nbSites_ * nbStates_);
-  
+
   //Compute:
   computeForward_();
 }
@@ -133,18 +136,19 @@ void LogsumHmmLikelihood::computeForward_()
   }
 
   //Initialisation:
-  const vector<double>* emissions = &(*emissionProbabilities_)(0);
-  
+  const vector<double>* emissions = &(* emissionProbabilities_)(0);
+
   for (size_t j = 0; j < nbStates_; j++)
   {
     size_t jj = j * nbStates_;
     x = logTrans[jj] + log(transitionMatrix_->getEquilibriumFrequencies()[0]);
-    
+
     for (size_t k = 1; k < nbStates_; k++)
     {
       a = logTrans[k + jj] + log(transitionMatrix_->getEquilibriumFrequencies()[k]);
       x = NumTools::logsum(x, a);
     }
+
     logLikelihood_[j] = log((*emissions)[j]) + x;
   }
  

@@ -56,14 +56,8 @@ FullHmmTransitionMatrix::FullHmmTransitionMatrix(const HmmStateAlphabet* alph, c
 
   for (size_t i=0; i<size; i++)
     {
-      vSimplex_.push_back(Simplex(size,1));
-      ParameterList pl=vSimplex_[i].getParameters();
-      for (size_t j=0; j<pl.size(); j++)
-        {
-          Parameter* p=pl[j].clone();
-          p->setName(TextTools::toString(i+1)+"."+p->getName());
-          addParameter_(p);
-        }
+      vSimplex_.push_back(Simplex(size,1,false,prefix + TextTools::toString(i+1)+"."));
+      addParameters_(vSimplex_[i].getParameters());
     }
 }
 
@@ -140,14 +134,7 @@ void FullHmmTransitionMatrix::fireParameterChanged(const ParameterList& paramete
   size_t salph=getNumberOfStates();
 
   for (size_t i=0; i< salph; i++)
-  {
-    ParameterList pl=vSimplex_[i].getParameters();
-
-    for (size_t j=0; j<pl.size(); j++)
-      pl[j].setValue(getParameterValue(TextTools::toString(i+1)+"."+pl[j].getName()));
-
-    vSimplex_[i].matchParametersValues(pl);
-  }
+    vSimplex_[i].matchParametersValues(parameters);
   
   upToDate_=false;
 }

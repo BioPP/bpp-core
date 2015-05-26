@@ -100,6 +100,18 @@ public:
     return alph_->getNumberOfStates();
   }
 
+  /**
+   * @brief sampling of a sequence of states. Starting point is
+   * sampled from the equilibrium distribution.
+   *
+   * @param size the length of the sequence
+   * @return a vector of states index sampled from the Transition
+   * probabilities
+   *
+   */
+
+  std::vector<size_t> sample(size_t size) const;
+  
 };
 
 } //end of namespace bpp

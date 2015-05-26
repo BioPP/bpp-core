@@ -57,7 +57,7 @@ AutoCorrelationTransitionMatrix::AutoCorrelationTransitionMatrix(const HmmStateA
   for (size_t i=0; i<size; i++)
     {
       vAutocorrel_.push_back(1./(double)size);
-      addParameter_(new Parameter("lambda"+TextTools::toString(i+1), 1./(double)size, &Parameter::PROP_CONSTRAINT_EX));
+      addParameter_(new Parameter(prefix + "lambda"+TextTools::toString(i+1), 1./(double)size, &Parameter::PROP_CONSTRAINT_EX));
     }
 
   for (size_t i = 0; i < size; i++)
