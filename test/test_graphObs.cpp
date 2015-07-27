@@ -37,14 +37,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "../src/Bpp/Graph/GraphObserver.h"
+#include "../src/Bpp/Graph/AssociationGraphObserver.h"
 #include <vector>
 #include <iostream>
 using namespace bpp;
 using namespace std;
 
 int main() {
-  SimpleGraphObserver<string,unsigned int> grObs(true);
+  SimpleAssociationGraphObserver<string,unsigned int,bpp::SimpleGraph> grObs(true);
   string zero = "zero";
   string one = "one";
   string two = "two";
@@ -52,16 +52,22 @@ int main() {
   unsigned int r3 = 3;
   cout << "Creating node zero." << endl;
   grObs.createNode(&zero);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node one from the number zero." << endl;
-  grObs.createNode(&one,&zero);
+  grObs.createNode(&zero,&one);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node two from the number one." << endl;
-  grObs.createNode(&two,&one);
+  grObs.createNode(&one,&two);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking two to one." << endl;
   grObs.link(&two,&zero,&r3);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking one to three." << endl;
-  grObs.createNode(&three,&one);
+  grObs.createNode(&one,&three);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking three to zero." << endl;
   grObs.link(&three,&zero);
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   // so now we have zero -> one -> two -> zero ...
   vector<string*> fromOne = grObs.getOutgoingNeighbors(&zero);
   vector<string*> fromThree = grObs.getOutgoingNeighbors(&two);
