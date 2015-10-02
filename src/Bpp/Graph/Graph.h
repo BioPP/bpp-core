@@ -104,6 +104,13 @@ private:
     * Usualy the first node of a graph. Used for algorithmic purposes.
     */
     Node root_;
+    
+    /**
+    * Some types of Graphs need to know if they have been modified
+    * But for a Graph, it does nothing.
+    */
+    virtual void topologyHasChanged_() const;
+    
     /**
     * Tell all the observers to get the last updates.
     * Calls the method update of all the subscribers.
@@ -197,7 +204,7 @@ private:
    * output a node to DOT format (recursive)
    */
   
-  void nodeToDot_(Node node, std::ostream &out, std::set<std::pair<Node,Node> > &alreadyFigured);
+  void nodeToDot_(Node node, std::ostream &out, std::set<std::pair<Node,Node> > &alreadyFigured) const;
     
     
 public:
@@ -218,12 +225,12 @@ public:
     /**
       * get the Highest Node ID (for vector sizing)
       */
-    unsigned int getHighestNodeID();
+    unsigned int getHighestNodeID() const;
     
     /**
       * get the Highest Node ID (for vector sizing)
       */
-    unsigned int getHighestEdgeID();
+    unsigned int getHighestEdgeID() const;
     
     /**
       * set the root node to an existing node. Will not affect the topology.
@@ -234,7 +241,7 @@ public:
     /**
       * get the root node
       */
-    Node getRoot();
+    Node getRoot() const;
     
     /**
       * Make the graph directed
@@ -424,7 +431,7 @@ public:
     * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
     * @return the edge between these two nodes
     */
-    const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
+    const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB) const;
     
     ///@}
 
@@ -438,13 +445,13 @@ public:
     * Trigger E objects deleting on the observers
     * @param edgesToDelete list of edges to delete
     */
-    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete);
+    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete) const;
 
     /**
     * Trigger N objects deleting on the observers
     * @param nodesToDelete list of edges to delete
     */
-    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete);
+    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete) const;
 
 
     ///@}
@@ -454,7 +461,7 @@ public:
      * @param out a ostream where the DOT format will be output
      * @param name a string naming the graph
      */
-    void outputToDot(std::ostream &out, std::string name);
+    void outputToDot(std::ostream &out, std::string name) const;
     
 };
 

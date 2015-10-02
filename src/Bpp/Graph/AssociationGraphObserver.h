@@ -1,7 +1,6 @@
 #ifndef _ASSOCIATIONGRAPHOBSERVER_HPP_
 #define _ASSOCIATIONGRAPHOBSERVER_HPP_
 
-#include "Graph.h"
 #include "GraphObserver.h"
 
 #include "../Exceptions.h"
@@ -109,14 +108,14 @@ namespace bpp
       * @param nodeObject object which to return the node ID
       * @return a node ID
       */
-      virtual Graph::Node getNodeId(N* nodeObject) = 0;
+      virtual Graph::Node getNodeId(N* nodeObject) const = 0;
       
       /**
       * Return the associated Node ID
       * @param nodeObject object which to return the node ID
       * @return a node ID
       */
-      virtual Graph::Edge getEdgeId(E* edgeObject) = 0;
+      virtual Graph::Edge getEdgeId(E* edgeObject) const = 0;
       
       ///@}
       
@@ -131,7 +130,7 @@ namespace bpp
       * @param nodeObject object which to return the node index
       * @return a node index
       */
-      virtual AssociationGraphObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject) = 0;
+      virtual AssociationGraphObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject) const = 0;
       
             
       /**
@@ -139,7 +138,7 @@ namespace bpp
       * @param edgeObject object which to return the node index
       * @return a node index
       */
-      virtual AssociationGraphObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject) = 0;
+      virtual AssociationGraphObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject) const = 0;
      
       /**
       * Set an index associated to a node
@@ -169,7 +168,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      virtual const std::vector<N*> getNeighbors(N* objectNode) = 0;
+      virtual const std::vector<N*> getNeighbors(N* objectNode) const = 0;
       
       /**
       * In an directed graph, get all the neighbors which
@@ -177,7 +176,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      virtual const std::vector<N*> getOutgoingNeighbors(N* node) = 0;
+      virtual const std::vector<N*> getOutgoingNeighbors(N* node) const = 0;
       
       /**
       * In an directed graph, get all the neighbors which
@@ -185,7 +184,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      virtual const std::vector<N*> getIncomingNeighbors(N* node) = 0;
+      virtual const std::vector<N*> getIncomingNeighbors(N* node) const = 0;
       
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -194,19 +193,19 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      virtual const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) = 0;
+      virtual const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const = 0;
       
       /**
       * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      virtual const std::vector<N*> getLeaves() = 0;
+      virtual const std::vector<N*> getLeaves() const = 0;
       
       /**
       * Get all the defined nodes of a graphO,
       * @return a vector containing the nodesObjects
       */
-      virtual const std::vector<N*> getNodes() = 0;
+      virtual const std::vector<N*> getNodes() const = 0;
       
      /**
       * Returns the Edge between two nodes nodeA -> nodeB
@@ -214,7 +213,7 @@ namespace bpp
       * @param nodeB destination node (if directed)
       * @return the edge between these two nodes
       */
-      virtual const E* getEdgeBetweenTwoNodes(N* nodeA, N* nodeB) const = 0;
+      virtual const E* getEdge(N* nodeA, N* nodeB) const = 0;
       
       
       ///@}
@@ -222,14 +221,12 @@ namespace bpp
     };
     
     
-    template <class N, class E, class I>
+    template <class N, class E, class GraphImpl>
     class SimpleAssociationGraphObserver: public virtual AssociationGraphObserver<N,E>
     {
 
     private:
-      //is the graph directed
-      bool directed_;
-      
+        
       //index management
       typename AssociationGraphObserver<N,E>::NodeIndex highestNodeIndex_;
       typename AssociationGraphObserver<N,E>::EdgeIndex highestEdgeIndex_;
@@ -285,14 +282,14 @@ namespace bpp
       /**
       * Get incoming / outgoing neighbors according to the enum type
       */
-      std::vector<N*> getNeighbors_(N* objectNode, neighborType type);
+      std::vector<N*> getNeighbors_(N* objectNode, neighborType type) const;
       
       
       /**
       * The observed Graph. Anytime this graph is observed,
       * the current object will be warned to take changes into account.
       */
-      I* subjectGraph_;
+      GraphImpl* subjectGraph_;
       
       /**
       * Set the observed Graph
@@ -304,12 +301,19 @@ namespace bpp
       /**
        * Transforms an (a list of) id(s) into an (a list of) object(s)
        */
-      N* getNodeObject_(Graph::Node);
-      std::vector<N*> getNodeObjects_(std::vector<Graph::Node>);
-      E* getEdgeObject_(Graph::Edge);
-      std::vector<E*> getEdgeObjects_(std::vector<Graph::Edge>);
+      N* getNodeObject_(Graph::Node) const;
+      std::vector<N*> getNodeObjects_(std::vector<Graph::Node>) const;
+      E* getEdgeObject_(Graph::Edge) const;
+      std::vector<E*> getEdgeObjects_(std::vector<Graph::Edge>) const;
       
-        
+      /**
+      * Allows to create the proper observed subject class, thanks to the virtuality.
+      * @param directed_p if the subject graph is directed
+      */
+      void allocateNewSubject(bool directed_p);
+      
+      
+      
     public:
       
       /**
@@ -328,15 +332,13 @@ namespace bpp
       * Copy Constructor
       * @param graphObserver the graphObserver to be copied
       */
-      SimpleAssociationGraphObserver(bpp::SimpleAssociationGraphObserver<N,E,I> const& graphObserver);
+      SimpleAssociationGraphObserver(bpp::SimpleAssociationGraphObserver<N,E,GraphImpl> const& graphObserver);
       
       /**
       * = Operator
       * @param graphObserver the graphObserver we want to copy the values
       */
-      SimpleAssociationGraphObserver<N,E,I> operator=(bpp::SimpleAssociationGraphObserver<N,E,I> const& graphObserver);
-      
-      
+      SimpleAssociationGraphObserver<N,E,GraphImpl>& operator=(bpp::SimpleAssociationGraphObserver<N,E,GraphImpl> const& graphObserver);
       
       /**
       * Destructor
@@ -353,12 +355,12 @@ namespace bpp
       #ifdef NO_VIRTUAL_COV
         Clonable*
       #else
-        SimpleAssociationGraphObserver<N,E,I>*
+        SimpleAssociationGraphObserver<N,E,GraphImpl>*
       #endif
-      clone() const { return new SimpleAssociationGraphObserver<N,E,I>(*this); };
+      clone() const { return new SimpleAssociationGraphObserver<N,E,GraphImpl>(*this); };
       
       
-      I* getGraph();
+      GraphImpl* getGraph() const;
       
       /**
       * This function is called to tell the observer that the subject
@@ -441,14 +443,14 @@ namespace bpp
       * @param nodeObject object which to return the node ID
       * @return a node ID
       */
-      Graph::Node getNodeId(N* nodeObject);
+      Graph::Node getNodeId(N* nodeObject) const;
 
       /**
       * Return the associated Node ID
       * @param nodeObject object which to return the node ID
       * @return a node ID
       */
-      Graph::Edge getEdgeId(E* edgeObject);
+      Graph::Edge getEdgeId(E* edgeObject) const;
       
       
       ///@}   
@@ -463,7 +465,7 @@ namespace bpp
       * @param nodeObject object which to return the node index
       * @return a node index
       */
-      typename AssociationGraphObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject);
+      typename AssociationGraphObserver<N,E>::NodeIndex getNodeIndex(N* nodeObject) const;
       
             
       /**
@@ -471,7 +473,7 @@ namespace bpp
       * @param edgeObject object which to return the node index
       * @return a node index
       */
-      typename AssociationGraphObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject);
+      typename AssociationGraphObserver<N,E>::EdgeIndex getEdgeIndex(E* edgeObject) const;
       
       /**
       * Set an index associated to a node
@@ -500,21 +502,21 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      const std::vector<N*> getNeighbors(N* node);
+      const std::vector<N*> getNeighbors(N* node) const;
       /**
       * In an directed graph, get all the neighbors which
       * are leaving a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      const std::vector<N*> getOutgoingNeighbors(N* node);
+      const std::vector<N*> getOutgoingNeighbors(N* node) const;
       /**
       * In an directed graph, get all the neighbors which
       * are coming to a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      const std::vector<N*> getIncomingNeighbors(N* node);
+      const std::vector<N*> getIncomingNeighbors(N* node) const;
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
       * starting from a peculiar node.
@@ -522,18 +524,18 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth);
+      const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const;
       /**
       * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeaves();
+      const std::vector<N*> getLeaves() const;
       
       /**
       * Get all the defined nodes of a graph,
       * @return a vector containing the nodesObjects
       */
-      const std::vector<N*> getNodes();
+      const std::vector<N*> getNodes() const;
       
             
       /**
@@ -542,7 +544,7 @@ namespace bpp
       * @param nodeB destination node (if directed)
       * @return the edge between these two nodes
       */
-      const E* getEdgeBetweenTwoNodes(N* nodeA, N* nodeB) const;
+      const E* getEdge(N* nodeA, N* nodeB) const;
       
       
       ///@}
@@ -577,14 +579,14 @@ namespace bpp
       * in this GraphObserver
       * @return the number of nodes
       */
-      size_t getNumberOfNodes();
+      size_t getNumberOfNodes() const;
       
       /**
       * Return the number of defined leaves, ie leaves that have a corresponding object
       * in this GraphObserver
       * @return the number of leaves
       */
-      size_t getNumberOfLeaves();
+      size_t getNumberOfLeaves() const;
       
       ///@}
       
@@ -597,52 +599,50 @@ namespace bpp
 //     };
 //     
     
-template <class N, class E, class I>
-N* SimpleAssociationGraphObserver<N,E,I>::getNodeObject_(Graph::Node node)
+template <class N, class E, class GraphImpl>
+N* SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodeObject_(Graph::Node node) const
 {
   return nodeToObject_.at(node); 
 }
 
-template <class N, class E, class I>
-E* SimpleAssociationGraphObserver<N,E,I>::getEdgeObject_(Graph::Edge edge)
+template <class N, class E, class GraphImpl>
+E* SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdgeObject_(Graph::Edge edge) const
 {
   return edgeToObject_.at(edge); 
 }
 
-template <class N, class E, class I>
-std::vector<N*> SimpleAssociationGraphObserver<N,E,I>::getNodeObjects_(std::vector<Graph::Node> nodes)
+template <class N, class E, class GraphImpl>
+std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodeObjects_(std::vector<Graph::Node> nodes) const
 {
   std::vector<N*> nodeObjects;
   for(std::vector<Graph::Node>::iterator currNode = nodes.begin(); currNode != nodes.end(); currNode++)
   {
-    nodeObjects.push_back(nodeToObject_(*currNode));
+    nodeObjects.push_back(nodeToObject_.at(*currNode));
   }
   return nodeObjects;
 }
 
-template <class N, class E, class I>
-std::vector<E*> SimpleAssociationGraphObserver<N,E,I>::getEdgeObjects_(std::vector<Graph::Edge> edges)
+template <class N, class E, class GraphImpl>
+std::vector<E*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdgeObjects_(std::vector<Graph::Edge> edges) const
 {
   std::vector<N*> edgeObjects;
   for(std::vector<Graph::Node>::iterator currEdge = edges.begin(); currEdge != edges.end(); currEdge++)
   {
-    edgeObjects.push_back(edgeToObject_(*currEdge));
+    edgeObjects.push_back(edgeToObject_.at(*currEdge));
   }
   return edgeObjects;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::createNode(N* nodeObject)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::createNode(N* nodeObject)
 {
   Graph::Node newGraphNode = subjectGraph_->createNode();
-  
   associateNode(nodeObject, newGraphNode);
   
 }
 
-template <class N, class E, class I>
-SimpleAssociationGraphObserver<N,E,I>::SimpleAssociationGraphObserver(bool directed_p):
-  directed_(directed_p),
+template <class N, class E, class GraphImpl>
+SimpleAssociationGraphObserver<N,E,GraphImpl>::SimpleAssociationGraphObserver(bool directed_p):
   highestNodeIndex_(0),
   highestEdgeIndex_(0),
   nodeToObject_(std::vector<N*>()),
@@ -653,20 +653,26 @@ SimpleAssociationGraphObserver<N,E,I>::SimpleAssociationGraphObserver(bool direc
   indexToEdgeObject_(std::vector<E*>()),
   nodeObjectToIndex_(std::map<N*,typename AssociationGraphObserver<N,E>::NodeIndex>()),
   edgeObjectToIndex_(std::map<E*,typename AssociationGraphObserver<N,E>::EdgeIndex>()),
-  subjectGraph_(new SimpleGraph(directed_p))
+  subjectGraph_(00)
 {
-  this->subjectGraph_->registerObserver(this);
+  this->allocateNewSubject(directed_p);
 }
 
-template <class N, class E, class I>
-SimpleAssociationGraphObserver<N,E,I>::~SimpleAssociationGraphObserver()
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::allocateNewSubject(bool directed_p)
+{
+    subjectGraph_ = new GraphImpl(directed_p);
+    subjectGraph_->registerObserver(this);
+}
+
+template <class N, class E, class GraphImpl>
+SimpleAssociationGraphObserver<N,E,GraphImpl>::~SimpleAssociationGraphObserver()
 {
   this->subjectGraph_->unregisterObserver(this);
 }
 
-template <class N, class E, class I>
-SimpleAssociationGraphObserver<N,E,I>::SimpleAssociationGraphObserver(SimpleAssociationGraphObserver<N,E,I> const& graphObserver):
-  directed_(graphObserver.directed_),
+template <class N, class E, class GraphImpl>
+SimpleAssociationGraphObserver<N,E,GraphImpl>::SimpleAssociationGraphObserver(SimpleAssociationGraphObserver<N,E,GraphImpl> const& graphObserver):
   highestNodeIndex_(0),
   highestEdgeIndex_(0),
   nodeToObject_(graphObserver.nodeToObject_),
@@ -682,10 +688,9 @@ SimpleAssociationGraphObserver<N,E,I>::SimpleAssociationGraphObserver(SimpleAsso
 }
 
 
-template <class N, class E, class I>
-SimpleAssociationGraphObserver<N,E,I> SimpleAssociationGraphObserver<N,E,I>::operator=(SimpleAssociationGraphObserver<N,E,I> const& graphObserver)
+template <class N, class E, class GraphImpl>
+SimpleAssociationGraphObserver<N,E,GraphImpl>& SimpleAssociationGraphObserver<N,E,GraphImpl>::operator=(SimpleAssociationGraphObserver<N,E,GraphImpl> const& graphObserver)
 {
-  this->directed_ = graphObserver.directed_;
   this->highestEdgeIndex_ = graphObserver.highestEdgeIndex_;
   this->nodeToObject_ = graphObserver.nodeToObject_;
   this->edgeToObject_ = graphObserver.edgeToObject_;
@@ -696,17 +701,18 @@ SimpleAssociationGraphObserver<N,E,I> SimpleAssociationGraphObserver<N,E,I>::ope
   this->nodeObjectToIndex_ = graphObserver.nodeObjectToIndex_;
   this->edgeObjectToIndex_ = graphObserver.edgeObjectToIndex_;
   this->subjectGraph_ = graphObserver.subjectGraph_;
+  return *this;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::createNode(N* objectOriginNode,N* newNodeObject)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::createNode(N* objectOriginNode,N* newNodeObject)
 {
   createNode(newNodeObject);
   link(objectOriginNode,newNodeObject);
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::link(N* nodeObjectA, N* nodeObjectB, E* edgeObject)
 {
   // checking the nodes
   typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
@@ -729,8 +735,8 @@ void SimpleAssociationGraphObserver<N,E,I>::link(N* nodeObjectA, N* nodeObjectB,
   objectToEdge_[edgeObject] = newGraphEdge;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::unlink(N* nodeObjectA, N* nodeObjectB)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::unlink(N* nodeObjectA, N* nodeObjectB)
 {
   //checking the nodes
   typename std::map<N*,Graph::Node>::iterator foundNodeA, foundNodeB;
@@ -742,8 +748,8 @@ void SimpleAssociationGraphObserver<N,E,I>::unlink(N* nodeObjectA, N* nodeObject
   subjectGraph_->unlink(foundNodeA->second,foundNodeB->second);
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::deletedEdgesUpdate(std::vector<Graph::Edge>& edgesToDelete)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::deletedEdgesUpdate(std::vector<Graph::Edge>& edgesToDelete)
 {
   for(std::vector<Graph::Edge>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++){
     E* edgeObject = edgeToObject_.at(*currEdge);
@@ -754,8 +760,8 @@ void SimpleAssociationGraphObserver<N,E,I>::deletedEdgesUpdate(std::vector<Graph
   }
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::deletedNodesUpdate(std::vector<Graph::Node>& nodesToDelete){
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::deletedNodesUpdate(std::vector<Graph::Node>& nodesToDelete){
   for(std::vector<Graph::Edge>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++){
     N* nodeObject = nodeToObject_.at(*currNode);
     nodeToObject_.at(*currNode) = 00;
@@ -765,8 +771,8 @@ void SimpleAssociationGraphObserver<N,E,I>::deletedNodesUpdate(std::vector<Graph
   }
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::associateNode(N* nodeObject, Graph::Node graphNode)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::associateNode(N* nodeObject, Graph::Node graphNode)
 {
   // nodes vector must be the right size. Eg: to store a node with
   // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
@@ -777,8 +783,8 @@ void SimpleAssociationGraphObserver<N,E,I>::associateNode(N* nodeObject, Graph::
   objectToNode_[nodeObject] = graphNode;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::associateEdge(E* edgeObject, Graph::Edge graphEdge)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::associateEdge(E* edgeObject, Graph::Edge graphEdge)
 {
   // nodes vector must be the right size. Eg: to store an edge with
   // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
@@ -789,8 +795,8 @@ void SimpleAssociationGraphObserver<N,E,I>::associateEdge(E* edgeObject, Graph::
   objectToEdge_[edgeObject] = graphEdge;
 }
 
-template <class N, class E, class I>
-unsigned int SimpleAssociationGraphObserver<N,E,I>::setEdgeIndex(E* edgeObject, typename AssociationGraphObserver<N,E>::EdgeIndex index)
+template <class N, class E, class GraphImpl>
+unsigned int SimpleAssociationGraphObserver<N,E,GraphImpl>::setEdgeIndex(E* edgeObject, typename AssociationGraphObserver<N,E>::EdgeIndex index)
 {
   //TODO: check if this object has already an index?
   if(index == 0)
@@ -808,16 +814,16 @@ unsigned int SimpleAssociationGraphObserver<N,E,I>::setEdgeIndex(E* edgeObject, 
   return index;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::forgetNode(N* nodeObject)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::forgetNode(N* nodeObject)
 {
   typename std::map<N*,Graph::Node>::iterator nodeToForget = objectToNode_.find(nodeObject);
   nodeToObject_.at(nodeToForget->second) = 00;
   objectToNode_.erase(nodeToForget);
 }
 
-template <class N, class E, class I>
-unsigned int SimpleAssociationGraphObserver<N,E,I>::setNodeIndex(N* nodeObject, typename AssociationGraphObserver<N,E>::NodeIndex index)
+template <class N, class E, class GraphImpl>
+unsigned int SimpleAssociationGraphObserver<N,E,GraphImpl>::setNodeIndex(N* nodeObject, typename AssociationGraphObserver<N,E>::NodeIndex index)
 {
   //TODO: check if this object has already an index?
   if(index == 0)
@@ -835,8 +841,8 @@ unsigned int SimpleAssociationGraphObserver<N,E,I>::setNodeIndex(N* nodeObject, 
   return index;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::forgetEdge(E* edgeObject)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::forgetEdge(E* edgeObject)
 {
   typename std::map<E*,Graph::Edge>::iterator edgeToForget = objectToEdge_.find(edgeObject);
   edgeToObject_.at(edgeToForget->second) = 00;
@@ -844,8 +850,8 @@ void SimpleAssociationGraphObserver<N,E,I>::forgetEdge(E* edgeObject)
 }
 
 
-template <class N, class E, class I>
-const std::vector<N*> SimpleAssociationGraphObserver<N,E,I>::getLeaves()
+template <class N, class E, class GraphImpl>
+const std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeaves() const
 {
   std::vector<N*> leavesToReturn;
   // fetching all the graph Leaves
@@ -860,11 +866,11 @@ const std::vector<N*> SimpleAssociationGraphObserver<N,E,I>::getLeaves()
   return leavesToReturn;
 }
 
-template <class N, class E, class I>
-const std::vector<N*> SimpleAssociationGraphObserver<N,E,I>::getNodes()
+template <class N, class E, class GraphImpl>
+const std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodes() const
 {
   std::vector<N*> nodesToReturn;
-  for(typename std::vector<N*>::iterator currNodeObject = nodeToObject_.begin(); currNodeObject != nodeToObject_.end(); currNodeObject++)
+  for(typename std::vector<N*>::const_iterator currNodeObject = nodeToObject_.begin(); currNodeObject != nodeToObject_.end(); currNodeObject++)
   {
     if(*currNodeObject != 00)
     {
@@ -874,26 +880,26 @@ const std::vector<N*> SimpleAssociationGraphObserver<N,E,I>::getNodes()
   return nodesToReturn;
 }
 
-template <class N, class E, class I>
-size_t SimpleAssociationGraphObserver<N,E,I>::getNumberOfNodes()
+template <class N, class E, class GraphImpl>
+size_t SimpleAssociationGraphObserver<N,E,GraphImpl>::getNumberOfNodes() const
 {
   return objectToNode_.size();
 }
  
-template <class N, class E, class I>
-size_t SimpleAssociationGraphObserver<N,E,I>::getNumberOfLeaves()
+template <class N, class E, class GraphImpl>
+size_t SimpleAssociationGraphObserver<N,E,GraphImpl>::getNumberOfLeaves() const
 {
   return getLeaves().size();
 }
  
-template <class N, class E, class I>
-I* SimpleAssociationGraphObserver<N,E,I>::getGraph()
+template <class N, class E, class GraphImpl>
+GraphImpl* SimpleAssociationGraphObserver<N,E,GraphImpl>::getGraph() const
 {
   return subjectGraph_;
 }
 
-template <class N, class E, class I>
-void SimpleAssociationGraphObserver<N,E,I>::deleteNode(N* node)
+template <class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::deleteNode(N* node)
 {
   // first deleting the node in the graph
   subjectGraph_->deleteNode(getNodeId(node));
@@ -901,44 +907,44 @@ void SimpleAssociationGraphObserver<N,E,I>::deleteNode(N* node)
   forgetNode(node);
 }
 
-template <class N, class E, class I>
-Graph::Node SimpleAssociationGraphObserver<N,E,I>::getNodeId(N* nodeObject)
+template <class N, class E, class GraphImpl>
+Graph::Node SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodeId(N* nodeObject) const
 {
-  typename std::map<N*,Graph::Node>::iterator found = objectToNode_.find(nodeObject);
+  typename std::map<N*,Graph::Node>::const_iterator found = objectToNode_.find(nodeObject);
   if(found == objectToNode_.end())
     throw Exception("Unexisting node object.");
   return found->second;
 }
 
-template <class N, class E, class I>
-typename AssociationGraphObserver<N,E>::NodeIndex SimpleAssociationGraphObserver<N,E,I>::getNodeIndex(N* nodeObject)
+template <class N, class E, class GraphImpl>
+typename AssociationGraphObserver<N,E>::NodeIndex SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodeIndex(N* nodeObject) const
 {
-  typename std::map<N*,typename AssociationGraphObserver<N,E>::NodeIndex>::iterator found = nodeObjectToIndex_.find(nodeObject);
+  typename std::map<N*,typename AssociationGraphObserver<N,E>::NodeIndex>::const_iterator found = nodeObjectToIndex_.find(nodeObject);
   if(found == nodeObjectToIndex_.end())
     throw Exception("Unexisting node object.");
   return found->second;
 }
 
-template <class N, class E, class I>
-Graph::Edge SimpleAssociationGraphObserver<N,E,I>::getEdgeId(E* edgeObject)
+template <class N, class E, class GraphImpl>
+Graph::Edge SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdgeId(E* edgeObject) const
 {
-  typename std::map<E*,Graph::Edge>::iterator found = objectToEdge_.find(edgeObject);
+  typename std::map<E*,Graph::Edge>::const_iterator found = objectToEdge_.find(edgeObject);
   if(found == objectToEdge_.end())
     throw Exception("Unexisting edge object.");
   return found->second;
 }
 
-template <class N, class E, class I>
-typename AssociationGraphObserver<N,E>::EdgeIndex SimpleAssociationGraphObserver<N,E,I>::getEdgeIndex(E* edgeObject)
+template <class N, class E, class GraphImpl>
+typename AssociationGraphObserver<N,E>::EdgeIndex SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdgeIndex(E* edgeObject) const
 {
-  typename std::map<E*,typename AssociationGraphObserver<N,E>::EdgeIndex>::iterator found = edgeObjectToIndex_.find(edgeObject);
+  typename std::map<E*,typename AssociationGraphObserver<N,E>::EdgeIndex>::const_iterator found = edgeObjectToIndex_.find(edgeObject);
   if(found == edgeObjectToIndex_.end())
     throw Exception("Unexisting edge object.");
   return found->second;
 }
 
-template <class N, class E, class I>
-std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getNeighbors_(N* objectNode, neighborType type)
+template <class N, class E, class GraphImpl>
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors_(N* objectNode, neighborType type) const
 {
   Graph::Node node = getNodeId(objectNode);
   
@@ -963,37 +969,35 @@ std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getNeighbors_(N* object
   return objectNeighbors;
 }
 
-template <class N, class E, class I>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getIncomingNeighbors(N* node)
+template <class N, class E, class GraphImpl>
+const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getIncomingNeighbors(N* node) const
 {
   return(getNeighbors_(node,INCOMING));
 }
 
-template <class N, class E, class I>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getOutgoingNeighbors(N* node)
+template <class N, class E, class GraphImpl>
+const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getOutgoingNeighbors(N* node) const
 {
   return(getNeighbors_(node,OUTGOING));
 }
 
-template <class N, class E, class I>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getNeighbors(N* node)
+template <class N, class E, class GraphImpl>
+const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors(N* node) const
 {
   return(getNeighbors_(node,BOTH));
 }
 
 
-template <class N, class E, class I>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,I>::getLeavesFromNode(N* node, unsigned int maxDepth)
+template <class N, class E, class GraphImpl>
+const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeavesFromNode(N* node, unsigned int maxDepth) const
 {
-  //TODO
-  return(std::vector<N*>());
+  return getNodeObjects_(subjectGraph_->getLeavesFromNode(getNodeId(node)));
 }
 
-template <class N, class E, class I>
-const E* SimpleAssociationGraphObserver<N,E,I>::getEdgeBetweenTwoNodes(N* nodeA, N* nodeB) const
+template <class N, class E, class GraphImpl>
+const E* SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdge(N* nodeA, N* nodeB) const
 {
-  //TODO
-  return(edgeToObject_[0]);
+  return getEdgeObject_(subjectGraph_->getEdge(getNodeId(nodeA),getNodeId(nodeB)));
 }
 
  
@@ -1001,6 +1005,6 @@ const E* SimpleAssociationGraphObserver<N,E,I>::getEdgeBetweenTwoNodes(N* nodeA,
 
 #else
 
-namespace bpp {class GraphObserver;}
+namespace bpp {class AssociationGraphObserver;}
 
 #endif

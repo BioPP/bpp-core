@@ -95,7 +95,6 @@ SET(CPP_FILES
   )
 
 SET(H_FILES
-  Bpp/Graph/AssociationGraphObserver.h
   Bpp/BppString.h
   Bpp/BppBoolean.h
   Bpp/BppVector.h
@@ -104,6 +103,8 @@ SET(H_FILES
   Bpp/App/ApplicationTools.h
   Bpp/App/BppApplication.h
   Bpp/App/NumCalcApplicationTools.h
+  Bpp/Graph/AssociationGraphObserver.h
+  Bpp/Graph/AssociationTreeGraphObserver.h
   Bpp/Graph/UNode.h
   Bpp/Graph/ONode.h
   Bpp/Graph/TNode.h

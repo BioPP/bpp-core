@@ -38,12 +38,12 @@ void SimpleGraph::unregisterObserver(GraphObserver* observer)
     throw(Exception("This GraphObserver was not an observer of this Graph"));
 }
 
-const SimpleGraph::Edge SimpleGraph::getEdge(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB)
+const SimpleGraph::Edge SimpleGraph::getEdge(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB) const
 {
-   nodeStructureType::iterator firstNodeFound = nodeStructure_.find(nodeA);
+   nodeStructureType::const_iterator firstNodeFound = nodeStructure_.find(nodeA);
    if(firstNodeFound == nodeStructure_.end())
      throw(Exception("The fist node was not the origin of an edge."));
-   map<Node,Edge>::iterator secondNodeFound = firstNodeFound->second.first.find(nodeB);
+   map<Node,Edge>::const_iterator secondNodeFound = firstNodeFound->second.first.find(nodeB);
    if(secondNodeFound == firstNodeFound->second.first.end())
      throw(Exception("The second node was not in a relation with the first one."));
    return(secondNodeFound->second);
@@ -106,6 +106,7 @@ std::vector<SimpleGraph::Edge> SimpleGraph::unlink(const Node nodeA, const Node 
   // telling the observers
   notifyDeletedEdges(deletedEdges);
   
+  this->topologyHasChanged_();
   return deletedEdges;
 }
 
@@ -113,11 +114,13 @@ void SimpleGraph::unlinkInEdgeStructure_(Edge edge)
 {
   edgeStructureType::iterator foundEdge = edgeStructure_.find(edge);
   edgeStructure_.erase(foundEdge);
+  this->topologyHasChanged_();
 }
 
 void SimpleGraph::linkInEdgeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB, SimpleGraph::Edge edge)
 {
   edgeStructure_[edge] = pair<Node,Node>(nodeA,nodeB);
+  this->topologyHasChanged_();
 }
 
 
@@ -134,6 +137,7 @@ SimpleGraph::Edge SimpleGraph::unlinkInNodeStructure_(SimpleGraph::Node nodeA, S
   map<Node,Edge>::iterator foundBackwardsRelation = nodeBRow->second.second.find(nodeA);
   nodeBRow->second.second.erase(foundBackwardsRelation);
   
+  this->topologyHasChanged_();
   return foundEdge;
 }
 
@@ -141,6 +145,7 @@ void SimpleGraph::linkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Nod
 {
   nodeStructure_.find(nodeA)->second.first.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeB,edge));
   nodeStructure_.find(nodeB)->second.second.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeA,edge));
+  this->topologyHasChanged_();
 }
 
 const SimpleGraph::Node SimpleGraph::createNode()
@@ -148,6 +153,7 @@ const SimpleGraph::Node SimpleGraph::createNode()
   Node newNode = highestNodeID_++;
   nodeStructure_[newNode];
   numberOfNodes_++;
+  this->topologyHasChanged_();
   return newNode;
 }
 
@@ -158,6 +164,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromNode(SimpleGraph::Node origin
   
   Node newNode = createNode();
   link(origin,newNode);
+  this->topologyHasChanged_();
   return newNode;
 }
 
@@ -176,7 +183,7 @@ const SimpleGraph::Node SimpleGraph::createNodeOnEdge(SimpleGraph::Edge edge)
   unlink(nodeA,nodeB);
   link(nodeA,newNode);
   link(newNode,nodeB);
-  
+  this->topologyHasChanged_();
   return newNode;
 }
 
@@ -191,12 +198,12 @@ const SimpleGraph::Node SimpleGraph::createNodeFromEdge(SimpleGraph::Edge origin
   Node anchor = createNodeOnEdge(origin);
   
   Node newNode = createNodeFromNode(anchor);
-  
+  this->topologyHasChanged_();  
   return newNode;
 }
 
 
-void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
+void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete) const
 {
   for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
@@ -204,7 +211,7 @@ void SimpleGraph::notifyDeletedEdges(vector< SimpleGraph::Edge > edgesToDelete)
   }
 }
 
-void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete)
+void SimpleGraph::notifyDeletedNodes(vector< SimpleGraph::Node > nodesToDelete) const
 {
   for(set<GraphObserver*>::iterator currObserver = observers_.begin(); currObserver != observers_.end(); currObserver++)
   {
@@ -257,23 +264,28 @@ void SimpleGraph::deleteNode(SimpleGraph::Node node)
   nodeStructureType::iterator found = nodeStructure_.find(node);
   nodeStructure_.erase(found);
   numberOfNodes_--;
+  this->topologyHasChanged_();
 }
 
 void SimpleGraph::isolate_(SimpleGraph::Node node)
 {
-  vector<Node> neighbors = getNeighbors(node);
-  for(vector<Node>::iterator currNeighbor = neighbors.begin(); currNeighbor != neighbors.end(); currNeighbor++){
+  vector<Node> oneighbors = getOutgoingNeighbors(node);
+  for(vector<Node>::iterator currNeighbor = oneighbors.begin(); currNeighbor != oneighbors.end(); currNeighbor++){
     unlink(node,*currNeighbor);
+  }
+  vector<Node> ineighbors = getIncomingNeighbors(node);
+  for(vector<Node>::iterator currNeighbor = ineighbors.begin(); currNeighbor != ineighbors.end(); currNeighbor++){
+    unlink(*currNeighbor,node);
   }
 }
 
-unsigned int SimpleGraph::getHighestNodeID()
+unsigned int SimpleGraph::getHighestNodeID() const
 {
   return highestNodeID_;
 }
 
 
-unsigned int SimpleGraph::getHighestEdgeID()
+unsigned int SimpleGraph::getHighestEdgeID() const
 {
   return highestEdgeID_;
 }
@@ -311,11 +323,11 @@ std::vector<SimpleGraph::Node> SimpleGraph::getLeavesFromNode(SimpleGraph::Node 
   return listOfLeaves;
 }
 
-void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<std::pair<Node,Node> > &alreadyFigured)
+void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<std::pair<Node,Node> > &alreadyFigured) const
 {
   bool theEnd = true;
-  std::map<Node,Edge> &children = nodeStructure_[node].first;
-  for(map<Node,Edge>::iterator currChild = children.begin();currChild != children.end();currChild++)
+  const std::map<Node,Edge> &children = nodeStructure_.at(node).first;
+  for(map<Node,Edge>::const_iterator currChild = children.begin();currChild != children.end();currChild++)
   {
      if(alreadyFigured.find(pair<Node,Node>(node,currChild->first))!=alreadyFigured.end() || (!directed_ &&alreadyFigured.find(pair<Node,Node>(currChild->first,node))!=alreadyFigured.end()))
       continue;
@@ -328,7 +340,7 @@ void SimpleGraph::nodeToDot_(SimpleGraph::Node node, ostream& out,  std::set<std
     out << node << ";\n    " ;
 }
 
-void SimpleGraph::outputToDot(ostream& out, std::string name)
+void SimpleGraph::outputToDot(ostream& out, std::string name) const
 {
   out << (directed_?"digraph":"graph") << " "<< name <<" {\n    ";
   set<pair<Node,Node> > alreadyFigured;
@@ -338,20 +350,20 @@ void SimpleGraph::outputToDot(ostream& out, std::string name)
 
 bool SimpleGraph::isTree() const
 {
-  set<Graph::Node> metNode;
-  bool nodesAreMetOnlyOnce = nodesAreMetOnlyOnce_(root_,metNode,root_);
+  set<Graph::Node> metNodes;
+  bool nodesAreMetOnlyOnce = nodesAreMetOnlyOnce_(root_,metNodes,root_);
   if(!nodesAreMetOnlyOnce)
     return false;
   // now they have only been met once, they have to be met at least once
   bool noNodeMissing = true;
   for(nodeStructureType::const_iterator currNode = nodeStructure_.begin(); noNodeMissing && currNode != nodeStructure_.end(); currNode++)
-    noNodeMissing = (metNode.find(currNode->first) != metNode.end());
+    noNodeMissing = (metNodes.find(currNode->first) != metNodes.end());
   return noNodeMissing;
 }
 
 bool SimpleGraph::nodesAreMetOnlyOnce_(Graph::Node node, set< Graph::Node >& metNodes, Graph::Node originNode) const
 {
-  //insert().sencond <=> not yet in the set
+  //insert().second <=> not yet in the set
   bool neverMetANodeMoreThanOnce = metNodes.insert(node).second;
   vector<Graph::Node> neighbors = getOutgoingNeighbors(node);
   for(vector<Graph::Node>::iterator currNeighbor = neighbors.begin(); neverMetANodeMoreThanOnce && currNeighbor != neighbors.end(); currNeighbor++)
@@ -369,7 +381,7 @@ void SimpleGraph::setRoot(Graph::Node newRoot)
   root_ = newRoot;
 }
 
-Graph::Node SimpleGraph::getRoot()
+Graph::Node SimpleGraph::getRoot() const
 {
   return(root_);
 }
@@ -403,6 +415,7 @@ void SimpleGraph::makeDirected()
     }
   }
   directed_=true;
+  this->topologyHasChanged_();
 }
 
 void SimpleGraph::makeUndirected()
@@ -428,6 +441,7 @@ void SimpleGraph::makeUndirected()
     }
   }
   directed_=false;
+  this->topologyHasChanged_();
 }
 
 bool SimpleGraph::containsReciprocalRelations() const
@@ -447,3 +461,7 @@ bool SimpleGraph::containsReciprocalRelations() const
   return false;
 }
 
+void SimpleGraph::topologyHasChanged_() const
+{
+  // do nothing: a Graph does not care to be modified
+}

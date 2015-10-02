@@ -1,6 +1,8 @@
 #ifndef _TREEGRAPH_H_
 #define _TREEGRAPH_H_
 
+#include <vector>
+
 #include "Graph.h"
 
 #include "../Exceptions.h"
@@ -22,16 +24,19 @@ namespace bpp
     virtual bool isValid() const = 0;
   };
   
-  template <class I>
+  template <class GraphImpl>
   class SimpleTreeGraph:
   public virtual TreeGraph,
-  public I
+  public virtual GraphImpl
   {
   private:
     /**
      * Is the graph a tree? Set to false when structure is modified, true after validation.
      */
     mutable bool isValid_;
+    
+    // unvalidate the tree
+    virtual void topologyHasChanged_() const;
     
     // will throw an exception if the tree is not valid
     void mustBeValid_() const;
@@ -49,6 +54,9 @@ namespace bpp
     void propagateDirection_(Node node);
     
   public:
+      
+    SimpleTreeGraph();
+    SimpleTreeGraph(bool rooted=true);
     
     /**
      * Is the graph a tree? A tree must be acyclic and with no isolated node.
@@ -64,9 +72,15 @@ namespace bpp
     
     /**
      * Get the father node of a node in a rooted tree
-     * @return true if rooted
+     * @return the father node
      */
     Graph::Node getFather(Graph::Node node);
+    
+    /**
+     * Get the branch leading to the father in a rooted tree
+     * @return the branch between a node and its father
+     */
+    Graph::Edge getBranchToFather(Graph::Node node);
     
     /**
      * Get the father node of a node in a rooted tree
@@ -104,101 +118,122 @@ namespace bpp
     
   };
   
-  template <class I>
-  bool SimpleTreeGraph::isValid() const
+  template <class GraphImpl>
+  SimpleTreeGraph<GraphImpl>::SimpleTreeGraph(bool rooted):
+  GraphImpl(rooted),
+  isValid_(false)
   {
-    return isValid_;
   }
   
-  template <class I>
-  Graph::Node SimpleTreeGraph::getFather(Graph::Node node)
+  
+  template <class GraphImpl>
+  bool SimpleTreeGraph<GraphImpl>::isValid() const
+  {
+    return (isValid_ || validate_());
+  }
+  
+  template <class GraphImpl>
+  Graph::Node SimpleTreeGraph<GraphImpl>::getFather(Graph::Node node)
   {
     mustBeValid_();
     mustBeRooted_();
-    vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
+    std::vector<Graph::Node> incomers = GraphImpl::getIncomingNeighbors(node);
     if(incomers.size() != 1)
-      throw Exception("SimpleTreeGraph::getFather: more than one father. Should never happen since validity has been controled. Please report this bug.");
+      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: more than one father. Should never happen since validity has been controled. Please report this bug.");
     if(incomers.size() == 0)
-      throw Exception("SimpleTreeGraph::getFather: node has no father.");
+      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: node has no father.");
     return *incomers.begin();
   }
   
-  template <class I>
-  bool SimpleTreeGraph::hasFather(Graph::Node node)
+  template <class GraphImpl>
+  Graph::Edge SimpleTreeGraph<GraphImpl>::getBranchToFather(Graph::Node node)
+  {
+    Node father = getFather(node);
+    return GraphImpl::getBranch(father,node);
+  }
+  
+  template <class GraphImpl>
+  bool SimpleTreeGraph<GraphImpl>::hasFather(Graph::Node node)
   {
     mustBeValid_();
     mustBeRooted_();
-    vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
+    std::vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
     return incomers.size() == 1;
   }
   
-  template <class I>
-  void SimpleTreeGraph::mustBeRooted_() const
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::mustBeRooted_() const
   {
     if(!isRooted())
       throw Exception("SimpleTreeGraph: The tree must be rooted.");
   }
   
-  template <class I>
-  void SimpleTreeGraph::mustBeValid_() const
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::mustBeValid_() const
   {
-    if(!isValid()||!validate_())
+    if(!isValid())
       throw Exception("SimpleTreeGraph: The tree is not valid.");
   }
   
-  template <class I>
-  bool SimpleTreeGraph::isRooted() const
+  template <class GraphImpl>
+  bool SimpleTreeGraph<GraphImpl>::isRooted() const
   {
     return(SimpleGraph::isDirected());
   }
   
-  template <class I>
-  bool SimpleTreeGraph::validate_() const
+  template <class GraphImpl>
+  bool SimpleTreeGraph<GraphImpl>::validate_() const
   {
     isValid_ = SimpleGraph::isTree();
-    return(isValid());
+    return(isValid_);
   }
   
-  template <class I>
-  void SimpleTreeGraph::rootAt(Graph::Node newRoot)
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::topologyHasChanged_() const
   {
-    makeDirected();
+    isValid_ = false;
+  }
+  
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::rootAt(Graph::Node newRoot)
+  {
+    GraphImpl::makeDirected();
     // set the new root on the Graph
-    SimpleGraph::setRoot(newRoot);
+    GraphImpl::setRoot(newRoot);
     // change edge direction between the new node and the former one
     propagateDirection_(newRoot);
   }
   
-  template <class I>
-  void SimpleTreeGraph::propagateDirection_(Graph::Node node)
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::propagateDirection_(Graph::Node node)
   {
     if(hasFather(node)){
       Node father = getFather(node);
-      unlink(father,node);
-      link(node,father);
+      GraphImpl::unlink(father,node);
+      GraphImpl::link(node,father);
       propagateDirection_(father);
     }
     
   }
   
-  template <class I>
-  void SimpleTreeGraph::unRoot(bool joinRootSons)
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::unRoot(bool joinRootSons)
   {
     if(joinRootSons){
       // the root must have exactly two joinRootSons
-      vector<Node> sons = getSons(getRoot());
+      std::vector<Node> sons = getSons(GraphImpl::getRoot());
       if(sons.size() != 2)
         throw Exception("The root must have two sons to join them.");
-      unlink(getRoot(),sons.at(0));
-      unlink(getRoot(),sons.at(1));
-      link(sons.at(0),sons.at(1));
-      setRoot(sons.at(0));
+      GraphImpl::unlink(GraphImpl::getRoot(),sons.at(0));
+      GraphImpl::unlink(GraphImpl::getRoot(),sons.at(1));
+      GraphImpl::link(sons.at(0),sons.at(1));
+      GraphImpl::setRoot(sons.at(0));
     }
-    makeUndirected();
+    GraphImpl::makeUndirected();
   }
   
-  template <class I>
-  void SimpleTreeGraph::newOutGroup(Graph::Node newOutGroup)
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::newOutGroup(Graph::Node newOutGroup)
   {
     mustBeRooted_();
     Node newRoot = createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
@@ -214,7 +249,9 @@ namespace bpp
 
 namespace bpp {
   class TreeGraph;
-  class SimpleTreeGraph
+  
+  template <class GraphImpl>
+  class SimpleTreeGraph;
 }
 
 #endif
