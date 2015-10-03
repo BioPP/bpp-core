@@ -113,7 +113,7 @@ namespace bpp
      * Set a node as a new outgroup in a rooted tree, will make a root between
      * the given node and its father.
      */
-    void newOutGroup(Graph::Node newOutGroup);
+    void setOutGroup(Graph::Node newOutGroup);
     
     
   };
@@ -233,7 +233,7 @@ namespace bpp
   }
   
   template <class GraphImpl>
-  void SimpleTreeGraph<GraphImpl>::newOutGroup(Graph::Node newOutGroup)
+  void SimpleTreeGraph<GraphImpl>::setOutGroup(Graph::Node newOutGroup)
   {
     mustBeRooted_();
     Node newRoot = createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));

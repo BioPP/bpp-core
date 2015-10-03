@@ -112,7 +112,7 @@ SET(H_FILES
   Bpp/Graph/BasicTNode.h
   Bpp/Graph/Graph.h
   Bpp/Graph/TreeGraph.h
-  Bpp/Graph/GraphObserver.h
+  Bpp/Graph/GraphObserver.h  
   Bpp/Graphics/AbstractGraphicDevice.h
   Bpp/Graphics/ColorManager.h
   Bpp/Graphics/ColorSet.h

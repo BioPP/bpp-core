@@ -78,7 +78,7 @@ namespace bpp
       * Deletes a node
       * @param node node to be deleted
       */
-      virtual void deleteNode(N* node) = 0;
+      virtual void deleteNode(N* nodeObject) = 0;
       
       ///@}
       
@@ -168,7 +168,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      virtual const std::vector<N*> getNeighbors(N* objectNode) const = 0;
+      virtual std::vector<N*> getNeighbors(N* nodeObject) const = 0;
       
       /**
       * In an directed graph, get all the neighbors which
@@ -176,7 +176,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      virtual const std::vector<N*> getOutgoingNeighbors(N* node) const = 0;
+      virtual std::vector<N*> getOutgoingNeighbors(N* node) const = 0;
       
       /**
       * In an directed graph, get all the neighbors which
@@ -184,7 +184,7 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      virtual const std::vector<N*> getIncomingNeighbors(N* node) const = 0;
+      virtual std::vector<N*> getIncomingNeighbors(N* node) const = 0;
       
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -193,19 +193,19 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      virtual const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const = 0;
+      virtual std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const = 0;
       
       /**
       * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      virtual const std::vector<N*> getLeaves() const = 0;
+      virtual std::vector<N*> getLeaves() const = 0;
       
       /**
       * Get all the defined nodes of a graphO,
       * @return a vector containing the nodesObjects
       */
-      virtual const std::vector<N*> getNodes() const = 0;
+      virtual std::vector<N*> getNodes() const = 0;
       
      /**
       * Returns the Edge between two nodes nodeA -> nodeB
@@ -213,7 +213,7 @@ namespace bpp
       * @param nodeB destination node (if directed)
       * @return the edge between these two nodes
       */
-      virtual const E* getEdge(N* nodeA, N* nodeB) const = 0;
+      virtual E* getEdge(N* nodeA, N* nodeB) const = 0;
       
       
       ///@}
@@ -282,7 +282,7 @@ namespace bpp
       /**
       * Get incoming / outgoing neighbors according to the enum type
       */
-      std::vector<N*> getNeighbors_(N* objectNode, neighborType type) const;
+      std::vector<N*> getNeighbors_(N* nodeObject, neighborType type) const;
       
       
       /**
@@ -410,9 +410,9 @@ namespace bpp
       
       /**
       * Deletes a node
-      * @param node node to be deleted
+      * @param node node to be deleted. The N node object given in argument is not deleted.
       */
-      void deleteNode(N* node);
+      void deleteNode(N* nodeObject);
       
       
       ///@}
@@ -502,21 +502,21 @@ namespace bpp
       * @param node the node one wants to get its neighbors
       * @return a vector containing the neighbors
       */
-      const std::vector<N*> getNeighbors(N* node) const;
+      std::vector<N*> getNeighbors(N* node) const;
       /**
       * In an directed graph, get all the neighbors which
       * are leaving a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the outgoing neighbors
       */
-      const std::vector<N*> getOutgoingNeighbors(N* node) const;
+      std::vector<N*> getOutgoingNeighbors(N* node) const;
       /**
       * In an directed graph, get all the neighbors which
       * are coming to a node in the graph.
       * @param node the node one wants to get its neighbors
       * @return a vector containing the incoming neighbors
       */
-      const std::vector<N*> getIncomingNeighbors(N* node) const;
+      std::vector<N*> getIncomingNeighbors(N* node) const;
       /**
       * Get the leaves of a graph, ie, nodes with only one neighbor,
       * starting from a peculiar node.
@@ -524,18 +524,18 @@ namespace bpp
       * @param maxDepth the maximum number of allowed depth, 0 means no max.
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const;
+      std::vector<N*> getLeavesFromNode(N* node, unsigned int maxDepth) const;
       /**
       * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
       * @return a vector containing the leaves
       */
-      const std::vector<N*> getLeaves() const;
+      std::vector<N*> getLeaves() const;
       
       /**
       * Get all the defined nodes of a graph,
       * @return a vector containing the nodesObjects
       */
-      const std::vector<N*> getNodes() const;
+      std::vector<N*> getNodes() const;
       
             
       /**
@@ -544,7 +544,7 @@ namespace bpp
       * @param nodeB destination node (if directed)
       * @return the edge between these two nodes
       */
-      const E* getEdge(N* nodeA, N* nodeB) const;
+      E* getEdge(N* nodeA, N* nodeB) const;
       
       
       ///@}
@@ -851,7 +851,7 @@ void SimpleAssociationGraphObserver<N,E,GraphImpl>::forgetEdge(E* edgeObject)
 
 
 template <class N, class E, class GraphImpl>
-const std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeaves() const
+std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeaves() const
 {
   std::vector<N*> leavesToReturn;
   // fetching all the graph Leaves
@@ -867,7 +867,7 @@ const std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeaves()
 }
 
 template <class N, class E, class GraphImpl>
-const std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodes() const
+std::vector<N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodes() const
 {
   std::vector<N*> nodesToReturn;
   for(typename std::vector<N*>::const_iterator currNodeObject = nodeToObject_.begin(); currNodeObject != nodeToObject_.end(); currNodeObject++)
@@ -899,12 +899,12 @@ GraphImpl* SimpleAssociationGraphObserver<N,E,GraphImpl>::getGraph() const
 }
 
 template <class N, class E, class GraphImpl>
-void SimpleAssociationGraphObserver<N,E,GraphImpl>::deleteNode(N* node)
+void SimpleAssociationGraphObserver<N,E,GraphImpl>::deleteNode(N* nodeObject)
 {
   // first deleting the node in the graph
-  subjectGraph_->deleteNode(getNodeId(node));
+  subjectGraph_->deleteNode(getNodeId(nodeObject));
   // then forgetting
-  forgetNode(node);
+  forgetNode(nodeObject);
 }
 
 template <class N, class E, class GraphImpl>
@@ -944,9 +944,9 @@ typename AssociationGraphObserver<N,E>::EdgeIndex SimpleAssociationGraphObserver
 }
 
 template <class N, class E, class GraphImpl>
-std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors_(N* objectNode, neighborType type) const
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors_(N* nodeObject, neighborType type) const
 {
-  Graph::Node node = getNodeId(objectNode);
+  Graph::Node node = getNodeId(nodeObject);
   
   // PHASE 1: getting the right neighbors
   std::vector<Graph::Node> neighbors;
@@ -970,32 +970,32 @@ std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors_(N
 }
 
 template <class N, class E, class GraphImpl>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getIncomingNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getIncomingNeighbors(N* node) const
 {
   return(getNeighbors_(node,INCOMING));
 }
 
 template <class N, class E, class GraphImpl>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getOutgoingNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getOutgoingNeighbors(N* node) const
 {
   return(getNeighbors_(node,OUTGOING));
 }
 
 template <class N, class E, class GraphImpl>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors(N* node) const
 {
   return(getNeighbors_(node,BOTH));
 }
 
 
 template <class N, class E, class GraphImpl>
-const std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeavesFromNode(N* node, unsigned int maxDepth) const
+std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getLeavesFromNode(N* node, unsigned int maxDepth) const
 {
   return getNodeObjects_(subjectGraph_->getLeavesFromNode(getNodeId(node)));
 }
 
 template <class N, class E, class GraphImpl>
-const E* SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdge(N* nodeA, N* nodeB) const
+E* SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdge(N* nodeA, N* nodeB) const
 {
   return getEdgeObject_(subjectGraph_->getEdge(getNodeId(nodeA),getNodeId(nodeB)));
 }
