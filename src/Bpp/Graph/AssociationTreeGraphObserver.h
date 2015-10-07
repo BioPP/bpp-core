@@ -87,13 +87,62 @@ namespace bpp
       clone() const { return new SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>(*this); };
       
       
-      /**
+    /**
      * Is the graph a tree? A tree must be acyclic and with no isolated node.
      * @return true if valid tree
      */
      bool isValid() const;
+     
+     
+     /**
+     * Return, in a rooted tree, the branch leading to the father
+     * @param nodeObject the concerned node
+     * @return an Edge which is the branch to the father
+     */
+     E* getBranchToFather(const N* nodeObject) const;
       
-      
+     /**
+      * Is the subject tree rooted?
+      */
+     bool isRooted() const;
+     
+     
+     /**
+     * Return, in a rooted tree, the father node
+     * @param nodeObject the concerned node
+     * @return the father
+     */
+     N* getFather(const N* nodeObject) const;
+     
+     /**
+      * Has the node a father?
+      */
+     bool hasFather(const N* nodeObject) const;
+     
+     
+    /**
+     * Return, in a rooted tree, the branch leading to the father
+     * @param nodeObject the concerned node
+     * @return an Edge which is the branch to the father
+     */
+     std::vector<N*> getSons(const N* nodeObject) const;
+     
+     /**
+     * Return, in a rooted tree, the branch leading to the father
+     * @param nodeObject the concerned node
+     * @return an Edge which is the branch to the father
+     */
+     unsigned int getNumberOfSons(const N* nodeObject) const;
+     
+     
+     /**
+     * Change / set the father of a node
+     * @param nodeObject the concerned node
+     * @param fatherNodeObject the node to be the father
+     */
+     void setFather(const N* nodeObject,const N* fatherNodeObject);
+     
+     
     };
     
 
@@ -134,8 +183,47 @@ bool SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::isValid() const
     return subjectTreeGraph_->isValid();
 }
 
+template <class N, class E, class TreeGraphImpl>
+bool SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::isRooted() const
+{
+    return subjectTreeGraph_->isRooted();
+}
+
+template <class N, class E, class TreeGraphImpl>
+bool SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::hasFather(const N* nodeObject) const
+{
+    return subjectTreeGraph_->hasFather(getNodeId(nodeObject));
+}
+
+template <class N, class E, class TreeGraphImpl>
+N* SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::getFather(const N* nodeObject) const
+{
+    return getNode(subjectTreeGraph_->getFather(getNodeId(nodeObject)));
+}
+
+template <class N, class E, class TreeGraphImpl>
+E* SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::getBranchToFather(const N* nodeObject) const
+{
+    return(getEdgeObject(subjectTreeGraph_->getBranchToFather(getNodeId(nodeObject))));
+}
+
+template <class N, class E, class TreeGraphImpl>
+std::vector<N*> SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::getSons(const N* nodeObject) const
+{
+    return getNodes(subjectTreeGraph_->getSons(getNodeId(nodeObject)));
+}
+
+template <class N, class E, class TreeGraphImpl>
+unsigned int SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::getNumberOfSons(const N* nodeObject) const
+{
+    return getNodes(subjectTreeGraph_->getSons(getNodeId(nodeObject))).size();
+}
  
- 
+template <class N, class E, class TreeGraphImpl>
+void SimpleAssociationTreeGraphObserver<N,E,TreeGraphImpl>::setFather(const N* nodeObject, const N* fatherNodeObject)
+{
+    subjectTreeGraph_->setFather(getNodeId(nodeObject),getNodeId(fatherNodeObject));
+}
  
 }
 

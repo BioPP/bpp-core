@@ -74,28 +74,31 @@ namespace bpp
      * Get the father node of a node in a rooted tree
      * @return the father node
      */
-    Graph::Node getFather(Graph::Node node);
+    Graph::Node getFather(Graph::Node node) const;
     
     /**
      * Get the branch leading to the father in a rooted tree
      * @return the branch between a node and its father
      */
-    Graph::Edge getBranchToFather(Graph::Node node);
+    Graph::Edge getBranchToFather(Graph::Node node) const;
     
     /**
      * Get the father node of a node in a rooted tree
      * @return true if rooted
      */
-    bool hasFather(Graph::Node node);
+    bool hasFather(Graph::Node node) const;
     
     /**
      * Get the father node of a node in a rooted tree
      * @return true if rooted
      */
-    std::vector<Graph::Node> getSons(Graph::Node node);
+    std::vector<Graph::Node> getSons(Graph::Node node) const;
     
-    
-    
+    /**
+     * Get the father node of a node in a rooted tree
+     * @return true if rooted
+     */
+    void setFather(Graph::Node node, Graph::Node fatherNode);
     
     /**
      * Re-root the tree with the new root
@@ -133,7 +136,7 @@ namespace bpp
   }
   
   template <class GraphImpl>
-  Graph::Node SimpleTreeGraph<GraphImpl>::getFather(Graph::Node node)
+  Graph::Node SimpleTreeGraph<GraphImpl>::getFather(Graph::Node node) const
   {
     mustBeValid_();
     mustBeRooted_();
@@ -146,14 +149,14 @@ namespace bpp
   }
   
   template <class GraphImpl>
-  Graph::Edge SimpleTreeGraph<GraphImpl>::getBranchToFather(Graph::Node node)
+  Graph::Edge SimpleTreeGraph<GraphImpl>::getBranchToFather(Graph::Node node) const
   {
     Node father = getFather(node);
     return GraphImpl::getBranch(father,node);
   }
   
   template <class GraphImpl>
-  bool SimpleTreeGraph<GraphImpl>::hasFather(Graph::Node node)
+  bool SimpleTreeGraph<GraphImpl>::hasFather(Graph::Node node) const
   {
     mustBeValid_();
     mustBeRooted_();
@@ -214,6 +217,14 @@ namespace bpp
       propagateDirection_(father);
     }
     
+  }
+  
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::setFather(Graph::Node node, Graph::Node fatherNode)
+  {
+    if(hasFather(node))
+      GraphImpl::unlink(getFather(node),node);
+    GraphImpl::link(fatherNode,node);
   }
   
   template <class GraphImpl>
