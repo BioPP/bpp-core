@@ -97,11 +97,11 @@ TARGET_LINK_LIBRARIES(test_treeGraphObs ${LIBS})
 ADD_TEST(test_treeGraphObs "test_treeGraphObs")
 
 IF(UNIX)
-  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_reparametrization test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools test_simplex test_graphObs PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_reparametrization test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools test_simplex test_graphObs test_treeGraphObs PROPERTY ENVIRONMENT "LD_LIBRARY_PATH=$ENV{LD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(APPLE)
-  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_reparametrization test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools test_simplex test_graphObs PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
+  SET_PROPERTY(TEST test_numconstants test_eigen test_matrices test_derivative1 test_reparametrization test_downhill test_powell test_gradient test_bfgs test_distributions test_stats test_mva test_sample test_range test_text_tools test_simplex test_graphObs test_treeGraphObs PROPERTY ENVIRONMENT "DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}:../src")
 ENDIF()
 
 IF(WIN32)
