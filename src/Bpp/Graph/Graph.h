@@ -388,7 +388,7 @@ public:
     * Get all the leaves of a graph, ie, nodes with only one neighbor,
     * @return a vector containing the leaves
     */
-    std::vector<Node> getLeaves() const;
+    std::vector<Node> getAllLeaves() const;
     
     ///@}
     
@@ -428,10 +428,19 @@ public:
     
     /**
     * Returns the Edge between two nodes
-    * @param nodes a pair of implied nodes (if directed graph nodeA then nodeB)
+    * @param nodeA if directed, origin node
+    * @param nodeB if directed, destination node
     * @return the edge between these two nodes
     */
     const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB) const;
+    
+    /**
+    * Returns the Edge between two nodes, trying both directions
+    * @param nodeA any node implied in the relation
+    * @param nodeB any other node implied in the relation
+    * @return the edge between these two nodes
+    */
+    const Edge getAnyEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB) const;
     
     ///@}
 
