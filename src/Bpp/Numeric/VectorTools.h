@@ -757,13 +757,21 @@ public:
    *
    * @{
    */
+  
   template<class T>
-  static std::vector<double> log(const std::vector<T>& v1)
+  static std::vector<T> log(const std::vector<T>& v1)
   {
-    std::vector<double> v2(v1.size());
-    for (size_t i = 0; i < v2.size(); i++) { v2[i] = std::log(v1[i]); }
+    std::vector<T> v2(v1.size());
+    for (size_t i = 0; i < v2.size(); i++) { v2[i] = VectorTools::log(v1[i]); }
     return v2;
   }
+
+  template<class T>
+  static double log(const T& x)
+  {
+    return std::log(x);
+  }
+  
   template<class T>
   static std::vector<double> log(const std::vector<T>& v1, double base)
   {
@@ -773,10 +781,16 @@ public:
   }
 
   template<class T>
-  static std::vector<double> exp(const std::vector<T>& v1)
+  static double exp(const T& x)
   {
-    std::vector<double> v2(v1.size());
-    for (size_t i = 0; i < v2.size(); i++) { v2[i] = std::exp(v1[i]); }
+    return std::exp(x);
+  }
+
+  template<class T>
+  static std::vector<T> exp(const std::vector<T>& v1)
+  {
+    std::vector<T> v2(v1.size());
+    for (size_t i = 0; i < v2.size(); i++) { v2[i] = VectorTools::exp(v1[i]); }
     return v2;
   }
 
