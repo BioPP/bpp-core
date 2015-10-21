@@ -53,6 +53,15 @@ namespace bpp
      */
     void propagateDirection_(Node node);
     
+    
+    
+    // recursive function for getSubtreeNodes
+    void fillSubtreeMetNodes_(std::vector<Graph::Node>& metNodes, Graph::Node localRoot) const;
+    
+    // recursive function for getSubtreeEdges
+    void fillSubtreeMetEdges_(std::vector<Graph::Edge>& metEdges, Graph::Node localRoot) const;
+    
+    
   public:
       
     SimpleTreeGraph();
@@ -84,21 +93,33 @@ namespace bpp
     
     /**
      * Get the father node of a node in a rooted tree
-     * @return true if rooted
      */
     bool hasFather(Graph::Node node) const;
     
     /**
      * Get the father node of a node in a rooted tree
-     * @return true if rooted
      */
     std::vector<Graph::Node> getSons(Graph::Node node) const;
     
     /**
      * Get the father node of a node in a rooted tree
-     * @return true if rooted
      */
     void setFather(Graph::Node node, Graph::Node fatherNode);
+    
+    /**
+     * Get the father node of a node in a rooted tree
+     */
+    void addSon(Graph::Node node, Graph::Node sonNode);
+    
+    /**
+     * Remove all the sons
+     */
+    std::vector<Graph::Node> removeSons(Graph::Node node);
+    
+    /**
+     * Remove one son
+     */
+    void removeSon(Graph::Node node, Graph::Node son);
     
     /**
      * Re-root the tree with the new root
@@ -118,6 +139,23 @@ namespace bpp
      */
     void setOutGroup(Graph::Node newOutGroup);
     
+    /**
+     * Get all the nodes of a subtree
+     */
+    std::vector<Graph::Node> getSubtreeNodes(Graph::Node localRoot) const;
+    
+    /**
+     * Get all the branches of a subtree
+     */
+    std::vector<Graph::Edge> getSubtreeEdges(Graph::Node localRoot) const;
+    
+    
+    
+    /////FROM TREETOOLS & TREETOOLS COMPAT
+    
+    
+    std::vector<Graph::Node> getNodePathBetweenTwoNodes(Graph::Node nodeA, Graph::Node nodeB, bool includeAncestor = true) const;
+    std::vector<Graph::Edge> getEdgePathBetweenTwoNodes(Graph::Node nodeA, Graph::Node nodeB) const;
     
   };
   
@@ -228,6 +266,12 @@ namespace bpp
   }
   
   template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::addSon(Graph::Node node, Graph::Node sonNode)
+  {
+    GraphImpl::link(node,sonNode);
+  }
+  
+  template <class GraphImpl>
   void SimpleTreeGraph<GraphImpl>::unRoot(bool joinRootSons)
   {
     if(joinRootSons){
@@ -244,12 +288,129 @@ namespace bpp
   }
   
   template <class GraphImpl>
+  std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::removeSons(Graph::Node node)
+  {
+    std::vector <Graph::Node> sons = getSons(node);
+    for(std::vector <Graph::Node>::iterator currSon = sons.begin(); currSon != sons.end(); currSon++)
+    {
+      removeSon(node,*currSon);
+    }
+    return sons;
+  }
+  
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::removeSon(Graph::Node node, Graph::Node son)
+  {
+    GraphImpl::unlink(node,son);
+  }
+  
+  template <class GraphImpl>
   void SimpleTreeGraph<GraphImpl>::setOutGroup(Graph::Node newOutGroup)
   {
     mustBeRooted_();
     Node newRoot = createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
     rootAt(newRoot);
   }
+  
+  template <class GraphImpl>
+  std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::getNodePathBetweenTwoNodes(Graph::Node nodeA, Graph::Node nodeB, bool includeAncestor) const
+  {
+    GraphImpl::nodeMustExist(nodeA);
+    GraphImpl::nodeMustExist(nodeB);
+    std::vector<Graph::Node> path;
+    std::vector<Graph::Node> pathMatrix1;
+    std::vector<Graph::Node> pathMatrix2;
+    
+    Graph::Node nodeUp = nodeA;
+    while (hasFather(nodeUp))
+    {
+      pathMatrix1.push_back(nodeUp);
+      nodeUp = getFather(nodeUp);
+    }
+    pathMatrix1.push_back(nodeUp); // The root.
+    
+    nodeUp = nodeB;
+    while (hasFather(nodeUp))
+    {
+      pathMatrix2.push_back(nodeUp);
+      nodeUp = getFather(nodeUp);
+    }
+    pathMatrix2.push_back(nodeUp); // The root.
+    // Must check that the two nodes have the same root!!!
+    
+    size_t tmp1 = pathMatrix1.size();
+    size_t tmp2 = pathMatrix2.size();
+    
+    while ((tmp1 > 0) && (tmp2 > 0))
+    {
+      if (pathMatrix1[tmp1 - 1] != pathMatrix2[tmp2 - 1])
+        break;
+      tmp1--; tmp2--;
+    }
+    // (tmp1 - 1) and (tmp2 - 1) now point toward the first non-common nodes
+    
+    for (size_t y = 0; y < tmp1; ++y)
+    {
+      path.push_back(pathMatrix1[y]);
+    }
+    if (includeAncestor) //FIXME: one of the extremities may be the ancestor!!!
+      path.push_back(pathMatrix1[tmp1]);  // pushing once, the Node that was common to both.
+    for (size_t j = tmp2; j > 0; --j)
+    {
+      path.push_back(pathMatrix2[j - 1]);
+    }
+    return path;
+  }
+
+  template <class GraphImpl>
+  std::vector<Graph::Edge> SimpleTreeGraph<GraphImpl>::getEdgePathBetweenTwoNodes(Graph::Node nodeA, Graph::Node nodeB) const
+  {
+    std::vector<Graph::Edge> path;
+    std::vector<Graph::Node> pathNodes = getNodePathBetweenTwoNodes(nodeA, nodeB, true);
+    for(size_t currNodeNr = 0; currNodeNr+1 < pathNodes.size(); currNodeNr++)
+      path.push_back(GraphImpl::getAnyEdge(pathNodes.at(currNodeNr),pathNodes.at(currNodeNr+1)));
+    return path;
+  }
+  
+  template <class GraphImpl>
+  std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::getSubtreeNodes(Graph::Node localRoot) const
+  {
+    mustBeValid_();
+    mustBeRooted_();
+    std::vector<Graph::Edge> metNodes;
+    fillSubtreeMetNodes_(metNodes,localRoot);
+    return metNodes;
+  }
+  
+  template <class GraphImpl>
+  std::vector<Graph::Edge> SimpleTreeGraph<GraphImpl>::getSubtreeEdges(Graph::Node localRoot) const
+  {
+    mustBeValid_();
+    mustBeRooted_();
+    std::vector<Graph::Edge> metEdges;
+    fillSubtreeMetEdges_(metEdges,localRoot);
+    return metEdges;
+  }
+  
+  
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::fillSubtreeMetNodes_(std::vector<Graph::Node>& metNodes, Graph::Node localRoot) const
+  {
+    metNodes.push_back(localRoot);
+    std::vector<Graph::Node> sons = GraphImpl::getOutgoingNeighbors(localRoot);
+    for(std::vector<Graph::Node>::iterator currSon = sons.begin(); currSon != sons.end(); currSon++)
+      fillSubtreeMetNodes_(metNodes,*currSon);
+  }
+  
+  template <class GraphImpl>
+  void SimpleTreeGraph<GraphImpl>::fillSubtreeMetEdges_(std::vector<Graph::Edge>& metEdges, Graph::Node localRoot) const
+  {
+    metEdges.push_back(localRoot);
+    std::vector<Graph::Edge> edgesToSons = GraphImpl::getOutgoingEdges(localRoot);
+    for(std::vector<Graph::Edge>::iterator currEdgeToSon = edgesToSons.begin(); currEdgeToSon != edgesToSons.end(); currEdgeToSon++)
+      fillSubtreeMetNodes_(metEdges,*currEdgeToSon);
+  }
+  
   
   
 }

@@ -49,6 +49,20 @@ const SimpleGraph::Edge SimpleGraph::getEdge(SimpleGraph::Node nodeA, SimpleGrap
    return(secondNodeFound->second);
 }
 
+const SimpleGraph::Edge SimpleGraph::getAnyEdge(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB) const
+{
+   try
+   {
+     // trying in the given order A->B
+     return getEdge(nodeA, nodeB);
+   }
+   catch(Exception e)
+   {
+     // didn’t work, hence trying in the opposite order B->A
+     return getEdge(nodeB, nodeA);
+   }
+}
+
 const SimpleGraph::Edge SimpleGraph::link(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB)
 {
   // the nodes must exist
@@ -290,7 +304,7 @@ unsigned int SimpleGraph::getHighestEdgeID() const
   return highestEdgeID_;
 }
 
-vector<SimpleGraph::Node> SimpleGraph::getLeaves() const
+vector<SimpleGraph::Node> SimpleGraph::getAllLeaves() const
 {
   vector<Node> listOfLeaves;
   fillListOfLeaves_(root_,listOfLeaves,root_);
