@@ -62,23 +62,22 @@ namespace bpp
       /**
       * Creates a link between two existing nodes.
       * If directed graph: nodeA -> nodeB.
-      * @param nodeA source node (or first node if undirected)
-      * @param nodeB target node (or second node if undirected)
-      * @return the new edge
+      * @param nodeObjectA source node (or first node if undirected)
+      * @param nodeObjectB target node (or second node if undirected)
       */
       virtual void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject = 00) = 0;
       
       /**
       * Creates a link between two existing nodes.
       * If directed graph: nodeA -> nodeB.
-      * @param nodeA source node (or first node if undirected)
-      * @param nodeB target node (or second node if undirected)
+      * @param nodeObjectA source node (or first node if undirected)
+      * @param nodeObjectB target node (or second node if undirected)
       */
       virtual void unlink(N* nodeObjectA, N* nodeObjectB) = 0;
       
       /**
       * Deletes a node
-      * @param node node to be deleted
+      * @param nodeObject node to be deleted
       */
       virtual void deleteNode(N* nodeObject) = 0;
       
@@ -114,7 +113,7 @@ namespace bpp
       
       /**
       * Return the associated Node ID
-      * @param nodeObject object which to return the node ID
+      * @param edgeObject object which to return the node ID
       * @return a node ID
       */
       virtual EdgeGraphid getEdgeGraphid(const E* edgeObject) const = 0;
@@ -160,17 +159,17 @@ namespace bpp
       virtual EdgeIndex setEdgeIndex(const E* edgeObject, EdgeIndex index = 0) = 0;
       
       /**
-      * Return the associated Node index
-      * @param nodeObject object which to return the node index
-      * @return a node index
+      * Return the associated Node, querying with an index
+      * @param nodeIndex the index of the wanted node
+      * @return N, a node object
       */
       virtual N* getNode(NodeIndex nodeIndex) const = 0;
       
             
       /**
       * Return the associated Node index
-      * @param edgeObject object which to return the node index
-      * @return a node index
+      * @param edgeIndex the index of the wanted edge
+      * @return E, an edge object
       */
       virtual E* getEdge(EdgeIndex edgeIndex) const = 0;
       
@@ -417,23 +416,22 @@ namespace bpp
       /**
       * Creates a link between two existing nodes.
       * If directed graph: nodeA -> nodeB.
-      * @param nodeA source node (or first node if undirected)
-      * @param nodeB target node (or second node if undirected)
-      * @return the new edge
+      * @param nodeObjectA source node (or first node if undirected)
+      * @param nodeObjectB target node (or second node if undirected)
       */
       void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject = 00);
       
       /**
       * Creates a link between two existing nodes.
       * If directed graph: nodeA -> nodeB.
-      * @param nodeA source node (or first node if undirected)
-      * @param nodeB target node (or second node if undirected)
+      * @param nodeObjectA source node (or first node if undirected)
+      * @param nodeObjectB target node (or second node if undirected)
       */
       void unlink(N* nodeObjectA, N* nodeObjectB);
       
       /**
       * Deletes a node
-      * @param node node to be deleted. The N node object given in argument is not deleted.
+      * @param nodeObject node to be deleted. The N node object given in argument is not deleted.
       */
       void deleteNode(N* nodeObject);
       
@@ -469,9 +467,9 @@ namespace bpp
       NodeGraphid getNodeGraphid(const N* nodeObject) const;
 
       /**
-      * Return the associated Node ID
-      * @param nodeObject object which to return the node ID
-      * @return a node ID
+      * Return the associated Edge ID
+      * @param edgeObject object which to return the node ID
+      * @return a edge ID
       */
       EdgeGraphid getEdgeGraphid(const E* edgeObject) const;
       
@@ -588,6 +586,15 @@ namespace bpp
       * @return a vector containing the nodesObjects
       */
       std::vector<N*> getAllNodes() const;
+      
+      
+      /**
+    * Get nodes located at the extremities of an edge
+    * @param edge an edge
+    * @return a pair of the Nodes at each extremity of the edge
+    *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
+    */
+      std::pair<N*,N*> getNodes(E* edge) const;
       
             
       /**
@@ -1030,13 +1037,7 @@ std::vector< N* > SimpleAssociationGraphObserver<N,E,GraphImpl>::getNeighbors_(N
     case BOTH:
       neighbors = subjectGraph_->getNeighbors(node);
   }
-  
-  // PHASE 2: transforming into nodeObjects
-  std::vector<N*> objectNeighbors;
-  for(typename std::vector<NodeGraphid>::iterator currNeighbor = neighbors.begin(); currNeighbor != neighbors.end(); currNeighbor++){
-    objectNeighbors.push_back(graphidToN_.at(*currNeighbor));
-  }
-  return objectNeighbors;
+  return getNodesFromGraphid(neighbors);
 }
 
 template <class N, class E, class GraphImpl>
@@ -1098,6 +1099,12 @@ template <class N, class E, class GraphImpl>
 E* SimpleAssociationGraphObserver<N,E,GraphImpl>::getEdge(typename AssociationGraphObserver<N,E>::EdgeIndex edge) const
 {
   return indexToE_.at(edge); 
+}
+
+template <class N, class E, class GraphImpl>
+std::pair<N*,N*> SimpleAssociationGraphObserver<N,E,GraphImpl>::getNodes(E* edge) const{
+  std::pair<NodeGraphid,NodeGraphid> nodes = subjectGraph_->getNodes(getEdgeGraphid(edge));
+  return std::pair<N*,N*>(getNodeFromGraphid(nodes.first),getNodeFromGraphid(nodes.second));
 }
  
 }
