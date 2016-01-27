@@ -286,6 +286,14 @@ void operator/=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionEx
   }
 }
 
+template<class T, class C>
+void operator&=(std::vector<T>& v1, const C& c)
+{
+  for (size_t i = 0; i < v1.size(); i++)
+  {
+    v1[i] = c;
+  }
+}
 
 template<class T, class C>
 void operator+=(std::vector<T>& v1, const C& c)
