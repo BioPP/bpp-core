@@ -270,6 +270,15 @@ vector< SimpleGraph::Node > SimpleGraph::getNeighbors(SimpleGraph::Node node) co
   return(result);
 }
 
+std::pair<SimpleGraph::Node, SimpleGraph::Node> SimpleGraph::getNodes(SimpleGraph::Edge edge) const
+{
+  edgeMustExist_(edge);
+  edgeStructureType::const_iterator found = edgeStructure_.find(edge);
+  //TODO Except if not found
+  return found->second;
+}
+
+
 void SimpleGraph::deleteNode(SimpleGraph::Node node)
 {
   //checking the node
