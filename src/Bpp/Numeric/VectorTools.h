@@ -668,6 +668,9 @@ public:
   static T logSumExp(const std::vector<T>& v1)
   {
     T M = max(v1);
+    if (isinf(M))
+      return M;
+    
     T x = std::exp(v1[0] - M);
     for (size_t i = 1; i < v1.size(); i++)
     {
@@ -692,6 +695,9 @@ public:
       size = v1.size();
 
     T M = max(v1);
+    if (isinf(M))
+      throw BadNumberException("VectorTools::logSumExp", M);
+    
     T x = v2[0] * std::exp(v1[0] - M);
     for (size_t i = 1; i < size; i++)
     {
@@ -709,6 +715,9 @@ public:
   static T logMeanExp(const std::vector<T>& v1)
   {
     T M = max(v1);
+    if (isinf(M))
+      return M;
+
     T x = std::exp(v1[0] - M);
     for (size_t i = 1; i < v1.size(); i++)
     {
@@ -727,6 +736,9 @@ public:
   static T sumExp(const std::vector<T>& v1)
   {
     T M = max(v1);
+    if (isinf(M))
+      return (M<0?0:M);
+
     T x = std::exp(v1[0] - M);
     for (size_t i = 1; i < v1.size(); i++)
     {
@@ -751,6 +763,9 @@ public:
       size = v1.size();
 
     T M = max(v1);
+    if (isinf(M))
+      throw BadNumberException("VectorTools::sumExp", M);
+
     T x = v2[0] * std::exp(v1[0] - M);
     for (size_t i = 1; i < size; i++)
     {
@@ -945,7 +960,7 @@ public:
   {
     if (v1.size() != v2.size())
     {
-      throw DimensionException("VectorFunctions::scalar", v1.size(), v2.size());
+      throw DimensionException("VectorTools::scalar", v1.size(), v2.size());
     }
     OutputType result = 0;
     for (size_t i = 0; i < v1.size(); i++)
@@ -975,11 +990,11 @@ public:
   {
     if (v1.size() != w.size())
     {
-      throw DimensionException("VectorFunctions::scalar", v1.size(), w.size());
+      throw DimensionException("VectorTools::scalar", v1.size(), w.size());
     }
     if (v2.size() != w.size())
     {
-      throw DimensionException("VectorFunctions::scalar", v2.size(), w.size());
+      throw DimensionException("VectorTools::scalar", v2.size(), w.size());
     }
     OutputType result = 0;
     for (size_t i = 0; i < v1.size(); i++)
@@ -1039,7 +1054,7 @@ public:
   {
     if (v1.size() != w.size())
     {
-      throw DimensionException("VectorFunctions::norm", v1.size(), w.size());
+      throw DimensionException("VectorTools::norm", v1.size(), w.size());
     }
     OutputType result = 0;
     for (size_t i = 0; i < v1.size(); i++)
@@ -1094,7 +1109,7 @@ public:
   template<class T>
   static T min(const std::vector<T>& v) throw (EmptyVectorException<T> )
   {
-    if (v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::min()", &v);
+    if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::min()", &v);
     T mini = v[0];
     for (size_t i = 1; i < v.size(); i++)
     {
@@ -1115,7 +1130,7 @@ public:
   template<class T>
   static T max(const std::vector<T>& v) throw (EmptyVectorException<T> )
   {
-    if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::max()", &v);
+    if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::max()", &v);
     T maxi = v[0];
     for (size_t i = 1; i < v.size(); i++)
     {
@@ -1164,7 +1179,7 @@ public:
   template<class T>
   static size_t whichMin(const std::vector<T>& v) throw (EmptyVectorException<T> )
   {
-    if (v.size() == 0) throw EmptyVectorException<T>("VectorFunctions::whichMin()", &v);
+    if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::whichMin()", &v);
     T mini = v[0];
     size_t pos = 0;
     for (size_t i = 1; i < v.size(); i++)
