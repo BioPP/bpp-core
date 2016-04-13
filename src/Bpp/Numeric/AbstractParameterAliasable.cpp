@@ -56,9 +56,11 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
     AliasParameterListener* listener = it->second->clone();
     listener->setParameterList(&getParameters_());
     aliasListenersRegister_[it->first] = listener;
-    //Now correct parameters with appropriate pointers:
-    for (unsigned int i = 0; i < getNumberOfParameters(); ++i) {
-      if (getParameters_()[i].hasParameterListener(it->first)) {
+    // Now correct parameters with appropriate pointers:
+    for (unsigned int i = 0; i < getNumberOfParameters(); ++i)
+    {
+      if (getParameters_()[i].hasParameterListener(it->first))
+      {
         getParameters_()[i].removeParameterListener(it->first);
         getParameters_()[i].addParameterListener(listener, false);
       }
@@ -78,9 +80,11 @@ AbstractParameterAliasable& AbstractParameterAliasable::operator=(const Abstract
     AliasParameterListener* listener = it->second->clone();
     listener->setParameterList(&getParameters_());
     aliasListenersRegister_[it->first] = listener;
-    //Now correct parameters with appropriate pointers:
-    for (unsigned int i = 0; i < getNumberOfParameters(); ++i) {
-      if (getParameters_()[i].hasParameterListener(it->first)) {
+    // Now correct parameters with appropriate pointers:
+    for (unsigned int i = 0; i < getNumberOfParameters(); ++i)
+    {
+      if (getParameters_()[i].hasParameterListener(it->first))
+      {
         getParameters_()[i].removeParameterListener(it->first);
         getParameters_()[i].addParameterListener(listener, false);
       }
@@ -129,15 +133,15 @@ throw (ParameterNotFoundException, Exception)
   }
   else
   // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
-    if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-      throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
+  if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
+    throw Exception("AbstractParameterAliasable::aliasParameters. Cannot alias parameter " + p2 + " to " + p1 + ", because the constraints attached to these two parameters are different.");
 
   // Every thing seems ok, let's create the listener and register it:
 
   AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_(), p1);
 
-  ParameterList pl=getParameters_();
-  
+  ParameterList pl = getParameters_();
+
   aliasListenersRegister_[id] = aliasListener;
 
   // Now we add it to the appropriate parameter, that is p1.
@@ -145,35 +149,36 @@ throw (ParameterNotFoundException, Exception)
   param1->addParameterListener(aliasListener, false);
   // Finally we remove p2 from the list of independent parameters:
   independentParameters_.deleteParameter(getNamespace() + p2);
-
 }
 
 void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedParams, bool verbose)
 {
-  ParameterList plpars, pl=getParameters();
-    
-  for (size_t i=0; i< pl.size(); i++)
+  ParameterList plpars, pl = getParameters();
+
+  for (size_t i = 0; i < pl.size(); i++)
   {
-    if (unparsedParams.find(pl[i].getName())==unparsedParams.end())
+    if (unparsedParams.find(pl[i].getName()) == unparsedParams.end())
       plpars.addParameter(*pl[i].clone());
   }
 
-  size_t unp_s=unparsedParams.size();  
-  while (unp_s!=0)
+  size_t unp_s = unparsedParams.size();
+  while (unp_s != 0)
   {
     map<string, string>::iterator it;
-    for (it=unparsedParams.begin(); it!=unparsedParams.end(); it++)
+    for (it = unparsedParams.begin(); it != unparsedParams.end(); it++)
     {
-      Parameter* pp=0;
-      try {
-        pp=&plpars.getParameter(it->second);
+      Parameter* pp = 0;
+      try
+      {
+        pp = &plpars.getParameter(it->second);
       }
-      catch (ParameterNotFoundException& e){
+      catch (ParameterNotFoundException& e)
+      {
         if (!pl.hasParameter(it->second))
           throw ParameterNotFoundException("Unknown aliasing parameter", it->first + "->" + it->second);
         continue;
       }
-      auto_ptr<Parameter> p2(pp->clone());
+      unique_ptr<Parameter> p2(pp->clone());
       p2->setName(it->first);
       plpars.addParameter(p2.release());
       plpars.getParameter(it->first);
@@ -183,16 +188,14 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
       unparsedParams.erase(it);
     }
 
-    if (unparsedParams.size()==unp_s)
+    if (unparsedParams.size() == unp_s)
       throw Exception("Error, there is a cycle in aliasing starting with " + unparsedParams.begin()->first);
     else
-      unp_s=unparsedParams.size();
+      unp_s = unparsedParams.size();
   }
 
   matchParametersValues(plpars);
 }
-
-  
 
 
 void AbstractParameterAliasable::unaliasParameters(const std::string& p1, const std::string& p2)
@@ -254,7 +257,8 @@ vector<string> AbstractParameterAliasable::getAlias(const string& name) const
     {
       string alias = it->second->getAlias();
       aliases.push_back(alias);
-      if (alias!=name){
+      if (alias != name)
+      {
         vector<string> chainAliases = getAlias(alias);
         VectorTools::append(aliases, chainAliases);
       }
@@ -272,12 +276,14 @@ std::map<std::string, std::string> AbstractParameterAliasable::getAliases() cons
        it != aliasListenersRegister_.end();
        it++)
   {
-    string name=it->second->getFrom();
+    string name = it->second->getFrom();
 
-    vector<string> alias=getAlias(name);
+    vector<string> alias = getAlias(name);
 
-    for (size_t i=0;i<alias.size();i++)
-      aliases[alias[i]]=name;
+    for (size_t i = 0; i < alias.size(); i++)
+    {
+      aliases[alias[i]] = name;
+    }
   }
 
   return aliases;
@@ -286,58 +292,57 @@ std::map<std::string, std::string> AbstractParameterAliasable::getAliases() cons
 ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterList& pl) const
 {
   ParameterList aliases;
-  bool b=false;
-  
+  bool b = false;
+
   for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
        it != aliasListenersRegister_.end();
        it++)
   {
     if ((pl.hasParameter(it->second->getFrom()) ||
          aliases.hasParameter(it->second->getFrom()))
-        && ! (aliases.hasParameter(it->second->getAlias()) ||
-              pl.hasParameter(it->second->getAlias())))
+        && !(aliases.hasParameter(it->second->getAlias()) ||
+             pl.hasParameter(it->second->getAlias())))
     {
-      b=true;
+      b = true;
       aliases.addParameter(getParameter(it->second->getAlias()));
     }
   }
-  
+
   while (b)
   {
-    b=false;
-    
+    b = false;
+
     for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
          it != aliasListenersRegister_.end();
          it++)
     {
       if (aliases.hasParameter(it->second->getFrom())
-          && ! (aliases.hasParameter(it->second->getAlias()) ||
-                pl.hasParameter(it->second->getAlias())))
+          && !(aliases.hasParameter(it->second->getAlias()) ||
+               pl.hasParameter(it->second->getAlias())))
       {
-        b=true;
+        b = true;
         aliases.addParameter(getParameter(it->second->getAlias()));
       }
     }
   }
-  
+
   return aliases;
 }
 
 string AbstractParameterAliasable::getFrom(const string& name) const
 {
-  string from="";
-  
+  string from = "";
+
   for (map<string, AliasParameterListener*>::const_iterator it = aliasListenersRegister_.begin();
        it != aliasListenersRegister_.end();
        it++)
+  {
+    if (it->second->getName() == name)
     {
-      if (it->second->getName() == name)
-        {
-          from = it->second->getFrom();
-          break;
-        }
+      from = it->second->getFrom();
+      break;
     }
+  }
 
   return from;
 }
-

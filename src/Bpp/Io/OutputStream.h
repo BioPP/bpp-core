@@ -169,14 +169,14 @@ class StlOutputStream :
   public AbstractOutputStream
 {
 private:
-  mutable std::auto_ptr<std::ostream> stream_;
+  mutable std::unique_ptr<std::ostream> stream_;
 
 public:
   StlOutputStream(std::ostream* stream): stream_(stream) {}
-  StlOutputStream(const StlOutputStream& stlos) : stream_(stlos.stream_) {}
+  StlOutputStream(const StlOutputStream& stlos) : stream_() { stream_ = std::move(stlos.stream_); }
   StlOutputStream& operator=(const StlOutputStream& stlos)
   {
-    stream_ = stlos.stream_;
+    stream_ = std::move(stlos.stream_);
     return *this;
   }
 

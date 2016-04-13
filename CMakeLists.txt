@@ -11,7 +11,7 @@ IF(NOT CMAKE_BUILD_TYPE)
       FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
 
-SET(CMAKE_CXX_FLAGS " -std=c++0x -Wall -Weffc++ -Wshadow -Wconversion")
+SET(CMAKE_CXX_FLAGS " -std=c++14 -Wall -Weffc++ -Wshadow -Wconversion")
 
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
