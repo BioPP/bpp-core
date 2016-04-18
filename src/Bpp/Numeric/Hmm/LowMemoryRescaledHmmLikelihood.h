@@ -154,12 +154,7 @@ public:
 
   virtual ~LowMemoryRescaledHmmLikelihood() {}
 
-#ifndef NO_VIRTUAL_COV
-  LowMemoryRescaledHmmLikelihood*
-#else
-  Clonable*
-#endif
-  clone() const { return new LowMemoryRescaledHmmLikelihood(*this); }
+  LowMemoryRescaledHmmLikelihood* clone() const { return new LowMemoryRescaledHmmLikelihood(*this); }
 
 public:
   const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }

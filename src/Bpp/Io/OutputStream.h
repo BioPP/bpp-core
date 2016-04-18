@@ -87,9 +87,7 @@ public:
    *
    * @{
    */
-#ifndef NO_VIRTUAL_COV
   OutputStream* clone() const = 0;
-#endif
   /** @} */
 
 };
@@ -326,9 +324,7 @@ public:
   OutputStream& endLine() { std::cerr << std::endl; return *this; }
   OutputStream& flush() { std::cerr.flush(); return *this; }
 
-#ifndef NO_VIRTUAL_COV
   StdErr* clone() const { return new StdErr(*this); }
-#endif
 
 };
 

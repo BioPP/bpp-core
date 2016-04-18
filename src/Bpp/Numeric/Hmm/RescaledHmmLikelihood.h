@@ -186,12 +186,7 @@ namespace bpp {
 
     virtual ~RescaledHmmLikelihood() {}
 
-#ifndef NO_VIRTUAL_COV
-    RescaledHmmLikelihood*
-#else
-    Clonable*
-#endif
-    clone() const { return new RescaledHmmLikelihood(*this); }
+    RescaledHmmLikelihood* clone() const { return new RescaledHmmLikelihood(*this); }
 
   public:
     const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }
