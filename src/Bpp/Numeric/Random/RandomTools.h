@@ -194,7 +194,7 @@ namespace bpp
       }
     }
 
-   template<class T>
+    template<class T>
     static T pickOne(const std::vector<T>& v) throw (EmptyVectorException<T>) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne: input vector is empty", &v);
@@ -505,7 +505,7 @@ namespace bpp
      * @param alpha, beta Alpha and Beta parameters.
      * @return \f$ln\left(Beta\left(\alpha,\beta\right)\right)\f$
      */
-    static double lnBeta (double alpha, double beta);
+    static double lnBeta(double alpha, double beta);
 
     /**
      * @brief Returns the regularized incomplete beta function
