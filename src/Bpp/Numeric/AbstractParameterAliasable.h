@@ -160,7 +160,9 @@ namespace bpp
     void setNamespace(const std::string& prefix);
  
     const ParameterList& getIndependentParameters() const { return independentParameters_; }
-    
+
+    bool hasIndependentParameter(const std::string& name) const { return independentParameters_.hasParameter(getNamespace() + name); }
+
     size_t getNumberOfIndependentParameters() const { return independentParameters_.size(); }
 
     void aliasParameters(const std::string& p1, const std::string& p2) throw (ParameterNotFoundException, Exception);
