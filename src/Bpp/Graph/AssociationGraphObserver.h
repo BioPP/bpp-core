@@ -183,7 +183,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the neighbors
    */
-  virtual std::vector<N*> getNeighbors(N* node) const = 0;
+  virtual std::vector<N*> getNeighbors(const N* node) const = 0;
   virtual std::vector<NodeIndex> getNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -192,7 +192,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  virtual std::vector<N*> getOutgoingNeighbors(N* node) const = 0;
+  virtual std::vector<N*> getOutgoingNeighbors(const N* node) const = 0;
   virtual std::vector<NodeIndex> getOutgoingNeighbors(NodeIndex node) const = 0;
 
 
@@ -202,7 +202,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the incoming neighbors
    */
-  virtual std::vector<N*> getIncomingNeighbors(N* node) const = 0;
+  virtual std::vector<N*> getIncomingNeighbors(const N* node) const = 0;
   virtual std::vector<NodeIndex> getIncomingNeighbors(NodeIndex node) const = 0;
 
 
@@ -531,7 +531,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the neighbors
    */
-  std::vector<N*> getNeighbors(N* node) const;
+  std::vector<N*> getNeighbors(const N* node) const;
   std::vector<NodeIndex> getNeighbors(NodeIndex node) const;
 
   /**
@@ -540,7 +540,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  std::vector<N*> getOutgoingNeighbors(N* node) const;
+  std::vector<N*> getOutgoingNeighbors(const N* node) const;
   std::vector<NodeIndex> getOutgoingNeighbors(NodeIndex node) const;
 
   /**
@@ -549,7 +549,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the incoming neighbors
    */
-  std::vector<N*> getIncomingNeighbors(N* node) const;
+  std::vector<N*> getIncomingNeighbors(const N* node) const;
   std::vector<NodeIndex> getIncomingNeighbors(NodeIndex node) const;
   /**
    * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -1004,7 +1004,7 @@ typename AssociationGraphObserver<N, E>::EdgeIndex SimpleAssociationGraphObserve
 }
 
 template<class N, class E, class GraphImpl>
-std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getNeighbors_(N* nodeObject, neighborType type) const
+std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getNeighbors_(const N* nodeObject, neighborType type) const
 {
   NodeGraphid node = getNodeGraphid(nodeObject);
 
@@ -1025,7 +1025,7 @@ std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getNeighbors_
 }
 
 template<class N, class E, class GraphImpl>
-std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getIncomingNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getIncomingNeighbors(const N* node) const
 {
   return getNeighbors_(node, INCOMING);
 }
@@ -1037,7 +1037,7 @@ std::vector<typename AssociationGraphObserver<N, E>::NodeIndex > SimpleAssociati
 }
 
 template<class N, class E, class GraphImpl>
-std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getOutgoingNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getOutgoingNeighbors(const N* node) const
 {
   return getNeighbors_(node, OUTGOING);
 }
@@ -1049,7 +1049,7 @@ std::vector< typename AssociationGraphObserver<N, E>::NodeIndex > SimpleAssociat
 }
 
 template<class N, class E, class GraphImpl>
-std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getNeighbors(N* node) const
+std::vector< N* > SimpleAssociationGraphObserver<N, E, GraphImpl>::getNeighbors(const N* node) const
 {
   return getNeighbors_(node, BOTH);
 }

@@ -392,6 +392,7 @@ public:
     
     /**
     * Get nodes located at the extremities of an edge
+    * 
     * @return a pair of the Nodes at each extremity of the edge
     *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
     */
