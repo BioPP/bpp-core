@@ -306,7 +306,7 @@ private:
   /**
    * Get incoming / outgoing neighbors according to the enum type
    */
-  std::vector<N*> getNeighbors_(N* nodeObject, neighborType type) const;
+  std::vector<N*> getNeighbors_(const N* nodeObject, neighborType type) const;
 
 
   /**
