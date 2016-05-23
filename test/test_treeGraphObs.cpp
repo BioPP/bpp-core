@@ -62,6 +62,7 @@ int main() {
   grObs.link(&zero,&one,&r1);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "The father branch of zero is " << *(grObs.getBranchToFather(&one)) << endl;
+  cout << "The father node of one is " << *(grObs.getFather(&one)) << endl;
   
   cout << "Creating node two from the number one." << endl;
   grObs.createNode(&one,&two);

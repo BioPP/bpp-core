@@ -231,7 +231,7 @@ bool SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::hasFather(const N*
 template<class N, class E, class TreeGraphImpl>
 N* SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getFather(const N* nodeObject) const
 {
-  return getNodeFromGraphid(subjectTreeGraph_->getFather(getNodeGraphid(nodeObject)));
+  return SimpleAssociationGraphObserver<N,E,TreeGraphImpl>::getNodeFromGraphid(subjectTreeGraph_->getFather(SimpleAssociationGraphObserver<N,E,TreeGraphImpl>::getNodeGraphid(nodeObject)));
 }
 
 template<class N, class E, class TreeGraphImpl>

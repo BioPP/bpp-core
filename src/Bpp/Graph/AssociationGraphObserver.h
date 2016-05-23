@@ -116,6 +116,15 @@ public:
    */
   virtual EdgeGraphid getEdgeGraphid(const E* edgeObject) const = 0;
 
+  /**
+  * Transforms an (a list of) id(s) into an (a list of) object(s)
+  */
+  N* getNodeFromGraphid(NodeGraphid) const;
+  std::vector<N*> getNodesFromGraphid(std::vector<NodeGraphid> ) const;
+  E* getEdgeFromGraphid(EdgeGraphid) const;
+  std::vector<E*> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const;
+
+  
   // /@}
 
 
