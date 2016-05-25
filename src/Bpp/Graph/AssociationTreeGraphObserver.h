@@ -100,7 +100,6 @@ public:
    */
   bool isRooted() const;
 
-
   /**
    * Return, in a rooted tree, the father node
    * @param nodeObject the concerned node
@@ -127,16 +126,16 @@ public:
    * @param nodeObject the concerned node
    * @return the number of sons
    */
-  unsigned int getNumberOfSons(const N* node) const;
-  unsigned int getNumberOfSons(NodeIndex node) const;
+  size_t getNumberOfSons(const N* node) const;
+  size_t getNumberOfSons(NodeIndex node) const;
 
   /**
    * Return, in a rooted tree, the number of leaves under a certain node
    * @param nodeObject the concerned node
    * @return the number of leaves
    */
-  unsigned int getNumberOfLeaves(const N* node) const;
-  unsigned int getNumberOfLeaves(NodeIndex node) const;
+  size_t getNumberOfLeaves(const N* node) const;
+  size_t getNumberOfLeaves(NodeIndex node) const;
 
   /**
    * Remove the son of a node
@@ -243,25 +242,25 @@ E* SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getBranchToFather(co
 template<class N, class E, class TreeGraphImpl>
 std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSons(const N* nodeObject) const
 {
-  return getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject)));
+  return this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject)));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<typename SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSons(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex node) const
 {
-  return getNodeIndexes(getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(getNode(node)))));
+  return getNodeIndexes(this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(getNode(node)))));
 }
 
 template<class N, class E, class TreeGraphImpl>
-unsigned int SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfSons(const N* nodeObject) const
+size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfSons(const N* nodeObject) const
 {
-  return getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject))).size();
+  return this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject))).size();
 }
 
 template<class N, class E, class TreeGraphImpl>
-unsigned int SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves(const N* nodeObject) const
+size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves(const N* nodeObject) const
 {
-  return getNodesFromGraphid(subjectTreeGraph_->getLeavesFromNode(this->getNodeGraphid(nodeObject))).size();
+  return this->getNodesFromGraphid(subjectTreeGraph_->getLeavesFromNode(this->getNodeGraphid(nodeObject))).size();
 }
 
 template<class N, class E, class TreeGraphImpl>
@@ -273,31 +272,31 @@ void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::setFather(const N*
 template<class N, class E, class TreeGraphImpl>
 void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::addSon(const N* nodeObject, const N* sonNodeObject)
 {
-  subjectTreeGraph_->addSon(this->getNodeGraphid(nodeObject), getNodeGraphid(sonNodeObject));
+  subjectTreeGraph_->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::removeSons(N* const node)
 {
-  return getNodesFromGraphid(subjectTreeGraph_->removeSons(this->getNodeGraphid(node)));
+  return this->getNodesFromGraphid(subjectTreeGraph_->removeSons(this->getNodeGraphid(node)));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNodePathBetweenTwoNodes(const N* nodeA, const N* nodeB, bool includeAncestor) const
 {
-  return getNodesFromGraphid(subjectTreeGraph_->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), getNodeGraphid(nodeB), includeAncestor));
+  return this->getNodesFromGraphid(subjectTreeGraph_->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB), includeAncestor));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<E*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getEdgePathBetweenTwoNodes(const N* nodeA, const N* nodeB) const
 {
-  return getEdges(subjectTreeGraph_->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), getNodeGraphid(nodeB)));
+  return getEdges(subjectTreeGraph_->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSubtreeNodes(const N* localRoot)
 {
-  return getNodesFromGraphid(subjectTreeGraph_->getSubtreeNodes(this->getNodeGraphid(localRoot)));
+  return this->getNodesFromGraphid(subjectTreeGraph_->getSubtreeNodes(this->getNodeGraphid(localRoot)));
 }
 
 template<class N, class E, class TreeGraphImpl>

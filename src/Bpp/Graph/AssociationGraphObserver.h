@@ -55,7 +55,7 @@ public:
    * @param newNodeObject the N object associated to the node in the graph.
    * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
    */
-  virtual void createNode(N* objectOriginNode, N* newNodeObject) = 0;
+  virtual void createNode(N* objectOriginNode, N* newNodeObject, E* newEdgeObject = 00) = 0;
 
   /**
    * Creates a link between two existing nodes.
@@ -119,11 +119,18 @@ public:
   /**
   * Transforms an (a list of) id(s) into an (a list of) object(s)
   */
-  N* getNodeFromGraphid(NodeGraphid) const;
-  std::vector<N*> getNodesFromGraphid(std::vector<NodeGraphid> ) const;
-  E* getEdgeFromGraphid(EdgeGraphid) const;
-  std::vector<E*> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const;
+  virtual N* getNodeFromGraphid(NodeGraphid) const = 0;
+  virtual  std::vector<N*> getNodesFromGraphid(std::vector<NodeGraphid> ) const = 0;
+  virtual  E* getEdgeFromGraphid(EdgeGraphid) const = 0;
+  virtual std::vector<E*> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const = 0;
 
+  
+  /**
+   * Set a new root
+   * @param newRoot the new root node
+   */
+  virtual void setRoot(const N* newRoot) = 0;
+  
   
   // /@}
 
@@ -404,7 +411,7 @@ public:
    * @param newNodeObject the N object associated to the node in the graph.
    * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
    */
-  void createNode(N* objectOriginNode, N* newNodeObject);
+  void createNode(N* objectOriginNode, N* newNodeObject, E* newEdgeObject = 00);
 
   /**
    * Creates a link between two existing nodes.
@@ -476,6 +483,12 @@ public:
   std::vector<E*> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const;
 
 
+  /**
+   * Set a new root
+   * @param newRoot the new root node
+   */
+  void setRoot(const N* newRoot);
+  
   // /@}
 
   /** @name Object Indexation
@@ -691,7 +704,7 @@ std::vector<typename AssociationGraphObserver<N, E>::NodeIndex> SimpleAssociatio
 template<class N, class E, class GraphImpl>
 std::vector<E*> SimpleAssociationGraphObserver<N, E, GraphImpl>::getEdgesFromGraphid(std::vector<EdgeGraphid> edges) const
 {
-  std::vector<N*> edgeObjects;
+  std::vector<E*> edgeObjects;
   for (typename std::vector<NodeGraphid>::iterator currEdge = edges.begin(); currEdge != edges.end(); currEdge++)
   {
     edgeObjects.push_back(graphidToE_.at(*currEdge));
@@ -769,10 +782,10 @@ SimpleAssociationGraphObserver<N, E, GraphImpl>& SimpleAssociationGraphObserver<
 }
 
 template<class N, class E, class GraphImpl>
-void SimpleAssociationGraphObserver<N, E, GraphImpl>::createNode(N* objectOriginNode, N* newNodeObject)
+void SimpleAssociationGraphObserver<N, E, GraphImpl>::createNode(N* objectOriginNode, N* newNodeObject, E* newEdgeObject)
 {
   createNode(newNodeObject);
-  link(objectOriginNode, newNodeObject);
+  link(objectOriginNode, newNodeObject, newEdgeObject);
 }
 
 template<class N, class E, class GraphImpl>
@@ -792,11 +805,13 @@ void SimpleAssociationGraphObserver<N, E, GraphImpl>::link(N* nodeObjectA, N* no
   std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
   EdgeGraphid newGraphEdge = subjectGraph_->link(foundNodeA->second, foundNodeB->second);
 
-  if (graphidToE_.size() < newGraphEdge + 1)
-    graphidToE_.resize(newGraphEdge + 1);
-  graphidToE_.at(newGraphEdge) = edgeObject;
-
-  EToGraphid_[edgeObject] = newGraphEdge;
+  if(edgeObject != 00)
+  {
+    if (graphidToE_.size() < newGraphEdge + 1)
+      graphidToE_.resize(newGraphEdge + 1);
+    graphidToE_.at(newGraphEdge) = edgeObject;
+    EToGraphid_[edgeObject] = newGraphEdge;
+  }
 }
 
 template<class N, class E, class GraphImpl>
@@ -1092,6 +1107,12 @@ template<class N, class E, class GraphImpl>
 E* SimpleAssociationGraphObserver<N, E, GraphImpl>::getEdge(typename AssociationGraphObserver<N, E>::EdgeIndex edge) const
 {
   return indexToE_.at(edge);
+}
+
+template<class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N, E, GraphImpl>::setRoot(const N* newRoot)
+{
+  return subjectGraph_->setRoot(getNodeGraphid(newRoot));
 }
 
 template<class N, class E, class GraphImpl>
