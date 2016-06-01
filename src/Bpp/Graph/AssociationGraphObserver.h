@@ -832,10 +832,12 @@ void SimpleAssociationGraphObserver<N, E, GraphImpl>::deletedEdgesUpdate(std::ve
 {
   for (typename std::vector<EdgeGraphid>::iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++)
   {
-    E* edgeObject = graphidToE_.at(*currEdge);
-    graphidToE_.at(*currEdge) = 00;
+    if(graphidToE_.size() > *currEdge){
+      E* edgeObject = graphidToE_.at(*currEdge);
+      graphidToE_.at(*currEdge) = 00;
 
-    EToGraphid_.erase(edgeObject);
+      EToGraphid_.erase(edgeObject);
+    }
   }
 }
 
@@ -844,10 +846,12 @@ void SimpleAssociationGraphObserver<N, E, GraphImpl>::deletedNodesUpdate(std::ve
 {
   for (typename std::vector<EdgeGraphid>::iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++)
   {
-    N* nodeObject = graphidToN_.at(*currNode);
-    graphidToN_.at(*currNode) = 00;
+    if(graphidToN_.size() > *currNode){
+      N* nodeObject = graphidToN_.at(*currNode);
+      graphidToN_.at(*currNode) = 00;
 
-    NToGraphid_.erase(nodeObject);
+      NToGraphid_.erase(nodeObject);
+    }
   }
 }
 

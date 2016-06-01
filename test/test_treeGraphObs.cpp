@@ -64,9 +64,10 @@ int main() {
   cout << "The father branch of zero is " << *(grObs.getBranchToFather(&one)) << endl;
   cout << "The father node of one is " << *(grObs.getFather(&one)) << endl;
   
-  cout << "unlink 0->1 and relink with setFather()";
-  grObs.unlink(&zero,&one);
-  grObs.setFather(&one,&zero);
+//   cout << "unlink 0->1 and relink with setFather()";
+//   grObs.unlink(&zero,&one);
+//   grObs.setFather(&one,&zero);
+//FIXME: setFather only works with valid tree (wich cannot be true…)
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
   
