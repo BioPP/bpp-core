@@ -251,7 +251,14 @@ public:
    */
   virtual E* getEdgeLinking(N* nodeA, N* nodeB) const = 0;
 
-
+  /**
+   * Sets the Edge between two nodes nodeA -> nodeB
+   * @param nodeA source node (if directed)
+   * @param nodeB destination node (if directed)
+   * @param edge the edge between these two nodes
+   */
+  virtual void setEdgeLinking(N* nodeA, N* nodeB, E* edge) = 0;
+  
   // /@}
 };
 
@@ -611,7 +618,15 @@ public:
    */
   E* getEdgeLinking(N* nodeA, N* nodeB) const;
 
-
+  /**
+   * Sets the Edge between two nodes nodeA -> nodeB
+   * @param nodeA source node (if directed)
+   * @param nodeB destination node (if directed)
+   * @param edge the edge between these two nodes
+   */
+  void setEdgeLinking(N* nodeA, N* nodeB, E* edge);
+  
+  
   // /@}
 
 
@@ -1099,6 +1114,12 @@ template<class N, class E, class GraphImpl>
 E* SimpleAssociationGraphObserver<N, E, GraphImpl>::getEdgeLinking(N* nodeA, N* nodeB) const
 {
   return getEdge(subjectGraph_->getEdge(getNodeGraphid(nodeA), getNodeGraphid(nodeB)));
+}
+
+template<class N, class E, class GraphImpl>
+void SimpleAssociationGraphObserver<N, E, GraphImpl>::setEdgeLinking(N* nodeA, N* nodeB, E* edge)
+{
+  associateEdge(edge,subjectGraph_->getEdge(getNodeGraphid(nodeA), getNodeGraphid(nodeB)));
 }
 
 template<class N, class E, class GraphImpl>
