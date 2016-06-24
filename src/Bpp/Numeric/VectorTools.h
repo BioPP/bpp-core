@@ -758,7 +758,7 @@ public:
   {
     size_t size;
     if (v1.size() != v2.size())
-      throw DimensionException("VectorTools::logsumexp", v1.size(), v2.size());
+      throw DimensionException("VectorTools::sumExp", v1.size(), v2.size());
     else
       size = v1.size();
 
