@@ -80,7 +80,12 @@ class AbstractParametrizable:
     {
       return parameters_.getParameter(prefix_ + name);
     }
-  
+
+  const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const throw (ParameterNotFoundException)
+  {
+    return parameters_.getSharedParameter(prefix_ + name);
+  }
+
     double getParameterValue(const std::string& name) const
       throw (ParameterNotFoundException)
     { 
@@ -131,19 +136,33 @@ class AbstractParametrizable:
      *
      * @param parameters A ParameterList object with parameters that changed.
      */
-    virtual void fireParameterChanged(const ParameterList& parameters) = 0;
+  
+  virtual void fireParameterChanged(const ParameterList& parameters) {};
+  
+  
 
   protected:
-    void addParameter_(Parameter* parameter)
-    {
-      if (parameter)
-        parameters_.addParameter(parameter);
-    }
+  
+  void addParameter_(Parameter* parameter)
+  {
+    if (parameter)
+      parameters_.addParameter(parameter);
+  }
+  
+  void addParameters_(const ParameterList& parameters)
+  {
+    parameters_.addParameters(parameters);
+  }
 
-    void addParameters_(const ParameterList& parameters)
-    {
-      parameters_.addParameters(parameters);
-    }
+  void shareParameter_(const std::shared_ptr<Parameter>& parameter)
+  {
+    parameters_.shareParameter(parameter);
+  }
+
+  void shareParameters_(const ParameterList& parameters)
+  {
+    parameters_.shareParameters(parameters);
+  }
 
   void includeParameters_(const ParameterList& parameters)
   {

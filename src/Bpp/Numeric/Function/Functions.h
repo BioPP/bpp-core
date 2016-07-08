@@ -129,7 +129,7 @@ class Function:
 class DerivableFirstOrder:
   public virtual Function
 {
-  public:
+ public:
     DerivableFirstOrder() {}
     virtual ~DerivableFirstOrder() {}
 

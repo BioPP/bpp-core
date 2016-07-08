@@ -186,6 +186,14 @@ public:
 
   ParameterList getAliasedParameters(const ParameterList& pl) const;
 
+  /**
+   * @brief Return the list of the names of the parameters from which
+   * the parameters of the list are aliased  (directly or not). 
+   *
+   */
+
+  ParameterList getFromParameters(const ParameterList& pl) const;
+
 
   /**
    * @return The list of names of the parameters that are aliased with a given parameter.
@@ -209,34 +217,37 @@ public:
 
   std::string getFrom(const std::string& name) const;
 
-  void fireParameterChanged(const ParameterList& parameters)
-  {
-    independentParameters_.matchParametersValues(getParameters());
-  }
+  // void fireParameterChanged(const ParameterList& parameters)
+  // {
+  //   independentParameters_.matchParametersValues(getParameters());
+  // }
 
 protected:
   void addParameter_(Parameter* parameter)
   {
     AbstractParametrizable::addParameter_(parameter);
-    independentParameters_.addParameter(parameter->clone());
+    independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameter->getName())));
   }
 
   void addParameters_(const ParameterList& parameters)
   {
     AbstractParametrizable::addParameters_(parameters);
-    independentParameters_.addParameters(parameters);
+
+    for (size_t i=0; i<parameters.size(); i++)
+      independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
   }
 
   void includeParameters_(const ParameterList& parameters)
   {
     AbstractParametrizable::includeParameters_(parameters);
-    independentParameters_.includeParameters(parameters);
+    for (size_t i=0; i<parameters.size(); i++)
+      independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
   }
 
 
   void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
   {
-    std::string name = getParameter_(index).getName();
+    std::string name = getParameterNameWithoutNamespace(getParameter_(index).getName());
     AbstractParametrizable::deleteParameter_(index);
     if (independentParameters_.hasParameter(name))
       independentParameters_.deleteParameter(name);
