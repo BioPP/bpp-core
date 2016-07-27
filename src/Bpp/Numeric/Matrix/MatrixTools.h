@@ -161,6 +161,18 @@ namespace bpp
     }
 
     /**
+     * @brief Set all diagonal elements in M to value x.
+     * @param M A matrix.
+     * @param x The value to use.
+     */
+    template<class Matrix, class Scalar>
+    static void fillDiag(Matrix& M, Scalar x)
+    {
+      for (size_t i = 0; i < M.getNumberOfRows(); i++)
+        M(i, i) = x;
+    }
+
+    /**
      * @brief Multiply all elements of a matrix by a given value, and add a constant.
      *
      * Performs \f$\forall i \forall j m_{i,j} = a.m_{i,j}+b\f$.
@@ -292,10 +304,11 @@ namespace bpp
     /**
      * @brief Add matrix B to matrix A.
      *
-     * @param A [in] Matrix A
+     * @param A [in, out] Matrix A
      * @param B [in] Matrix B
      * @throw DimensionException If A and B have note the same size.
      */
+    
     template<class MatrixA, class MatrixB>
     static void add(MatrixA& A, const MatrixB& B) throw (DimensionException)
     {
@@ -303,11 +316,13 @@ namespace bpp
       size_t nrA = A.getNumberOfRows();
       size_t nrB = B.getNumberOfRows();
       size_t ncB = B.getNumberOfColumns();
-      if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
-      if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
-      for (size_t i = 0; i < A.getNumberOfRows(); i++)
+      if (ncA > ncB) throw DimensionException("MatrixTools::operator+=(). A and B must have the same number of colums.", ncB, ncA);
+      if (nrA > nrB) throw DimensionException("MatrixTools::operator+=(). A and B must have the same number of rows.", nrB, nrA);
+      
+      
+      for (size_t i = 0; i < nrA; i++)
       {
-        for (size_t j = 0; j < A.getNumberOfColumns(); j++)
+        for (size_t j = 0; j < ncA; j++)
         {
           A(i, j) += B(i, j);
         }
@@ -331,9 +346,10 @@ namespace bpp
       size_t ncB = B.getNumberOfColumns();
       if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
       if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
-      for (size_t i = 0; i < A.getNumberOfRows(); i++)
+      
+      for (size_t i = 0; i < nrA; i++)
       {
-        for (size_t j = 0; j < A.getNumberOfColumns(); j++)
+        for (size_t j = 0; j < ncA; j++)
         {
           A(i, j) += x*B(i, j);
         }
@@ -760,15 +776,19 @@ namespace bpp
      * @param A [in] The first row matrix.
      * @param B [in] The second row matrix.
      * @param O [out] The product \f$A \otimes B\f$.
+     * @param check [optional] if resize of 0 (default: true)
      */
     template<class Scalar>
-    static void kroneckerMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
+    static void kroneckerMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O, bool check = true)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
       size_t nrB = B.getNumberOfRows();
       size_t ncB = B.getNumberOfColumns();
-      O.resize(nrA * nrB, ncA * ncB);
+
+      if (check)
+        O.resize(nrA * nrB, ncA * ncB);
+      
       for (size_t ia = 0; ia < nrA; ia++)
       {
         for (size_t ja = 0; ja < ncA; ja++)
@@ -779,6 +799,80 @@ namespace bpp
             for (size_t jb = 0; jb < ncB; jb++)
             {
               O(ia * nrB + ib, ja * ncB + jb) = aij * B(ib, jb);
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * @brief Compute the Kronecker product of one Matrice with a
+     * diagonal matrix, which main term and dimension are given
+     *
+     * @param A [in] The first row matrix.
+     * @param dim [in] The dimension of the diagonal matrix.
+     * @param v [in] The diagonal value of the diagonal matrix.
+     * @param O [out] The product \f$A \otimes B\f$.
+     * @param check [optional] if resize of 0 (default: true)
+     */
+    template<class Scalar>
+    static void kroneckerMult(const Matrix<Scalar>& A, size_t dim, const Scalar& v, Matrix<Scalar>& O, bool check = true)
+    {
+      size_t ncA = A.getNumberOfColumns();
+      size_t nrA = A.getNumberOfRows();
+
+      if (check)
+        O.resize(nrA * dim, ncA * dim);
+      
+      for (size_t ia = 0; ia < nrA; ia++)
+      {
+        for (size_t ja = 0; ja < ncA; ja++)
+        {
+          Scalar aij = A(ia, ja);
+          for (size_t ib = 0; ib < dim; ib++)
+          {
+            for (size_t jb = 0; jb < dim; jb++)
+            {
+              O(ia * dim + ib, ja * dim + jb) = aij * ((ib==jb)?v:0);
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * @brief Compute the Kronecker product of two row matrices in
+     * which the diagonal element is changed
+     *
+     * @param A [in] The first row matrix.
+     * @param B [in] The second row matrix.
+     * @param dA [in] The replaced diagonal element of A
+     * @param dB [in] The replaced diagonal element of B
+     * @param O [out] The product \f$A \otimes B\f$.
+     * @param check [optional] if resize of 0 (default: true)
+     */
+    template<class Scalar>
+    static void kroneckerMult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, const Scalar& dA, const Scalar& dB, Matrix<Scalar>& O, bool check= true)
+    {
+      size_t ncA = A.getNumberOfColumns();
+      size_t nrA = A.getNumberOfRows();
+      size_t nrB = B.getNumberOfRows();
+      size_t ncB = B.getNumberOfColumns();
+
+      if (check)
+        O.resize(nrA * nrB, ncA * ncB);
+      
+      for (size_t ia = 0; ia < nrA; ia++)
+      {
+        for (size_t ja = 0; ja < ncA; ja++)
+        {
+          const Scalar& aij = (ia==ja)?dA:A(ia, ja);
+          
+          for (size_t ib = 0; ib < nrB; ib++)
+          {
+            for (size_t jb = 0; jb < ncB; jb++)
+            {
+              O(ia * nrB + ib, ja * ncB + jb) = aij * ((ib==jb)?dB:B(ib, jb));
             }
           }
         }

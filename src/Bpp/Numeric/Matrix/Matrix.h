@@ -198,6 +198,11 @@ public:
     return m_[i];
   }
 
+  std::vector<Scalar>& getRow(size_t i) 
+  {
+    return m_[i];
+  }
+
   std::vector<Scalar> col(size_t j) const
   {
     std::vector<Scalar> c(getNumberOfRows());
