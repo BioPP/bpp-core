@@ -66,11 +66,12 @@ public:
   virtual void link(N* nodeObjectA, N* nodeObjectB, E* edgeObject = 00) = 0;
 
   /**
-   * Creates a link between two existing nodes.
+   * Detroys a link between two existing nodes.
    * If directed graph: nodeA -> nodeB.
    * @param nodeObjectA source node (or first node if undirected)
    * @param nodeObjectB target node (or second node if undirected)
    */
+  
   virtual void unlink(N* nodeObjectA, N* nodeObjectB) = 0;
 
   /**
