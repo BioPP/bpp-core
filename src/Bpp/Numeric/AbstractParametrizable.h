@@ -143,13 +143,13 @@ class AbstractParametrizable:
 
   protected:
   
-  void addParameter_(Parameter* parameter)
+  virtual void addParameter_(Parameter* parameter)
   {
     if (parameter)
       parameters_.addParameter(parameter);
   }
   
-  void addParameters_(const ParameterList& parameters)
+  virtual void addParameters_(const ParameterList& parameters)
   {
     parameters_.addParameters(parameters);
   }
@@ -164,32 +164,32 @@ class AbstractParametrizable:
     parameters_.shareParameters(parameters);
   }
 
-  void includeParameters_(const ParameterList& parameters)
+  virtual void includeParameters_(const ParameterList& parameters)
   {
     parameters_.includeParameters(parameters);
   }
 
-  void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
+  virtual void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
     {
       if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
       parameters_.deleteParameter(index);
     }
 
-  void deleteParameter_(std::string& name)
+  virtual void deleteParameter_(std::string& name)
   {
     parameters_.deleteParameter(name);
   }
 
-  void deleteParameters_(const std::vector<std::string>& names)
+  virtual void deleteParameters_(const std::vector<std::string>& names)
   {
      parameters_.deleteParameters(names);
   }
 
-    void resetParameters_()
-    {
-      parameters_.reset();
-    }
+  void resetParameters_()
+  {
+    parameters_.reset();
+  }
 
     /**
      * @param name The name of the parameter.
