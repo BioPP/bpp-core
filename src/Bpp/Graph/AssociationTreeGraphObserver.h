@@ -8,7 +8,7 @@
 #include <map>
 #include <iostream>
 #include <ostream>
-
+#include <memory>
 
 namespace bpp
 {
@@ -39,9 +39,6 @@ public:
   typedef typename Graph::Node NodeGraphid;
   typedef typename Graph::Edge EdgeGraphid;
 
-private:
-  TreeGraphImpl* subjectTreeGraph_;
-
 public:
   /**
    * Constructor
@@ -53,7 +50,7 @@ public:
    * Constructor
    * @param subjectGraph the graph which is observed
    */
-  SimpleAssociationTreeGraphObserver(TreeGraphImpl* subjectTreeGraph = 00);
+  SimpleAssociationTreeGraphObserver(std::shared_ptr<TreeGraphImpl> subjectTreeGraph = 00);
 
   /**
    * Copy Constructor
@@ -87,13 +84,12 @@ public:
    */
   bool isValid() const;
 
-
   /**
    * Return, in a rooted tree, the branch leading to the father
    * @param nodeObject the concerned node
    * @return an Edge which is the branch to the father
    */
-  E* getBranchToFather(const N* nodeObject) const;
+  std::shared_ptr<E>  getEdgeToFather(const std::shared_ptr<N>  nodeObject) const;
 
   /**
    * Is the subject tree rooted?
@@ -101,62 +97,117 @@ public:
   bool isRooted() const;
 
   /**
+   * @brief Sets the root and make the tree directed from root to leaves
+   *
+   */
+
+  void rootAt(const std::shared_ptr<N> root);
+
+  /*
+   * @brief Supersedes AssociationGraphObserver function, to
+   * avoid incoherent treeS
+   *
+   */
+  
+  void setRoot(const std::shared_ptr<N> newRoot)
+  {
+    rootAt(newRoot);
+  }
+
+  /**
+   * @return the root
+   */
+
+  std::shared_ptr<N> getRoot() const;
+
+  Graph::Node getRootId() const;
+
+  /**
    * Return, in a rooted tree, the father node
    * @param nodeObject the concerned node
    * @return the father
    */
-  N* getFather(const N* nodeObject) const;
+  std::shared_ptr<N>  getFather(const std::shared_ptr<N>  nodeObject) const;
 
   /**
    * Has the node a father?
    */
-  bool hasFather(const N* nodeObject) const;
-
+  bool hasFather(const std::shared_ptr<N>  nodeObject) const;
 
   /**
-   * Return, in a rooted tree, the branch leading to the father
+   * Return, in a rooted tree, the sons of a node 
    * @param nodeObject the concerned node
-   * @return an Edge which is the branch to the father
+   * @return a vector of son Nodes
    */
-  std::vector<N*> getSons(const N* node) const;
+  
+  std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N>  node) const;
   std::vector<NodeIndex> getSons(const NodeIndex node) const;
+
+  /**
+   * Return, in a rooted tree, the son of an edge
+   * @param nodeObject the concerned node
+   * @return the son Node
+   */
+  
+  std::shared_ptr<N> getSon(const std::shared_ptr<E>  edge) const;
+  NodeIndex getSon(const EdgeIndex edge) const;
+
+  /**
+   * Return, in a rooted tree, the father of an edge
+   * @param nodeObject the concerned node
+   * @return the father Node
+   */
+  
+  std::shared_ptr<N> getFather(const std::shared_ptr<E>  edge) const;
+  NodeIndex getFather(const EdgeIndex edge) const;
 
   /**
    * Return, in a rooted tree, the number of sons
    * @param nodeObject the concerned node
    * @return the number of sons
    */
-  size_t getNumberOfSons(const N* node) const;
-  size_t getNumberOfSons(NodeIndex node) const;
+  size_t getNumberOfSons(const std::shared_ptr<N>  node) const;
 
   /**
-   * Return, in a rooted tree, the number of leaves under a certain node
+   * Return the number of leaves under a certain node
    * @param nodeObject the concerned node
    * @return the number of leaves
    */
-  size_t getNumberOfLeaves(const N* node) const;
-  size_t getNumberOfLeaves(NodeIndex node) const;
+  size_t getNumberOfLeaves(const std::shared_ptr<N>  node) const;
 
   /**
-   * Remove the son of a node
+   * Return the number of leaves
+   * @return the number of leaves
+   */
+
+  size_t getNumberOfLeaves() const;
+
+  /**
+   * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
-  std::vector<N*> removeSons(N* node);
+  std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node);
 
+  /**
+   * Remove a sons of a node
+   * @return a vector containing the removed nodes
+   */
 
+  void removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son);
+  
   /**
    * Change / set the father of a node
    * @param nodeObject the concerned node
    * @param fatherNodeObject the node to be the father
    */
-  void setFather(const N* nodeObject, const N* fatherNodeObject);
+  void setFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject);
 
   /**
    * Add a son to a node
    * @param nodeObject the concerned node
    * @param sonNodeObject the node to be added as a son to the father
    */
-  void addSon(const N* nodeObject, const N* sonNodeObject);
+  void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject);
 
 
   // / FROM TREETOOLS
@@ -171,29 +222,27 @@ public:
    * @return A vector of ancestor nodes ids.
    * @throw PhyloNodeNotFoundException If a node is not found.
    */
-  std::vector<N*> getNodePathBetweenTwoNodes(const N* nodeObjectA, const N* nodeObjectB, bool includeAncestor = true) const;
+  std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB, bool includeAncestor = true) const;
 
-  std::vector<E*> getEdgePathBetweenTwoNodes(const N* nodeObjectA, const N* nodeObjectB) const;
+  std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB) const;
 
-  std::vector<N*> getSubtreeNodes(const N* localRoot);
-  std::vector<E*> getSubtreeEdges(const N* localRoot);
+  std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot);
+  std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot);
 };
 
 
 template<class N, class E, class TreeGraphImpl>
 SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationTreeGraphObserver(bool rooted_p) :
-  SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationGraphObserver(rooted_p),
-  subjectTreeGraph_(00)
+  SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationGraphObserver(rooted_p)
 {
-  subjectTreeGraph_ = static_cast<TreeGraphImpl*>(SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::getGraph());
 }
 
 
 template<class N, class E, class TreeGraphImpl>
 SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationTreeGraphObserver(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver) :
-  SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationGraphObserver(treeGraphObserver),
-  subjectTreeGraph_(00)
-{}
+  SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationGraphObserver(treeGraphObserver)
+{
+}
 
 
 template<class N, class E, class TreeGraphImpl>
@@ -205,104 +254,151 @@ SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> SimpleAssociationTreeGra
 template<class N, class E, class TreeGraphImpl>
 SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::~SimpleAssociationTreeGraphObserver()
 {
-  // delete subjectTreeGraph_;
 }
 
 
 template<class N, class E, class TreeGraphImpl>
 bool SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::isValid() const
 {
-  return subjectTreeGraph_->isValid();
+  return this->getGraph()->isValid();
 }
 
 template<class N, class E, class TreeGraphImpl>
 bool SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::isRooted() const
 {
-  return subjectTreeGraph_->isRooted();
+  return this->getGraph()->isRooted();
 }
 
 template<class N, class E, class TreeGraphImpl>
-bool SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::hasFather(const N* nodeObject) const
+void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::rootAt(const std::shared_ptr<N> root)
 {
-  return subjectTreeGraph_->hasFather(this->getNodeGraphid(nodeObject));
+  this->getGraph()->rootAt(this->getNodeGraphid(root));
 }
 
 template<class N, class E, class TreeGraphImpl>
-N* SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getFather(const N* nodeObject) const
+std::shared_ptr<N>  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getRoot() const
 {
-  return this->getNodeFromGraphid(subjectTreeGraph_->getFather(this->getNodeGraphid(nodeObject)));
+  return this->getNodeFromGraphid(this->getGraph()->getRoot());
 }
 
 template<class N, class E, class TreeGraphImpl>
-E* SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getBranchToFather(const N* nodeObject) const
+bool SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::hasFather(const std::shared_ptr<N>  nodeObject) const
 {
-  return this->getEdgeFromGraphid(subjectTreeGraph_->getBranchToFather(this->getNodeGraphid(nodeObject)));
+  return this->getGraph()->hasFather(this->getNodeGraphid(nodeObject));
 }
 
 template<class N, class E, class TreeGraphImpl>
-std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSons(const N* nodeObject) const
+std::shared_ptr<N>  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getFather(const std::shared_ptr<N>  nodeObject) const
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject)));
+  return this->getNodeFromGraphid(this->getGraph()->getFather(this->getNodeGraphid(nodeObject)));
+}
+
+template<class N, class E, class TreeGraphImpl>
+std::shared_ptr<E>  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getEdgeToFather(const std::shared_ptr<N>  nodeObject) const
+{
+  return this->getEdgeFromGraphid(this->getGraph()->getEdgeToFather(this->getNodeGraphid(nodeObject)));
+}
+
+template<class N, class E, class TreeGraphImpl>
+std::vector<std::shared_ptr<N> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSons(const std::shared_ptr<N>  nodeObject) const
+{
+  return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(nodeObject)));
 }
 
 template<class N, class E, class TreeGraphImpl>
 std::vector<typename SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSons(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex node) const
 {
-  return getNodeIndexes(this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(getNode(node)))));
+  return getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(getNode(node)))));
+}
+
+  template<class N, class E, class TreeGraphImpl>
+  std::shared_ptr<N> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSon(const std::shared_ptr<E>  edgeObject) const
+  {
+    return this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(edgeObject)));
+  }
+
+  template<class N, class E, class TreeGraphImpl>
+  typename SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSon(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::EdgeIndex edge) const
+  {
+    return getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(getEdge(edge)))));
+  }
+
+  template<class N, class E, class TreeGraphImpl>
+  std::shared_ptr<N> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getFather(const std::shared_ptr<E>  edgeObject) const
+  {
+    return this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(edgeObject)));
+  }
+
+  template<class N, class E, class TreeGraphImpl>
+  typename SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getFather(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::EdgeIndex edge) const
+  {
+    return getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(getEdge(edge)))));
+  }
+
+template<class N, class E, class TreeGraphImpl>
+size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfSons(const std::shared_ptr<N>  nodeObject) const
+{
+  return this->getGraph()->getNumberOfSons(this->getNodeGraphid(nodeObject));
 }
 
 template<class N, class E, class TreeGraphImpl>
-size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfSons(const N* nodeObject) const
+size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves(const std::shared_ptr<N>  nodeObject) const
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->getSons(this->getNodeGraphid(nodeObject))).size();
+  return this->getNodesFromGraphid(this->getGraph()->getLeavesFromNode(this->getNodeGraphid(nodeObject))).size();
+}
+
+  template<class N, class E, class TreeGraphImpl>
+  size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves() const
+  {
+    return SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves();
+  }
+
+template<class N, class E, class TreeGraphImpl>
+void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::setFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject)
+{
+  this->getGraph()->setFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject));
 }
 
 template<class N, class E, class TreeGraphImpl>
-size_t SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNumberOfLeaves(const N* nodeObject) const
+void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject)
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->getLeavesFromNode(this->getNodeGraphid(nodeObject))).size();
+  this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
 }
 
 template<class N, class E, class TreeGraphImpl>
-void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::setFather(const N* nodeObject, const N* fatherNodeObject)
+std::vector<std::shared_ptr<N> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::removeSons(const std::shared_ptr<N> node)
 {
-  subjectTreeGraph_->setFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject));
+  return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
 }
 
 template<class N, class E, class TreeGraphImpl>
-void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::addSon(const N* nodeObject, const N* sonNodeObject)
+void SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son)
 {
-  subjectTreeGraph_->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
+  this->getGraph()->removeSon(this->getNodeGraphid(node), this->getNodeGraphid(son));
 }
 
 template<class N, class E, class TreeGraphImpl>
-std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::removeSons(N* const node)
+std::vector<std::shared_ptr<N> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor) const
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->removeSons(this->getNodeGraphid(node)));
+  return this->getNodesFromGraphid(this->getGraph()->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB), includeAncestor));
 }
 
 template<class N, class E, class TreeGraphImpl>
-std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getNodePathBetweenTwoNodes(const N* nodeA, const N* nodeB, bool includeAncestor) const
+std::vector<std::shared_ptr<E> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB), includeAncestor));
+  return getEdgesFromGraphid(this->getGraph()->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
 }
 
 template<class N, class E, class TreeGraphImpl>
-std::vector<E*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getEdgePathBetweenTwoNodes(const N* nodeA, const N* nodeB) const
+std::vector<std::shared_ptr<N> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSubtreeNodes(const std::shared_ptr<N> localRoot)
 {
-  return getEdges(subjectTreeGraph_->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
+  return this->getNodesFromGraphid(this->getGraph()->getSubtreeNodes(this->getNodeGraphid(localRoot)));
 }
 
 template<class N, class E, class TreeGraphImpl>
-std::vector<N*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSubtreeNodes(const N* localRoot)
+std::vector<std::shared_ptr<E> > SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSubtreeEdges(const std::shared_ptr<N>  localRoot)
 {
-  return this->getNodesFromGraphid(subjectTreeGraph_->getSubtreeNodes(this->getNodeGraphid(localRoot)));
-}
-
-template<class N, class E, class TreeGraphImpl>
-std::vector<E*> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getSubtreeEdges(const N* localRoot)
-{
-  return getEdges(subjectTreeGraph_->getSubtreeNodes(this->getNodeGraphid(localRoot)));
+  return SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::getEdgesFromGraphid(this->getGraph()->getSubtreeEdges(this->getNodeGraphid(localRoot)));
 }
 }
 

@@ -33,9 +33,9 @@ namespace bpp
 namespace bpp
 {
 /**
- * @brief Defines a Graph. Contains edges and nodes. This class just define the structure of the graph
- * the content itself is contained in a GraphObserver template.
- * The observers are of the class GraphObservers, and can be called Subscribers.
+ * @brief Defines a Graph. Contains edges and nodes. This class just defines the structure of the graph
+ * The content itself is contained in a GraphObserver template.
+ * The observers are of the class GraphObservers.
  *
  * @author Thomas Bigot
  */
@@ -44,7 +44,7 @@ class SimpleGraph:
 public virtual Graph
 {
 
-private:
+protected:
 
     /**
     * is the graph directed
@@ -155,7 +155,7 @@ private:
     */
     void unlinkInEdgeStructure_(Edge edge);
     
-    
+protected:    
     /**
     * Check that a node exists. If not, throw an exception.
     * @param node node that has to be checked
@@ -170,13 +170,22 @@ private:
     */
     void edgeMustExist_(Edge edge, std::string name="") const;
 
+private:
     /**
     * Private version of getIncomingNeighbors or getOutgoingNeighbors.
     * Common code of these function shared here.
     * @param node node to  in or outgoing neighbors
-    * @param outgoing boolean: if tue, outgoing; else incoming
+    * @param outgoing boolean: if true, outgoing; else incoming
     */
     std::vector<Node> getNeighbors_(Node node,bool outgoing=true) const;
+
+  /**
+   * Private version of getIncomingEdges or getOutgoingEdges.
+   * Common code of these function shared here.
+   * @param node node to  in or outgoing edges
+   * @param outgoing boolean: if true, outgoing; else incoming
+   */
+  std::vector<Edge> getEdges_(Node node,bool outgoing=true) const;
 
   /**
     * Separate a node from all its neighbors.
@@ -353,12 +362,43 @@ public:
     ///@{
     
     /**
-    * Get all the neighbors of a node in the graph.
-    * @param node the node one wants to get its neighbors
-    * @return a vector containing the neighbors
+    * Get the degree of a node (ie the number of neighbors) in the graph.
+    * @param node the node one wants to count its neighbors
+    * @return the number of neighbors
     */
-    std::vector<Node> getNeighbors(Node node) const;
-    
+
+  size_t getDegree(Node node) const;
+
+  /**
+   * Says if  a node is a leaf (ie has at most one neighbor).
+   */
+
+  virtual bool isLeaf(Node node) const;
+
+  /**
+   * Get the number of outgoing neighbors  of a node (ie the number of sons) in the graph.
+   * @param node the node one wants to count its neighbors
+   * @return the number of outgoing neighbors
+   */
+
+  size_t getNumberOfOutgoingNeighbors(Node node) const;
+
+  /**
+   * Get all the neighbors of a node in the graph.
+   * @param node the node one wants to get its neighbors
+   * @return a vector containing the neighbors
+   */
+  
+  std::vector<Node> getNeighbors(Node node) const;
+
+  /**
+   * Get all the edges to/from a node in the graph.
+   * @param node the node one wants to get its edges
+   * @return a vector containing the edges
+   */
+  
+  std::vector<Edge> getEdges(Node node) const;
+
     /**
     * In an directed graph, get all the neighbors which
     * are leaving a node in the graph.
@@ -366,7 +406,15 @@ public:
     * @return a vector containing the outgoing neighbors
     */
     std::vector<Node> getOutgoingNeighbors(Node node) const;
-    
+
+  /**
+   * In an directed graph, get all the edges which
+   * are leaving a node in the graph.
+   * @param node the node one wants to get its edges
+   * @return a vector containing the outgoing edges
+   */
+  std::vector<Edge> getOutgoingEdges(Node node) const;
+
     /**
     * In an directed graph, get all the neighbors which
     * are coming to a node in the graph.
@@ -374,6 +422,14 @@ public:
     * @return a vector containing the incoming neighbors
     */
     std::vector<Node> getIncomingNeighbors(Node node) const;
+    
+  /**
+   * In an directed graph, get all the edges which
+   * are coming to a node in the graph.
+   * @param node the node one wants to get its edges
+   * @return a vector containing the incoming edges
+   */
+  std::vector<Edge> getIncomingEdges(Node node) const;
     
     /**
     * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -397,8 +453,23 @@ public:
     *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
     */
     std::pair<Node,Node> getNodes(Edge edge) const;
-    
-    
+
+  /**
+   * Get node located at the top of an edge
+   * 
+   * @return  the Node at the top the edge
+   *        example : N1--E1-->N2; getTop(E1) will return N1;
+   */
+  Node getTop(Edge edge) const;
+
+  /**
+   * Get node located at the bottom of an edge
+   * 
+   * @return  the Node at the bottom the edge
+   *        example : N1--E1-->N2; getBottom(E1) will return N2;
+   */
+  Node getBottom(Edge edge) const;
+  
     
     ///@}
     

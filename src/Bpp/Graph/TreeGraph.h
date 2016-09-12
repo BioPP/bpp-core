@@ -1,7 +1,11 @@
 #ifndef _TREEGRAPH_H_
 #define _TREEGRAPH_H_
 
+#include <string>
 #include <vector>
+#include <iostream>
+#include <ostream>
+
 
 #include "Graph.h"
 
@@ -53,8 +57,6 @@ namespace bpp
      */
     void propagateDirection_(Node node);
     
-    
-    
     // recursive function for getSubtreeNodes
     void fillSubtreeMetNodes_(std::vector<Graph::Node>& metNodes, Graph::Node localRoot) const;
     
@@ -75,10 +77,12 @@ namespace bpp
     
     /**
      * Is the tree rooted?
-     * @return true if rooted
+     *
+     * @return true if rooted, ie is directed.
      */
-    bool isRooted() const;
     
+    bool isRooted() const;
+
     /**
      * Get the father node of a node in a rooted tree
      * @return the father node
@@ -89,25 +93,37 @@ namespace bpp
      * Get the branch leading to the father in a rooted tree
      * @return the branch between a node and its father
      */
-    Graph::Edge getBranchToFather(Graph::Node node) const;
+    Graph::Edge getEdgeToFather(Graph::Node node) const;
     
     /**
-     * Get the father node of a node in a rooted tree
+     * Check if node has a father
      */
     bool hasFather(Graph::Node node) const;
-    
+
     /**
-     * Get the father node of a node in a rooted tree
+     * Says if  a node is a leaf (ie has at most one neighbor).
+     */
+
+    bool isLeaf(const Graph::Node node) const;
+
+    /**
+     * Get the sons node of a node
      */
     std::vector<Graph::Node> getSons(Graph::Node node) const;
-    
+
     /**
-     * Get the father node of a node in a rooted tree
+     * @brief Get the number of sons node
+     */
+
+    size_t getNumberOfSons(Graph::Node node) const;
+
+    /**
+     * set the father node of a node in a rooted tree
      */
     void setFather(Graph::Node node, Graph::Node fatherNode);
     
     /**
-     * Get the father node of a node in a rooted tree
+     * Add a son to a node in a rooted tree
      */
     void addSon(Graph::Node node, Graph::Node sonNode);
     
@@ -177,7 +193,6 @@ namespace bpp
   Graph::Node SimpleTreeGraph<GraphImpl>::getFather(Graph::Node node) const
   {
     mustBeValid_();
-    mustBeRooted_();
     std::vector<Graph::Node> incomers = GraphImpl::getIncomingNeighbors(node);
     if(incomers.size() != 1)
       throw Exception("SimpleTreeGraph<GraphImpl>::getFather: more than one father. Should never happen since validity has been controled. Please report this bug.");
@@ -187,7 +202,7 @@ namespace bpp
   }
   
   template <class GraphImpl>
-  Graph::Edge SimpleTreeGraph<GraphImpl>::getBranchToFather(Graph::Node node) const
+  Graph::Edge SimpleTreeGraph<GraphImpl>::getEdgeToFather(Graph::Node node) const
   {
     Node father = getFather(node);
     return GraphImpl::getEdge(father,node);
@@ -197,11 +212,18 @@ namespace bpp
   bool SimpleTreeGraph<GraphImpl>::hasFather(Graph::Node node) const
   {
     mustBeValid_();
-    mustBeRooted_();
     std::vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
     return incomers.size() == 1;
   }
-  
+
+  template <class GraphImpl>
+  bool SimpleTreeGraph<GraphImpl>::isLeaf(const Graph::Node node) const
+  {
+    mustBeValid_();
+    std::vector<Graph::Node> outg = SimpleGraph::getOutgoingNeighbors(node);
+    return outg.size() == 0;
+  }
+
   template <class GraphImpl>
   void SimpleTreeGraph<GraphImpl>::mustBeRooted_() const
   {
@@ -254,7 +276,6 @@ namespace bpp
       GraphImpl::link(node,father);
       propagateDirection_(father);
     }
-    
   }
   
   template <class GraphImpl>
@@ -270,7 +291,7 @@ namespace bpp
   {
     GraphImpl::link(node,sonNode);
   }
-  
+
   template <class GraphImpl>
   void SimpleTreeGraph<GraphImpl>::unRoot(bool joinRootSons)
   {
@@ -286,7 +307,19 @@ namespace bpp
     }
     GraphImpl::makeUndirected();
   }
-  
+
+  template <class GraphImpl>
+  std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::getSons(Graph::Node node) const
+  {
+    return GraphImpl::getOutgoingNeighbors(node);
+  }
+
+  template <class GraphImpl>
+  size_t SimpleTreeGraph<GraphImpl>::getNumberOfSons(Graph::Node node) const
+  {
+    return GraphImpl::getNumberOfOutgoingNeighbors(node);
+  }
+
   template <class GraphImpl>
   std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::removeSons(Graph::Node node)
   {
@@ -308,6 +341,8 @@ namespace bpp
   void SimpleTreeGraph<GraphImpl>::setOutGroup(Graph::Node newOutGroup)
   {
     mustBeRooted_();
+    deleteNode(SimpleGraph::getRoot());
+    
     Node newRoot = createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
     rootAt(newRoot);
   }
@@ -376,7 +411,6 @@ namespace bpp
   std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::getSubtreeNodes(Graph::Node localRoot) const
   {
     mustBeValid_();
-    mustBeRooted_();
     std::vector<Graph::Edge> metNodes;
     fillSubtreeMetNodes_(metNodes,localRoot);
     return metNodes;
@@ -386,7 +420,6 @@ namespace bpp
   std::vector<Graph::Edge> SimpleTreeGraph<GraphImpl>::getSubtreeEdges(Graph::Node localRoot) const
   {
     mustBeValid_();
-    mustBeRooted_();
     std::vector<Graph::Edge> metEdges;
     fillSubtreeMetEdges_(metEdges,localRoot);
     return metEdges;
@@ -405,14 +438,13 @@ namespace bpp
   template <class GraphImpl>
   void SimpleTreeGraph<GraphImpl>::fillSubtreeMetEdges_(std::vector<Graph::Edge>& metEdges, Graph::Node localRoot) const
   {
-    metEdges.push_back(localRoot);
     std::vector<Graph::Edge> edgesToSons = GraphImpl::getOutgoingEdges(localRoot);
     for(std::vector<Graph::Edge>::iterator currEdgeToSon = edgesToSons.begin(); currEdgeToSon != edgesToSons.end(); currEdgeToSon++)
-      fillSubtreeMetNodes_(metEdges,*currEdgeToSon);
+    {
+      metEdges.push_back(*currEdgeToSon);
+      fillSubtreeMetEdges_(metEdges,GraphImpl::getBottom(*currEdgeToSon));
+    }
   }
-  
-  
-  
 }
 
 

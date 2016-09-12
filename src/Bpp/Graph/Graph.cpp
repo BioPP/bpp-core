@@ -19,7 +19,6 @@ SimpleGraph::SimpleGraph(bool directed_p):
   highestEdgeID_(0),
   nodeStructure_(nodeStructureType()),
   edgeStructure_(edgeStructureType()),
-  
   root_(0)
 {
  
@@ -47,6 +46,17 @@ const SimpleGraph::Edge SimpleGraph::getEdge(SimpleGraph::Node nodeA, SimpleGrap
    if(secondNodeFound == firstNodeFound->second.first.end())
      throw(Exception("The second node was not in a relation with the first one."));
    return(secondNodeFound->second);
+}
+
+vector<SimpleGraph::Edge> SimpleGraph::getEdges(SimpleGraph::Node node) const
+{
+  vector<SimpleGraph::Edge> result;
+    vector<SimpleGraph::Edge> edgesToInsert;
+    edgesToInsert = getEdges_(node,false);
+    result.insert(result.end(),edgesToInsert.begin(),edgesToInsert.end());
+    edgesToInsert = getEdges_(node,true);
+    result.insert(result.end(),edgesToInsert.begin(),edgesToInsert.end());
+    return(result);
 }
 
 const SimpleGraph::Edge SimpleGraph::getAnyEdge(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB) const
@@ -94,7 +104,7 @@ void SimpleGraph::nodeMustExist_(Node node, string name) const
 
 void SimpleGraph::edgeMustExist_(SimpleGraph::Edge edge, string name) const
 {
-  if(edgeStructure_.find(edge) != edgeStructure_.end())
+  if(edgeStructure_.find(edge) == edgeStructure_.end())
   {
     ostringstream errMessage;
     errMessage << "This edge must exist: " << edge << " as " << name << ".";
@@ -157,15 +167,23 @@ SimpleGraph::Edge SimpleGraph::unlinkInNodeStructure_(SimpleGraph::Node nodeA, S
 
 void SimpleGraph::linkInNodeStructure_(SimpleGraph::Node nodeA, SimpleGraph::Node nodeB, SimpleGraph::Edge edge)
 {
-  nodeStructure_.find(nodeA)->second.first.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeB,edge));
-  nodeStructure_.find(nodeB)->second.second.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeA,edge));
+  std::map<Node, std::pair<std::map<Graph::Node, Graph::Edge>, std::map<Graph::Node, Graph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
+
+  if (ita!=nodeStructure_.end())
+    ita->second.first.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeB,edge));
+
+  std::map<Node, std::pair<std::map<Graph::Node, Graph::Edge>, std::map<Graph::Node, Graph::Edge> > >::iterator itb = nodeStructure_.find(nodeB);
+
+  if (itb!=nodeStructure_.end())
+    nodeStructure_.find(nodeB)->second.second.insert( pair<SimpleGraph::Node,SimpleGraph::Edge>(nodeA,edge));
+  
   this->topologyHasChanged_();
 }
 
 const SimpleGraph::Node SimpleGraph::createNode()
 {
   Node newNode = highestNodeID_++;
-  nodeStructure_[newNode];
+  nodeStructure_[newNode]=std::pair<std::map<Node,Edge>,std::map<Node,Edge> >();
   numberOfNodes_++;
   this->topologyHasChanged_();
   return newNode;
@@ -175,7 +193,7 @@ const SimpleGraph::Node SimpleGraph::createNodeFromNode(SimpleGraph::Node origin
 {
   //origin must be an existing node
   nodeMustExist_(origin,"origin node");
-  
+
   Node newNode = createNode();
   link(origin,newNode);
   this->topologyHasChanged_();
@@ -249,14 +267,71 @@ std::vector< SimpleGraph::Node > SimpleGraph::getNeighbors_(SimpleGraph::Node no
   return result;
 }
 
+std::vector< SimpleGraph::Edge > SimpleGraph::getEdges_(SimpleGraph::Node node, bool outgoing) const
+{
+  nodeMustExist_(node,"");
+  nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
+  if(foundNode == nodeStructure_.end())
+    throw(Exception("The requested node is not in the structure."));
+  const std::map<Node,Edge> &forOrBack = (outgoing?foundNode->second.first:foundNode->second.second);
+  vector<Edge> result;
+  for(map<Node,Edge>::const_iterator currNeighbor = forOrBack.begin(); currNeighbor!= forOrBack.end(); currNeighbor++)
+  {
+    result.push_back(currNeighbor->second);
+  }
+  
+  return result;
+}
+
 vector< SimpleGraph::Node > SimpleGraph::getIncomingNeighbors(SimpleGraph::Node node) const
 {
   return getNeighbors_(node,false);
 }
 
+vector< SimpleGraph::Edge > SimpleGraph::getIncomingEdges(SimpleGraph::Node node) const
+{
+  return getEdges_(node,false);
+}
+
 vector< SimpleGraph::Node > SimpleGraph::getOutgoingNeighbors(SimpleGraph::Node node) const
 {
   return getNeighbors_(node,true);
+}
+
+vector< SimpleGraph::Edge > SimpleGraph::getOutgoingEdges(SimpleGraph::Node node) const
+{
+  return getEdges_(node,true);
+}
+
+size_t SimpleGraph::getDegree(SimpleGraph::Node node) const
+{
+  nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
+  if (foundNode==nodeStructure_.end())
+    throw Exception("SimpleGraph::getDegree : Node " + TextTools::toString(node) + " does not exist.");
+  
+  return foundNode->second.first.size() + foundNode->second.second.size();
+}
+
+
+bool SimpleGraph::isLeaf(SimpleGraph::Node node) const
+{
+  nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
+  if (foundNode==nodeStructure_.end())
+    throw Exception("SimpleGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
+
+  return ((foundNode->second.first.size() + foundNode->second.second.size()) <= 1
+          || (isDirected() && foundNode->second.first.size()==1 && foundNode->second.second.size()==1
+              && (foundNode->second.first.begin()->first == foundNode->second.second.begin()->first)));
+}
+  
+  
+size_t SimpleGraph::getNumberOfOutgoingNeighbors(SimpleGraph::Node node) const
+{
+  nodeMustExist_(node,"");
+  nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
+  if(foundNode == nodeStructure_.end())
+    throw(Exception("The requested node is not in the structure."));
+  return foundNode->second.first.size();
 }
 
 vector< SimpleGraph::Node > SimpleGraph::getNeighbors(SimpleGraph::Node node) const
@@ -278,6 +353,15 @@ std::pair<SimpleGraph::Node, SimpleGraph::Node> SimpleGraph::getNodes(SimpleGrap
   return found->second;
 }
 
+SimpleGraph::Node SimpleGraph::getTop(SimpleGraph::Edge edge) const
+{
+  return std::get<0>(getNodes(edge));
+}
+
+SimpleGraph::Node SimpleGraph::getBottom(SimpleGraph::Edge edge) const
+{
+  return std::get<1>(getNodes(edge));
+}
 
 void SimpleGraph::deleteNode(SimpleGraph::Node node)
 {
@@ -316,7 +400,12 @@ unsigned int SimpleGraph::getHighestEdgeID() const
 vector<SimpleGraph::Node> SimpleGraph::getAllLeaves() const
 {
   vector<Node> listOfLeaves;
-  fillListOfLeaves_(root_,listOfLeaves,root_);
+  for (nodeStructureType::const_iterator it=nodeStructure_.begin(); it!=nodeStructure_ .end(); it++)
+  {
+    if (this->isLeaf(it->first))
+      listOfLeaves.push_back(it->first);
+  }
+  
   return listOfLeaves;
 }
 
@@ -377,7 +466,7 @@ bool SimpleGraph::isTree() const
   bool nodesAreMetOnlyOnce = nodesAreMetOnlyOnce_(root_,metNodes,root_);
   if(!nodesAreMetOnlyOnce)
     return false;
-  // now they have only been met once, they have to be met at least once
+  // now they have only been met at most once, they have to be met at least once
   bool noNodeMissing = true;
   for(nodeStructureType::const_iterator currNode = nodeStructure_.begin(); noNodeMissing && currNode != nodeStructure_.end(); currNode++)
     noNodeMissing = (metNodes.find(currNode->first) != metNodes.end());
@@ -421,7 +510,8 @@ void SimpleGraph::makeDirected()
     return;
   // save and clean the undirectedStructure
   nodeStructureType undirectedStructure = nodeStructure_;
-  nodeStructure_.clear();
+  for (nodeStructureType::iterator it=nodeStructure_.begin(); it!=nodeStructure_.end(); it++)
+    it->second=std::pair<std::map<Node,Edge>,std::map<Node,Edge> >();
   // copy each relation once, without the reciprocal link
   // (first met, first kept)
   // eg: A - B in undirected is represented as A->B and B->A
@@ -429,11 +519,12 @@ void SimpleGraph::makeDirected()
   std::set<pair<Node,Node> > alreadyConvertedRelations;
   for(nodeStructureType::iterator currNodeRow = undirectedStructure.begin(); currNodeRow != undirectedStructure.end(); currNodeRow++){
     Node nodeA = currNodeRow->first;
+    
     for(map<Node,Edge>::iterator currRelation = currNodeRow->second.first.begin(); currRelation != currNodeRow->second.first.end(); currRelation++)
     {
       Node nodeB = currRelation->first;
       Edge edge = currRelation->second;
-      if( !alreadyConvertedRelations.insert(pair<Node,Node>(min(nodeA,nodeB),max(nodeA,nodeB))).second)
+      if(alreadyConvertedRelations.insert(pair<Node,Node>(min(nodeA,nodeB),max(nodeA,nodeB))).second)
         linkInNodeStructure_(nodeA,nodeB,edge);
     }
   }
@@ -449,7 +540,8 @@ void SimpleGraph::makeUndirected()
     throw Exception("Cannot make an undirected graph from a directed one containing reciprocal relations.");
   // save and clean the undirectedStructure
   nodeStructureType directedStructure = nodeStructure_;
-  nodeStructure_.clear();
+  for (nodeStructureType::iterator it=nodeStructure_.begin(); it!=nodeStructure_.end(); it++)
+    it->second=std::pair<std::map<Node,Edge>,std::map<Node,Edge> >();
   // copy each relation twice, making the reciprocal link
   // eg: A - B in directed is represented as A->B
   //     in undirected, becomes A->B and B->A

@@ -42,6 +42,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #define _NUMBER_H_
 
 #include "../Clonable.h"
+#include "../Text/TextTools.h"
 
 #include <string>
 
