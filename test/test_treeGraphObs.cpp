@@ -48,47 +48,49 @@ using namespace std;
 
 int main() {
   SimpleAssociationTreeGraphObserver<string,unsigned int,bpp::SimpleTreeGraph<SimpleGraph> > grObs(true);
-  string zero = "zero";
-  string one = "one";
-  string two = "two";
-  string three = "three";
-  unsigned int r1 = 1;
-  unsigned int r3 = 3;
+
+  shared_ptr<string> zero(new string("zero"));
+  shared_ptr<string> one(new string("one"));
+  shared_ptr<string> two(new string("two"));
+  shared_ptr<string> three(new string("three"));
+  shared_ptr<unsigned int> r3(new unsigned int(3));
+  shared_ptr<unsigned int> r1(new unsigned int(3));
+
   cout << "Creating node zero." << endl;
-  grObs.createNode(&zero);
+  grObs.createNode(zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node one from the number zero." << endl;
-  grObs.createNode(&one);
-  grObs.link(&zero,&one,&r1);
+  grObs.createNode(one);
+  grObs.link(zero,one,r1);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  cout << "The father branch of zero is " << *(grObs.getBranchToFather(&one)) << endl;
-  cout << "The father node of one is " << *(grObs.getFather(&one)) << endl;
+  cout << "The father branch of zero is " << *(grObs.getEdgeToFather(one)) << endl;
+  cout << "The father node of one is " << *(grObs.getFather(one)) << endl;
   
 //   cout << "unlink 0->1 and relink with setFather()";
-//   grObs.unlink(&zero,&one);
-//   grObs.setFather(&one,&zero);
+//   grObs.unlink(zero,one);
+//   grObs.setFather(one,zero);
 //FIXME: setFather only works with valid tree (wich cannot be true…)
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
   
   cout << "Creating node two from the number one." << endl;
-  grObs.createNode(&one,&two);
+  grObs.createNode(one,two);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking two to zero." << endl;
-  grObs.link(&two,&zero,&r3);
+  grObs.link(two,zero,r3);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");  
   cout << "Linking one to three." << endl;
-  grObs.createNode(&one,&three);
+  grObs.createNode(one,three);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
 
   cout << "Linking three to zero." << endl;
-  grObs.link(&three,&zero);
+  grObs.link(three,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   // so now we have zero -> one -> two -> zero ...
-  vector<string*> fromOne = grObs.getOutgoingNeighbors(&zero);
-  vector<string*> fromThree = grObs.getOutgoingNeighbors(&two);
-  bool test = (*(fromOne.begin()) == &one) && (*(fromThree.begin()) == &zero);
+  vector<shared_ptr<string> > fromOne = grObs.getOutgoingNeighbors(zero);
+  vector<shared_ptr<string> > fromThree = grObs.getOutgoingNeighbors(two);
+  bool test = (*(fromOne.begin()) == one) && (*(fromThree.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
   
@@ -100,8 +102,8 @@ int main() {
   
   
   cout << "Removing 3->0"<< endl;
-  grObs.unlink(&two,&zero);
-  grObs.unlink(&three,&zero);
+  grObs.unlink(two,zero);
+  grObs.unlink(three,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
@@ -109,7 +111,7 @@ int main() {
   test &= grObs.isValid();
   
   cout << "Re-linking 3->0"<< endl;
-  grObs.link(&two,&zero);
+  grObs.link(two,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
   // the tree must be considered as unvalid at this point

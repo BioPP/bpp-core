@@ -45,33 +45,35 @@ using namespace std;
 
 int main() {
   SimpleAssociationGraphObserver<string,unsigned int,bpp::SimpleGraph> grObs(true);
-  string zero = "zero";
-  string one = "one";
-  string two = "two";
-  string three = "three";
-  unsigned int r3 = 3;
+  shared_ptr<string> zero(new string("zero"));
+  shared_ptr<string> one(new string("one"));
+  shared_ptr<string> two(new string("two"));
+  shared_ptr<string> three(new string("three"));
+  shared_ptr<unsigned int> r3(new unsigned int(3));
+  
   cout << "Creating node zero." << endl;
-  grObs.createNode(&zero);
+  grObs.createNode(zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node one from the number zero." << endl;
-  grObs.createNode(&zero,&one);
+  grObs.createNode(zero,one);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node two from the number one." << endl;
-  grObs.createNode(&one,&two);
+  grObs.createNode(one,two);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  cout << "Linking two to one." << endl;
-  grObs.link(&two,&zero,&r3);
+  cout << "Linking two to zero." << endl;
+  grObs.link(two,zero,r3);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking one to three." << endl;
-  grObs.createNode(&one,&three);
+  grObs.createNode(one,three);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking three to zero." << endl;
-  grObs.link(&three,&zero);
+  grObs.link(three,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   // so now we have zero -> one -> two -> zero ...
-  vector<string*> fromOne = grObs.getOutgoingNeighbors(&zero);
-  vector<string*> fromThree = grObs.getOutgoingNeighbors(&two);
-  bool test = (*(fromOne.begin()) == &one) && (*(fromThree.begin()) == &zero);
+  vector<shared_ptr<string> > fromZero = grObs.getOutgoingNeighbors(zero);
+  vector<shared_ptr<string> > fromTwo = grObs.getOutgoingNeighbors(two);
+
+  bool test = (*(fromZero.begin()) == one) && (*(fromTwo.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   return (test ? 0 : 1);
 }
