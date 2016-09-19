@@ -226,14 +226,32 @@ class AbstractParametrizable:
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
       return parameters_[index];
     }
-    const Parameter& getParameter_(size_t index) const throw (IndexOutOfBoundsException)
+
+  const Parameter& getParameter_(size_t index) const throw (IndexOutOfBoundsException)
     {
       if(index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
       return parameters_[index];
     }
-    
-    ParameterList& getParameters_() { return parameters_; }
+
+
+  ParameterList& getParameters_() { return parameters_; }
+
+  /**
+   * @return The shared_ptr parameter at a given position.
+   * @warning No check is performed on the validity of the index given as input!
+   */
+  
+  const std::shared_ptr<Parameter>& get_at(size_t i) const
+  {
+    return parameters_.get_at(i);
+  }
+  
+  std::shared_ptr<Parameter>& get_at(size_t i)
+  {
+    return parameters_.get_at(i);
+  }
+
 };
 
 } //end of namespace bpp.

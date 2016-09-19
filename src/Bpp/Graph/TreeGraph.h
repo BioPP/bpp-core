@@ -449,13 +449,4 @@ namespace bpp
 
 
 
-#else
-
-namespace bpp {
-  class TreeGraph;
-  
-  template <class GraphImpl>
-  class SimpleTreeGraph;
-}
-
 #endif

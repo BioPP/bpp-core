@@ -557,10 +557,4 @@ public:
 
 }
 
-#else
-
-namespace bpp {
-class Graph;
-}
-
 #endif

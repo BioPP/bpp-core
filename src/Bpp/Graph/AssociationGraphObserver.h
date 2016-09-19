@@ -321,7 +321,7 @@ public:
   typedef typename Graph::Node NodeGraphid;
   typedef typename Graph::Edge EdgeGraphid;
 
-private:
+protected:
   /**
    * The observed Graph. Anytime this graph is observed,
    * the current object will be warned to take changes into account.
@@ -329,6 +329,7 @@ private:
 
   std::shared_ptr<GraphImpl> subjectGraph_;
 
+private:
   /**
    * Registration with Graph Ids.
    *
@@ -425,12 +426,17 @@ public:
    * Copy Constructor
    * @param graphObserver the graphObserver to be copied
    */
+
+  template<class N2, class E2>
+  SimpleAssociationGraphObserver(SimpleAssociationGraphObserver<N2, E2, GraphImpl> const& graphObserver);
+  
   SimpleAssociationGraphObserver(SimpleAssociationGraphObserver<N, E, GraphImpl> const& graphObserver);
 
   /**
    * = Operator
    * @param graphObserver the graphObserver we want to copy the values
    */
+  
   SimpleAssociationGraphObserver<N, E, GraphImpl>& operator=(bpp::SimpleAssociationGraphObserver<N, E, GraphImpl> const& graphObserver);
 
   /**
@@ -446,7 +452,9 @@ public:
    */
   SimpleAssociationGraphObserver<N, E, GraphImpl>* clone() const { return new SimpleAssociationGraphObserver<N, E, GraphImpl>(*this); }
 
-  std::shared_ptr<GraphImpl> getGraph() const;
+  const std::shared_ptr<GraphImpl> getGraph() const;
+
+  std::shared_ptr<GraphImpl> getGraph();
 
   /**
    * This function is called to tell the observer that the subject
@@ -788,9 +796,11 @@ public:
    */
   
   size_t getDegree(const std::shared_ptr<N>  node) const;
-
-
+  
   // /@}
+
+  template<typename N2, typename E2, typename G2> friend class SimpleAssociationGraphObserver;
+  
 };
 
 //     class GraphObserverTools
@@ -885,6 +895,58 @@ SimpleAssociationGraphObserver<N, E, GraphImpl>::SimpleAssociationGraphObserver(
   getGraph()->registerObserver(this);
 }
 
+  template<class N, class E, class GraphImpl> template<class N2, class E2>
+  SimpleAssociationGraphObserver<N, E, GraphImpl>::SimpleAssociationGraphObserver(SimpleAssociationGraphObserver<N2, E2, GraphImpl> const& graphObserver) :
+    subjectGraph_(graphObserver.getGraph()),
+    graphidToN_(graphObserver.graphidToN_.size()),
+    graphidToE_(graphObserver.graphidToE_.size()),
+    NToGraphid_(),
+    EToGraphid_(),
+    indexToN_(graphObserver.indexToN_.size()),
+    indexToE_(graphObserver.indexToE_.size()),
+    NToIndex_(),
+    EToIndex_()
+  {
+    for (typename std::map<std::shared_ptr<N2>, NodeGraphid >::const_iterator itN=graphObserver.NToGraphid_.begin();
+         itN != graphObserver.NToGraphid_.end(); itN++)
+    {  
+
+      std::shared_ptr<N> node(new N(*itN->first));
+    
+      NToGraphid_[node]=itN->second;
+      graphidToN_[itN->second]=node;
+
+      typename std::map<std::shared_ptr<N2>, typename AssociationGraphObserver<N2, E2>::NodeIndex>::const_iterator indN=graphObserver.NToIndex_.find(itN->first);
+
+      if (indN!=graphObserver.NToIndex_.end())
+      {
+        NToIndex_[node]=indN->second;
+        indexToN_[indN->second]=node;
+      }
+    }
+
+    for (typename std::map<std::shared_ptr<E2>, EdgeGraphid >::const_iterator itE=graphObserver.EToGraphid_.begin();
+         itE != graphObserver.EToGraphid_.end(); itE++)
+    {  
+      std::shared_ptr<E> edge(new E(*itE->first));
+
+      EToGraphid_[edge]=itE->second;
+      graphidToE_[itE->second]=edge;
+
+      typename std::map<std::shared_ptr<E2> , typename AssociationGraphObserver<N2, E2>::EdgeIndex>::const_iterator indE=graphObserver.EToIndex_.find(itE->first);
+    
+      if (indE!=graphObserver.EToIndex_.end())
+      {    
+        EToIndex_[edge]=indE->second;
+        indexToE_[indE->second]=edge;
+      }
+    }
+
+    getGraph()->registerObserver(this);
+  }
+
+
+  
 template<class N, class E, class GraphImpl>
 SimpleAssociationGraphObserver<N, E, GraphImpl>::~SimpleAssociationGraphObserver()
 {
@@ -934,7 +996,7 @@ SimpleAssociationGraphObserver<N, E, GraphImpl>& SimpleAssociationGraphObserver<
     }
   }
 
-  this->subjectGraph_ = graphObserver.subjectGraph_;
+  this->subjectGraph_ = graphObserver.getGraph();
 
   this->getGraph()->registerObserver(this);
 
@@ -1253,10 +1315,16 @@ size_t SimpleAssociationGraphObserver<N, E, GraphImpl>::getDegree(const std::sha
 }
 
 template<class N, class E, class GraphImpl>
-  std::shared_ptr<GraphImpl> SimpleAssociationGraphObserver<N, E, GraphImpl>::getGraph() const
+const std::shared_ptr<GraphImpl> SimpleAssociationGraphObserver<N, E, GraphImpl>::getGraph() const
 {
   return subjectGraph_;
 }
+
+  template<class N, class E, class GraphImpl>
+  std::shared_ptr<GraphImpl> SimpleAssociationGraphObserver<N, E, GraphImpl>::getGraph() 
+  {
+    return subjectGraph_;
+  }
 
 template<class N, class E, class GraphImpl>
 void SimpleAssociationGraphObserver<N, E, GraphImpl>::deleteNode(std::shared_ptr<N>  nodeObject)
@@ -1477,10 +1545,5 @@ std::pair<std::shared_ptr<N> , std::shared_ptr<N> > SimpleAssociationGraphObserv
   return std::pair<std::shared_ptr<N> , std::shared_ptr<N> >(getNodeFromGraphid(nodes.first), getNodeFromGraphid(nodes.second));
 }
 }
-
-#else
-
-namespace bpp
-{class AssociationGraphObserver; }
 
 #endif

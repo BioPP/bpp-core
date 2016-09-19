@@ -29,8 +29,8 @@ class AssociationTreeGraphObserver :
 
 template<class N, class E, class TreeGraphImpl>
 class SimpleAssociationTreeGraphObserver :
-  public virtual AssociationTreeGraphObserver<N, E>,
-  public virtual SimpleAssociationGraphObserver<N, E, TreeGraphImpl>
+  public AssociationTreeGraphObserver<N, E>,
+  public SimpleAssociationGraphObserver<N, E, TreeGraphImpl>
 {
 public:
   typedef typename AssociationGraphObserver<N, E>::NodeIndex NodeIndex;
@@ -59,10 +59,19 @@ public:
   SimpleAssociationTreeGraphObserver(bpp::SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver);
 
   /**
+   * Copy Constructor
+   * @param treeGraphObserver the treeGraphObserver to be copied
+   */
+
+  template<class N2, class E2>
+  SimpleAssociationTreeGraphObserver(bpp::SimpleAssociationTreeGraphObserver<N2, E2, TreeGraphImpl> const& treeGraphObserver);
+
+  /**
    * = Operator
    * @param graphObserver the treeGraphObserver we want to copy the values
    */
-  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> operator=(bpp::SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver);
+
+  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>& operator=(bpp::SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver);
 
   /**
    * Destructor
@@ -244,11 +253,23 @@ SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationTreeGr
 {
 }
 
+  /**
+   * Copy Constructor
+   * @param graphObserver the treeGraphObserver to be copied
+   */
+  
+  template<class N, class E, class TreeGraphImpl> template<class N2, class E2>
+  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationTreeGraphObserver(bpp::SimpleAssociationTreeGraphObserver<N2, E2, TreeGraphImpl> const& treeGraphObserver) :
+    SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::SimpleAssociationGraphObserver(treeGraphObserver)
+  {
+  } 
 
+  
 template<class N, class E, class TreeGraphImpl>
-SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::operator=(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver)
+SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>& SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::operator=(SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl> const& treeGraphObserver)
 {
   SimpleAssociationGraphObserver<N, E, TreeGraphImpl>::operator=(treeGraphObserver);
+  return *this;
 }
 
 template<class N, class E, class TreeGraphImpl>
@@ -402,9 +423,5 @@ std::vector<std::shared_ptr<E> > SimpleAssociationTreeGraphObserver<N, E, TreeGr
 }
 }
 
-#else
-
-namespace bpp
-{class AssociationTreeGraphObserver; }
 
 #endif
