@@ -409,16 +409,16 @@ vector<SimpleGraph::Node> SimpleGraph::getAllLeaves() const
   return listOfLeaves;
 }
 
-void SimpleGraph::fillListOfLeaves_(Node startingNode, vector<Node>& foundLeaves, Node originNode, bool limitedRecursions, unsigned int maxRecursions) const
+void SimpleGraph::fillListOfLeaves_(Node startingNode, vector<Node>& foundLeaves, Node originNode, unsigned int maxRecursions) const
 {
   const vector<Node> neighbors = getNeighbors(startingNode);
   if (neighbors.size() > 1)
   {
-    if(!limitedRecursions || maxRecursions > 0)
+    if(maxRecursions > 0)
       for(vector<Node>::const_iterator currNeighbor = neighbors.begin(); currNeighbor != neighbors.end(); currNeighbor++)
       {
         if (*currNeighbor != originNode)
-          fillListOfLeaves_(*currNeighbor, foundLeaves, startingNode, limitedRecursions, maxRecursions-1);
+          fillListOfLeaves_(*currNeighbor, foundLeaves, startingNode, maxRecursions-1);
       }
   }
   else
@@ -431,7 +431,7 @@ void SimpleGraph::fillListOfLeaves_(Node startingNode, vector<Node>& foundLeaves
 std::vector<SimpleGraph::Node> SimpleGraph::getLeavesFromNode(SimpleGraph::Node node,unsigned int maxDepth) const
 {
   vector<Node> listOfLeaves;
-  fillListOfLeaves_(node,listOfLeaves,node,(maxDepth!=0),maxDepth);
+  fillListOfLeaves_(node,listOfLeaves,node,maxDepth);
   return listOfLeaves;
 }
 

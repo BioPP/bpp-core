@@ -199,7 +199,7 @@ private:
     * @param foundLeaves a vector containing all the found leaves
     * @param originNode the node where we come from, not to explore
     */
-    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, bool limitedRecursions = false, unsigned int maxRecursions = 0) const;
+    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, unsigned int maxRecursions) const;
     
    /** 
     * Check that nodes are only met once to define if the graph is cyclic.
@@ -435,10 +435,10 @@ public:
     * Get the leaves of a graph, ie, nodes with only one neighbor,
     * starting from a peculiar node.
     * @param node the starting node
-    * @param maxDepth the maximum number of allowed depth, 0 means no max.
+    * @param maxDepth the maximum number of allowed depth.
     * @return a vector containing the leaves
     */
-    std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth = 0) const;
+    std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth) const;
     
     /**
     * Get all the leaves of a graph, ie, nodes with only one neighbor,

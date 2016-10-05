@@ -79,6 +79,11 @@ typedef std::vector<Vint> VVint;
 typedef std::vector<VVint> VVVint;
 typedef std::vector<VVVint> VVVVint;
 
+typedef std::vector<unsigned int> Vuint;
+typedef std::vector<Vint> VVuint;
+typedef std::vector<VVint> VVVuint;
+typedef std::vector<VVVint> VVVVuint;
+
 /**
  * @name Element-wise operations.
  * @{

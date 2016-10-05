@@ -10,6 +10,7 @@
 #include "Graph.h"
 
 #include "../Exceptions.h"
+#include "../Numeric/VectorTools.h"
 
 namespace bpp
 {
@@ -63,6 +64,8 @@ namespace bpp
     // recursive function for getSubtreeEdges
     void fillSubtreeMetEdges_(std::vector<Graph::Edge>& metEdges, Graph::Node localRoot) const;
     
+    // recursive function for getLeavesUnderNode
+    void fillListOfLeaves_(Graph::Node startingNode, std::vector<Graph::Node>& foundLeaves) const;
     
   public:
       
@@ -105,6 +108,14 @@ namespace bpp
      */
 
     bool isLeaf(const Graph::Node node) const;
+
+    /**
+     * Get the leaves under a node
+     * @param node the starting node
+     * @return a vector containing the leaves
+     */
+    
+    std::vector<Node> getLeavesUnderNode(Node node) const;
 
     /**
      * Get the sons node of a node
@@ -194,10 +205,10 @@ namespace bpp
   {
     mustBeValid_();
     std::vector<Graph::Node> incomers = GraphImpl::getIncomingNeighbors(node);
-    if(incomers.size() != 1)
-      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: more than one father. Should never happen since validity has been controled. Please report this bug.");
+    if (incomers.size() > 1)
+      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: more than one father for Node " + TextTools::toString(node) + " : " + VectorTools::paste(incomers,",") + ". Should never happen since validity has been controled. Please report this bug.");
     if(incomers.size() == 0)
-      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: node has no father.");
+      throw Exception("SimpleTreeGraph<GraphImpl>::getFather: node " + TextTools::toString(node) + " has no father.");
     return *incomers.begin();
   }
   
@@ -213,7 +224,7 @@ namespace bpp
   {
     mustBeValid_();
     std::vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
-    return incomers.size() == 1;
+    return incomers.size() >= 1;
   }
 
   template <class GraphImpl>
@@ -222,6 +233,34 @@ namespace bpp
     mustBeValid_();
     std::vector<Graph::Node> outg = SimpleGraph::getOutgoingNeighbors(node);
     return outg.size() == 0;
+  }
+
+
+  template <class GraphImpl>  
+  void SimpleTreeGraph<GraphImpl>::fillListOfLeaves_(Graph::Node startingNode, std::vector<Graph::Node>& foundLeaves) const
+  {
+    const std::vector<Graph::Node> sons = getSons(startingNode);
+    if (sons.size() > 1)
+    {
+      for(std::vector<Graph::Node>::const_iterator currNeighbor = sons.begin(); currNeighbor != sons.end(); currNeighbor++)
+      {
+        fillListOfLeaves_(*currNeighbor, foundLeaves);
+      }
+    }
+    else
+    {
+      foundLeaves.push_back(startingNode);
+    }
+  }
+
+  template <class GraphImpl>  
+  std::vector<Graph::Node> SimpleTreeGraph<GraphImpl>::getLeavesUnderNode(Graph::Node node) const
+  {
+
+    std::vector<Graph::Node> foundLeaves;
+    fillListOfLeaves_(node, foundLeaves);
+
+    return foundLeaves;
   }
 
   template <class GraphImpl>
