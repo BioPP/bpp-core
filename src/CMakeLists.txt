@@ -18,8 +18,6 @@ SET(CPP_FILES
   Bpp/Text/NestedStringTokenizer.cpp
   Bpp/Text/StringTokenizer.cpp
   Bpp/Text/TextTools.cpp
-  Bpp/Graph/BasicONode.cpp
-  Bpp/Graph/BasicTNode.cpp
   Bpp/Graph/Graph.cpp
   Bpp/Graphics/ColorTools.cpp
   Bpp/Graphics/GraphicDevice.cpp
@@ -105,11 +103,6 @@ SET(H_FILES
   Bpp/App/NumCalcApplicationTools.h
   Bpp/Graph/AssociationGraphObserver.h
   Bpp/Graph/AssociationTreeGraphObserver.h
-  Bpp/Graph/UNode.h
-  Bpp/Graph/ONode.h
-  Bpp/Graph/TNode.h
-  Bpp/Graph/BasicONode.h
-  Bpp/Graph/BasicTNode.h
   Bpp/Graph/Graph.h
   Bpp/Graph/TreeGraph.h
   Bpp/Graph/GraphObserver.h  
@@ -257,7 +250,4 @@ INSTALL(TARGETS bppcore-static bppcore-shared DESTINATION lib${LIB_SUFFIX})
 
 # Install headers
 INSTALL(DIRECTORY Bpp/ DESTINATION include/Bpp FILES_MATCHING PATTERN "*.h")
-
-# Generate generic include files (.all)
-INSTALL(CODE "EXECUTE_PROCESS(COMMAND ${CMAKE_SOURCE_DIR}/genIncludes.sh ${CMAKE_PREFIX_PATH}/include/Bpp)")
 
