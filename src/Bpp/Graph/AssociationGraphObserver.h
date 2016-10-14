@@ -303,6 +303,12 @@ namespace bpp
     virtual std::vector<std::shared_ptr<N> > getAllLeaves() const = 0;
 
     /**
+     * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
+     * @return a vector containing the inner nodes.
+     */    
+    virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const = 0;
+
+    /**
      * Get all the defined nodes of a graphO,
      * @return a vector containing the nodesObjects
      */
@@ -723,6 +729,12 @@ namespace bpp
      * @return a vector containing the leaves
      */
     std::vector<std::shared_ptr<N> > getAllLeaves() const;
+
+    /**
+     * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
+     * @return a vector containing the inner nodes.
+     */    
+    virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const;
 
     /**
      * Get all the defined nodes of a graph,
@@ -1278,6 +1290,22 @@ namespace bpp
         leavesToReturn.push_back(foundLeafObject);
     }
     return leavesToReturn;
+  }
+
+  template<class N, class E, class GraphImpl>
+  std::vector<std::shared_ptr<N> > SimpleAssociationGraphObserver<N, E, GraphImpl>::getAllInnerNodes() const
+  {
+    std::vector<std::shared_ptr<N> > nodesToReturn;
+    // fetching all the graph Leaves
+    std::vector<NodeGraphid> graphNodes = getGraph()->getAllInnerNodes();
+    // testing if they are defined in this observer
+    for (typename std::vector<NodeGraphid>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
+    {
+      std::shared_ptr<N>  foundNodeObject = graphidToN_.at(*currGraphNode);
+      if (foundNodeObject != 00)
+        nodesToReturn.push_back(foundNodeObject);
+    }
+    return nodesToReturn;
   }
 
   template<class N, class E, class GraphImpl>

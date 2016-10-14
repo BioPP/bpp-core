@@ -308,8 +308,8 @@ size_t SimpleGraph::getDegree(SimpleGraph::Node node) const
   nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
   if (foundNode==nodeStructure_.end())
     throw Exception("SimpleGraph::getDegree : Node " + TextTools::toString(node) + " does not exist.");
-  
-  return foundNode->second.first.size() + foundNode->second.second.size();
+
+  return (isDirected()? foundNode->second.first.size() + foundNode->second.second.size() : foundNode->second.first.size());
 }
 
 
@@ -319,9 +319,10 @@ bool SimpleGraph::isLeaf(SimpleGraph::Node node) const
   if (foundNode==nodeStructure_.end())
     throw Exception("SimpleGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
 
-  return ((foundNode->second.first.size() + foundNode->second.second.size()) <= 1
-          || (isDirected() && foundNode->second.first.size()==1 && foundNode->second.second.size()==1
-              && (foundNode->second.first.begin()->first == foundNode->second.second.begin()->first)));
+  return ((!isDirected() && (foundNode->second.first.size() <= 1))
+          || (isDirected() && (
+                (foundNode->second.first.size() + foundNode->second.second.size() <= 1)
+                || (foundNode->second.first.size() ==1 &&  foundNode->second.second.size() == 1 && foundNode->second.first.begin()->first == foundNode->second.second.begin()->first))));
 }
   
   
@@ -407,6 +408,18 @@ vector<SimpleGraph::Node> SimpleGraph::getAllLeaves() const
   }
   
   return listOfLeaves;
+}
+
+vector<SimpleGraph::Node> SimpleGraph::getAllInnerNodes() const
+{
+  vector<Node> listOfInNodes;
+  for (nodeStructureType::const_iterator it=nodeStructure_.begin(); it!=nodeStructure_ .end(); it++)
+  {
+    if (this->getDegree(it->first)>=2)
+      listOfInNodes.push_back(it->first);
+  }
+  
+  return listOfInNodes;
 }
 
 void SimpleGraph::fillListOfLeaves_(Node startingNode, vector<Node>& foundLeaves, Node originNode, unsigned int maxRecursions) const

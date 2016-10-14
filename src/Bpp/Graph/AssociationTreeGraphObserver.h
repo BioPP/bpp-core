@@ -129,6 +129,7 @@ namespace bpp
      */
 
     std::shared_ptr<N> getRoot() const;
+    NodeIndex getRootIndex() const;
 
     /**
      * Return, in a rooted tree, the father node
@@ -295,6 +296,12 @@ namespace bpp
   std::shared_ptr<N>  SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getRoot() const
   {
     return this->getNodeFromGraphid(this->getGraph()->getRoot());
+  }
+
+  template<class N, class E, class TreeGraphImpl>
+  typename SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::NodeIndex SimpleAssociationTreeGraphObserver<N, E, TreeGraphImpl>::getRootIndex() const
+  {
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getRoot()));
   }
 
   template<class N, class E, class TreeGraphImpl>

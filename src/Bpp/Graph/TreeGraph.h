@@ -15,7 +15,7 @@
 namespace bpp
 {
   class TreeGraph:
-  public virtual Graph
+    public virtual Graph
   {
   public:
     
@@ -31,8 +31,8 @@ namespace bpp
   
   template <class GraphImpl>
   class SimpleTreeGraph:
-  public virtual TreeGraph,
-  public virtual GraphImpl
+    public virtual TreeGraph,
+    public virtual GraphImpl
   {
   private:
     /**
@@ -188,8 +188,8 @@ namespace bpp
   
   template <class GraphImpl>
   SimpleTreeGraph<GraphImpl>::SimpleTreeGraph(bool rooted):
-  GraphImpl(rooted),
-  isValid_(false)
+    GraphImpl(rooted),
+    isValid_(false)
   {
   }
   
@@ -222,17 +222,23 @@ namespace bpp
   template <class GraphImpl>
   bool SimpleTreeGraph<GraphImpl>::hasFather(Graph::Node node) const
   {
-    mustBeValid_();
-    std::vector<Graph::Node> incomers = SimpleGraph::getIncomingNeighbors(node);
-    return incomers.size() >= 1;
+    SimpleGraph::nodeStructureType::const_iterator foundNode = SimpleGraph::nodeStructure_.find(node);
+    if (foundNode==SimpleGraph::nodeStructure_.end())
+      throw Exception("SimpleTreeGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
+    
+    return foundNode->second.second.size() >= 1;
   }
 
   template <class GraphImpl>
   bool SimpleTreeGraph<GraphImpl>::isLeaf(const Graph::Node node) const
   {
-    mustBeValid_();
-    std::vector<Graph::Node> outg = SimpleGraph::getOutgoingNeighbors(node);
-    return outg.size() == 0;
+    SimpleGraph::nodeStructureType::const_iterator foundNode = SimpleGraph::nodeStructure_.find(node);
+    if (foundNode==SimpleGraph::nodeStructure_.end())
+      throw Exception("SimpleTreeGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
+    
+    return ((!SimpleGraph::isDirected() && (foundNode->second.first.size() <= 1))
+            || (SimpleGraph::isDirected() && foundNode->second.first.size() == 0));
+    
   }
 
 
@@ -311,9 +317,9 @@ namespace bpp
   {
     if(hasFather(node)){
       Node father = getFather(node);
+      propagateDirection_(father);
       GraphImpl::unlink(father,node);
       GraphImpl::link(node,father);
-      propagateDirection_(father);
     }
   }
   
