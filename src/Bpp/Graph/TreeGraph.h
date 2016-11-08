@@ -68,6 +68,117 @@ namespace bpp
      * @return true if valid tree
      */
     virtual bool isValid() const = 0;
+
+    /**
+     * Get the father node of a node in a rooted tree
+     * @return the father node
+     */
+    
+    virtual Graph::NodeId getFather(Graph::NodeId nodeid) const = 0;
+    
+    /**
+     * Get the branch leading to the father in a rooted tree
+     * @return the branch between a node and its father
+     */
+
+    virtual Graph::EdgeId getEdgeToFather(Graph::NodeId node) const = 0;
+    
+    /**
+     * Check if node has a father
+     */
+
+    virtual bool hasFather(Graph::NodeId node) const = 0;
+
+    /**
+     * Says if  a node is a leaf (ie has at most one neighbor).
+     */
+
+    virtual bool isLeaf(Graph::NodeId node) const = 0;
+
+    /**
+     * Get the leaves under a node
+     * @param node the starting node
+     * @return a vector containing the leaves
+     */
+    
+    virtual std::vector<Graph::NodeId> getLeavesUnderNode(Graph::NodeId node) const = 0;
+
+    /**
+     * Get the sons node of a node
+     */
+    
+    virtual std::vector<Graph::NodeId> getSons(Graph::NodeId node) const = 0;
+
+    /**
+     * @brief Get the number of sons node
+     */
+
+    virtual size_t getNumberOfSons(Graph::NodeId node) const = 0;
+
+    /**
+     * set the father node of a node in a rooted tree
+     */
+    
+    virtual void setFather(Graph::NodeId node, Graph::NodeId fatherNode) = 0;
+    
+    /**
+     * Add a son to a node in a rooted tree
+     */
+    
+    virtual void addSon(Graph::NodeId node, Graph::NodeId sonNode) = 0;
+    
+    /**
+     * Remove all the sons
+     */
+    
+    std::vector<Graph::NodeId> removeSons(Graph::NodeId node);
+    
+    /**
+     * Remove one son
+     */
+    
+    virtual void removeSon(Graph::NodeId node, Graph::NodeId son) = 0;
+    
+    /**
+     * Re-root the tree with the new root
+     */
+    
+    virtual void rootAt(Graph::NodeId newRoot) = 0;
+    
+    /**
+     * Set the tree to its flat unrooted version.
+     * As an algorithmical convenience, a root node is kept, but it has
+     * no logical significance.
+     */
+    
+    virtual void unRoot(bool joinRootSons) = 0;
+    
+    /**
+     * Set a node as a new outgroup in a rooted tree, will make a root between
+     * the given node and its father.
+     */
+
+    virtual void setOutGroup(Graph::NodeId newOutGroup) = 0;
+    
+    /**
+     * Get all the nodes of a subtree
+     */
+    
+    virtual std::vector<Graph::NodeId> getSubtreeNodes(Graph::NodeId localRoot) const = 0;
+    
+    /**
+     * Get all the branches of a subtree
+     */
+    
+    virtual std::vector<Graph::EdgeId> getSubtreeEdges(Graph::NodeId localRoot) const = 0;
+        
+    /////FROM TREETOOLS & TREETOOLS COMPAT
+    
+    
+    virtual std::vector<Graph::NodeId> getNodePathBetweenTwoNodes(Graph::NodeId nodeA, Graph::NodeId nodeB, bool includeAncestor = true) const = 0;
+    virtual std::vector<Graph::EdgeId> getEdgePathBetweenTwoNodes(Graph::NodeId nodeA, Graph::NodeId nodeB) const = 0;
+    
+
   };
 }
 

@@ -123,8 +123,6 @@ namespace bpp
      */
     
     Graph::NodeId getFather(Graph::NodeId nodeid) const;
-    // const Node& getFather(const Node& node) const;
-    // Node& getFather(const Node& node);
     
     /**
      * Get the branch leading to the father in a rooted tree
@@ -430,15 +428,15 @@ namespace bpp
     mustBeRooted_();
     deleteNode(GraphImpl::getRoot());
     
-    Node* newRoot = GraphImpl::createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
-    rootAt(*newRoot);
+    Graph::NodeId newRoot = GraphImpl::createNodeFromEdge(getEdge(getFather(newOutGroup),newOutGroup));
+    rootAt(newRoot);
   }
   
   template <class GraphImpl>
   std::vector<Graph::NodeId> TreeGraphImpl<GraphImpl>::getNodePathBetweenTwoNodes(Graph::NodeId nodeA, Graph::NodeId nodeB, bool includeAncestor) const
   {
-    GraphImpl::nodeMustExist(nodeA);
-    GraphImpl::nodeMustExist(nodeB);
+    GraphImpl::nodeMustExist_(nodeA);
+    GraphImpl::nodeMustExist_(nodeB);
     std::vector<Graph::NodeId> path;
     std::vector<Graph::NodeId> pathMatrix1;
     std::vector<Graph::NodeId> pathMatrix2;

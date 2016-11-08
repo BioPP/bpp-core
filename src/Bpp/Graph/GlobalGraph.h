@@ -59,7 +59,7 @@ namespace bpp
     typedef Graph::NodeId Node;
     typedef Graph::EdgeId Edge;
     
-  protected:
+  private:
     
     /**
      * is the graph directed
@@ -176,6 +176,7 @@ namespace bpp
     
     void unlinkInEdgeStructure_(const Edge& edge);
 
+  protected:
     /**
      * get the Highest Node ID (for vector sizing)
      */
