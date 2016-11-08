@@ -1,3 +1,42 @@
+//
+// File Graph.h
+// Created by: Thomas Bigot
+// Last modification : vendredi 4 novembre 2016, à 10h 21
+//
+
+/*
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+
+This software is a computer program whose purpose is to provide utilitary
+classes. This file belongs to the Bio++ Project.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+*/
+
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
@@ -22,240 +61,24 @@ namespace bpp
   class Graph
   {
   public:
-    typedef unsigned int Node;
-    typedef unsigned int Edge;
-    virtual ~Graph() {}
+    typedef unsigned int NodeId;
+    typedef unsigned int EdgeId;
 
-    //TODO: interface  from SimpleGraph
-  };
-}
+    virtual ~Graph(){};    
 
-namespace bpp
-{
-/**
- * @brief Defines a Graph. Contains edges and nodes. This class just defines the structure of the graph
- * The content itself is contained in a GraphObserver template.
- * The observers are of the class GraphObservers.
- *
- * @author Thomas Bigot
- */
-
-  class SimpleGraph:
-    public virtual Graph
-  {
-
-  protected:
-
-    /**
-     * is the graph directed
-     */
-    bool directed_;
-
-    /**
-     * List of all the subscribers.
-     */
-    std::set<GraphObserver*> observers_;
-
-    /**
-     * Number of nodes.
-     */
-    unsigned int numberOfNodes_;
-    /**
-     * Highest used available ID for a Node.
-     */
-    unsigned int highestNodeID_;
-    /**
-     * Highest used available ID for an Edge.
-     */
-    unsigned int highestEdgeID_;
-
-    /**
-     * The node structure type
-     * Node -> ("toNodes" [DestNode,Edge],"fromNodes" [DestNode,Edge])
-     * directed example: (N1)-E1->(N2)-E2->(N3) is coded as
-     *     N1 -> ((N2:E1),())
-     *     N2 -> ((N3:E3),(N1:E1))
-     *     N3 -> ((),(N2:E2))
-     * undirected example: (N1)-E1-(N2)-E2->(N3) is coded as
-     *     N1 -> ((N2:E1),(N2:E1))
-     *     N2 -> ((N1:E1, N3:E3),(N1:E1, N3:E3))
-     *     N3 -> ((N2:E2),(N2:E2)) 
-     */
-    typedef std::map<Node,std::pair<std::map<Node,Edge>,std::map<Node,Edge> > > nodeStructureType;
-
-    /**
-     * The edge structure type
-     * directed example: N1--E1-->N2 is coded as E1 -> (N1,N2)
-     * undirected example: N1--E1--N2 is coded as E1 -> (N1,N2)
-     */
-    typedef std::map<Edge,std::pair<Node,Node> > edgeStructureType;
-
-    
-    /**
-     * Nodes and their relations.
-     * see nodeStructureType documentation
-     */
-    nodeStructureType nodeStructure_;
-    
-    
-    /**
-     * Edges and their relations in the forward direction..
-     * see edgeStructureType documentation
-     */
-    edgeStructureType edgeStructure_;
-    
-    /**
-     * Usualy the first node of a graph. Used for algorithmic purposes.
-     */
-    Node root_;
-    
-    /**
-     * Some types of Graphs need to know if they have been modified
-     * But for a Graph, it does nothing.
-     */
-    virtual void topologyHasChanged_() const;
-    
-    /**
-     * Tell all the observers to get the last updates.
-     * Calls the method update of all the subscribers.
-     */
-    void notify_();
-
-    /**
-     * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
-     * Private version of link, does not check for the reciprocity.
-     * Mainly called by link().
-     * @param nodeA source node
-     * @param nodeB target node
-     * @param edge the ID of the relation
-     */
-    void linkInNodeStructure_(Node nodeA, Node nodeB, Edge edge);
-    
-    /**
-     * Creates a link between two existing nodes in the edge structure.
-     * If directed graph: nodeA -> nodeB.
-     * Mainly called by link().
-     * @param nodeA source node (or first node if undirected)
-     * @param nodeB target node (or second node if undirected)
-     * @param edge the ID of the relation
-     */
-    void linkInEdgeStructure_(Node nodeA, Node nodeB, Edge edge);
-
-
-    /**
-     * Erase a link between two existing nodes. If directed graph: nodeA -> nodeB.
-     * Private version of unLink, does not check for the reciprocity.
-     * Mainly called by unLink().
-     * @param nodeA source node
-     * @param nodeB target node
-     * @return the ID of the erased relation
-     */
-    Edge unlinkInNodeStructure_(Node nodeA, Node nodeB);
-
-    /**
-     * Erase a link between two existing nodes in the Edge structure.
-     * Mainly called by unLink().
-     * @param edge the edge to unregister
-     */
-    void unlinkInEdgeStructure_(Edge edge);
-    
-  protected:    
-    /**
-     * Check that a node exists. If not, throw an exception.
-     * @param node node that has to be checked
-     * @param name common name to give to the user in case of failure (eg: "first node")
-     */
-    void nodeMustExist_(Node node, std::string name="") const;
-    
-    /**
-     * Check that a edge exists. If not, throw an exception.
-     * @param edge edge that has to be checked
-     * @param name common name to give to the user in case of failure (eg: "first node")
-     */
-    void edgeMustExist_(Edge edge, std::string name="") const;
-
-  private:
-    /**
-     * Private version of getIncomingNeighbors or getOutgoingNeighbors.
-     * Common code of these function shared here.
-     * @param node node to  in or outgoing neighbors
-     * @param outgoing boolean: if true, outgoing; else incoming
-     */
-    std::vector<Node> getNeighbors_(Node node,bool outgoing=true) const;
-
-    /**
-     * Private version of getIncomingEdges or getOutgoingEdges.
-     * Common code of these function shared here.
-     * @param node node to  in or outgoing edges
-     * @param outgoing boolean: if true, outgoing; else incoming
-     */
-    std::vector<Edge> getEdges_(Node node,bool outgoing=true) const;
-
-    /**
-     * Separate a node from all its neighbors.
-     * @param node node to isolate
-     */
-    void isolate_(Node node);
-    
-    /**
-     * Get leaves from a starting node, filling a vector (private version).
-     * @param startingNode root node
-     * @param foundLeaves a vector containing all the found leaves
-     * @param originNode the node where we come from, not to explore
-     */
-    void fillListOfLeaves_(Node startingNode, std::vector<Node>& foundLeaves, Node originNode, unsigned int maxRecursions) const;
-    
-    /** 
-     * Check that nodes are only met once to define if the graph is cyclic.
-     * @param node the node to explore
-     * @param metNode a set containing all the nodes we met
-     * @param originNode the node where we come from, not to explore
-     */
-    bool nodesAreMetOnlyOnce_(Graph::Node node, std::set<Graph::Node>& metNodes, Graph::Node originNode) const;
-    
-    /**
-     * output a node to DOT format (recursive)
-     */
-  
-    void nodeToDot_(Node node, std::ostream &out, std::set<std::pair<Node,Node> > &alreadyFigured) const;
-    
-    
-  public:
-  
-    /** @name General Management
-     *  Misc & constructors
-     */
-    ///@{
-
-  
-    /**
-     * Constructor
-     * @param directed true if the graph is directed.
-     */
-    SimpleGraph(bool directed=false);
-   
-    
-    /**
-     * get the Highest Node ID (for vector sizing)
-     */
-    unsigned int getHighestNodeID() const;
-    
-    /**
-     * get the Highest Node ID (for vector sizing)
-     */
-    unsigned int getHighestEdgeID() const;
-    
     /**
      * set the root node to an existing node. Will not affect the topology.
      * @param node the new root
      */
-    void setRoot(Graph::Node newRoot);
-    
+
+    virtual void setRoot(NodeId newRoot) = 0;
+        
     /**
      * get the root node
      */
-    Node getRoot() const;
     
+    virtual NodeId getRoot() const = 0;
+       
     /**
      * Make the graph directed
      * - changes the property
@@ -266,7 +89,8 @@ namespace bpp
      * Please note that the resulting directions are totaly arbritrary.
      * One might consider to use the makeLocalRoot method.
      */
-    void makeDirected();
+
+    virtual void makeDirected() = 0;
     
     /**
      * Make the graph directed
@@ -277,7 +101,8 @@ namespace bpp
      * If the directed graph already contains reciprocal relations,
      * such as A->B and B->A, the method will throw an exception.
      */
-    void makeUndirected();
+
+    virtual void makeUndirected() = 0;
     
     ///@}
 
@@ -289,52 +114,59 @@ namespace bpp
     
     /**
      * Creates an orphaned node.
-     * @return the new node
+     * @return the index of the new node
      */
-    const Node createNode();
+    
+    virtual NodeId createNode() = 0;
     
     /**
      * Creates a node linked to an existing node.
      * @param origin existing node. In a directed graph: origin -> newNode.
-     * @return the new node
+     * @return the index of the new node
      */
-    const Node createNodeFromNode(Node origin);
+    
+    virtual NodeId createNodeFromNode(NodeId origin) = 0;
     
     /**
      * Creates new node on an existing Edge. A -> B will be A -> N -> B
      * @param edge existing edge.
-     * @return the new node
+     * @return the index of the new node
      */
-    const Node createNodeOnEdge(Edge edge);
+    virtual NodeId createNodeOnEdge(NodeId edge) = 0;
+    
     
     /**
      * Creates a node linked to new node, splitting an edge.
      * @param origin existing edge. In a directed graph: origin -> newNode.
-     * @return the new node
+     * @return the index of the new node
      */
-    const Node createNodeFromEdge(Edge origin);
+    
+    virtual NodeId createNodeFromEdge(NodeId origin) = 0;
     
     /**
      * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)
      * @param nodeB target node (or second node if undirected)
-     * @return the new edge
+     * @return the index of the new edge
      */
-    const Edge link(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB);
+    
+    virtual EdgeId link(NodeId nodeA, NodeId nodeB) = 0;
     
     /**
      * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)
      * @param nodeB target node (or second node if undirected)
-     * @return vector of deleted edges
+     * @return vector of IDs to de-assigned edges
      */
-    std::vector<Edge> unlink(Node nodeA, Node nodeB);
+    
+    virtual std::vector<EdgeId> unlink(NodeId nodeA, NodeId nodeB) = 0;
 
     /**
      * Delete one node
      * @param node node to be deleted
      */
-    void deleteNode(Graph::Node node);
+    
+    virtual void deleteNode(NodeId node) = 0;
 
     ///@}
 
@@ -350,15 +182,17 @@ namespace bpp
      * Attach a new observer to this Graph.
      * As a subscriber, the observer will be warned of all the changes.
      */
-    void registerObserver(bpp::GraphObserver* observer);
+    
+    virtual void registerObserver(GraphObserver* observer) = 0;
+
     /**
      * Detach an observer from this Graph.
      * The observer will not be warned of changes anymore.
      */
-    void unregisterObserver(bpp::GraphObserver* observer);
-    ///@}
 
+    virtual void unregisterObserver(GraphObserver* observer) = 0;
 
+///@}
 
     /** @name Nodes Functions
      *  These methodes of the graph concern the node management.
@@ -371,53 +205,63 @@ namespace bpp
      * @return the number of neighbors
      */
 
-    size_t getDegree(Node node) const;
+    virtual size_t getDegree(NodeId node) const = 0;
 
     /**
      * Says if  a node is a leaf (ie has at most one neighbor).
      */
 
-    virtual bool isLeaf(Node node) const;
+    virtual bool isLeaf(NodeId node) const = 0;
 
     /**
      * Get the number of outgoing neighbors  of a node (ie the number of sons) in the graph.
-     * @param node the node one wants to count its neighbors
+     * @param node the node one wants to count its sons
      * @return the number of outgoing neighbors
      */
 
-    size_t getNumberOfOutgoingNeighbors(Node node) const;
+    virtual size_t getNumberOfOutgoingNeighbors(NodeId node) const = 0;
+
+    /**
+     * Get the number of incoming neighbors  of a node (ie the number of fathers) in the graph.
+     * @param node the node one wants to count its fathers
+     * @return the number of incoming neighbors
+     */
+
+    virtual size_t getNumberOfIncomingNeighbors(const NodeId node) const = 0;
 
     /**
      * Get all the neighbors of a node in the graph.
      * @param node the node one wants to get its neighbors
-     * @return a vector containing the neighbors
+     * @return a vector containing the ID of the  neighbors
      */
   
-    std::vector<Node> getNeighbors(Node node) const;
+    virtual std::vector<NodeId> getNeighbors(const NodeId node) const = 0;
 
     /**
      * Get all the edges to/from a node in the graph.
      * @param node the node one wants to get its edges
-     * @return a vector containing the edges
+     * @return a vector containing the ID of the  edges
      */
   
-    std::vector<Edge> getEdges(Node node) const;
+    virtual std::vector<EdgeId> getEdges(const NodeId node) const = 0;
 
     /**
      * In an directed graph, get all the neighbors which
      * are leaving a node in the graph.
      * @param node the node one wants to get its neighbors
-     * @return a vector containing the outgoing neighbors
+     * @return a vector containing the ID of the  outgoing neighbors
      */
-    std::vector<Node> getOutgoingNeighbors(Node node) const;
+    
+    virtual std::vector<NodeId> getOutgoingNeighbors(const NodeId node) const = 0;
 
     /**
      * In an directed graph, get all the edges which
      * are leaving a node in the graph.
      * @param node the node one wants to get its edges
-     * @return a vector containing the outgoing edges
+     * @return a vector containing the ID of the outgoing edges
      */
-    std::vector<Edge> getOutgoingEdges(Node node) const;
+    
+    virtual std::vector<EdgeId> getOutgoingEdges(const NodeId node) const = 0;
 
     /**
      * In an directed graph, get all the neighbors which
@@ -425,7 +269,8 @@ namespace bpp
      * @param node the node one wants to get its neighbors
      * @return a vector containing the incoming neighbors
      */
-    std::vector<Node> getIncomingNeighbors(Node node) const;
+
+    virtual std::vector<NodeId> getIncomingNeighbors(NodeId node) const = 0;
     
     /**
      * In an directed graph, get all the edges which
@@ -433,7 +278,8 @@ namespace bpp
      * @param node the node one wants to get its edges
      * @return a vector containing the incoming edges
      */
-    std::vector<Edge> getIncomingEdges(Node node) const;
+    
+    virtual std::vector<EdgeId> getIncomingEdges(NodeId node) const = 0;
     
     /**
      * Get the leaves of a graph, ie, nodes with only one neighbor,
@@ -442,20 +288,38 @@ namespace bpp
      * @param maxDepth the maximum number of allowed depth.
      * @return a vector containing the leaves
      */
-    std::vector<Node> getLeavesFromNode(Node node, unsigned int maxDepth) const;
+    
+    virtual std::vector<NodeId> getLeavesFromNode(NodeId node, unsigned int maxDepth) const = 0;
     
     /**
-     * Get all the leaves of a graph, ie, nodes with only one neighbor,
+     * Get all edges of a graph.
+     * @return a vector containing the edges
+     */
+    
+    virtual std::vector<EdgeId> getAllEdges() const = 0;
+
+    /**
+     * Get all leaves of a graph, ie, nodes with no son (or only one
+     * neighbor is not directet).
      * @return a vector containing the leaves
      */
-    std::vector<Node> getAllLeaves() const;
+    
+    virtual std::vector<NodeId> getAllLeaves() const = 0;
 
     /**
      * Get all the inner nodes, ie, nodes with degree > 1.
      * @return a vector containing the leaves
      */
   
-    std::vector<Node> getAllInnerNodes() const;
+    virtual std::vector<NodeId> getAllInnerNodes() const = 0;
+
+    /**
+     * Get a vector of sorted nodes, ie, each  node is 
+     * before its successors.
+     * @return a vector containing the nodes
+     */
+  
+//    virtual std::vector<NodeId> getAllSortedNodes() const = 0;
 
     /**
      * Get nodes located at the extremities of an edge
@@ -463,7 +327,8 @@ namespace bpp
      * @return a pair of the Nodes at each extremity of the edge
      *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
      */
-    std::pair<Node,Node> getNodes(Edge edge) const;
+    
+    virtual std::pair<NodeId,NodeId> getNodes(EdgeId edge) const = 0;
 
     /**
      * Get node located at the top of an edge
@@ -471,7 +336,8 @@ namespace bpp
      * @return  the Node at the top the edge
      *        example : N1--E1-->N2; getTop(E1) will return N1;
      */
-    Node getTop(Edge edge) const;
+    
+    virtual NodeId getTop(EdgeId edge) const = 0;
 
     /**
      * Get node located at the bottom of an edge
@@ -479,9 +345,9 @@ namespace bpp
      * @return  the Node at the bottom the edge
      *        example : N1--E1-->N2; getBottom(E1) will return N2;
      */
-    Node getBottom(Edge edge) const;
-  
-    
+
+    virtual NodeId getBottom(EdgeId edge) const = 0;
+      
     ///@}
     
     /** @name Topological Properties
@@ -491,23 +357,32 @@ namespace bpp
     
     /**
      * Is the graph a tree?
-     * @return true if a node is met more than one time browsing the graph
+     * @return false if a node is met more than one time browsing the graph
      */
-    bool isTree() const;
     
+    virtual bool isTree() const = 0;
+
+    /**
+     * Is the graph directed acyclic?
+     * @return true if an edge is met more than one time browsing the graph
+     */
+    
+//    bool isDA() const;
     
     /**
      * Is the graph directed?
      * @return true the type of the graph is directed
      */
-    bool isDirected() const;
+    
+    virtual bool isDirected() const = 0;
     
     
     /**
      * Does the graph contain reciprocal relations such as A->B and B->A?
      * @return true if one of them is seen in the structure
      */
-    bool containsReciprocalRelations() const;
+    
+    virtual bool containsReciprocalRelations() const = 0;
     
     
     ///@}
@@ -524,7 +399,8 @@ namespace bpp
      * @param nodeB if directed, destination node
      * @return the edge between these two nodes
      */
-    const Edge getEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB) const;
+    
+    virtual EdgeId getEdge(NodeId nodeA, NodeId nodeB) const = 0;
     
     /**
      * Returns the Edge between two nodes, trying both directions
@@ -532,40 +408,47 @@ namespace bpp
      * @param nodeB any other node implied in the relation
      * @return the edge between these two nodes
      */
-    const Edge getAnyEdge(bpp::Graph::Node nodeA, bpp::Graph::Node nodeB) const;
+    
+    virtual EdgeId getAnyEdge(NodeId nodeA, NodeId nodeB) const = 0;
     
     ///@}
 
 
+  protected:
     /** @name Updating the changes on the observers
      *  These methodes aim to trigger some changes to the observers
      */
+    
     ///@{
 
     /**
      * Trigger E objects deleting on the observers
      * @param edgesToDelete list of edges to delete
      */
-    void notifyDeletedEdges(std::vector<Graph::Edge> edgesToDelete) const;
+    virtual void notifyDeletedEdges(const std::vector<EdgeId>& edgesToDelete) const = 0;
 
     /**
      * Trigger N objects deleting on the observers
      * @param nodesToDelete list of edges to delete
      */
-    void notifyDeletedNodes(std::vector< Graph::Node > nodesToDelete) const;
+    virtual void notifyDeletedNodes(const std::vector<NodeId>& nodesToDelete) const = 0;
 
 
     ///@}
+
+  public:
     
     /**
      * Output the graph in DOT format
      * @param out a ostream where the DOT format will be output
      * @param name a string naming the graph
      */
-    void outputToDot(std::ostream &out, std::string name) const;
     
-  };
+    virtual void outputToDot(std::ostream &out, const std::string& name) const = 0;
+    
 
+    //TODO: interface  from SimpleGraph
+  };
 }
 
 #endif

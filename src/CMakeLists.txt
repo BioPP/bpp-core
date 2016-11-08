@@ -18,7 +18,7 @@ SET(CPP_FILES
   Bpp/Text/NestedStringTokenizer.cpp
   Bpp/Text/StringTokenizer.cpp
   Bpp/Text/TextTools.cpp
-  Bpp/Graph/Graph.cpp
+  Bpp/Graph/GlobalGraph.cpp
   Bpp/Graphics/ColorTools.cpp
   Bpp/Graphics/GraphicDevice.cpp
   Bpp/Graphics/Fig/XFigGraphicDevice.cpp
@@ -101,11 +101,15 @@ SET(H_FILES
   Bpp/App/ApplicationTools.h
   Bpp/App/BppApplication.h
   Bpp/App/NumCalcApplicationTools.h
-  Bpp/Graph/AssociationGraphObserver.h
-  Bpp/Graph/AssociationTreeGraphObserver.h
   Bpp/Graph/Graph.h
+  Bpp/Graph/GlobalGraph.h
   Bpp/Graph/TreeGraph.h
-  Bpp/Graph/GraphObserver.h  
+  Bpp/Graph/TreeGraphImpl.h
+  Bpp/Graph/GraphObserver.h
+  Bpp/Graph/AssociationGraphObserver.h
+  Bpp/Graph/AssociationGraphImplObserver.h
+  Bpp/Graph/AssociationTreeGraphObserver.h
+  Bpp/Graph/AssociationTreeGraphImplObserver.h
   Bpp/Graphics/AbstractGraphicDevice.h
   Bpp/Graphics/ColorManager.h
   Bpp/Graphics/ColorSet.h

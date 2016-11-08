@@ -37,14 +37,14 @@ The fact that you are presently reading this means that you have had
 knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "../src/Bpp/Graph/AssociationGraphObserver.h"
+#include "../src/Bpp/Graph/AssociationGraphImplObserver.h"
 #include <vector>
 #include <iostream>
 using namespace bpp;
 using namespace std;
 
 int main() {
-  SimpleAssociationGraphObserver<string,unsigned int,bpp::SimpleGraph> grObs(true);
+  AssociationGlobalGraphObserver<string,unsigned int> grObs(true);
   shared_ptr<string> zero(new string("zero"));
   shared_ptr<string> one(new string("one"));
   shared_ptr<string> two(new string("two"));

@@ -38,7 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "../src/Bpp/Graph/TreeGraph.h"
-#include "../src/Bpp/Graph/AssociationTreeGraphObserver.h"
+#include "../src/Bpp/Graph/AssociationTreeGraphImplObserver.h"
 
 
 #include <vector>
@@ -47,7 +47,7 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  SimpleAssociationTreeGraphObserver<string,unsigned int,bpp::SimpleTreeGraph<SimpleGraph> > grObs(true);
+  AssociationTreeGlobalGraphObserver<string,unsigned int> grObs(true);
 
   shared_ptr<string> zero(new string("zero"));
   shared_ptr<string> one(new string("one"));
