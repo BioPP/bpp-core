@@ -328,6 +328,21 @@ vector< Graph::EdgeId > GlobalGraph::getOutgoingEdges(const Graph::NodeId node) 
   return getEdges_(node,true);
 }
 
+Graph::NodeIterator GlobalGraph::allNodesIterator()
+{
+  return GlobalGraph::allNodesIteratorClass(*this);
+}
+
+Graph::NodeIterator GlobalGraph::outgoingNeighborNodesIterator(Graph::NodeId node)
+{
+  return GlobalGraph::outgoingNeighborNodesIteratorClass(*this, node);
+}
+
+Graph::NodeIterator GlobalGraph::incomingNeighborNodesIterator(Graph::NodeId node)
+{
+  return GlobalGraph::incomingNeighborNodesIteratorClass(*this, node);
+}
+
 size_t GlobalGraph::getDegree(const Graph::NodeId node) const
 {
   nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
@@ -670,6 +685,21 @@ bool GlobalGraph::containsReciprocalRelations() const
     }
   }
   return false;
+}
+
+Graph::EdgeIterator GlobalGraph::allEdgesIterator()
+{
+  return GlobalGraph::allEdgesIteratorClass(*this);
+}
+
+Graph::EdgeIterator GlobalGraph::outgoingEdgesIterator(Graph::NodeId node)
+{
+  return GlobalGraph::outgoingEdgesIteratorClass(*this, node);
+}
+
+Graph::EdgeIterator GlobalGraph::incomingEdgesIterator(Graph::NodeId node)
+{
+  return GlobalGraph::incomingEdgesIteratorClass(*this, node);
 }
 
 Graph::EdgeId GlobalGraph::getEdge(Graph::NodeId nodeA, Graph::NodeId nodeB) const

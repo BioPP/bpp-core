@@ -58,27 +58,6 @@ namespace bpp
   public:
     typedef Graph::NodeId Node;
     typedef Graph::EdgeId Edge;
-    
-  private:
-    
-    /**
-     * is the graph directed
-     */
-    bool directed_;
-
-    /**
-     * List of all the subscribers.
-     */
-    std::set<GraphObserver*> observers_;
-
-    /**
-     * Highest used available ID for a Node.
-     */
-    Node highestNodeID_;
-    /**
-     * Highest used available ID for an Edge.
-     */
-    Edge highestEdgeID_;
 
     /**
      * The node structure type
@@ -102,6 +81,27 @@ namespace bpp
     typedef std::map<Edge,std::pair<Node,Node> > edgeStructureType;
 
     
+  private:
+    
+    /**
+     * is the graph directed
+     */
+    bool directed_;
+
+    /**
+     * List of all the subscribers.
+     */
+    std::set<GraphObserver*> observers_;
+
+    /**
+     * Highest used available ID for a Node.
+     */
+    Node highestNodeID_;
+    /**
+     * Highest used available ID for an Edge.
+     */
+    Edge highestEdgeID_;
+
     /**
      * Nodes and their relations.
      * see nodeStructureType documentation
@@ -399,7 +399,86 @@ namespace bpp
      *  These methodes of the graph concern the node management.
      */
     ///@{
+
     
+    class allNodesIteratorClass :
+      public Graph::NodeIterator
+    {
+    private:
+      nodeStructureType::iterator it_;
+      
+    public:
+
+      allNodesIteratorClass(GlobalGraph& gg) : it_(gg.nodeStructure_.begin()) {}
+      allNodesIteratorClass& operator++() { it_++; return *this;}
+      allNodesIteratorClass operator++(int) {allNodesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(allNodesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(allNodesIteratorClass other) const {return !(*this == other);}
+      reference operator*() {return it_->first;}
+    };
+    
+    friend class allNodesIteratorClass;
+
+    
+    class outgoingNeighborNodesIteratorClass :
+      public Graph::NodeIterator
+    {
+    private:
+      std::map<Node, Edge>::iterator it_;
+      
+    public:
+      
+      outgoingNeighborNodesIteratorClass(GlobalGraph& gg, NodeId node) : it_(gg.nodeStructure_.find(node)->second.first.begin()) {}
+      outgoingNeighborNodesIteratorClass& operator++() { it_++; return *this;}
+      outgoingNeighborNodesIteratorClass operator++(int) {outgoingNeighborNodesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(outgoingNeighborNodesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(outgoingNeighborNodesIteratorClass other) const {return !(*this == other);}
+      reference operator*() const {return it_->first;}
+    };
+    
+    friend class outgoingNeighborNodesIteratorClass;
+
+    
+    class incomingNeighborNodesIteratorClass :
+      public Graph::NodeIterator
+    {
+    private:
+      std::map<Node, Edge>::iterator it_;
+      
+    public:
+      
+      incomingNeighborNodesIteratorClass(GlobalGraph& gg, NodeId node) : it_(gg.nodeStructure_.find(node)->second.second.begin()) {}
+      incomingNeighborNodesIteratorClass& operator++() { it_++; return *this;}
+      incomingNeighborNodesIteratorClass operator++(int) {incomingNeighborNodesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(incomingNeighborNodesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(incomingNeighborNodesIteratorClass other) const {return !(*this == other);}
+      reference operator*() const {return it_->first;}
+    };
+    
+    friend class incomingNeighborNodesIteratorClass;
+
+    
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    Graph::NodeIterator allNodesIterator();
+
+    /*
+     * @brief builds iterator on the neighbor nodes of a Node
+     *
+     */
+    
+    Graph::NodeIterator outgoingNeighborNodesIterator(NodeId node);
+
+    /*
+     * @brief builds iterator on the neighbor nodes of a Node
+     *
+     */
+    
+    Graph::NodeIterator incomingNeighborNodesIterator(NodeId node);
+
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.
      * @param node the node one wants to count its neighbors
@@ -439,28 +518,12 @@ namespace bpp
     std::vector<Graph::NodeId> getNeighbors(Graph::NodeId node) const;
 
     /**
-     * Get all the edges to/from a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the edges
-     */
-  
-    std::vector<Graph::EdgeId> getEdges(Graph::NodeId node) const;
-
-    /**
      * In an directed graph, get all the neighbors which
      * are leaving a node in the graph.
      * @param node the node one wants to get its neighbors
      * @return a vector containing the outgoing neighbors
      */
     std::vector<Graph::NodeId> getOutgoingNeighbors(Graph::NodeId node) const;
-
-    /**
-     * In an directed graph, get all the edges which
-     * are leaving a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the outgoing edges
-     */
-    std::vector<Graph::EdgeId> getOutgoingEdges(Graph::NodeId node) const;
 
     /**
      * In an directed graph, get all the neighbors which
@@ -471,14 +534,6 @@ namespace bpp
     std::vector<Graph::NodeId> getIncomingNeighbors(Graph::NodeId node) const;
     
     /**
-     * In an directed graph, get all the edges which
-     * are coming to a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the incoming edges
-     */
-    std::vector<Graph::EdgeId> getIncomingEdges(Graph::NodeId node) const;
-    
-    /**
      * Get the leaves of a graph, ie, nodes with only one neighbor,
      * starting from a peculiar node.
      * @param node the starting node
@@ -487,13 +542,6 @@ namespace bpp
      */
     std::vector<Graph::NodeId> getLeavesFromNode(Graph::NodeId node, unsigned int maxDepth) const;
     
-    /**
-     * Get all edges of a graph.
-     * @return a vector containing the edges
-     */
-    
-    std::vector<Graph::EdgeId> getAllEdges() const;
-
     /**
      * Get all leaves of a graph, ie, nodes with no son (or only one
      * neighbor is not directet).
@@ -587,6 +635,108 @@ namespace bpp
      */
     ///@{
     
+    class allEdgesIteratorClass :
+      public Graph::EdgeIterator
+    {
+    private:
+      edgeStructureType::iterator it_;
+      
+    public:
+
+      allEdgesIteratorClass(GlobalGraph& gg) : it_(gg.edgeStructure_.begin()) {}
+      allEdgesIteratorClass& operator++() { it_++; return *this;}
+      allEdgesIteratorClass operator++(int) {allEdgesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(allEdgesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(allEdgesIteratorClass other) const {return !(*this == other);}
+      reference operator*() {return it_->first;}
+    };
+    
+    friend class allEdgesIteratorClass;
+
+    
+    class outgoingEdgesIteratorClass :
+      public Graph::EdgeIterator
+    {
+    private:
+      std::map<Node, Edge>::iterator it_;
+      
+    public:
+      
+      outgoingEdgesIteratorClass(GlobalGraph& gg, EdgeId node) : it_(gg.nodeStructure_.find(node)->second.first.begin()) {}
+      outgoingEdgesIteratorClass& operator++() { it_++; return *this;}
+      outgoingEdgesIteratorClass operator++(int) {outgoingEdgesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(outgoingEdgesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(outgoingEdgesIteratorClass other) const {return !(*this == other);}
+      reference operator*() const {return it_->second;}
+    };
+    
+    friend class outgoingEdgesIteratorClass;
+
+    
+    class incomingEdgesIteratorClass :
+      public Graph::EdgeIterator
+    {
+    private:
+      std::map<Node, Edge>::iterator it_;
+      
+    public:
+      
+      incomingEdgesIteratorClass(GlobalGraph& gg, EdgeId node) : it_(gg.nodeStructure_.find(node)->second.second.begin()) {}
+      incomingEdgesIteratorClass& operator++() { it_++; return *this;}
+      incomingEdgesIteratorClass operator++(int) {incomingEdgesIteratorClass retval = *this; ++(*this); return retval;}
+      bool operator==(incomingEdgesIteratorClass other) const {return it_ == other.it_;}
+      bool operator!=(incomingEdgesIteratorClass other) const {return !(*this == other);}
+      reference operator*() const {return it_->first;}
+    };
+    
+    friend class incomingEdgesIteratorClass;
+    
+
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    EdgeIterator allEdgesIterator();
+
+    /*
+     * @brief builds iterator on the outgoing neighbor nodes of a Node
+     *
+     */
+    
+    EdgeIterator outgoingEdgesIterator(NodeId node);
+
+    /*
+     * @brief builds iterator on the incoming neighbor nodes of a Node
+     *
+     */
+    
+    EdgeIterator incomingEdgesIterator(NodeId node);
+    
+    /**
+     * Get all the edges to/from a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the edges
+     */
+  
+    std::vector<Graph::EdgeId> getEdges(Graph::NodeId node) const;
+
+    /**
+     * In an directed graph, get all the edges which
+     * are leaving a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the outgoing edges
+     */
+    std::vector<Graph::EdgeId> getOutgoingEdges(Graph::NodeId node) const;
+
+    /**
+     * In an directed graph, get all the edges which
+     * are coming to a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the incoming edges
+     */
+    std::vector<Graph::EdgeId> getIncomingEdges(Graph::NodeId node) const;
+    
     /**
      * Returns the Edge between two nodes
      * @param nodeA if directed, origin node
@@ -605,6 +755,13 @@ namespace bpp
     
     Graph::EdgeId getAnyEdge(Graph::NodeId nodeA, Graph::NodeId nodeB) const;
     
+    /**
+     * Get all edges of a graph.
+     * @return a vector containing the edges
+     */
+    
+    std::vector<Graph::EdgeId> getAllEdges() const;
+
     ///@}
 
 

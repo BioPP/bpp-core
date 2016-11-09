@@ -60,9 +60,6 @@ namespace bpp
   {
   public:
     
-    //TODO Incomplete specification. Waiting the basic implementation is functional
-    // to specify the interface.
-    
     /**
      * Is the graph a tree? A tree must be acyclic and with no isolated node.
      * @return true if valid tree

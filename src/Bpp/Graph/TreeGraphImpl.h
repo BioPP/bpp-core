@@ -351,7 +351,7 @@ namespace bpp
   void TreeGraphImpl<GraphImpl>::propagateDirection_(Graph::NodeId node)
   {
     if(hasFather(node)){
-      Node father = getFather(node);
+      NodeId father = getFather(node);
       propagateDirection_(father);
       GraphImpl::unlink(father,node);
       GraphImpl::link(node,father);

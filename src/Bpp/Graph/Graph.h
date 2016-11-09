@@ -45,8 +45,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #include<string>
 #include<vector>
 #include<utility>
-#include<ostream>
-
+#include<iostream>
+#include<algorithm>
 
 
 // forward declaration to avoid circular dependancies.
@@ -58,11 +58,13 @@ namespace bpp
 
 namespace bpp
 {
+    
   class Graph
   {
   public:
     typedef unsigned int NodeId;
     typedef unsigned int EdgeId;
+
 
     virtual ~Graph(){};    
 
@@ -198,6 +200,41 @@ namespace bpp
      *  These methodes of the graph concern the node management.
      */
     ///@{
+
+    /**
+     * @name Iterator interface on Nodes
+     *
+     */
+    
+    class NodeIterator :
+      virtual public std::iterator<std::output_iterator_tag, NodeId, NodeId, NodeId, NodeId>
+    {
+    public:
+      ~NodeIterator() {};
+    };
+
+
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    virtual NodeIterator allNodesIterator() = 0;
+
+    /*
+     * @brief builds iterator on the outgoing neighbor nodes of a Node
+     *
+     */
+    
+    virtual NodeIterator outgoingNeighborNodesIterator(NodeId node) = 0;
+
+    /*
+     * @brief builds iterator on the incoming neighbor nodes of a Node
+     *
+     */
+    
+    virtual NodeIterator incomingNeighborNodesIterator(NodeId node) = 0;
+
     
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.
@@ -238,14 +275,6 @@ namespace bpp
     virtual std::vector<NodeId> getNeighbors(const NodeId node) const = 0;
 
     /**
-     * Get all the edges to/from a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the ID of the  edges
-     */
-  
-    virtual std::vector<EdgeId> getEdges(const NodeId node) const = 0;
-
-    /**
      * In an directed graph, get all the neighbors which
      * are leaving a node in the graph.
      * @param node the node one wants to get its neighbors
@@ -253,15 +282,6 @@ namespace bpp
      */
     
     virtual std::vector<NodeId> getOutgoingNeighbors(const NodeId node) const = 0;
-
-    /**
-     * In an directed graph, get all the edges which
-     * are leaving a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the ID of the outgoing edges
-     */
-    
-    virtual std::vector<EdgeId> getOutgoingEdges(const NodeId node) const = 0;
 
     /**
      * In an directed graph, get all the neighbors which
@@ -273,15 +293,6 @@ namespace bpp
     virtual std::vector<NodeId> getIncomingNeighbors(NodeId node) const = 0;
     
     /**
-     * In an directed graph, get all the edges which
-     * are coming to a node in the graph.
-     * @param node the node one wants to get its edges
-     * @return a vector containing the incoming edges
-     */
-    
-    virtual std::vector<EdgeId> getIncomingEdges(NodeId node) const = 0;
-    
-    /**
      * Get the leaves of a graph, ie, nodes with only one neighbor,
      * starting from a peculiar node.
      * @param node the starting node
@@ -291,13 +302,6 @@ namespace bpp
     
     virtual std::vector<NodeId> getLeavesFromNode(NodeId node, unsigned int maxDepth) const = 0;
     
-    /**
-     * Get all edges of a graph.
-     * @return a vector containing the edges
-     */
-    
-    virtual std::vector<EdgeId> getAllEdges() const = 0;
-
     /**
      * Get all leaves of a graph, ie, nodes with no son (or only one
      * neighbor is not directet).
@@ -374,7 +378,7 @@ namespace bpp
      * @return true the type of the graph is directed
      */
     
-    virtual bool isDirected() const = 0;
+     virtual bool isDirected() const = 0;
     
     
     /**
@@ -393,6 +397,73 @@ namespace bpp
      */
     ///@{
     
+    /**
+     * @name Iterator interface on Nodes
+     *
+     */
+    
+    class EdgeIterator :
+      virtual public std::iterator<std::output_iterator_tag, EdgeId, EdgeId, EdgeId, EdgeId>
+    {
+    public:
+      ~EdgeIterator() {};
+    };
+
+
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    virtual EdgeIterator allEdgesIterator() = 0;
+
+    /*
+     * @brief builds iterator on the outgoing neighbor nodes of a Node
+     *
+     */
+    
+    virtual EdgeIterator outgoingEdgesIterator(NodeId node) = 0;
+
+    /*
+     * @brief builds iterator on the incoming neighbor nodes of a Node
+     *
+     */
+    
+    virtual EdgeIterator incomingEdgesIterator(NodeId node) = 0;
+    
+    /**
+     * Get all the edges to/from a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the ID of the  edges
+     */
+  
+    virtual std::vector<EdgeId> getEdges(const NodeId node) const = 0;
+
+    /**
+     * In an directed graph, get all the edges which
+     * are leaving a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the ID of the outgoing edges
+     */
+    
+    virtual std::vector<EdgeId> getOutgoingEdges(const NodeId node) const = 0;
+
+    /**
+     * In an directed graph, get all the edges which
+     * are coming to a node in the graph.
+     * @param node the node one wants to get its edges
+     * @return a vector containing the incoming edges
+     */
+    
+    virtual std::vector<EdgeId> getIncomingEdges(NodeId node) const = 0;
+    
+    /**
+     * Get all edges of a graph.
+     * @return a vector containing the edges
+     */
+    
+    virtual std::vector<EdgeId> getAllEdges() const = 0;
+
     /**
      * Returns the Edge between two nodes
      * @param nodeA if directed, origin node
