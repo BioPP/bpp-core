@@ -153,6 +153,18 @@ namespace bpp
     std::vector<Graph::NodeId> getSons(Graph::NodeId node) const;
 
     /**
+     * Get a iterator on the sons node of a node
+     */
+    
+    Graph::NodeIterator sonsIterator(Graph::NodeId node);
+
+    /**
+     * Get a iterator on the branches to sons of a node
+     */
+    
+    Graph::EdgeIterator branchesIterator(Graph::NodeId node);
+
+    /**
      * @brief Get the number of sons node
      */
 
@@ -392,6 +404,18 @@ namespace bpp
   std::vector<Graph::NodeId> TreeGraphImpl<GraphImpl>::getSons(Graph::NodeId node) const
   {
     return GraphImpl::getOutgoingNeighbors(node);
+  }
+  
+  template <class GraphImpl>
+  Graph::NodeIterator TreeGraphImpl<GraphImpl>::sonsIterator(Graph::NodeId node) 
+  {
+    return GraphImpl::outgoingNeighborNodesIterator(node);
+  }
+
+  template <class GraphImpl>
+  Graph::EdgeIterator TreeGraphImpl<GraphImpl>::branchesIterator(Graph::NodeId node) 
+  {
+    return GraphImpl::outgoingEdgesIterator(node);
   }
 
   template <class GraphImpl>

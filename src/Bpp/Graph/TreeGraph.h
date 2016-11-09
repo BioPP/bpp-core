@@ -107,6 +107,18 @@ namespace bpp
     virtual std::vector<Graph::NodeId> getSons(Graph::NodeId node) const = 0;
 
     /**
+     * Get a iterator on the sons node of a node
+     */
+    
+    virtual Graph::NodeIterator sonsIterator(Graph::NodeId node) = 0;
+
+    /**
+     * Get a iterator on the branches to sons of a node
+     */
+    
+    virtual Graph::EdgeIterator branchesIterator(Graph::NodeId node) = 0;
+
+    /**
      * @brief Get the number of sons node
      */
 
