@@ -41,7 +41,7 @@
 #ifndef _GLOBAL_GRAPH_H_
 #define _GLOBAL_GRAPH_H_
 
-#include<Bpp/Clonable.h>
+#include "../Clonable.h"
 
 #include<set>
 #include<map>

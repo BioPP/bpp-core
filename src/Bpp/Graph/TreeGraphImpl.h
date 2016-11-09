@@ -59,11 +59,6 @@ namespace bpp
     public virtual TreeGraph,
     public GraphImpl
   {
-  public:
-
-    typedef typename GraphImpl::Node Node;
-    typedef typename GraphImpl::Edge Edge;
-
   private:
     /**
      * Is the graph a tree? Set to false when structure is modified, true after validation.
