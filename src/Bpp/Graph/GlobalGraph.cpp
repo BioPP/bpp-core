@@ -330,17 +330,17 @@ vector< Graph::EdgeId > GlobalGraph::getOutgoingEdges(const Graph::NodeId node) 
 
 Graph::NodeIterator GlobalGraph::allNodesIterator()
 {
-  return GlobalGraph::allNodesIteratorClass(*this);
+  return NodesIteratorClass<Graph::ALLGRAPHITER>(*this);
 }
 
 Graph::NodeIterator GlobalGraph::outgoingNeighborNodesIterator(Graph::NodeId node)
 {
-  return GlobalGraph::outgoingNeighborNodesIteratorClass(*this, node);
+  return NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this, node);
 }
 
 Graph::NodeIterator GlobalGraph::incomingNeighborNodesIterator(Graph::NodeId node)
 {
-  return GlobalGraph::incomingNeighborNodesIteratorClass(*this, node);
+  return NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this, node);
 }
 
 size_t GlobalGraph::getDegree(const Graph::NodeId node) const

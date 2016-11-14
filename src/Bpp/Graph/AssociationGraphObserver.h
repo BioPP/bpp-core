@@ -271,10 +271,45 @@ namespace bpp
     // /@{
 
     /**
+     * @name Iterator interface on Nodes
+     *
+     */
+    
+    class NodeIterator :
+      public std::iterator<std::output_iterator_tag, std::shared_ptr<N> >
+    {
+    public:
+      ~NodeIterator() {};
+    };
+
+
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    virtual NodeIterator allNodesIterator() = 0;
+
+    /*
+     * @brief builds iterator on the outgoing neighbor nodes of a Node
+     *
+     */
+    
+    virtual NodeIterator outgoingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
+
+    /*
+     * @brief builds iterator on the incoming neighbor nodes of a Node
+     *
+     */
+    
+    virtual NodeIterator incomingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
+
+    /**
      * Get all the neighbors of a node in the graph.
      * @param node the node one wants to get its neighbors
      * @return a vector containing the neighbors
      */
+    
     virtual std::vector<std::shared_ptr<N> > getNeighbors(const std::shared_ptr<N>  node) const = 0;
     virtual std::vector<NodeIndex> getNeighbors(NodeIndex node) const = 0;
 
@@ -351,6 +386,40 @@ namespace bpp
      */
     virtual std::vector<std::shared_ptr<N> > getAllNodes() const = 0;
     virtual std::vector<NodeIndex> getAllNodesIndexes() const = 0;
+
+    /**
+     * @name Iterator interface on Edges
+     *
+     */
+    
+    class EdgeIterator :
+      virtual public std::iterator<std::output_iterator_tag, std::shared_ptr<E> >
+    {
+    public:
+      ~EdgeIterator() {};
+    };
+
+
+    /*
+     * @brief builds iterator on all Nodes of the graph
+     *
+     */
+    
+    virtual EdgeIterator allEdgesIterator() = 0;
+
+    /*
+     * @brief builds iterator on the outgoing neighbor nodes of a Node
+     *
+     */
+    
+    virtual EdgeIterator outgoingEdgesIterator(std::shared_ptr<N> node) = 0;
+
+    /*
+     * @brief builds iterator on the incoming neighbor nodes of a Node
+     *
+     */
+    
+    virtual EdgeIterator incomingEdgesIterator(std::shared_ptr<N> node) = 0;
 
     /**
      * Get all the defined edges of a graphO,

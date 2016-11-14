@@ -202,17 +202,25 @@ namespace bpp
     ///@{
 
     /**
+     * @brief define categories of iterators
+     *
+     */
+    
+    struct ALLGRAPHITER {};
+    struct OUTGOINGNEIGHBORITER {};
+    struct INCOMINGNEIGHBORITER {};
+    
+    /**
      * @name Iterator interface on Nodes
      *
      */
     
     class NodeIterator :
-      virtual public std::iterator<std::output_iterator_tag, NodeId, NodeId, NodeId, NodeId>
+      virtual public std::iterator<std::output_iterator_tag, NodeId, NodeId, NodeId*, NodeId>
     {
     public:
       ~NodeIterator() {};
     };
-
 
     /*
      * @brief builds iterator on all Nodes of the graph
@@ -403,7 +411,7 @@ namespace bpp
      */
     
     class EdgeIterator :
-      virtual public std::iterator<std::output_iterator_tag, EdgeId, EdgeId, EdgeId, EdgeId>
+      virtual public std::iterator<std::output_iterator_tag, EdgeId, EdgeId, EdgeId*, EdgeId>
     {
     public:
       ~EdgeIterator() {};
