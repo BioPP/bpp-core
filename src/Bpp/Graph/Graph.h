@@ -47,6 +47,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include<utility>
 #include<iostream>
 #include<algorithm>
+#include<memory>
 
 
 // forward declaration to avoid circular dependancies.
@@ -202,48 +203,55 @@ namespace bpp
     ///@{
 
     /**
+     * @name Iterator interface on Nodes
+     *
+     */
+    
+    class NodeIterator 
+    {
+    public:
+      virtual ~NodeIterator() {};
+      
+      virtual void next() = 0;      
+      virtual bool end() const = 0;
+      virtual void start() = 0;
+
+      virtual NodeId operator*() = 0;
+    };
+
+    /**
      * @brief define categories of iterators
      *
      */
     
     struct ALLGRAPHITER {};
-    struct OUTGOINGNEIGHBORITER {};
-    struct INCOMINGNEIGHBORITER {};
-    
-    /**
-     * @name Iterator interface on Nodes
-     *
-     */
-    
-    class NodeIterator :
-      virtual public std::iterator<std::output_iterator_tag, NodeId, NodeId, NodeId*, NodeId>
-    {
-    public:
-      ~NodeIterator() {};
-    };
+    struct NEIGHBORITER {};
+    struct OUTGOINGNEIGHBORITER : public NEIGHBORITER{};
+    struct INCOMINGNEIGHBORITER : public NEIGHBORITER{};
 
     /*
      * @brief builds iterator on all Nodes of the graph
      *
      */
     
-    virtual NodeIterator allNodesIterator() = 0;
+    virtual std::unique_ptr<NodeIterator> allNodesIterator() = 0;
 
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
      */
     
-    virtual NodeIterator outgoingNeighborNodesIterator(NodeId node) = 0;
+    virtual std::unique_ptr<NodeIterator> outgoingNeighborNodesIterator(NodeId node) = 0;
 
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
-    virtual NodeIterator incomingNeighborNodesIterator(NodeId node) = 0;
+    virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(NodeId node) = 0;
 
     
+
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.
      * @param node the node one wants to count its neighbors
@@ -410,11 +418,16 @@ namespace bpp
      *
      */
     
-    class EdgeIterator :
-      virtual public std::iterator<std::output_iterator_tag, EdgeId, EdgeId, EdgeId*, EdgeId>
+    class EdgeIterator 
     {
     public:
-      ~EdgeIterator() {};
+      virtual ~EdgeIterator() {};
+
+      virtual void next() = 0;      
+      virtual bool end() const = 0;
+      virtual void start() = 0;
+
+      virtual EdgeId operator*() = 0;
     };
 
 
@@ -423,21 +436,21 @@ namespace bpp
      *
      */
     
-    virtual EdgeIterator allEdgesIterator() = 0;
+    virtual std::unique_ptr<EdgeIterator> allEdgesIterator() = 0;
 
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
      */
     
-    virtual EdgeIterator outgoingEdgesIterator(NodeId node) = 0;
+    virtual std::unique_ptr<EdgeIterator> outgoingEdgesIterator(NodeId node) = 0;
 
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
-    virtual EdgeIterator incomingEdgesIterator(NodeId node) = 0;
+    virtual std::unique_ptr<EdgeIterator> incomingEdgesIterator(NodeId node) = 0;
     
     /**
      * Get all the edges to/from a node in the graph.

@@ -294,8 +294,8 @@ namespace bpp
      */
     std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid);
     const std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid) const;
-  
     std::vector<std::shared_ptr<N> > getNodesFromGraphid(std::vector<NodeGraphid> ) const;
+
     std::shared_ptr<E> getEdgeFromGraphid(EdgeGraphid);
     const std::shared_ptr<E> getEdgeFromGraphid(EdgeGraphid) const;
     std::vector<std::shared_ptr<E> > getEdgesFromGraphid(std::vector<EdgeGraphid> ) const;
@@ -381,47 +381,46 @@ namespace bpp
      *
      */
 
-    template<class GraphImplNodeIterator>
+    template<class GraphIterator>
     class NodeIteratorClass :
-      public AssociationGraphObserver<N,E>::NodeIterator
+      virtual public AssociationGraphObserver<N,E>::NodeIterator
     {
     private:
-      NodesIteratorClass<GraphImplNodeIterator> it_;
+      NodesIteratorClass<GraphIterator> it_;
+      const AssociationGraphImplObserver<N,E,GraphImpl>& agio_;
       
     public:
 
-      NodeIteratorClass<GraphImplNodeIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio)// typename std::enable_if< std::is_same<GraphImplNodeIterator,Graph::ALLGRAPHITER>::value >::type* = 0) 
-    : it_(*agio.getGraph()) {};
+      NodeIteratorClass<GraphIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio) : it_(*agio.getGraph()), agio_(agio) { start();};
       
-      // NodeIteratorClass<GraphImplNodeIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio, std::shared_ptr<N> n// , typename std::enable_if< std::is_same<GraphImplNodeIterator, Graph::OUTGOINGNEIGHBORITER>::value >::type* = 0
-      //   ) : it_(*agio.getGraph(), agio.getNodeGraphid(n)) {};
+      NodeIteratorClass<GraphIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)), agio_(agio) {start();};
 
-      NodeIteratorClass<GraphImplNodeIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio, std::shared_ptr<N> n// , typename std::enable_if< std::is_same<GraphImplNodeIterator, Graph::INCOMINGNEIGHBORITER>::value >::type* = 0
-        ) : it_(*agio.getGraph(), agio.getNodeGraphid(n)) {};
-
-      NodeIteratorClass<GraphImplNodeIterator>& operator++() { it_++; return *this;}
-      NodeIteratorClass<GraphImplNodeIterator> operator++(int) {NodeIteratorClass<GraphImplNodeIterator> retval = *this; ++(*this); return retval;}
-      bool operator==(NodeIteratorClass<GraphImplNodeIterator> other) const {return it_ == other.it_;}
-      bool operator!=(NodeIteratorClass<GraphImplNodeIterator> other) const {return !(*this == other);}
-      std::shared_ptr<N>& operator*() {return graphidToN_.at(*it_);}
+      ~NodeIteratorClass<GraphIterator>() {};
+      
+      void next() {it_.next(); while (!it_.end() && agio_.getNodeFromGraphid(*it_)==0) it_.next();}
+      
+      bool end() const {return it_.end();}
+      
+      void start() { it_.start(); while (!it_.end() && (agio_.getNodeFromGraphid(*it_)==0)) it_.next();}
+      
+      std::shared_ptr<N> operator*() {return agio_.getNodeFromGraphid(*it_);}
     };
 
-    
-    typename AssociationGraphObserver<N,E>::NodeIterator allNodesIterator();
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator> allNodesIterator();
 
     /*
      * @brief builds iterator on the neighbor nodes of a Node
      *
      */
     
-    typename AssociationGraphObserver<N,E>::NodeIterator outgoingNeighborNodesIterator(std::shared_ptr<N> node);
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node);
 
     /*
      * @brief builds iterator on the neighbor nodes of a Node
      *
      */
-     
-    typename AssociationGraphObserver<N,E>::NodeIterator incomingNeighborNodesIterator(std::shared_ptr<N> node);
+
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node);
     
     /**
      * Get all the neighbors of a node in the graph.
@@ -511,42 +510,47 @@ namespace bpp
     std::vector<NodeIndex> getAllNodesIndexes() const;
 
 
-    template<class GraphImplEdgeIterator>
+    template<class GraphIterator>
     class EdgeIteratorClass :
       public AssociationGraphObserver<N,E>::EdgeIterator
     {
     private:
-      EdgesIteratorClass<GraphImplEdgeIterator> it_;
+      EdgesIteratorClass<GraphIterator> it_;
+      const AssociationGraphImplObserver<N,E,GraphImpl>& agio_;
       
     public:
 
-      EdgeIteratorClass<GraphImplEdgeIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio) : it_(*agio.getGraph()){};
+      EdgeIteratorClass<GraphIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio) : it_(*agio.getGraph()), agio_(agio) { start();};
       
-      EdgeIteratorClass<GraphImplEdgeIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)) {};
+      EdgeIteratorClass<GraphIterator>(AssociationGraphImplObserver<N,E,GraphImpl>& agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)), agio_(agio) { start();};
 
-      EdgeIteratorClass<GraphImplEdgeIterator>& operator++() { it_++; return *this;}
-      EdgeIteratorClass<GraphImplEdgeIterator> operator++(int) {EdgeIteratorClass<GraphImplEdgeIterator> retval = *this; ++(*this); return retval;}
-      bool operator==(EdgeIteratorClass<GraphImplEdgeIterator> other) const {return it_ == other.it_;}
-      bool operator!=(EdgeIteratorClass<GraphImplEdgeIterator> other) const {return !(*this == other);}
-      std::shared_ptr<E>& operator*() {return graphidToE_.at(*it_);}
+      ~EdgeIteratorClass<GraphIterator>() {};
+      
+      void next() {it_.next(); while (!it_.end() && (agio_.getEdgeFromGraphid(*it_)==0)) it_.next();}
+      
+      bool end() const {return it_.end();}
+      
+      void start() { it_.start(); while (!it_.end() && (agio_.getEdgeFromGraphid(*it_)==0)) it_.next();}
+      
+      std::shared_ptr<E> operator*() {return agio_.getEdgeFromGraphid(*it_);}
     };
 
     
-    typename AssociationGraphObserver<N,E>::EdgeIterator allEdgesIterator();
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> allEdgesIterator();
 
     /*
      * @brief builds iterator on the neighbor nodes of a Edge
      *
      */
     
-    typename AssociationGraphObserver<N,E>::EdgeIterator outgoingEdgesIterator(std::shared_ptr<N> node);
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> outgoingEdgesIterator(std::shared_ptr<N> node);
 
     /*
      * @brief builds iterator on the neighbor nodes of a Edge
      *
      */
      
-    typename AssociationGraphObserver<N,E>::EdgeIterator incomingEdgesIterator(std::shared_ptr<N> node);
+    std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> incomingEdgesIterator(std::shared_ptr<N> node);
     
 
 
@@ -631,6 +635,15 @@ namespace bpp
     size_t getNumberOfNodes() const;
 
     /**
+     * Return the number of defined edges, ie edges that have a corresponding object
+     * in this GraphObserver
+     * @return the number of edges
+     */
+    
+    size_t getNumberOfEdges() const;
+
+
+    /**
      * Return the number of defined leaves, ie leaves that have a corresponding object
      * in this GraphObserver
      * @return the number of leaves
@@ -648,7 +661,7 @@ namespace bpp
     // /@}
 
     template<typename N2, typename E2, typename G2> friend class AssociationGraphImplObserver;
-  
+    
   };
 
   /***************/
@@ -658,13 +671,6 @@ namespace bpp
 
   /*******************/
   
-  
-//     class GraphObserverTools
-//     {
-//       static void outputToDot(AssociationGraphImplObserver<std::string,void>,std::ostream &out);
-//     };
-//
-
   /**
    * Constructor
    * @param subjectGraph the graph which is observed
@@ -967,13 +973,10 @@ namespace bpp
 //  std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
     EdgeGraphid newGraphEdge = getGraph()->link(foundNodeA->second, foundNodeB->second);
 
-    if(edgeObject != 00)
-    {
-      if (graphidToE_.size() < newGraphEdge + 1)
-        graphidToE_.resize(newGraphEdge + 1);
-      graphidToE_.at(newGraphEdge) = edgeObject;
-      EToGraphid_[edgeObject] = newGraphEdge;
-    }
+    if (graphidToE_.size() < newGraphEdge + 1)
+      graphidToE_.resize(newGraphEdge + 1);
+    graphidToE_.at(newGraphEdge) = edgeObject;
+    EToGraphid_[edgeObject] = newGraphEdge;
   }
 
   template<class N, class E, class GraphImpl>
@@ -1181,6 +1184,12 @@ namespace bpp
   }
 
   template<class N, class E, class GraphImpl>
+  size_t AssociationGraphImplObserver<N, E, GraphImpl>::getNumberOfEdges() const
+  {
+    return EToGraphid_.size();
+  }
+
+  template<class N, class E, class GraphImpl>
   size_t AssociationGraphImplObserver<N, E, GraphImpl>::getNumberOfLeaves() const
   {
     size_t nb=0;
@@ -1369,9 +1378,9 @@ namespace bpp
    */
 
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::NodeIterator AssociationGraphImplObserver<N,E,GraphImpl>::allNodesIterator()
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator> AssociationGraphImplObserver<N,E, GraphImpl>::allNodesIterator()
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER>(*this);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER>(*this));
   }
   
 
@@ -1381,15 +1390,17 @@ namespace bpp
    */
     
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::NodeIterator AssociationGraphImplObserver<N,E,GraphImpl>::outgoingNeighborNodesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator>
+  AssociationGraphImplObserver<N,E, GraphImpl>::outgoingNeighborNodesIterator(std::shared_ptr<N> node)
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this,node);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this,node));
   }
 
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::NodeIterator AssociationGraphImplObserver<N,E,GraphImpl>::incomingNeighborNodesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator>
+  AssociationGraphImplObserver<N,E,GraphImpl>::incomingNeighborNodesIterator(std::shared_ptr<N> node)
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this,node);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this,node));
   }
     
 
@@ -1434,9 +1445,9 @@ namespace bpp
    */
 
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::EdgeIterator AssociationGraphImplObserver<N,E,GraphImpl>::allEdgesIterator()
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> AssociationGraphImplObserver<N,E,GraphImpl>::allEdgesIterator()
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER>(*this);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER>(*this));
   }
   
 
@@ -1446,15 +1457,15 @@ namespace bpp
    */
     
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::EdgeIterator AssociationGraphImplObserver<N,E,GraphImpl>::outgoingEdgesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> AssociationGraphImplObserver<N,E,GraphImpl>::outgoingEdgesIterator(std::shared_ptr<N> node)
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this,node);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this,node));
   }
 
   template<class N, class E, class GraphImpl>
-  typename AssociationGraphObserver<N,E>::EdgeIterator AssociationGraphImplObserver<N,E,GraphImpl>::incomingEdgesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N,E>::EdgeIterator> AssociationGraphImplObserver<N,E,GraphImpl>::incomingEdgesIterator(std::shared_ptr<N> node)
   {
-    return AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this,node);
+    return std::unique_ptr<AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER> >(new AssociationGraphImplObserver<N,E,GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this,node));
   }
     
 

@@ -406,31 +406,26 @@ namespace bpp
     template<typename T>
     friend class EdgesIteratorClass;
 
-    
-    // friend class NodesIteratorClass<Graph::ALLGRAPHITER>;
-    // friend class NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>;
-    // friend class NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>;
-    
     /*
      * @brief builds iterator on all Nodes of the graph
      *
      */
     
-    Graph::NodeIterator allNodesIterator();
+    std::unique_ptr<Graph::NodeIterator> allNodesIterator();
 
     /*
      * @brief builds iterator on the neighbor nodes of a Node
      *
      */
     
-    Graph::NodeIterator outgoingNeighborNodesIterator(NodeId node);
+    std::unique_ptr<Graph::NodeIterator> outgoingNeighborNodesIterator(NodeId node);
 
     /*
      * @brief builds iterator on the neighbor nodes of a Node
      *
      */
     
-    Graph::NodeIterator incomingNeighborNodesIterator(NodeId node);
+    std::unique_ptr<Graph::NodeIterator> incomingNeighborNodesIterator(NodeId node);
 
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.
@@ -582,82 +577,26 @@ namespace bpp
     
     ///@}
 
-
-    /** @name Edge Functions
-     *  These methodes of the graph concern the edges.
-     */
-    ///@{
-    
-    class allEdgesIteratorClass :
-      public Graph::EdgeIterator
-    {
-    private:
-      edgeStructureType::iterator it_;
-      
-    public:
-
-      allEdgesIteratorClass(GlobalGraph& gg) : it_(gg.edgeStructure_.begin()) {}
-      allEdgesIteratorClass& operator++() { it_++; return *this;}
-      allEdgesIteratorClass operator++(int) {allEdgesIteratorClass retval = *this; ++(*this); return retval;}
-      bool operator==(allEdgesIteratorClass other) const {return it_ == other.it_;}
-      bool operator!=(allEdgesIteratorClass other) const {return !(*this == other);}
-      reference operator*() {return it_->first;}
-    };
-    
-     
-    class outgoingEdgesIteratorClass :
-      public Graph::EdgeIterator
-    {
-    private:
-      std::map<Node, Edge>::iterator it_;
-      
-    public:
-      
-      outgoingEdgesIteratorClass(GlobalGraph& gg, EdgeId node) : it_(gg.nodeStructure_.find(node)->second.first.begin()) {}
-      outgoingEdgesIteratorClass& operator++() { it_++; return *this;}
-      outgoingEdgesIteratorClass operator++(int) {outgoingEdgesIteratorClass retval = *this; ++(*this); return retval;}
-      bool operator==(outgoingEdgesIteratorClass other) const {return it_ == other.it_;}
-      bool operator!=(outgoingEdgesIteratorClass other) const {return !(*this == other);}
-      reference operator*() {return it_->second;}
-    };
-    
-    class incomingEdgesIteratorClass :
-      public Graph::EdgeIterator
-    {
-    private:
-      std::map<Node, Edge>::iterator it_;
-      
-    public:
-      
-      incomingEdgesIteratorClass(GlobalGraph& gg, EdgeId node) : it_(gg.nodeStructure_.find(node)->second.second.begin()) {}
-      incomingEdgesIteratorClass& operator++() { it_++; return *this;}
-      incomingEdgesIteratorClass operator++(int) {incomingEdgesIteratorClass retval = *this; ++(*this); return retval;}
-      bool operator==(incomingEdgesIteratorClass other) const {return it_ == other.it_;}
-      bool operator!=(incomingEdgesIteratorClass other) const {return !(*this == other);}
-      reference operator*() {return it_->first;}
-    };
-    
-
     /*
      * @brief builds iterator on all Nodes of the graph
      *
      */
     
-    EdgeIterator allEdgesIterator();
+    std::unique_ptr<EdgeIterator> allEdgesIterator();
 
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
      */
     
-    EdgeIterator outgoingEdgesIterator(NodeId node);
+    std::unique_ptr<EdgeIterator> outgoingEdgesIterator(NodeId node);
 
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
-    EdgeIterator incomingEdgesIterator(NodeId node);
+    std::unique_ptr<EdgeIterator> incomingEdgesIterator(NodeId node);
     
     /**
      * Get all the edges to/from a node in the graph.
@@ -755,60 +694,94 @@ namespace bpp
   
   template<class T>
   class NodesIteratorClass :
-    public Graph::NodeIterator
+    virtual public Graph::NodeIterator
   {
+    ~NodesIteratorClass<T>(){};
   };
     
           
   template<>
   class NodesIteratorClass<Graph::ALLGRAPHITER> :
-    public Graph::NodeIterator
+    virtual public Graph::NodeIterator
   {
   private:
     GlobalGraph::nodeStructureType::iterator it_;
+    GlobalGraph::nodeStructureType::iterator begin_;
+    GlobalGraph::nodeStructureType::iterator end_;
       
   public:
 
-    NodesIteratorClass<Graph::ALLGRAPHITER>(GlobalGraph& gg) : it_(gg.nodeStructure_.begin()) {}
-    NodesIteratorClass<Graph::ALLGRAPHITER>& operator++() { it_++; return *this;}
-    NodesIteratorClass<Graph::ALLGRAPHITER> operator++(int) {NodesIteratorClass<Graph::ALLGRAPHITER> retval = *this; ++(*this); return retval;}
-    bool operator==(NodesIteratorClass<Graph::ALLGRAPHITER> other) const {return it_ == other.it_;}
-    bool operator!=(NodesIteratorClass<Graph::ALLGRAPHITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->first;}
-  };
+    NodesIteratorClass<Graph::ALLGRAPHITER>(GlobalGraph& gg) : it_(gg.nodeStructure_.begin()), begin_(gg.nodeStructure_.begin()), end_(gg.nodeStructure_.end()) {}
+
+    ~NodesIteratorClass<Graph::ALLGRAPHITER>(){};
     
+    void next() { it_++;}
+    bool end() const { return (it_==end_); }
+    void start() { it_=begin_; }
+
+    Graph::NodeId operator*() {return it_->first;}
+  };
+
+  /**
+   * @brief Abstract class for neighbor iterators
+   *
+   **/
+   
+  class NeighborIteratorClass 
+  {
+  protected:
+    std::map<GlobalGraph::Node, GlobalGraph::Edge>& map_;
+    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator it_;
+    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator begin_;
+    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator end_;
+  
+  public:
+    virtual ~NeighborIteratorClass(){};
+    
+    NeighborIteratorClass(std::map<GlobalGraph::Node, GlobalGraph::Edge>& map) :
+      map_(map), it_(map_.begin()), begin_(map_.begin()), end_(map_.end()) {}
+    
+    void next() { it_++;}
+    bool end() const { return (it_==end_); }
+    void start() { it_=begin_; }
+  };
+
+  /**
+   * @brief 
+   *
+   **/
+  
   template<>
   class NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER> :
-    public Graph::NodeIterator
+    virtual public NeighborIteratorClass,
+    virtual public Graph::NodeIterator
   {
-  private:
-    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator it_;
-      
   public:
-      
-    NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : it_(gg.nodeStructure_.find(node)->second.first.begin()) {}
-    NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>& operator++() { it_++; return *this;}
-    NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER> operator++(int) {NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER> retval = *this; ++(*this); return retval;}
-    bool operator==(NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER> other) const {return it_ == other.it_;}
-    bool operator!=(NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->first;}
+    NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass(gg.nodeStructure_.find(node)->second.first) {}
+
+    ~NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(){};
+
+    void next() { NeighborIteratorClass::next();}
+    bool end() const { return NeighborIteratorClass::end(); }
+    void start() { NeighborIteratorClass::start(); }
+
+    Graph::NodeId operator*() {return it_->first;}
   };
     
   template<>
   class NodesIteratorClass<Graph::INCOMINGNEIGHBORITER> :
-    public Graph::NodeIterator
+    public NeighborIteratorClass,
+    virtual public Graph::NodeIterator
   {
-  private:
-    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator it_;
-      
   public:
-      
-    NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : it_(gg.nodeStructure_.find(node)->second.second.begin()) {}
-    NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>& operator++() { it_++; return *this;}
-    NodesIteratorClass<Graph::INCOMINGNEIGHBORITER> operator++(int) {NodesIteratorClass<Graph::INCOMINGNEIGHBORITER> retval = *this; ++(*this); return retval;}
-    bool operator==(NodesIteratorClass<Graph::INCOMINGNEIGHBORITER> other) const {return it_ == other.it_;}
-    bool operator!=(NodesIteratorClass<Graph::INCOMINGNEIGHBORITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->first;}
+    NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass(gg.nodeStructure_.find(node)->second.second) {}
+    ~NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(){};
+    
+    void next() { NeighborIteratorClass::next();}
+    bool end() const { return NeighborIteratorClass::end(); }
+    void start() { NeighborIteratorClass::start(); }
+
+    Graph::NodeId operator*() {return it_->first;}
   };
 
   /************************************************/
@@ -821,56 +794,50 @@ namespace bpp
   {
   };
     
-          
   template<>
   class EdgesIteratorClass<Graph::ALLGRAPHITER> :
     public Graph::EdgeIterator
   {
   private:
     GlobalGraph::edgeStructureType::iterator it_;
+    GlobalGraph::edgeStructureType::iterator begin_;
+    GlobalGraph::edgeStructureType::iterator end_;
       
   public:
-
-    EdgesIteratorClass<Graph::ALLGRAPHITER>(GlobalGraph& gg) : it_(gg.edgeStructure_.begin()) {}
-    EdgesIteratorClass<Graph::ALLGRAPHITER>& operator++() { it_++; return *this;}
-    EdgesIteratorClass<Graph::ALLGRAPHITER> operator++(int) {EdgesIteratorClass<Graph::ALLGRAPHITER> retval = *this; ++(*this); return retval;}
-    bool operator==(EdgesIteratorClass<Graph::ALLGRAPHITER> other) const {return it_ == other.it_;}
-    bool operator!=(EdgesIteratorClass<Graph::ALLGRAPHITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->first;}
+    EdgesIteratorClass<Graph::ALLGRAPHITER>(GlobalGraph& gg) : it_(gg.edgeStructure_.begin()), begin_(gg.edgeStructure_.begin()), end_(gg.edgeStructure_.end()) {
+    }
+    void next() { it_++;}
+    bool end() const { return (it_==end_); }
+    void start() { it_=begin_; }
+    Graph::EdgeId operator*() {return it_->first;}
   };
-    
+
   template<>
   class EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER> :
+    public NeighborIteratorClass,
     public Graph::EdgeIterator
   {
-  private:
-    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator it_;
-      
   public:
-      
-    EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : it_(gg.nodeStructure_.find(node)->second.first.begin()) {}
-    EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER>& operator++() { it_++; return *this;}
-    EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER> operator++(int) {EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER> retval = *this; ++(*this); return retval;}
-    bool operator==(EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER> other) const {return it_ == other.it_;}
-    bool operator!=(EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->second;}
+    EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass(gg.nodeStructure_.find(node)->second.first) {}
+    Graph::EdgeId operator*() {return it_->second;}
+
+    void next() { NeighborIteratorClass::next();}
+    bool end() const { return NeighborIteratorClass::end(); }
+    void start() { NeighborIteratorClass::start(); }
   };
     
   template<>
   class EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER> :
+    public NeighborIteratorClass,
     public Graph::EdgeIterator
   {
-  private:
-    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator it_;
-      
   public:
-      
-    EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : it_(gg.nodeStructure_.find(node)->second.second.begin()) {}
-    EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER>& operator++() { it_++; return *this;}
-    EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER> operator++(int) {EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER> retval = *this; ++(*this); return retval;}
-    bool operator==(EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER> other) const {return it_ == other.it_;}
-    bool operator!=(EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER> other) const {return !(*this == other);}
-    reference operator*() {return it_->second;}
+    EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass(gg.nodeStructure_.find(node)->second.second) {}
+    Graph::EdgeId operator*() {return it_->second;}
+
+    void next() { NeighborIteratorClass::next();}
+    bool end() const { return NeighborIteratorClass::end(); }
+    void start() { NeighborIteratorClass::start(); }
   };
 
 }

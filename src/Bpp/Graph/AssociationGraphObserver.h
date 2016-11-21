@@ -275,34 +275,39 @@ namespace bpp
      *
      */
     
-    class NodeIterator :
-      public std::iterator<std::output_iterator_tag, std::shared_ptr<N> >
+    class NodeIterator 
     {
     public:
-      ~NodeIterator() {};
-    };
+      virtual ~NodeIterator() {};
+      
+      virtual void next() = 0;      
+      virtual bool end() const = 0;
+      virtual void start() = 0;
 
+      virtual std::shared_ptr<N> operator*() = 0;
+    };
+    
 
     /*
      * @brief builds iterator on all Nodes of the graph
      *
      */
     
-    virtual NodeIterator allNodesIterator() = 0;
+    virtual std::unique_ptr<NodeIterator> allNodesIterator() = 0;
 
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
      */
     
-    virtual NodeIterator outgoingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
+    virtual std::unique_ptr<NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
 
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
-    virtual NodeIterator incomingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
+    virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
 
     /**
      * Get all the neighbors of a node in the graph.
@@ -392,11 +397,16 @@ namespace bpp
      *
      */
     
-    class EdgeIterator :
-      virtual public std::iterator<std::output_iterator_tag, std::shared_ptr<E> >
+    class EdgeIterator
     {
     public:
-      ~EdgeIterator() {};
+      virtual ~EdgeIterator() {};
+      
+      virtual void next() = 0;      
+      virtual bool end() const = 0;
+      virtual void start() = 0;
+
+      virtual std::shared_ptr<E> operator*() = 0;
     };
 
 
@@ -405,21 +415,21 @@ namespace bpp
      *
      */
     
-    virtual EdgeIterator allEdgesIterator() = 0;
+    virtual std::unique_ptr<EdgeIterator> allEdgesIterator() = 0;
 
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
      */
     
-    virtual EdgeIterator outgoingEdgesIterator(std::shared_ptr<N> node) = 0;
+    virtual std::unique_ptr<EdgeIterator> outgoingEdgesIterator(std::shared_ptr<N> node) = 0;
 
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
-    virtual EdgeIterator incomingEdgesIterator(std::shared_ptr<N> node) = 0;
+    virtual std::unique_ptr<EdgeIterator> incomingEdgesIterator(std::shared_ptr<N> node) = 0;
 
     /**
      * Get all the defined edges of a graphO,

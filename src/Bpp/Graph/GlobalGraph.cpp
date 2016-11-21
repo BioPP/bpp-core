@@ -328,19 +328,19 @@ vector< Graph::EdgeId > GlobalGraph::getOutgoingEdges(const Graph::NodeId node) 
   return getEdges_(node,true);
 }
 
-Graph::NodeIterator GlobalGraph::allNodesIterator()
+std::unique_ptr<Graph::NodeIterator> GlobalGraph::allNodesIterator()
 {
-  return NodesIteratorClass<Graph::ALLGRAPHITER>(*this);
+  return std::unique_ptr<Graph::NodeIterator>(new NodesIteratorClass<Graph::ALLGRAPHITER>(*this));
 }
 
-Graph::NodeIterator GlobalGraph::outgoingNeighborNodesIterator(Graph::NodeId node)
+std::unique_ptr<Graph::NodeIterator> GlobalGraph::outgoingNeighborNodesIterator(Graph::NodeId node)
 {
-  return NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this, node);
+  return std::unique_ptr<Graph::NodeIterator>(new NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this, node));
 }
 
-Graph::NodeIterator GlobalGraph::incomingNeighborNodesIterator(Graph::NodeId node)
+std::unique_ptr<Graph::NodeIterator> GlobalGraph::incomingNeighborNodesIterator(Graph::NodeId node)
 {
-  return NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this, node);
+  return std::unique_ptr<Graph::NodeIterator>(new NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this, node));
 }
 
 size_t GlobalGraph::getDegree(const Graph::NodeId node) const
@@ -687,19 +687,20 @@ bool GlobalGraph::containsReciprocalRelations() const
   return false;
 }
 
-Graph::EdgeIterator GlobalGraph::allEdgesIterator()
+std::unique_ptr<Graph::EdgeIterator> GlobalGraph::allEdgesIterator()
 {
-  return GlobalGraph::allEdgesIteratorClass(*this);
+  return std::unique_ptr<Graph::EdgeIterator>(new EdgesIteratorClass<Graph::ALLGRAPHITER>(*this));
+  
 }
 
-Graph::EdgeIterator GlobalGraph::outgoingEdgesIterator(Graph::NodeId node)
+std::unique_ptr<Graph::EdgeIterator> GlobalGraph::outgoingEdgesIterator(Graph::NodeId node)
 {
-  return GlobalGraph::outgoingEdgesIteratorClass(*this, node);
+  return std::unique_ptr<Graph::EdgeIterator>(new EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this, node));
 }
 
-Graph::EdgeIterator GlobalGraph::incomingEdgesIterator(Graph::NodeId node)
+std::unique_ptr<Graph::EdgeIterator> GlobalGraph::incomingEdgesIterator(Graph::NodeId node)
 {
-  return GlobalGraph::incomingEdgesIteratorClass(*this, node);
+  return std::unique_ptr<Graph::EdgeIterator>(new EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this, node));
 }
 
 Graph::EdgeId GlobalGraph::getEdge(Graph::NodeId nodeA, Graph::NodeId nodeB) const

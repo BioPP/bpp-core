@@ -156,13 +156,13 @@ namespace bpp
      * Get a iterator on the sons node of a node
      */
     
-    Graph::NodeIterator sonsIterator(Graph::NodeId node);
+    std::unique_ptr<Graph::NodeIterator> sonsIterator(Graph::NodeId node);
 
     /**
      * Get a iterator on the branches to sons of a node
      */
     
-    Graph::EdgeIterator branchesIterator(Graph::NodeId node);
+    std::unique_ptr<Graph::EdgeIterator> branchesIterator(Graph::NodeId node);
 
     /**
      * @brief Get the number of sons node
@@ -407,13 +407,13 @@ namespace bpp
   }
   
   template <class GraphImpl>
-  Graph::NodeIterator TreeGraphImpl<GraphImpl>::sonsIterator(Graph::NodeId node) 
+  std::unique_ptr<Graph::NodeIterator> TreeGraphImpl<GraphImpl>::sonsIterator(Graph::NodeId node) 
   {
     return GraphImpl::outgoingNeighborNodesIterator(node);
   }
 
   template <class GraphImpl>
-  Graph::EdgeIterator TreeGraphImpl<GraphImpl>::branchesIterator(Graph::NodeId node) 
+  std::unique_ptr<Graph::EdgeIterator> TreeGraphImpl<GraphImpl>::branchesIterator(Graph::NodeId node) 
   {
     return GraphImpl::outgoingEdgesIterator(node);
   }
