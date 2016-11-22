@@ -225,9 +225,8 @@ namespace bpp
      */
     
     struct ALLGRAPHITER {};
-    struct NEIGHBORITER {};
-    struct OUTGOINGNEIGHBORITER : public NEIGHBORITER{};
-    struct INCOMINGNEIGHBORITER : public NEIGHBORITER{};
+    struct OUTGOINGNEIGHBORITER {};
+    struct INCOMINGNEIGHBORITER {};
 
     /*
      * @brief builds iterator on all Nodes of the graph
@@ -249,8 +248,6 @@ namespace bpp
      */
     
     virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(NodeId node) = 0;
-
-    
 
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.

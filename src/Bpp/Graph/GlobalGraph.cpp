@@ -338,6 +338,7 @@ std::unique_ptr<Graph::NodeIterator> GlobalGraph::outgoingNeighborNodesIterator(
   return std::unique_ptr<Graph::NodeIterator>(new NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER>(*this, node));
 }
 
+
 std::unique_ptr<Graph::NodeIterator> GlobalGraph::incomingNeighborNodesIterator(Graph::NodeId node)
 {
   return std::unique_ptr<Graph::NodeIterator>(new NodesIteratorClass<Graph::INCOMINGNEIGHBORITER>(*this, node));
