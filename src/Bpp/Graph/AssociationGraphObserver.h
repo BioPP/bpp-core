@@ -198,7 +198,14 @@ namespace bpp
      */
     virtual void setRoot(const std::shared_ptr<N>  newRoot) = 0;
   
-  
+    /**
+     * @return the root
+     */
+
+    virtual std::shared_ptr<N> getRoot() const = 0;
+    
+    virtual NodeIndex getRootIndex() const = 0;
+
     // /@}
 
 
@@ -253,8 +260,8 @@ namespace bpp
      * @param nodeIndex the index of the wanted node
      * @return N, a node object
      */
+    
     virtual std::shared_ptr<N>  getNode(NodeIndex nodeIndex) const = 0;
-
 
     /**
      * Return the associated Node index

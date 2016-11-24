@@ -306,7 +306,15 @@ namespace bpp
      * @param newRoot the new root node
      */
     void setRoot(const std::shared_ptr<N>  newRoot);
-  
+
+    /**
+     * @return the root
+     */
+
+    std::shared_ptr<N> getRoot() const;
+    
+    NodeIndex getRootIndex() const;
+
     // /@}
 
     /** @name Object Indexation
@@ -360,7 +368,8 @@ namespace bpp
      * @param nodeObject object which to return the node index
      * @return a node index
      */
-    virtual std::shared_ptr<N>  getNode(NodeIndex nodeIndex) const;
+    
+    std::shared_ptr<N>  getNode(NodeIndex nodeIndex) const;
 
 
     /**
@@ -368,7 +377,8 @@ namespace bpp
      * @param edgeObject object which to return the node index
      * @return a node index
      */
-    virtual std::shared_ptr<E>  getEdge(EdgeIndex edgeIndex) const;
+
+    std::shared_ptr<E>  getEdge(EdgeIndex edgeIndex) const;
     // /@}
 
     /** @name Topology exploration
@@ -406,6 +416,7 @@ namespace bpp
       std::shared_ptr<N> operator*() {return agio_.getNodeFromGraphid(*it_);}
     };
 
+    
     std::unique_ptr<typename AssociationGraphObserver<N,E>::NodeIterator> allNodesIterator();
 
     /*
@@ -1500,6 +1511,19 @@ namespace bpp
   {
     return getGraph()->setRoot(getNodeGraphid(newRoot));
   }
+
+  template<class N, class E, class GraphImpl>
+  std::shared_ptr<N>  AssociationGraphImplObserver<N, E, GraphImpl>::getRoot() const
+  {
+    return this->getNodeFromGraphid(this->getGraph()->getRoot());
+  }
+
+  template<class N, class E, class GraphImpl>
+  typename AssociationGraphImplObserver<N, E, GraphImpl>::NodeIndex AssociationGraphImplObserver<N, E, GraphImpl>::getRootIndex() const
+  {
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getRoot()));
+  }
+
 
   template<class N, class E, class GraphImpl>
   std::pair<std::shared_ptr<N> , std::shared_ptr<N> > AssociationGraphImplObserver<N, E, GraphImpl>::getNodes(std::shared_ptr<E> edge) const

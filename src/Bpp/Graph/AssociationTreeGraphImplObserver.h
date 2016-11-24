@@ -127,11 +127,6 @@ namespace bpp
     std::shared_ptr<E>  getEdgeToFather(const NodeIndex  nodeIndex) const;
 
     /**
-     * Is the subject tree rooted?
-     */
-    bool isRooted() const;
-
-    /**
      * @brief Sets the root and make the tree directed from root to leaves
      *
      */
@@ -149,12 +144,17 @@ namespace bpp
       rootAt(newRoot);
     }
 
-    /**
-     * @return the root
+    
+    /*
+     * @brief check if rooted, ie directed 
+     *
      */
+    
+    bool isRooted() const
+    {
+      return this->getGraph()->isRooted();
+    }
 
-    std::shared_ptr<N> getRoot() const;
-    NodeIndex getRootIndex() const;
 
     /**
      * Return, in a rooted tree, the father node
@@ -239,9 +239,24 @@ namespace bpp
      */
     void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject);
 
+    /**
+     * Iterators
+     *
+     */
 
-    // / FROM TREETOOLS
+    /*
+     * @brief builds iterator on the sons of a Node
+     *
+     */
 
+    std::unique_ptr<typename AssociationTreeGraphObserver<N,E>::NodeIterator> sonsIterator(std::shared_ptr<N> node);
+
+    /*
+     * @brief builds iterator on the branches to sons of a Node
+     *
+     */
+
+    std::unique_ptr<typename AssociationTreeGraphObserver<N,E>::EdgeIterator> branchesIterator(std::shared_ptr<N> node);
 
     /**
      * @brief Get a vector of ancestor nodes between to nodes.
@@ -252,6 +267,7 @@ namespace bpp
      * @return A vector of ancestor nodes ids.
      * @throw PhyloNodeNotFoundException If a node is not found.
      */
+    
     std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB, bool includeAncestor = true) const;
 
     std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB) const;
@@ -313,30 +329,6 @@ namespace bpp
   }
 
   template<class N, class E, class TreeGraphImpl>
-  bool AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::isRooted() const
-  {
-    return this->getGraph()->isRooted();
-  }
-
-  template<class N, class E, class TreeGraphImpl>
-  void AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::rootAt(const std::shared_ptr<N> root)
-  {
-    this->getGraph()->rootAt(this->getNodeGraphid(root));
-  }
-
-  template<class N, class E, class TreeGraphImpl>
-  std::shared_ptr<N>  AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getRoot() const
-  {
-    return this->getNodeFromGraphid(this->getGraph()->getRoot());
-  }
-
-  template<class N, class E, class TreeGraphImpl>
-  typename AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::NodeIndex AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getRootIndex() const
-  {
-    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getRoot()));
-  }
-
-  template<class N, class E, class TreeGraphImpl>
   bool AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::hasFather(const std::shared_ptr<N>  nodeObject) const
   {
     return this->getGraph()->hasFather(this->getNodeGraphid(nodeObject));
@@ -377,7 +369,7 @@ namespace bpp
   template<class N, class E, class TreeGraphImpl>
   std::vector<typename AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::NodeIndex> AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getSons(AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::NodeIndex node) const
   {
-    return getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(getNode(node)))));
+    return this->getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(this->getNode(node)))));
   }
 
   template<class N, class E, class TreeGraphImpl>
@@ -389,7 +381,7 @@ namespace bpp
   template<class N, class E, class TreeGraphImpl>
   typename AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::NodeIndex AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getSon(AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::EdgeIndex edge) const
   {
-    return getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(getEdge(edge)))));
+    return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
   template<class N, class E, class TreeGraphImpl>
@@ -401,7 +393,7 @@ namespace bpp
   template<class N, class E, class TreeGraphImpl>
   typename AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::NodeIndex AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getFather(AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::EdgeIndex edge) const
   {
-    return getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(getEdge(edge)))));
+    return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
   template<class N, class E, class TreeGraphImpl>
@@ -443,6 +435,24 @@ namespace bpp
   }
 
   template<class N, class E, class TreeGraphImpl>
+  void AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::rootAt(const std::shared_ptr<N> root)
+  {
+    this->getGraph()->rootAt(this->getNodeGraphid(root));
+  }
+
+  template<class N, class E, class TreeGraphImpl>
+  std::unique_ptr<typename AssociationTreeGraphObserver<N,E>::NodeIterator> AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::sonsIterator(std::shared_ptr<N> node)
+  {
+    return this->outgoingNeighborNodesIterator(node);
+  }
+  
+  template<class N, class E, class TreeGraphImpl>
+  std::unique_ptr<typename AssociationTreeGraphObserver<N,E>::EdgeIterator> AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::branchesIterator(std::shared_ptr<N> node)
+  {
+    return this->outgoingEdgesIterator(node);
+  }
+
+  template<class N, class E, class TreeGraphImpl>
   std::vector<std::shared_ptr<N> > AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB), includeAncestor));
@@ -451,7 +461,7 @@ namespace bpp
   template<class N, class E, class TreeGraphImpl>
   std::vector<std::shared_ptr<E> > AssociationTreeGraphImplObserver<N, E, TreeGraphImpl>::getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const
   {
-    return getEdgesFromGraphid(this->getGraph()->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
+    return this->getEdgesFromGraphid(this->getGraph()->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
   }
 
   template<class N, class E, class TreeGraphImpl>

@@ -1,7 +1,7 @@
 //
-// File: test_bfgs.cpp
-// Created by: Julien Dutheil
-// Created on: Mon Jan 31 19:45 2011
+// File: test_treeGraphObs.cpp
+// Created by: Thomas Bigot
+// Created on: 2016
 //
 
 /*
@@ -109,7 +109,29 @@ int main() {
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
   // the tree is valid at this point
   test &= grObs.isValid();
+
+  cout << endl;
+  cout << "Iteration on sons  of 1:" << endl;
   
+  unique_ptr<AssociationTreeGraphObserver<string, unsigned int>::NodeIterator> in0It=grObs.sonsIterator(one);
+
+  for (;!in0It->end();in0It->next())
+  {
+    cout << ***in0It << endl;
+  }
+
+  cout << endl;
+  cout << "Iteration on outgoing edges  of 0:" << endl;
+  
+  unique_ptr<AssociationTreeGraphObserver<string, unsigned int>::EdgeIterator> oe1It=grObs.branchesIterator(zero);
+
+  for (;!oe1It->end();oe1It->next())
+  {
+    cout << ***oe1It << endl;
+  }
+
+  cout << endl;
+
   cout << "Re-linking 3->0"<< endl;
   grObs.link(two,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
@@ -118,6 +140,6 @@ int main() {
   test &= !grObs.isValid();
   
   cout << "Test " << (test? "passed":"failed") << endl;
-  
+
   return (test ? 0 : 1);
 }

@@ -1,7 +1,7 @@
 //
-// File: test_bfgs.cpp
-// Created by: Julien Dutheil
-// Created on: Mon Jan 31 19:45 2011
+// File: test_graphObs.cpp
+// Created by: Thomas Bigot
+// Created on: 2016
 //
 
 /*
