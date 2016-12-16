@@ -65,6 +65,7 @@ SET(CPP_FILES
   Bpp/Numeric/Function/SimpleNewtonMultiDimensions.cpp
   Bpp/Numeric/Function/ThreePointsNumericalDerivative.cpp
   Bpp/Numeric/Function/TwoPointsNumericalDerivative.cpp
+  Bpp/Numeric/Function/Operators/ComputationTree.cpp
   Bpp/Numeric/Hmm/HmmLikelihood.cpp
   Bpp/Numeric/Hmm/AbstractHmmTransitionMatrix.cpp
   Bpp/Numeric/Hmm/FullHmmTransitionMatrix.cpp
@@ -192,6 +193,12 @@ SET(H_FILES
   Bpp/Numeric/Function/SimpleNewtonMultiDimensions.h
   Bpp/Numeric/Function/ThreePointsNumericalDerivative.h
   Bpp/Numeric/Function/TwoPointsNumericalDerivative.h
+  Bpp/Numeric/Function/Operators/Operator.h
+  Bpp/Numeric/Function/Operators/ConstantOperator.h
+  Bpp/Numeric/Function/Operators/FunctionOperator.h
+  Bpp/Numeric/Function/Operators/BinaryOperator.h
+  Bpp/Numeric/Function/Operators/MathOperator.h
+  Bpp/Numeric/Function/Operators/ComputationTree.h
   Bpp/Numeric/Hmm/HmmEmissionProbabilities.h
   Bpp/Numeric/Hmm/HmmExceptions.h
   Bpp/Numeric/Hmm/HmmLikelihood.h
