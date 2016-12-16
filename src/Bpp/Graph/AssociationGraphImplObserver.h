@@ -734,7 +734,7 @@ namespace bpp
     for (typename std::map<std::shared_ptr<N>, NodeGraphid >::const_iterator itN=graphObserver.NToGraphid_.begin();
          itN != graphObserver.NToGraphid_.end(); itN++)
     {  
-      std::shared_ptr<N> node(AssociationGraphObserver<E,N>::template copy<N,N>(*itN->first));
+      std::shared_ptr<N> node(AssociationGraphObserver<N,E>::template copy<N,N>(*itN->first));
     
       NToGraphid_[node]=itN->second;
       graphidToN_[itN->second]=node;
@@ -751,7 +751,7 @@ namespace bpp
     for (typename std::map<std::shared_ptr<E>, EdgeGraphid >::const_iterator itE=graphObserver.EToGraphid_.begin();
          itE != graphObserver.EToGraphid_.end(); itE++)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<E,N>::template copy<E,E>(*itE->first));
+      std::shared_ptr<E> edge(AssociationGraphObserver<N,E>::template copy<E,E>(*itE->first));
 
       EToGraphid_[edge]=itE->second;
       graphidToE_[itE->second]=edge;
@@ -783,7 +783,7 @@ namespace bpp
     for (typename std::map<std::shared_ptr<N2>, NodeGraphid >::const_iterator itN=graphObserver.NToGraphid_.begin();
          itN != graphObserver.NToGraphid_.end(); itN++)
     {
-      std::shared_ptr<N> node(AssociationGraphObserver<E,N>::template copy<N2,N>(*itN->first));
+      std::shared_ptr<N> node(AssociationGraphObserver<N,E>::template copy<N2,N>(*itN->first));
 
       NToGraphid_[node]=itN->second;
       graphidToN_[itN->second]=node;
@@ -800,7 +800,7 @@ namespace bpp
     for (typename std::map<std::shared_ptr<E2>, EdgeGraphid >::const_iterator itE=graphObserver.EToGraphid_.begin();
          itE != graphObserver.EToGraphid_.end(); itE++)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<E,N>::template copy<E2,E>(*itE->first));
+      std::shared_ptr<E> edge(AssociationGraphObserver<N,E>::template copy<E2,E>(*itE->first));
       
       EToGraphid_[edge]=itE->second;
       graphidToE_[itE->second]=edge;
@@ -837,7 +837,7 @@ namespace bpp
     for (typename std::map<std::shared_ptr<N>, NodeGraphid >::const_iterator itN=graphObserver.NToGraphid_.begin();
          itN != graphObserver.NToGraphid_.end(); itN++)
     {
-      std::shared_ptr<N> node(AssociationGraphObserver<E,N>::template copy<N,N>(*itN->first));
+      std::shared_ptr<N> node(AssociationGraphObserver<N,E>::template copy<N,N>(*itN->first));
         
       NToGraphid_[node]=itN->second;
       graphidToN_[itN->second]=node;
@@ -854,7 +854,7 @@ namespace bpp
 
     for (typename std::map<std::shared_ptr<E>, EdgeGraphid >::const_iterator itE=graphObserver.EToGraphid_.begin(); itE != graphObserver.EToGraphid_.end(); itE++)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<E,N>::template copy<E,E>(*itE->first));
+      std::shared_ptr<E> edge(AssociationGraphObserver<N,E>::template copy<E,E>(*itE->first));
     
       EToGraphid_[edge]=itE->second;
       graphidToE_[itE->second]=edge;
