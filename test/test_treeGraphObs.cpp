@@ -48,28 +48,27 @@ using namespace std;
 
 int main() {
   AssociationTreeGlobalGraphObserver<string,unsigned int> grObs(true);
-
+  
   shared_ptr<string> zero(new string("zero"));
   shared_ptr<string> one(new string("one"));
   shared_ptr<string> two(new string("two"));
   shared_ptr<string> three(new string("three"));
+  shared_ptr<string> four(new string("four"));
+  shared_ptr<string> five(new string("five"));
   shared_ptr<unsigned int> r3(new unsigned int(3));
-  shared_ptr<unsigned int> r1(new unsigned int(3));
+  shared_ptr<unsigned int> r1(new unsigned int(5));
+  shared_ptr<unsigned int> r2(new unsigned int(10));
 
   cout << "Creating node zero." << endl;
   grObs.createNode(zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Creating node one from the number zero." << endl;
   grObs.createNode(one);
-  grObs.link(zero,one,r1);
+  grObs.link(zero,one,r2);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "The father branch of zero is " << *(grObs.getEdgeToFather(one)) << endl;
   cout << "The father node of one is " << *(grObs.getFather(one)) << endl;
   
-//   cout << "unlink 0->1 and relink with setFather()";
-//   grObs.unlink(zero,one);
-//   grObs.setFather(one,zero);
-//FIXME: setFather only works with valid tree (wich cannot be true…)
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
   
@@ -79,29 +78,27 @@ int main() {
   cout << "Linking two to zero." << endl;
   grObs.link(two,zero,r3);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");  
-  cout << "Linking one to three." << endl;
+  cout << "Linking one to three and two to four." << endl;
   grObs.createNode(one,three);
+  grObs.createNode(two,four,r1);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
-
   cout << "Linking three to zero." << endl;
   grObs.link(three,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  // so now we have zero -> one -> two -> zero ...
+
   vector<shared_ptr<string> > fromOne = grObs.getOutgoingNeighbors(zero);
   vector<shared_ptr<string> > fromThree = grObs.getOutgoingNeighbors(two);
   bool test = (*(fromOne.begin()) == one) && (*(fromThree.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   
-  
-  
+ 
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
   
   // the tree must be considered as unvalid at this point
   test &= !grObs.isValid();
   
-  
-  cout << "Removing 3->0"<< endl;
+  cout << "Removing 2->0 and 3->0"<< endl;
   grObs.unlink(two,zero);
   grObs.unlink(three,zero);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
@@ -121,19 +118,55 @@ int main() {
   }
 
   cout << endl;
-  cout << "Iteration on outgoing edges  of 0:" << endl;
+  cout << " Outgoing edges  of 2:" << endl;
+ 
+  vector<shared_ptr<unsigned int> > ve=grObs.getBranches(two);
+  for (size_t i=0; i<ve.size();i++)
+    cout << *ve[i] << endl;
+
+  cout << endl;
   
-  unique_ptr<AssociationTreeGraphObserver<string, unsigned int>::EdgeIterator> oe1It=grObs.branchesIterator(zero);
+  cout << "Iteration on outgoing edges  of 2:" << endl;
+  unique_ptr<AssociationTreeGraphObserver<string, unsigned int>::EdgeIterator> oe1It=grObs.branchesIterator(two);
 
   for (;!oe1It->end();oe1It->next())
   {
     cout << ***oe1It << endl;
   }
 
-  cout << endl;
+  cout << endl ;
 
-  cout << "Re-linking 3->0"<< endl;
-  grObs.link(two,zero);
+  // add another root
+
+  cout << "Add another root " << endl;
+  
+  grObs.createNode(five);
+  grObs.link(five,two);
+
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
+  
+  cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
+  // the tree is not valid at this point
+  test &= !grObs.isValid();
+
+  cout << "Reroot on one" << endl;
+
+  try {
+    grObs.rootAt(one);
+  }
+  catch(Exception& e)
+  {
+    cout << "First undirect the tree." << endl;
+    grObs.getGraph()->makeUndirected();
+    grObs.getGraph()->outputToDot(std::cout,"undirected");
+    cout << "Then root." << endl;
+    grObs.rootAt(one);
+  }
+
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
+  
+  cout << "Linking 3->2"<< endl;
+  grObs.link(three, two);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
   // the tree must be considered as unvalid at this point
