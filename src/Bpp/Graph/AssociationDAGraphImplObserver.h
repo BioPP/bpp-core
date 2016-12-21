@@ -406,18 +406,30 @@ namespace bpp
   void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject)
   {
     if (edgeObject)
-      this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject), this->getEdgeGraphid(edgeObject));
+      try {        
+        this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject), this->getEdgeGraphid(edgeObject));
+      }
+      catch (Exception& e)
+      {
+        this->link(nodeObject, sonNodeObject, edgeObject);
+      }
     else
       this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
   }
 
   template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::addFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject)
+  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::addFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject)
   {
     if (edgeObject)
-      this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject), this->getEdgeGraphid(edgeObject));
+      try {        
+        this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject), this->getEdgeGraphid(edgeObject));
+      }
+      catch (Exception& e)
+      {
+        this->link(fatherNodeObject, nodeObject, edgeObject);
+      }
     else
-      this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
+      this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject));
   }
 
 

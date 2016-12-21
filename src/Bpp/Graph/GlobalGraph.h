@@ -730,7 +730,7 @@ namespace bpp
 
     template<class N, class E, class GraphImpl>
     friend class AssociationGraphImplObserver;
-    
+
   };
 
 

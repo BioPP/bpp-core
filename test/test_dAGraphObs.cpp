@@ -56,7 +56,7 @@ int main() {
   shared_ptr<string> five(new string("five"));
   shared_ptr<string> six(new string("six"));
   shared_ptr<unsigned int> r3(new unsigned int(3));
-  shared_ptr<unsigned int> r1(new unsigned int(3));
+  shared_ptr<unsigned int> r1(new unsigned int(5));
 
   cout << "Creating node zero." << endl;
   grObs.createNode(zero);
@@ -70,7 +70,7 @@ int main() {
   grObs.createNode(one,two);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Linking two to zero." << endl;
-  grObs.addFather(two,zero,r3);
+  grObs.addFather(zero,two,r3);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");  
 
 

@@ -169,6 +169,9 @@ GlobalGraph::Edge GlobalGraph::getHighestEdgeID() const
 void GlobalGraph::unlinkInEdgeStructure_(const GlobalGraph::Edge& edge)
 {
   edgeStructureType::iterator foundEdge = edgeStructure_.find(edge);
+  if (foundEdge==edgeStructure_.end())
+    throw Exception("GlobalGraph::unlinkInEdgeStructure_ : no edge to erase " + TextTools::toString(edge));
+  
   edgeStructure_.erase(foundEdge);
   this->topologyHasChanged_();
 }
@@ -186,12 +189,18 @@ unsigned int GlobalGraph::unlinkInNodeStructure_(const GlobalGraph::Node& nodeA,
   // Forward
   nodeStructureType::iterator nodeARow = nodeStructure_.find(nodeA);
   map<GlobalGraph::Node,GlobalGraph::Edge>::iterator foundForwardRelation = nodeARow->second.first.find(nodeB);
+  if (foundForwardRelation==nodeARow->second.first.end())
+    throw Exception("GlobalGraph::unlinkInNodeStructure_ : no edge to erase " + TextTools::toString(nodeA) + "->" + TextTools::toString(nodeB));
+  
   GlobalGraph::Edge& foundEdge = foundForwardRelation->second;
   nodeARow->second.first.erase(foundForwardRelation);
-
+  
   // Backwards
   nodeStructureType::iterator nodeBRow = nodeStructure_.find(nodeB);
   map<GlobalGraph::Node,GlobalGraph::Edge>::iterator foundBackwardsRelation = nodeBRow->second.second.find(nodeA);
+  if (foundBackwardsRelation==nodeBRow->second.first.end())
+    throw Exception("GlobalGraph::unlinkInNodeStructure_ : no edge to erase " + TextTools::toString(nodeB) + "<-" + TextTools::toString(nodeA));
+
   nodeBRow->second.second.erase(foundBackwardsRelation);
   
   this->topologyHasChanged_();
@@ -464,6 +473,9 @@ void GlobalGraph::deleteNode(Graph::NodeId node)
   nodeMustExist_(node,"node to delete");
   isolate_(node);
   nodeStructureType::iterator found = nodeStructure_.find(node);
+  if (found==nodeStructure_.end())
+    throw Exception("GlobalGraph::deleteNode : no node to erase " + TextTools::toString(node));
+
   nodeStructure_.erase(found);
   this->topologyHasChanged_();
 }
