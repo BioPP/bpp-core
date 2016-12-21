@@ -104,11 +104,15 @@ SET(H_FILES
   Bpp/App/NumCalcApplicationTools.h
   Bpp/Graph/Graph.h
   Bpp/Graph/GlobalGraph.h
+  Bpp/Graph/DAGraph.h
+  Bpp/Graph/DAGraphImpl.h
   Bpp/Graph/TreeGraph.h
   Bpp/Graph/TreeGraphImpl.h
   Bpp/Graph/GraphObserver.h
   Bpp/Graph/AssociationGraphObserver.h
   Bpp/Graph/AssociationGraphImplObserver.h
+  Bpp/Graph/AssociationDAGraphObserver.h
+  Bpp/Graph/AssociationDAGraphImplObserver.h
   Bpp/Graph/AssociationTreeGraphObserver.h
   Bpp/Graph/AssociationTreeGraphImplObserver.h
   Bpp/Graphics/AbstractGraphicDevice.h
