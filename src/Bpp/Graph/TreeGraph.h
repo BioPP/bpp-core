@@ -107,6 +107,12 @@ namespace bpp
     virtual std::vector<Graph::NodeId> getSons(Graph::NodeId node) const = 0;
 
     /**
+     * Get the branches to the sons of a node
+     */
+    
+    virtual std::vector<Graph::EdgeId> getBranches(Graph::NodeId node) const = 0;
+
+    /**
      * Get a iterator on the sons node of a node
      */
     
@@ -130,12 +136,16 @@ namespace bpp
     
     virtual void setFather(Graph::NodeId node, Graph::NodeId fatherNode) = 0;
     
+    virtual void setFather(Graph::NodeId node, Graph::NodeId fatherNode, Graph::EdgeId edgeId) = 0;
+    
     /**
      * Add a son to a node in a rooted tree
      */
     
     virtual void addSon(Graph::NodeId node, Graph::NodeId sonNode) = 0;
     
+    virtual void addSon(Graph::NodeId node, Graph::NodeId sonNode, Graph::EdgeId edgeId) = 0;
+
     /**
      * Remove all the sons
      */

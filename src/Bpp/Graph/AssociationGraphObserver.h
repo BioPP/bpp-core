@@ -193,12 +193,6 @@ namespace bpp
 
   
     /**
-     * Set a new root
-     * @param newRoot the new root node
-     */
-    virtual void setRoot(const std::shared_ptr<N>  newRoot) = 0;
-  
-    /**
      * @return the root
      */
 
@@ -302,6 +296,8 @@ namespace bpp
     
     virtual std::unique_ptr<NodeIterator> allNodesIterator() = 0;
 
+    virtual std::unique_ptr<NodeIterator> allNodesIterator() const = 0;
+
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
@@ -309,12 +305,16 @@ namespace bpp
     
     virtual std::unique_ptr<NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
 
+    virtual std::unique_ptr<NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node) const = 0;
+
     /*
      * @brief builds iterator on the incoming neighbor nodes of a Node
      *
      */
     
     virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node) = 0;
+
+    virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node) const = 0;
 
     /**
      * Get all the neighbors of a node in the graph.

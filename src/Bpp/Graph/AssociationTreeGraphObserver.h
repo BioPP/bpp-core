@@ -37,8 +37,8 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef _ASSOCIATIONTREEGRAPHOBSERVER_HPP_
-#define _ASSOCIATIONTREEGRAPHOBSERVER_HPP_
+#ifndef _ASSOCIATION_TREE_GRAPHOBSERVER_HPP_
+#define _ASSOCIATION_TREE_GRAPHOBSERVER_HPP_
 
 #include "TreeGraph.h"
 #include "AssociationGraphObserver.h"
@@ -129,6 +129,16 @@ namespace bpp
     virtual std::vector<NodeIndex> getSons(const NodeIndex node) const = 0;
 
     /**
+     * Return, in a rooted tree, the branches to the sons of a node 
+     * @param nodeObject the concerned node
+     * @return a vector of branch Nodes
+     */
+    
+    virtual std::vector<std::shared_ptr<E> > getBranches(const std::shared_ptr<N>  node) const = 0;
+    
+    virtual std::vector<EdgeIndex> getBranches(const NodeIndex node) const = 0;
+
+    /**
      * Return, in a rooted tree, the son of an edge
      * @param nodeObject the concerned node
      * @return the son Node
@@ -171,8 +181,7 @@ namespace bpp
     virtual std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node) = 0;
     
     /**
-     * Remove a sons of a node
-     * @return a vector containing the removed nodes
+     * Remove a son of a node
      */
     
     virtual void removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son) = 0;
@@ -183,7 +192,7 @@ namespace bpp
      * @param fatherNodeObject the node to be the father
      */
 
-    virtual void setFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject) = 0;
+    virtual void setFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
 
     /**
      * Add a son to a node
@@ -191,7 +200,7 @@ namespace bpp
      * @param sonNodeObject the node to be added as a son to the father
      */
 
-    virtual void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject) = 0;
+    virtual void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
     
     /**
      * Iterators

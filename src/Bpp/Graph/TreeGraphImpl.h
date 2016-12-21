@@ -66,7 +66,7 @@ namespace bpp
     mutable bool isValid_;
     
     // unvalidate the tree
-    virtual void topologyHasChanged_() const;
+    void topologyHasChanged_() const;
     
     // will throw an exception if the tree is not valid
     void mustBeValid_() const;
@@ -152,6 +152,12 @@ namespace bpp
     
     std::vector<Graph::NodeId> getSons(Graph::NodeId node) const;
 
+     /**
+      * Get the branches to the sons node of a node
+      */
+    
+    std::vector<Graph::EdgeId> getBranches(Graph::NodeId node) const;
+
     /**
      * Get a iterator on the sons node of a node
      */
@@ -175,13 +181,16 @@ namespace bpp
      */
     
     void setFather(Graph::NodeId node, Graph::NodeId fatherNode);
+    void setFather(Graph::NodeId node, Graph::NodeId fatherNode, Graph::EdgeId edgeId);
     
     /**
      * Add a son to a node in a rooted tree
      */
     
     void addSon(Graph::NodeId node, Graph::NodeId sonNode);
-    
+
+    void addSon(Graph::NodeId node, Graph::NodeId sonNode, Graph::EdgeId edgeId);
+
     /**
      * Remove all the sons
      */
@@ -260,7 +269,6 @@ namespace bpp
   template <class GraphImpl>
   Graph::NodeId TreeGraphImpl<GraphImpl>::getFather(Graph::NodeId node) const
   {
-    mustBeValid_();
     std::vector<Graph::NodeId> incomers = getIncomingNeighbors(node);
     if (incomers.size() > 1)
       throw Exception("TreeGraphImpl<GraphImpl>::getFather: more than one father for Node " + TextTools::toString(node) + " : " + VectorTools::paste(incomers,",") + ". Should never happen since validity has been controled. Please report this bug.");
@@ -352,6 +360,9 @@ namespace bpp
   template <class GraphImpl>
   void TreeGraphImpl<GraphImpl>::rootAt(Graph::NodeId newRoot)
   {
+    if (!isValid())
+      throw Exception("TreeGraphImpl::rootAt: Tree is not Valid.");
+        
     GraphImpl::makeDirected();
     // set the new root on the Graph
     GraphImpl::setRoot(newRoot);
@@ -376,12 +387,31 @@ namespace bpp
     if(hasFather(node))
       GraphImpl::unlink(getFather(node),node);
     GraphImpl::link(fatherNode,node);
+    topologyHasChanged_();
   }
-  
+
+  template <class GraphImpl>
+  void TreeGraphImpl<GraphImpl>::setFather(Graph::NodeId node, Graph::NodeId fatherNode, Graph::EdgeId edgeId)
+  {
+    if(hasFather(node))
+      GraphImpl::unlink(getFather(node),node);
+    GraphImpl::link(fatherNode,node,edgeId);
+    topologyHasChanged_();
+  }
+
+    
   template <class GraphImpl>
   void TreeGraphImpl<GraphImpl>::addSon(Graph::NodeId node, Graph::NodeId sonNode)
   {
     GraphImpl::link(node,sonNode);
+    topologyHasChanged_();
+  }
+
+  template <class GraphImpl>
+  void TreeGraphImpl<GraphImpl>::addSon(Graph::NodeId node, Graph::NodeId sonNode, Graph::EdgeId edgeId)
+  {
+    GraphImpl::link(node,sonNode,edgeId);
+    topologyHasChanged_();
   }
 
   template <class GraphImpl>
@@ -404,6 +434,12 @@ namespace bpp
   std::vector<Graph::NodeId> TreeGraphImpl<GraphImpl>::getSons(Graph::NodeId node) const
   {
     return GraphImpl::getOutgoingNeighbors(node);
+  }
+  
+  template <class GraphImpl>
+  std::vector<Graph::EdgeId> TreeGraphImpl<GraphImpl>::getBranches(Graph::NodeId node) const
+  {
+    return GraphImpl::getOutgoingEdges(node);
   }
   
   template <class GraphImpl>
@@ -439,6 +475,7 @@ namespace bpp
   void TreeGraphImpl<GraphImpl>::removeSon(Graph::NodeId node, Graph::NodeId son)
   {
     GraphImpl::unlink(node,son);
+    topologyHasChanged_();
   }
   
   template <class GraphImpl>

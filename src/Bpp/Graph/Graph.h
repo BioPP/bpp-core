@@ -69,13 +69,15 @@ namespace bpp
 
     virtual ~Graph(){};    
 
+  protected:
     /**
      * set the root node to an existing node. Will not affect the topology.
      * @param node the new root
      */
 
     virtual void setRoot(NodeId newRoot) = 0;
-        
+
+  public:
     /**
      * get the root node
      */
@@ -145,6 +147,9 @@ namespace bpp
      */
     
     virtual NodeId createNodeFromEdge(NodeId origin) = 0;
+
+    
+  protected:
     
     /**
      * Creates a link between two existing nodes. If directed graph: nodeA -> nodeB.
@@ -154,7 +159,17 @@ namespace bpp
      */
     
     virtual EdgeId link(NodeId nodeA, NodeId nodeB) = 0;
+
+    /**
+     * Sets a link between two existing nodes, using existing edge. If
+     * directed graph: nodeA -> nodeB.
+     * @param nodeA source node (or first node if undirected)
+     * @param nodeB target node (or second node if undirected)
+     * @parem the used edge
+     */
     
+    virtual void link(Graph::NodeId nodeA, Graph::NodeId nodeB, Graph::EdgeId edgeID) = 0;
+
     /**
      * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)
@@ -164,6 +179,8 @@ namespace bpp
     
     virtual std::vector<EdgeId> unlink(NodeId nodeA, NodeId nodeB) = 0;
 
+  public:
+    
     /**
      * Delete one node
      * @param node node to be deleted
@@ -172,9 +189,6 @@ namespace bpp
     virtual void deleteNode(NodeId node) = 0;
 
     ///@}
-
-
-
 
     /** @name Observers Management
      *  Managing communication with the observers: subscribe, unsubscribe.
@@ -235,6 +249,8 @@ namespace bpp
     
     virtual std::unique_ptr<NodeIterator> allNodesIterator() = 0;
 
+    virtual std::unique_ptr<NodeIterator> allNodesIterator() const = 0;
+
     /*
      * @brief builds iterator on the outgoing neighbor nodes of a Node
      *
@@ -249,6 +265,19 @@ namespace bpp
     
     virtual std::unique_ptr<NodeIterator> incomingNeighborNodesIterator(NodeId node) = 0;
 
+    
+    /**
+     * Get the number of nodes in the graph.
+     */
+
+    virtual size_t getNumberOfNodes() const = 0;
+
+    /**
+     * Get the number of edges in the graph.
+     */
+
+    virtual size_t getNumberOfEdges() const = 0;
+
     /**
      * Get the degree of a node (ie the number of neighbors) in the graph.
      * @param node the node one wants to count its neighbors
@@ -262,6 +291,14 @@ namespace bpp
      */
 
     virtual bool isLeaf(NodeId node) const = 0;
+
+    /**
+     * Get the number of neighbors  of a node in the graph.
+     * @param node the node one wants to count its sons
+     * @return the number of neighbors
+     */
+
+    virtual size_t getNumberOfNeighbors(NodeId node) const = 0;
 
     /**
      * Get the number of outgoing neighbors  of a node (ie the number of sons) in the graph.
@@ -323,20 +360,21 @@ namespace bpp
     
     virtual std::vector<NodeId> getAllLeaves() const = 0;
 
+    virtual std::set<NodeId> getSetOfAllLeaves() const = 0;
+
     /**
      * Get all the inner nodes, ie, nodes with degree > 1.
-     * @return a vector containing the leaves
+     * @return a vector containing the nodes
      */
   
     virtual std::vector<NodeId> getAllInnerNodes() const = 0;
 
     /**
-     * Get a vector of sorted nodes, ie, each  node is 
-     * before its successors.
+     * Get all the nodes.
      * @return a vector containing the nodes
      */
   
-//    virtual std::vector<NodeId> getAllSortedNodes() const = 0;
+    virtual std::vector<NodeId> getAllNodes() const = 0;
 
     /**
      * Get nodes located at the extremities of an edge
@@ -384,7 +422,14 @@ namespace bpp
      * @return true if an edge is met more than one time browsing the graph
      */
     
-//    bool isDA() const;
+    virtual bool isDA() const = 0;
+    
+    
+    /**
+     * Orientates the graph hanging from the root
+     */
+    
+    virtual void orientate() = 0;
     
     /**
      * Is the graph directed?
@@ -534,9 +579,10 @@ namespace bpp
      */
     
     virtual void outputToDot(std::ostream &out, const std::string& name) const = 0;
-    
 
-    //TODO: interface  from SimpleGraph
+    template<class N, class E, class GraphImpl>
+    friend class AssociationGraphImplObserver;
+
   };
 }
 

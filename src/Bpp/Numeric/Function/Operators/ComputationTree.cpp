@@ -61,7 +61,7 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
                             [](char x){return std::isspace(x);}),
              str2.end());
   
-  setRoot(readFormula_(str2, functionNames));
+  rootAt(readFormula_(str2, functionNames));
 }
 
 std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, Function*>& functionNames)
@@ -101,8 +101,8 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       
       createNode(here);
       
-      link(here, left);
-      link(here, right);
+      setFather(left, here);
+      setFather(right, here);
       
       return here;
     }
@@ -136,8 +136,8 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       
       createNode(here);
       
-      link(here, left);
-      link(here, right);
+      setFather(left, here);
+      setFather(right, here);
       
       return here;
     }
