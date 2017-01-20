@@ -303,6 +303,13 @@ namespace bpp
 
 
     /**
+     * @set the root (but no checking, prefer rootAt)
+     */
+
+    void setRoot(const std::shared_ptr<N> newRoot);
+    
+
+    /**
      * @return the root
      */
 
@@ -1561,11 +1568,11 @@ namespace bpp
     return indexToE_.at(edge);
   }
 
-  // template<class N, class E, class GraphImpl>
-  // void AssociationGraphImplObserver<N, E, GraphImpl>::setRoot(const std::shared_ptr<N>  newRoot)
-  // {
-  //   return getGraph()->setRoot(getNodeGraphid(newRoot));
-  // }
+  template<class N, class E, class GraphImpl>
+  void AssociationGraphImplObserver<N, E, GraphImpl>::setRoot(const std::shared_ptr<N>  newRoot)
+  {
+    return getGraph()->setRoot(getNodeGraphid(newRoot));
+  }
 
   template<class N, class E, class GraphImpl>
   std::shared_ptr<N>  AssociationGraphImplObserver<N, E, GraphImpl>::getRoot() const

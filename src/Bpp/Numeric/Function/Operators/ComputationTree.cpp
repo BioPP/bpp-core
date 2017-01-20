@@ -60,8 +60,8 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
                             str2.end(),
                             [](char x){return std::isspace(x);}),
              str2.end());
-  
-  rootAt(readFormula_(str2, functionNames));
+
+  setRoot(readFormula_(str2, functionNames));
 }
 
 std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, Function*>& functionNames)

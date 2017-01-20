@@ -621,6 +621,7 @@ bool GlobalGraph::isTree() const
 {
   set<GlobalGraph::Node> metNodes;
   bool nodesAreMetOnlyOnce = nodesAreMetOnlyOnce_(root_,metNodes,root_);
+  
   if(!nodesAreMetOnlyOnce)
     return false;
   // now they have only been met at most once, they have to be met at least once

@@ -129,7 +129,7 @@ namespace bpp
     virtual std::vector<NodeIndex> getSons(const NodeIndex node) const = 0;
 
     /**
-     * Return, in a rooted tree, the branches to the sons of a node 
+     * Return the branches to the sons of a node 
      * @param nodeObject the concerned node
      * @return a vector of branch Nodes
      */
