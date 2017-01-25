@@ -13,9 +13,7 @@ install:
   # C++14
   - sudo apt-get install -qq g++-5
   # Add $HOME/bpp-core/src to the path
-  - echo $PATH
-  - PATH=$PATH:$HOME/bpp-core/src;export PATH
-  - echo $PATH
+  - ./add_path
 
 script: 
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME

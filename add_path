@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# This scripts at the bpp-core source folder to
+# the path, so that the tests can find the Bio++ 
+# shared objects
+
+echo $PATH
+
+# Cannot do this in Travis, as the colon confuses it
+PATH=$PATH:$HOME/bpp-core/src;export PATH
+
+echo $PATH
