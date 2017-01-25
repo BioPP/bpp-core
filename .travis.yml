@@ -13,15 +13,14 @@ install:
   - sudo apt-get install -qq g++-5
 
 script: 
-  - cmake -DCMAKE_INSTALL_PREFIX=$HOME
+  - cmake -DCMAKE_INSTALL_PREFIX=/home/travis/build/richelbilderbeek
   - make
-  # Add $HOME/bpp-core/src to the path
-  - echo $PATH
-  - PATH=$PATH:/home/travis/build/richelbilderbeek/bpp-core/src;export PATH
-  - echo $PATH
-  - PATH=$PATH:/home/travis/build/richelbilderbeek/bpp-core;export PATH
-  - echo $PATH
-  - ls /home/travis/build/richelbilderbeek/bpp-core/src
+  # Add $HOME/bpp-core/src to the path, so the tests can find the shared objects
+  # Sadly, this fails
+  # - PATH=$PATH:/home/travis/build/richelbilderbeek/bpp-core/src;export PATH
+  # - ls /home/travis/build/richelbilderbeek/bpp-core/src
+  # Copy the .so to the test folder, so the tests can find it 
+  cp src/libbpp-core.* test/
   # Run all tests
   - ./test/test_bfgs
   - ./test/test_derivative1
