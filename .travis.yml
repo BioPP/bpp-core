@@ -15,3 +15,22 @@ install:
 script: 
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME
   - make
+  # Run all tests
+  - ./test/test_bfgs
+  - ./test/test_derivative1
+  - ./test/test_distributions
+  - ./test/test_downhill
+  - ./test/test_sample
+  - ./test/test_text_tools
+  - ./test/test_treeGraphObs
+  - ./test/test_simplex
+  - ./test/test_stats
+  - ./test/test_reparametrization
+  - ./test/test_range
+  - ./test/test_powell
+  - ./test/test_numconstants
+  - ./test/test_mva
+  - ./test/test_matrices
+  - ./test/test_gradient
+  - ./test/test_eigen
+  - ./test/test_graphObs
