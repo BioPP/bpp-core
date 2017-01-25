@@ -20,7 +20,7 @@ script:
   # - PATH=$PATH:/home/travis/build/richelbilderbeek/bpp-core/src;export PATH
   # - ls /home/travis/build/richelbilderbeek/bpp-core/src
   # Copy the .so to the test folder, so the tests can find it 
-  cp src/libbpp-core.* test/
+  - cp src/libbpp-core.* test/
   # Run all tests
   - ./test/test_bfgs
   - ./test/test_derivative1
