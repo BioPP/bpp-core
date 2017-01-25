@@ -16,10 +16,8 @@ script:
   - cmake -DCMAKE_INSTALL_PREFIX=$HOME
   - make
   # Add $HOME/bpp-core/src to the path
-  - echo $PATH
-  - PATH=$PATH:$HOME/bpp-core/src;export PATH
-  - echo $PATH
-  - ls $HOME/bpp-core/src
+  - PATH=$PATH:/home/travis/build/richelbilderbeek/bpp-core/src;export PATH
+  - ls /home/travis/build/richelbilderbeek/bpp-core/src
   # Run all tests
   - ./test/test_bfgs
   - ./test/test_derivative1
