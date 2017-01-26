@@ -474,12 +474,9 @@ namespace bpp
       propagateDirection_(vFat[i]);
     
     for (size_t i=0;i<vFat.size();i++)
-    {
-      GraphImpl::unlink(vFat[i],node);
-      GraphImpl::link(node,vFat[i]);
-    }
+      GraphImpl::switchNodes(vFat[i],node);
   }
-
+  
  
   template <class GraphImpl>
   std::vector<Graph::NodeId> DAGraphImpl<GraphImpl>::getBelowNodes(Graph::NodeId localRoot) const

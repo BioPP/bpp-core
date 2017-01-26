@@ -376,8 +376,7 @@ namespace bpp
     if(hasFather(node)){
       NodeId father = getFather(node);
       propagateDirection_(father);
-      GraphImpl::unlink(father,node);
-      GraphImpl::link(node,father);
+      GraphImpl::switchNodes(father,node);
     }
   }
   

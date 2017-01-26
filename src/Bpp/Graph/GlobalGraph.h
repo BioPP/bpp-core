@@ -368,7 +368,18 @@ namespace bpp
      */
     
     void link(Graph::NodeId nodeA, Graph::NodeId nodeB, GlobalGraph::Edge edgeID);
+
+    /**
+     * Switch the edge  between two existing nodes.
+     *
+     * @param nodeA source node (or first node if undirected)
+     * @param nodeB target node (or second node if undirected)
+     * @parem the used edge
+     */
+
+    void switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB);
     
+
     /**
      * Remove all links between two existing nodes. If directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)

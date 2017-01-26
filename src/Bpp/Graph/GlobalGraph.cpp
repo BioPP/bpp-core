@@ -154,6 +154,58 @@ vector<GlobalGraph::Edge> GlobalGraph::unlink(Graph::NodeId nodeA, Graph::NodeId
   return deletedEdges;
 }
 
+void GlobalGraph::switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB)
+{
+  Graph::NodeId father, son;
+  
+  nodeStructureType::iterator nodeARow = nodeStructure_.find(nodeA);
+  nodeStructureType::iterator nodeBRow = nodeStructure_.find(nodeB);
+  nodeStructureType::iterator nodeSonRow, nodeFatherRow;
+
+  // Forwards 
+  map<GlobalGraph::Node,GlobalGraph::Edge>::iterator foundForwardRelation = nodeARow->second.first.find(nodeB);
+  if (foundForwardRelation==nodeARow->second.first.end())
+  {
+    foundForwardRelation = nodeBRow->second.first.find(nodeA);
+    if (foundForwardRelation==nodeBRow->second.first.end())
+      throw Exception("GlobalGraph::exchangeNodes : no edge between nodes " + TextTools::toString(nodeA) + " and " + TextTools::toString(nodeB));
+    father=nodeB;
+    son=nodeA;
+    nodeFatherRow=nodeBRow;
+    nodeSonRow=nodeARow;    
+  }
+  else
+  {
+    father=nodeA;
+    son=nodeB;
+    nodeFatherRow=nodeARow;
+    nodeSonRow=nodeBRow;    
+  }
+
+  // Edge
+  GlobalGraph::Edge& foundEdge = foundForwardRelation->second;
+
+  // Backwards
+  map<GlobalGraph::Node,GlobalGraph::Edge>::iterator foundBackwardsRelation = nodeSonRow->second.second.find(father);
+
+  
+  // Exchange
+  nodeFatherRow->second.first.erase(foundForwardRelation);
+  nodeSonRow->second.second.erase(foundBackwardsRelation);
+
+  
+  nodeSonRow->second.first[father]=foundEdge;
+
+  nodeFatherRow->second.second[son]=foundEdge;
+  
+
+//    std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
+
+  edgeStructure_[foundEdge] = pair<Node,Node>(son,father);
+
+  this->topologyHasChanged_();
+}
+
 
 GlobalGraph::Node GlobalGraph::getHighestNodeID() const
 {
@@ -181,7 +233,6 @@ void GlobalGraph::linkInEdgeStructure_(const GlobalGraph::Node& nodeA, const Glo
   edgeStructure_[edge] = pair<Node,Node>(nodeA,nodeB);
   this->topologyHasChanged_();
 }
-
 
 
 unsigned int GlobalGraph::unlinkInNodeStructure_(const GlobalGraph::Node& nodeA, const GlobalGraph::Node& nodeB)
@@ -472,11 +523,13 @@ void GlobalGraph::deleteNode(Graph::NodeId node)
   //checking the node
   nodeMustExist_(node,"node to delete");
   isolate_(node);
+
   nodeStructureType::iterator found = nodeStructure_.find(node);
   if (found==nodeStructure_.end())
     throw Exception("GlobalGraph::deleteNode : no node to erase " + TextTools::toString(node));
 
   nodeStructure_.erase(found);
+  
   this->topologyHasChanged_();
 }
 
@@ -486,10 +539,12 @@ void GlobalGraph::isolate_(GlobalGraph::Node& node)
   for(vector<Graph::NodeId>::iterator currNeighbor = oneighbors.begin(); currNeighbor != oneighbors.end(); currNeighbor++){
     unlink(node,*currNeighbor);
   }
+  
   vector<Graph::NodeId> ineighbors = getIncomingNeighbors(node);
   for(vector<Graph::NodeId>::iterator currNeighbor = ineighbors.begin(); currNeighbor != ineighbors.end(); currNeighbor++){
     unlink(*currNeighbor,node);
   }
+
 }
 
 vector<Graph::EdgeId> GlobalGraph::getAllEdges() const
@@ -658,17 +713,17 @@ bool GlobalGraph::isDA() const
   for (;!it->end();it->next())
     if (gg.getNumberOfOutgoingNeighbors(**it)==0)
       vL.push_back(**it);
-  
+
   while (vL.size()!=0)
   {
     for (std::vector<Graph::NodeId>::iterator it2(vL.begin()); it2!=vL.end();it2++)
       gg.deleteNode(*it2);
-    
+
     if (gg.getNumberOfNodes()==0)
       return true;
     
     vL.clear();
-  
+
     it=gg.allNodesIterator();
     for (;!it->end();it->next())
       if (gg.getNumberOfOutgoingNeighbors(**it)==0)
@@ -736,9 +791,8 @@ void GlobalGraph::orientate()
     std::vector<Graph::NodeId> vL= gg.getIncomingNeighbors(nbgg);
     for (std::vector<Graph::NodeId>::iterator it2(vL.begin()); it2!=vL.end();it2++)
     {
-      unlink(*it2,nbgg);
-      link(nbgg,*it2);
-      
+      switchNodes(nbgg,*it2);
+  
       nextNodes.insert(*it2);
     }
   
