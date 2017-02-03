@@ -15,7 +15,7 @@ install:
 script: 
   - cmake -DCMAKE_INSTALL_PREFIX=/home/travis/build/richelbilderbeek
   - make
-  - bpp_dir=/home/travis/build/richelbilderbeek/bpp-core/src
+  - export bpp_dir=/home/travis/build/richelbilderbeek/bpp-core/src
   # - cp src/libbpp-core.* test/
   # Run all tests
   - ./test/test_bfgs
