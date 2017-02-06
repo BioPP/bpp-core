@@ -34,4 +34,4 @@ script:
   #- ./test/test_matrices
   #- ./test/test_gradient
   #- ./test/test_eigen
-  #- ./test/test_graphObs
+  - ./test/test_graphObs
