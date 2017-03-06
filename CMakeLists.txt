@@ -1,10 +1,14 @@
 # CMake script for Bio++ Core
-# Author: Sylvain Gaillard and Julien Dutheil
+# Authors:
+#   Sylvain Gaillard
+#   Julien Dutheil
+#   Francois Gindraud (2017)
 # Created: 17/09/2010
 
+cmake_minimum_required (VERSION 2.8.11)
+project (bpp-core CXX)
+
 # Global parameters
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-PROJECT(bpp-core CXX)
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
@@ -31,14 +35,8 @@ SET(BPPCORE_VERSION_MINOR ${BPPCORE_VERSION_AGE})
 SET(BPPCORE_VERSION_PATCH ${BPPCORE_VERSION_REVISION})
 SET(BPPCORE_VERSION "${BPPCORE_VERSION_MAJOR}.${BPPCORE_VERSION_MINOR}.${BPPCORE_VERSION_PATCH}")
 
-# Set the CMAKE_PREFIX_PATH for the find_library fonction when using non
-# standard install location
-IF(CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
-ENDIF(CMAKE_INSTALL_PREFIX)
-
 # Subdirectories
-ADD_SUBDIRECTORY(src)
+add_subdirectory (src) # Defines targets bppcore-static and bppcore-shared
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
@@ -122,8 +120,9 @@ SET(CTEST_UPDATE_TYPE git)
 SET(UPDATE_COMMAND "git")
 SET(UPDATE_OPTIONS "")
 
-ENABLE_TESTING()
-INCLUDE(CTest)
-IF (BUILD_TESTING)
-  ADD_SUBDIRECTORY(test)
-ENDIF(BUILD_TESTING)
+# Tests
+enable_testing ()
+include (CTest)
+if (BUILD_TESTING)
+  add_subdirectory (test)
+endif (BUILD_TESTING)
