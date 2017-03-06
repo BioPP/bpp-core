@@ -153,8 +153,13 @@ namespace bpp
      * Has the node a father?
      */
     
-    bool hasFather(const std::shared_ptr<N>  nodeObject) const;
-    bool hasFather(const NodeIndex  node) const;
+    bool hasFather(const std::shared_ptr<N>  nodeObject) const {
+      return this->getGraph()->hasFather(this->getNodeGraphid(nodeObject));
+    }
+
+    bool hasFather(const NodeIndex  node) const {
+      return this->getGraph()->hasFather(this->getNodeGraphid(this->getNode(index)));
+    }
 
     /**
      * Return the sons of a node 
@@ -330,17 +335,6 @@ namespace bpp
     return this->getGraph()->isValid();
   }
 
-  template<class N, class E, class DAGraphImpl>
-  bool AssociationDAGraphImplObserver<N, E, DAGraphImpl>::hasFather(const std::shared_ptr<N>  nodeObject) const
-  {
-    return this->getGraph()->hasFather(this->getNodeGraphid(nodeObject));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  bool AssociationDAGraphImplObserver<N, E, DAGraphImpl>::hasFather(const AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex index) const
-  {
-    return this->getGraph()->hasFather(this->getNodeGraphid(this->getNode(index)));
-  }
 
   template<class N, class E, class DAGraphImpl>
   std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getFathers(const std::shared_ptr<N>  nodeObject) const
