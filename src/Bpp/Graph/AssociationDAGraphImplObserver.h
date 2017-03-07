@@ -153,12 +153,12 @@ namespace bpp
      * Has the node a father?
      */
     
-    bool hasFather(const std::shared_ptr<N>  nodeObject) const {
+    bool hasFather(const std::shared_ptr<N> nodeObject) const {
       return this->getGraph()->hasFather(this->getNodeGraphid(nodeObject));
     }
 
-    bool hasFather(const NodeIndex  node) const {
-      return this->getGraph()->hasFather(this->getNodeGraphid(this->getNode(index)));
+    bool hasFather(const NodeIndex node) const {
+      return this->getGraph()->hasFather(this->getNodeGraphid(this->getNode(node)));
     }
 
     /**
