@@ -114,8 +114,8 @@ target_include_directories (bpp-core-shared PUBLIC
 set_target_properties (bpp-core-shared
   PROPERTIES OUTPUT_NAME bpp-core
   MACOSX_RPATH 1
-  VERSION ${BPPPHYL_VERSION}
-  SOVERSION ${BPPPHYL_VERSION_MAJOR}
+  VERSION ${BPPCORE_VERSION}
+  SOVERSION ${BPPCORE_VERSION_MAJOR}
   )
 target_link_libraries (bpp-core-shared ${LIBS})
 

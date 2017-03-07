@@ -36,7 +36,7 @@ SET(BPPCORE_VERSION_PATCH ${BPPCORE_VERSION_REVISION})
 SET(BPPCORE_VERSION "${BPPCORE_VERSION_MAJOR}.${BPPCORE_VERSION_MINOR}.${BPPCORE_VERSION_PATCH}")
 
 # Subdirectories
-add_subdirectory (src) # Defines targets bppcore-static and bppcore-shared
+add_subdirectory (src) # Defines targets bpp-core-static and bpp-core-shared
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
