@@ -133,4 +133,3 @@ install (
   )
 # Install cmake file representing targets
 install (EXPORT ${PROJECT_NAME}-targets DESTINATION ${cmake-package-location})
-
