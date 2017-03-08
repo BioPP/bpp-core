@@ -9,8 +9,8 @@
 # It will be compiled as a standalone program (must contain a main()).
 # A test is considered to succeed if it returns EXIT_SUCCESS (usually 0).
 
-# Tests are linked to the the bpp-core-static target, which should point to the newly compiled library.
-# CMake will then set the correct paths duing compilation (-L and -I).
+# Tests are linked to the the shared library target, which should point to the newly compiled library.
+# CMake will handle command line parameters for it and dependencies.
 
 file (GLOB test_cpp_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 foreach (test_cpp_file ${test_cpp_files})
