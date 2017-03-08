@@ -7,6 +7,10 @@
 
 cmake_minimum_required (VERSION 2.8.11)
 project (bpp-core CXX)
+# PROJECT_NAME is used to name:
+# - the library
+# - the CMake targets (${PROJECT_NAME}-static or ${PROJECT_NAME}-shared)
+# - the CMake package
 
 # Global parameters
 IF(NOT CMAKE_BUILD_TYPE)
@@ -25,18 +29,39 @@ SET(CMAKE_CXX_FLAGS " -std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(BPPCORE_VERSION_CURRENT "2")
-SET(BPPCORE_VERSION_REVISION "3")
-SET(BPPCORE_VERSION_AGE "0")
+SET(${PROJECT_NAME}_VERSION_CURRENT "2")
+SET(${PROJECT_NAME}_VERSION_REVISION "3")
+SET(${PROJECT_NAME}_VERSION_AGE "0")
 
 # Effective version number computation
-MATH(EXPR BPPCORE_VERSION_MAJOR "${BPPCORE_VERSION_CURRENT} - ${BPPCORE_VERSION_AGE}")
-SET(BPPCORE_VERSION_MINOR ${BPPCORE_VERSION_AGE})
-SET(BPPCORE_VERSION_PATCH ${BPPCORE_VERSION_REVISION})
-SET(BPPCORE_VERSION "${BPPCORE_VERSION_MAJOR}.${BPPCORE_VERSION_MINOR}.${BPPCORE_VERSION_PATCH}")
+MATH(EXPR ${PROJECT_NAME}_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_CURRENT} - ${${PROJECT_NAME}_VERSION_AGE}")
+SET(${PROJECT_NAME}_VERSION_MINOR ${${PROJECT_NAME}_VERSION_AGE})
+SET(${PROJECT_NAME}_VERSION_PATCH ${${PROJECT_NAME}_VERSION_REVISION})
+SET(${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}")
 
-# Subdirectories
-add_subdirectory (src) # Defines targets bpp-core-static and bpp-core-shared
+set (PROJECT_VERSION ${${PROJECT_NAME}_VERSION})
+
+# CMake package
+set (cmake-package-location lib/cmake/${PROJECT_NAME})
+include (CMakePackageConfigHelpers)
+configure_package_config_file (
+  ${PROJECT_NAME}-config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  INSTALL_DESTINATION ${cmake-package-location}
+  )
+write_basic_package_version_file (
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  VERSION ${${PROJECT_NAME}_VERSION}
+  COMPATIBILITY ExactVersion
+  )
+install (FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  DESTINATION ${cmake-package-location}
+  )
+
+# Define the libraries
+add_subdirectory (src)
 
 # Doxygen
 FIND_PACKAGE(Doxygen)
