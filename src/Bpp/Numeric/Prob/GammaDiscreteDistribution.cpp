@@ -130,6 +130,6 @@ double GammaDiscreteDistribution::pProb(double x) const
 
 double GammaDiscreteDistribution::Expectation(double a) const
 {
-  return RandomTools::pGamma(a-offset_, alpha_ + 1, beta_) / beta_ * ga1_ + (offset_ ? offset_ * RandomTools::pGamma(a - offset_, alpha_, beta_):0);
+  return RandomTools::pGamma(a-offset_, alpha_ + 1, beta_) / beta_ * ga1_ + (offset_ > 0 ? offset_ * RandomTools::pGamma(a - offset_, alpha_, beta_) : 0);
 }
 

@@ -52,7 +52,7 @@ ParameterList::ParameterList(const ParameterList& pl) :
   parameters_(pl.size())
 {
   // Now copy all parameters:
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     parameters_[i] = shared_ptr<Parameter>(pl.parameters_[i]->clone());
   }
@@ -66,7 +66,7 @@ ParameterList& ParameterList::operator=(const ParameterList& pl)
   parameters_.resize(pl.size());
 
   // Now copy all parameters:
-  for (unsigned int i = 0; i < pl.size(); i++)
+  for (size_t i = 0; i < pl.size(); i++)
   {
     parameters_[i] = shared_ptr<Parameter>(pl.parameters_[i]->clone());
   }
@@ -83,9 +83,10 @@ ParameterList::~ParameterList()
 }
 
 /******************************************************************************/
+
 const Parameter& ParameterList::getParameter(const std::string& name) const throw (ParameterNotFoundException)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     const Parameter* p = parameters_[i].get();
     if (p->getName() == name) return *p;
@@ -94,22 +95,24 @@ const Parameter& ParameterList::getParameter(const std::string& name) const thro
 }
 
 /******************************************************************************/
+
 const shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name) const throw (ParameterNotFoundException)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     const shared_ptr<Parameter>& p = parameters_[i];
     if (p->getName() == name)
       return p;
   }
-  throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
+  throw ParameterNotFoundException("ParameterList::getSharedParameter('name').", name);
 }
 
 
 /******************************************************************************/
+
 double ParameterList::getParameterValue(const std::string& name) const throw (ParameterNotFoundException)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     const Parameter* p = parameters_[i].get();
     if (p->getName() == name) return p->getValue();
@@ -118,9 +121,10 @@ double ParameterList::getParameterValue(const std::string& name) const throw (Pa
 }
 
 /******************************************************************************/
+
 Parameter& ParameterList::getParameter(const std::string& name) throw (ParameterNotFoundException)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     Parameter* p = parameters_[i].get();
     if (p->getName() == name) return *p;
@@ -129,10 +133,25 @@ Parameter& ParameterList::getParameter(const std::string& name) throw (Parameter
 }
 
 /******************************************************************************/
+
+shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name) throw (ParameterNotFoundException)
+{
+  for (size_t i = 0; i < size(); i++)
+  {
+    shared_ptr<Parameter>& p = parameters_[i];
+    if (p->getName() == name)
+      return p;
+  }
+  throw ParameterNotFoundException("ParameterList::getSharedParameter('name').", name);
+}
+
+
+/******************************************************************************/
+
 ParameterList ParameterList::subList(const std::vector<std::string>& names) const throw (ParameterNotFoundException)
 {
   ParameterList pl;
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (size_t i = 0; i < names.size(); i++)
   {
     Parameter param = getParameter(names[i]);
     pl.addParameter(param);
@@ -141,6 +160,7 @@ ParameterList ParameterList::subList(const std::vector<std::string>& names) cons
 }
 
 /******************************************************************************/
+
 ParameterList ParameterList::subList(const std::string& name) const throw (ParameterNotFoundException)
 {
   ParameterList pl;
@@ -150,10 +170,11 @@ ParameterList ParameterList::subList(const std::string& name) const throw (Param
 }
 
 /******************************************************************************/
+
 ParameterList ParameterList::subList(const std::vector<size_t>& parameters) const
 {
   ParameterList pl;
-  for (unsigned int i = 0; i < parameters.size(); i++)
+  for (size_t i = 0; i < parameters.size(); i++)
   {
     if (parameters[i] < size())
       pl.parameters_.push_back(shared_ptr<Parameter>(parameters_[parameters[i]]->clone()));
@@ -162,6 +183,7 @@ ParameterList ParameterList::subList(const std::vector<size_t>& parameters) cons
 }
 
 /******************************************************************************/
+
 ParameterList ParameterList::subList(size_t parameter) const
 {
   ParameterList pl;
@@ -171,10 +193,11 @@ ParameterList ParameterList::subList(size_t parameter) const
 }
 
 /******************************************************************************/
+
 ParameterList ParameterList::getCommonParametersWith(const ParameterList& params) const
 {
   ParameterList pl;
-  for (unsigned int i = 0; i < params.size(); i++)
+  for (size_t i = 0; i < params.size(); i++)
   {
     const Parameter& p = params[i];
     if (hasParameter(p.getName()))
@@ -190,7 +213,7 @@ ParameterList ParameterList::getCommonParametersWith(const ParameterList& params
 std::vector<std::string> ParameterList::getParameterNames() const
 {
   vector<string> pNames(size());
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
   {
     pNames[i] = parameters_[i]->getName();
   }
@@ -202,7 +225,7 @@ std::vector<std::string> ParameterList::getParameterNames() const
 vector<string> ParameterList::getMatchingParameterNames(const string& pattern) const
 {
   vector<string> pNames;
-  for (unsigned int i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); i++)
     {
       string name = parameters_[i]->getName();
 
@@ -274,7 +297,7 @@ void ParameterList::setParameter(size_t index, const Parameter& param) throw (In
 
 void ParameterList::includeParameters(const ParameterList& params)
 {
-  for (unsigned int i = 0; i < params.size(); i++)
+  for (size_t i = 0; i < params.size(); i++)
   {
     if (hasParameter(params[i].getName()))
       setParameterValue(params[i].getName(), params[i].getValue());
@@ -288,7 +311,7 @@ void ParameterList::includeParameters(const ParameterList& params)
 void ParameterList::addParameters(const ParameterList& params)
 throw (ParameterException)
 {
-  for (unsigned int i = 0; i < params.size(); i++)
+  for (size_t i = 0; i < params.size(); i++)
   {
     addParameter(params[i]);
   }
@@ -299,9 +322,9 @@ throw (ParameterException)
 void ParameterList::shareParameters(const ParameterList& params)
   throw (ParameterException)
 {
-  for (unsigned int i = 0; i < params.size(); i++)
+  for (size_t i = 0; i < params.size(); i++)
   {
-    shareParameter(params.get_at(i));
+    shareParameter(params.getSharedParameter(i));
   }
 }
 

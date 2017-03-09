@@ -21,6 +21,12 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 SET(CMAKE_CXX_FLAGS " -std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
 
+# Add -O0 to remove optimizations for debugging when using gcc.
+IF(CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
+ENDIF(CMAKE_COMPILER_IS_GNUCC)
+
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
 # current:  The most recent interface number that this library implements.
