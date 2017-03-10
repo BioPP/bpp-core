@@ -170,8 +170,6 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
   if  (dim_==0)
     return;
 
-  AbstractParameterAliasable::fireParameterChanged(parameters);
-
   double x = 1.0;
   switch (method_)
   {
@@ -239,12 +237,21 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
 
 void Simplex::setFrequencies(const std::vector<double>& probas)
 {
+  VectorTools::printForR(probas,"prob",cerr);
+  
+  cerr << method_ << endl;
+
+  getParameters().printParameters(cerr);
+
+  
   if  (dim_==0)
     return;
 
   double sum = VectorTools::sum(probas);
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex::setFrequencies. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
+
+  cerr << getNamespace() << endl;
 
   double y = 1;
 

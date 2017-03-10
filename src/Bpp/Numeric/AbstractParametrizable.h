@@ -241,7 +241,7 @@ class AbstractParametrizable:
    * @return The shared_ptr parameter at a given position.
    * @warning No check is performed on the validity of the index given as input!
    */ 
-  const std::shared_ptr<Parameter>& getShareParamter(size_t i) const
+  const std::shared_ptr<Parameter>& getSharedParameter(size_t i) const
   {
     return parameters_.getSharedParameter(i);
   }
