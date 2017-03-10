@@ -5,27 +5,18 @@
 #   Francois Gindraud (2017)
 # Created: 17/09/2010
 
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 2.8.12)
 project (bpp-core CXX)
-# PROJECT_NAME is used to name:
-# - the library
-# - the CMake targets (${PROJECT_NAME}-static or ${PROJECT_NAME}-shared)
-# - the CMake package
 
-# Global parameters
+# Compile options
+set (public-compile-options -std=c++11)
+set (private-compile-options -Wall -Weffc++ -Wshadow -Wconversion)
+
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
       FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
-
-SET(CMAKE_CXX_FLAGS " -std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
-
-# Add -O0 to remove optimizations for debugging when using gcc.
-IF(CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
-ENDIF(CMAKE_COMPILER_IS_GNUCC)
 
 # Libtool-like version number
 # CURRENT:REVISION:AGE => file.so.(C-A).A.R
@@ -57,8 +48,8 @@ configure_package_config_file (
   )
 write_basic_package_version_file (
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-  VERSION ${${PROJECT_NAME}_VERSION}
-  COMPATIBILITY ExactVersion
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
   )
 install (FILES
   ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
