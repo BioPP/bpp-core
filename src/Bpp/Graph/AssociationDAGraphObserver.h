@@ -97,7 +97,7 @@ namespace bpp
     
     /**
      * Return, the fathers of a node
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the father
      */
     
@@ -114,7 +114,7 @@ namespace bpp
     
     /**
      * Return the sons of a node 
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return a vector of son Nodes
      */
     
@@ -124,7 +124,7 @@ namespace bpp
 
     /**
      * Return the son of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the son Node
      */
   
@@ -133,7 +133,7 @@ namespace bpp
 
     /**
      * Return the father of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the father Node
      */
     
@@ -142,7 +142,7 @@ namespace bpp
 
     /**
      * Return the number of sons
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the number of sons
      */
 
@@ -150,7 +150,7 @@ namespace bpp
 
     /**
      * Return the number of fathers
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the number of fathers
      */
 
@@ -174,8 +174,8 @@ namespace bpp
     
     /**
      * Remove a son of a node
-     * @param nodeObject the concerned node
-     * @param sonNodeObject the node to be removed
+     * @param node the concerned node
+     * @param son the node to be removed
      */
     
     virtual void removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son) = 0;
@@ -184,6 +184,8 @@ namespace bpp
      * Add a son to a node
      * @param nodeObject the concerned node
      * @param sonNodeObject the node to be added as a son to the father
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 0)
      */
 
     virtual void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
@@ -205,6 +207,8 @@ namespace bpp
      * Add a father to a node
      * @param nodeObject the concerned node
      * @param fatherNodeObject the node to be added as a father to the node
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
 
     virtual void addFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
@@ -240,7 +244,7 @@ namespace bpp
     /**
      * @brief Get Below Objects.
      *
-     * @param top of the subgraph.
+     * @param localRoot of the subgraph.
      * @return A vector of ancestor nodes ids.
      *
      */

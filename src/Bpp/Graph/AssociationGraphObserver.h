@@ -114,8 +114,11 @@ namespace bpp
      * Creates an node linked to an existing node. Order of parameters match
      * the link method.
      * @param newNodeObject the N object associated to the node in the graph.
-     * @param objectOriginNode existing node. In a directed graph: origin -> newNode.
+     * @param objectOriginNode existing node. In a directed graph:
+     * origin -> newNode.
+     * @param newEdgeObject optional edge between nodes (default = 00)
      */
+    
     virtual void createNode(std::shared_ptr<N>  objectOriginNode, std::shared_ptr<N>  newNodeObject, std::shared_ptr<E>  newEdgeObject = 00) = 0;
 
     /**
@@ -123,7 +126,10 @@ namespace bpp
      * If directed graph: nodeA -> nodeB.
      * @param nodeObjectA source node (or first node if undirected)
      * @param nodeObjectB target node (or second node if undirected)
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
+    
     virtual void link(std::shared_ptr<N>  nodeObjectA, std::shared_ptr<N>  nodeObjectB, std::shared_ptr<E>  edgeObject = 00) = 0;
 
     /**
@@ -149,11 +155,19 @@ namespace bpp
     // /@{
 
     /**
-     * Associate a N or E object to a node or an edge in the graph.
+     * Associate a N object to a node in the graph.
      * @param nodeObject object to associate
-     * @param node/edge existing node/edge to be associated
+     * @param node existing node to be associated
      */
+    
     virtual void associateNode(std::shared_ptr<N>  nodeObject, NodeGraphid node) = 0;
+    
+    /**
+     * Associate a E object to an edge in the graph.
+     * @param edgeObject object to associate
+     * @param edge existing edge to be associated
+     */
+    
     virtual void associateEdge(std::shared_ptr<E>  edgeObject, EdgeGraphid edge) = 0;
 
     /**
@@ -162,6 +176,7 @@ namespace bpp
      *
      * @param nodeObject object to dissociate
      */
+
     virtual void dissociateNode(std::shared_ptr<N>  nodeObject) = 0;
     virtual void dissociateEdge(std::shared_ptr<E>  edgeObject) = 0;
 
@@ -375,7 +390,7 @@ namespace bpp
      * Get the leaves of a graph, ie, nodes with only one neighbor,
      * starting from a peculiar node, up to a specific depth.
      * @param node the starting node
-     * @maxDepth the max recursion depth
+     * @param maxDepth the max recursion depth
      * @return a vector containing the leaves
      */
     virtual std::vector<std::shared_ptr<N> > getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const = 0;

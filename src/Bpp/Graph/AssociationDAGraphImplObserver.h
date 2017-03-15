@@ -68,50 +68,71 @@ namespace bpp
     /**
      * Constructor
      */
-    AssociationDAGraphImplObserver();
 
+    AssociationDAGraphImplObserver() :
+      AssociationGraphImplObserver<N,E,DAGraphImpl>(true)
+    {
+    }
+  
     /**
      * Constructor
-     * @param subjectGraph the graph which is observed
+     * @param subjectDAGraph the DAGraph which is observed
      */
 
-    AssociationDAGraphImplObserver(std::shared_ptr<DAGraphImpl> subjectDAGraph);
+    AssociationDAGraphImplObserver(std::shared_ptr<DAGraphImpl> subjectDAGraph) :
+      AssociationGraphImplObserver<N,E,DAGraphImpl>(subjectDAGraph)
+    {
+    }
 
     /**
      * Copy Constructor
-     * @param graphObserver the treeGraphObserver to be copied
+     * @param dAGraphObserver the DAGraphObserver to be copied
      */
     
-    AssociationDAGraphImplObserver(bpp::AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver);
+    AssociationDAGraphImplObserver(bpp::AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver) :
+      AssociationGraphImplObserver<N,E,DAGraphImpl>(dAGraphObserver)
+    {
+    } 
+
 
     /**
      * Copy Constructor
-     * @param DAGraphObserver the DAGraphObserver to be copied
+     * @param dAGraphObserver the DAGraphObserver to be copied
      */
 
     template<class N2, class E2>
-    AssociationDAGraphImplObserver(bpp::AssociationDAGraphImplObserver<N2, E2, DAGraphImpl> const& dAGraphObserver);
+    AssociationDAGraphImplObserver(bpp::AssociationDAGraphImplObserver<N2, E2, DAGraphImpl> const& dAGraphObserver) :
+      AssociationGraphImplObserver<N,E,DAGraphImpl>(dAGraphObserver)
+    {
+    } 
 
     /**
      * = Operator
-     * @param graphObserver the DAGraphObserver we want to copy the values
+     * @param dAGraphObserver the DAGraphObserver we want to copy the values
      */
 
-    AssociationDAGraphImplObserver<N, E, DAGraphImpl>& operator=(bpp::AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver);
+    AssociationDAGraphImplObserver<N, E, DAGraphImpl>& operator=(bpp::AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver)
+    {
+      AssociationGraphImplObserver<N, E, DAGraphImpl>::operator=(dAGraphObserver);
+      return *this;
+    }
 
     /**
      * Destructor
-     * @param graphObserver the DAGraphObserver to be copied
      */
 
-    ~AssociationDAGraphImplObserver();
+    ~AssociationDAGraphImplObserver() 
+    {
+    }
 
     /**
      * clone function
-     * @param graphObserver the graphObserver to be copied
      */
 
-    AssociationDAGraphImplObserver<N, E, DAGraphImpl>* clone() const { return new AssociationDAGraphImplObserver<N, E, DAGraphImpl>(*this); }
+    AssociationDAGraphImplObserver<N, E, DAGraphImpl>* clone() const
+    {
+      return new AssociationDAGraphImplObserver<N, E, DAGraphImpl>(*this);
+    }
 
 
     /**
@@ -119,7 +140,10 @@ namespace bpp
      * @return true if valid DAG
      */
 
-    bool isValid() const;
+    bool isValid() const
+    {
+      return this->getGraph()->isValid();
+    }
 
     /**
      * Is the DAG rooted? Ie with a unique node with no father.
@@ -134,12 +158,19 @@ namespace bpp
 
     /**
      * Return the fathers of a node 
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return a vector of son Nodes
      */
   
-    std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const;
-    std::vector<NodeIndex> getFathers(const NodeIndex node) const;
+    std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const
+    {
+      return this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(node)));
+    }
+
+    std::vector<NodeIndex> getFathers(const NodeIndex node) const
+    {
+      return this->getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(this->getNode(node)))));
+    }
 
     /**
      * @brief Sets the root and make the DAG directed from root to
@@ -147,7 +178,10 @@ namespace bpp
      *
      */
 
-    void rootAt(const std::shared_ptr<N> root);
+    void rootAt(const std::shared_ptr<N> root)
+    {
+      this->getGraph()->rootAt(this->getNodeGraphid(root));
+    }
 
     /**
      * Has the node a father?
@@ -163,46 +197,74 @@ namespace bpp
 
     /**
      * Return the sons of a node 
-     * @param nodeObject the concerned node
      * @return a vector of son Nodes
      */
   
-    std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N>  node) const;
-    std::vector<NodeIndex> getSons(const NodeIndex node) const;
+    std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N> node) const
+    {
+      return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(node)));
+    }
+
+    std::vector<NodeIndex> getSons(const NodeIndex node) const
+    {
+      return this->getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(this->getNode(node)))));
+    }
+
 
     /**
      * Return the son of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the son Node
      */
-  
-    std::shared_ptr<N> getSon(const std::shared_ptr<E>  edge) const;
-    NodeIndex getSon(const EdgeIndex edge) const;
+
+    std::shared_ptr<N> getSon(const std::shared_ptr<E>  edge) const
+    {
+      return this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(edge)));
+    }
+
+    NodeIndex getSon(const EdgeIndex edgeId) const
+    {
+      return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edgeId)))));
+    }
+
 
     /**
      * Return the father of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the father Node
      */
   
-    std::shared_ptr<N> getFather(const std::shared_ptr<E>  edge) const;
-    NodeIndex getFather(const EdgeIndex edge) const;
+    std::shared_ptr<N> getFather(const std::shared_ptr<E>  edge) const
+    {
+      return this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(edge)));
+    }
+
+    NodeIndex getFather(const EdgeIndex edge) const
+    {
+      return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
+    }
 
     /**
      * Return the number of fathers
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the number of fathers
      */
     
-    size_t getNumberOfFathers(const std::shared_ptr<N>  node) const;
+    size_t getNumberOfFathers(const std::shared_ptr<N>  node) const
+    {
+      return this->getGraph()->getNumberOfFathers(this->getNodeGraphid(node));
+    }
 
     /**
      * Return the number of sons
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the number of sons
      */
     
-    size_t getNumberOfSons(const std::shared_ptr<N>  node) const;
+    size_t getNumberOfSons(const std::shared_ptr<N>  node) const
+    {
+      return this->getGraph()->getNumberOfSons(this->getNodeGraphid(node));
+    }
 
     /**
      * Get the leaves of a DAG under a peculiar node.
@@ -211,50 +273,93 @@ namespace bpp
      * @return a vector containing the leaves
      */
 
-    std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const;
+    std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const
+    {
+      return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
+    }
 
     /**
      * Remove the fathers of a node
      * @return a vector containing the removed fathers
      */
     
-    std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N>  node);
+    std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N>  node)
+    {
+      return this->getNodesFromGraphid(this->getGraph()->removeFathers(this->getNodeGraphid(node)));
+    }
 
     /**
      * Remove a father of a node
      * @return a vector containing the removed nodes
      */
 
-    void removeFather(const std::shared_ptr<N> node, const std::shared_ptr<N> father);
+    void removeFather(const std::shared_ptr<N> node, const std::shared_ptr<N> father)
+    {
+      this->getGraph()->removeFather(this->getNodeGraphid(node), this->getNodeGraphid(father));
+    }
   
     /**
      * Remove the sons of a node
      * @return a vector containing the removed nodes
      */
     
-    std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node);
+    std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node)
+    {
+      return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
+    }
 
     /**
      * Remove a son of a node
      */
 
-    void removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son);
-  
+    void removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son)
+    {
+      this->getGraph()->removeSon(this->getNodeGraphid(node), this->getNodeGraphid(son));
+    }
+
     /**
      * Add a father to a node
      * @param nodeObject the concerned node
      * @param fatherNodeObject the node to be added as a father to the node
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
 
-    void addFather(const std::shared_ptr<N> nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject = 0);
-    
+    void addFather(const std::shared_ptr<N> nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject = 0)
+    {
+      if (edgeObject)
+        try {        
+          this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject), this->getEdgeGraphid(edgeObject));
+        }
+        catch (Exception& e)
+        {
+          this->link(fatherNodeObject, nodeObject, edgeObject);
+        }
+      else
+        this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject));
+    }
+
     /**
      * Add a son to a node
      * @param nodeObject the concerned node
      * @param sonNodeObject the node to be added as a son to the father
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
 
-    void addSon(const std::shared_ptr<N> nodeObject, const std::shared_ptr<N> sonNodeObject, const std::shared_ptr<E> edgeObject = 0);
+    void addSon(const std::shared_ptr<N> nodeObject, const std::shared_ptr<N> sonNodeObject, const std::shared_ptr<E> edgeObject = 0)
+    {
+      if (edgeObject)
+        try {        
+          this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject), this->getEdgeGraphid(edgeObject));
+        }
+        catch (Exception& e)
+        {
+          this->link(nodeObject, sonNodeObject, edgeObject);
+        }
+      else
+        this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
+    }
 
     /**
      * Iterators
@@ -266,26 +371,39 @@ namespace bpp
      *
      */
 
-    std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> fathersIterator(std::shared_ptr<N> node);
-
+    std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> fathersIterator(std::shared_ptr<N> node)
+    {
+      return this->incomingNeighborNodesIterator(node);
+    }
+    
     /*
      * @brief builds iterator on the sons of a Node
      *
      */
 
-    std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> sonsIterator(std::shared_ptr<N> node);
+    std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> sonsIterator(std::shared_ptr<N> node)
+    {
+      return this->outgoingNeighborNodesIterator(node);
+    }
 
     /**
      * @brief Get Below Objects.
      *
-     * @param top of the subgraph.
+     * @param localRoot of the subgraph.
      * @return A vector of ancestor nodes ids.
      *
      */
     
-    std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot);
-    
-    std::vector<std::shared_ptr<E> > getBelowEdges(const std::shared_ptr<N> localRoot);
+    std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot)
+    {
+      return this->getNodesFromGraphid(this->getGraph()->getBelowNodes(this->getNodeGraphid(localRoot)));
+    }
+
+    std::vector<std::shared_ptr<E> > getBelowEdges(const std::shared_ptr<N> localRoot)
+    {
+      return AssociationGraphImplObserver<N, E, DAGraphImpl>::getEdgesFromGraphid(this->getGraph()->getBelowEdges(this->getNodeGraphid(localRoot)));
+    }
+
   };
 
   /********************/
@@ -296,197 +414,7 @@ namespace bpp
   /********************/
 
 
-  template<class N, class E, class DAGraphImpl>
-  AssociationDAGraphImplObserver<N, E, DAGraphImpl>::AssociationDAGraphImplObserver() :
-    AssociationGraphImplObserver<N, E, DAGraphImpl>::AssociationGraphImplObserver(true)
-  {
-  }
-  
 
-  template<class N, class E, class DAGraphImpl>
-  AssociationDAGraphImplObserver<N, E, DAGraphImpl>::AssociationDAGraphImplObserver(AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver) :
-    AssociationGraphImplObserver<N, E, DAGraphImpl>::AssociationGraphImplObserver(dAGraphObserver)
-  {
-  }
-
-  template<class N, class E, class DAGraphImpl> template<class N2, class E2>
-  AssociationDAGraphImplObserver<N, E, DAGraphImpl>::AssociationDAGraphImplObserver(bpp::AssociationDAGraphImplObserver<N2, E2, DAGraphImpl> const& dAGraphObserver) :
-    AssociationGraphImplObserver<N, E, DAGraphImpl>::AssociationGraphImplObserver(dAGraphObserver)
-  {
-  } 
-
-  
-  template<class N, class E, class DAGraphImpl>
-  AssociationDAGraphImplObserver<N, E, DAGraphImpl>& AssociationDAGraphImplObserver<N, E, DAGraphImpl>::operator=(AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver)
-  {
-    AssociationGraphImplObserver<N, E, DAGraphImpl>::operator=(dAGraphObserver);
-    return *this;
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  AssociationDAGraphImplObserver<N, E, DAGraphImpl>::~AssociationDAGraphImplObserver()
-  {
-  }
-
-
-  template<class N, class E, class DAGraphImpl>
-  bool AssociationDAGraphImplObserver<N, E, DAGraphImpl>::isValid() const
-  {
-    return this->getGraph()->isValid();
-  }
-
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getFathers(const std::shared_ptr<N>  nodeObject) const
-  {
-    return this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(nodeObject)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<typename AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getFathers(AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex node) const
-  {
-    return this->getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(this->getNode(node)))));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getSons(const std::shared_ptr<N>  nodeObject) const
-  {
-    return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(nodeObject)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<typename AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getSons(AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex node) const
-  {
-    return this->getNodeIndexes(this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(this->getNode(node)))));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::shared_ptr<N> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getSon(const std::shared_ptr<E>  edgeObject) const
-  {
-    return this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(edgeObject)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  typename AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getSon(AssociationDAGraphImplObserver<N, E, DAGraphImpl>::EdgeIndex edge) const
-  {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::shared_ptr<N> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getFather(const std::shared_ptr<E>  edgeObject) const
-  {
-    return this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(edgeObject)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  typename AssociationDAGraphImplObserver<N, E, DAGraphImpl>::NodeIndex AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getFather(AssociationDAGraphImplObserver<N, E, DAGraphImpl>::EdgeIndex edge) const
-  {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  size_t AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getNumberOfSons(const std::shared_ptr<N>  nodeObject) const
-  {
-    return this->getGraph()->getNumberOfSons(this->getNodeGraphid(nodeObject));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  size_t AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getNumberOfFathers(const std::shared_ptr<N>  nodeObject) const
-  {
-    return this->getGraph()->getNumberOfFathers(this->getNodeGraphid(nodeObject));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject)
-  {
-    if (edgeObject)
-      try {        
-        this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject), this->getEdgeGraphid(edgeObject));
-      }
-      catch (Exception& e)
-      {
-        this->link(nodeObject, sonNodeObject, edgeObject);
-      }
-    else
-      this->getGraph()->addSon(this->getNodeGraphid(nodeObject), this->getNodeGraphid(sonNodeObject));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::addFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject)
-  {
-    if (edgeObject)
-      try {        
-        this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject), this->getEdgeGraphid(edgeObject));
-      }
-      catch (Exception& e)
-      {
-        this->link(fatherNodeObject, nodeObject, edgeObject);
-      }
-    else
-      this->getGraph()->addFather(this->getNodeGraphid(nodeObject), this->getNodeGraphid(fatherNodeObject));
-  }
-
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getLeavesUnderNode(const std::shared_ptr<N> node) const
-  {
-    return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::removeSons(const std::shared_ptr<N> node)
-  {
-    return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
-  }
-
-  
-  template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::removeSon(const std::shared_ptr<N> node, const std::shared_ptr<N> son)
-  {
-    this->getGraph()->removeSon(this->getNodeGraphid(node), this->getNodeGraphid(son));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::removeFathers(const std::shared_ptr<N> node)
-  {
-    return this->getNodesFromGraphid(this->getGraph()->removeFathers(this->getNodeGraphid(node)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::removeFather(const std::shared_ptr<N> node, const std::shared_ptr<N> son)
-  {
-    this->getGraph()->removeFather(this->getNodeGraphid(node), this->getNodeGraphid(son));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  void AssociationDAGraphImplObserver<N, E, DAGraphImpl>::rootAt(const std::shared_ptr<N> root)
-  {
-    this->getGraph()->rootAt(this->getNodeGraphid(root));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::sonsIterator(std::shared_ptr<N> node)
-  {
-    return this->outgoingNeighborNodesIterator(node);
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::unique_ptr<typename AssociationDAGraphObserver<N,E>::NodeIterator> AssociationDAGraphImplObserver<N, E, DAGraphImpl>::fathersIterator(std::shared_ptr<N> node)
-  {
-    return this->incomingNeighborNodesIterator(node);
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<N> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getBelowNodes(const std::shared_ptr<N> localRoot)
-  {
-    return this->getNodesFromGraphid(this->getGraph()->getBelowNodes(this->getNodeGraphid(localRoot)));
-  }
-
-  template<class N, class E, class DAGraphImpl>
-  std::vector<std::shared_ptr<E> > AssociationDAGraphImplObserver<N, E, DAGraphImpl>::getBelowEdges(const std::shared_ptr<N>  localRoot)
-  {
-    return AssociationGraphImplObserver<N, E, DAGraphImpl>::getEdgesFromGraphid(this->getGraph()->getBelowEdges(this->getNodeGraphid(localRoot)));
-  }
 }
 
 

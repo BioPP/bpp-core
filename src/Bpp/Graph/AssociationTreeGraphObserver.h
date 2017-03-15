@@ -120,7 +120,7 @@ namespace bpp
     
     /**
      * Return, in a rooted tree, the sons of a node 
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return a vector of son Nodes
      */
     
@@ -130,7 +130,7 @@ namespace bpp
 
     /**
      * Return the branches to the sons of a node 
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return a vector of branch Nodes
      */
     
@@ -140,7 +140,7 @@ namespace bpp
 
     /**
      * Return, in a rooted tree, the son of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the son Node
      */
   
@@ -149,7 +149,7 @@ namespace bpp
 
     /**
      * Return, in a rooted tree, the father of an edge
-     * @param nodeObject the concerned node
+     * @param edge the concerned edge
      * @return the father Node
      */
     
@@ -158,7 +158,7 @@ namespace bpp
 
     /**
      * Return, in a rooted tree, the number of sons
-     * @param nodeObject the concerned node
+     * @param node the concerned node
      * @return the number of sons
      */
 
@@ -190,6 +190,8 @@ namespace bpp
      * Change / set the father of a node
      * @param nodeObject the concerned node
      * @param fatherNodeObject the node to be the father
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
 
     virtual void setFather(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  fatherNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
@@ -198,6 +200,8 @@ namespace bpp
      * Add a son to a node
      * @param nodeObject the concerned node
      * @param sonNodeObject the node to be added as a son to the father
+     * @param edgeObject the optional edge  between the nodes (default
+     * = 00)
      */
 
     virtual void addSon(const std::shared_ptr<N>  nodeObject, const std::shared_ptr<N>  sonNodeObject, const std::shared_ptr<E> edgeObject = 0) = 0;
@@ -233,16 +237,16 @@ namespace bpp
     /**
      * @brief Get a vector of ancestor nodes between to nodes.
      *
-     * @param nodeId1 first node.
-     * @param nodeId2 second node.
+     * @param nodeA first node.
+     * @param nodeB second node.
      * @param includeAncestor Tell if the common ancestor must be included in the vector.
      * @return A vector of ancestor nodes ids.
      * @throw PhyloNodeNotFoundException If a node is not found.
      */
 
-    virtual std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB, bool includeAncestor = true) const = 0;
+    virtual std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor = true) const = 0;
 
-    virtual std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeObjectA, const std::shared_ptr<N>  nodeObjectB) const = 0;
+    virtual std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const = 0;
 
     virtual std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) = 0;
     

@@ -231,13 +231,15 @@ namespace bpp
      * @param startingNode root node
      * @param foundLeaves a vector containing all the found leaves
      * @param originNode the node where we come from, not to explore
+     * @param maxRecursions  maximum number of recursion steps
      */
+    
     void fillListOfLeaves_(const Node& startingNode, std::vector<Node>& foundLeaves, const Node& originNode, unsigned int maxRecursions) const;
     
     /** 
      * Check that nodes are only met once to define if the graph is cyclic.
      * @param node the node to explore
-     * @param metNode a set containing all the nodes we met
+     * @param metNodes a set containing all the nodes we met
      * @param originNode the node where we come from, not to explore
      */
     bool nodesAreMetOnlyOnce_(const Node& node, std::set<Node>& metNodes, const Node& originNode) const;
@@ -274,7 +276,7 @@ namespace bpp
   protected:
     /**
      * set the root node to an existing node. Will not affect the topology.
-     * @param node the new root
+     * @param newRoot the new root
      */
     
     void setRoot(Graph::NodeId newRoot);
@@ -364,7 +366,7 @@ namespace bpp
      * directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)
      * @param nodeB target node (or second node if undirected)
-     * @parem the used edge
+     * @param edgeID the used edge
      */
     
     void link(Graph::NodeId nodeA, Graph::NodeId nodeB, GlobalGraph::Edge edgeID);
@@ -374,7 +376,6 @@ namespace bpp
      *
      * @param nodeA source node (or first node if undirected)
      * @param nodeB target node (or second node if undirected)
-     * @parem the used edge
      */
 
     void switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB);

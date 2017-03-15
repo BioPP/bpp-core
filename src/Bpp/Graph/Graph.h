@@ -72,7 +72,7 @@ namespace bpp
   protected:
     /**
      * set the root node to an existing node. Will not affect the topology.
-     * @param node the new root
+     * @param newRoot the new root
      */
 
     virtual void setRoot(NodeId newRoot) = 0;
@@ -165,7 +165,7 @@ namespace bpp
      * directed graph: nodeA -> nodeB.
      * @param nodeA source node (or first node if undirected)
      * @param nodeB target node (or second node if undirected)
-     * @parem the used edge
+     * @param edgeID the used edge
      */
     
     virtual void link(Graph::NodeId nodeA, Graph::NodeId nodeB, Graph::EdgeId edgeID) = 0;
