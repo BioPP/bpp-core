@@ -43,8 +43,9 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "AssociationGraphObserver.h"
 #include "GlobalGraph.h"
 
-#include "../Exceptions.h"
-#include "../Clonable.h"
+#include <Bpp/Exceptions.h>
+#include <Bpp/Clonable.h>
+#include <Bpp/Text/TextTools.h>
 
 #include <vector>
 #include <map>

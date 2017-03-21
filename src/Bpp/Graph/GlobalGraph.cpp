@@ -46,6 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 #include "GraphObserver.h"
 #include "GlobalGraph.h"
 #include "../Exceptions.h"
+#include <Bpp/Text/TextTools.h>
 
 using namespace bpp;
 using namespace std;
