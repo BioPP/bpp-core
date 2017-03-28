@@ -198,7 +198,7 @@ class BppFile:
                     if comment.match_eol ():
                         file_parser.last_parsed = Element.Space
                         continue # Empty comment
-                    if comment.match_toks ("File", ":"):
+                    if comment.match_toks ("File"):
                         file_parser.last_parsed = Element.File
                         continue # ignore filename
                     with comment.match_or (

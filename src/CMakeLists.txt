@@ -11,6 +11,7 @@ set (CPP_FILES
   Bpp/App/BppApplication.cpp
   Bpp/App/NumCalcApplicationTools.cpp
   Bpp/BppString.cpp
+  Bpp/Exceptions.cpp
   Bpp/Graph/GlobalGraph.cpp
   Bpp/Graphics/ColorTools.cpp
   Bpp/Graphics/Fig/XFigGraphicDevice.cpp
