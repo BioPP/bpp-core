@@ -373,8 +373,8 @@ class BppCpp (BppFile):
     
     def parse_file (self):
         file_parser = FileParser (self.file_path)
-        self.parse_file_header ()
-        self.parse_file_license ()
+        self.parse_file_header (file_parser)
+        self.parse_file_license (file_parser)
         while True: # Parsing header inclusion
             line = file_parser.parse_line ()
             if line.match_eol ():
