@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -98,23 +98,23 @@ namespace bpp
  */
 class Clonable
 {
-	public:
-		
-		Clonable() {}
-	
-		virtual ~Clonable() {}
-	
-	public:
-		
-		/**
-		 * @brief Create a copy of this object and send a pointer to it.
-		 *
-		 * @return A pointer toward the copy object.
-		 */
-		virtual Clonable * clone() const = 0;
+  public:
+    
+    Clonable() {}
+  
+    virtual ~Clonable() {}
+  
+  public:
+    
+    /**
+     * @brief Create a copy of this object and send a pointer to it.
+     *
+     * @return A pointer toward the copy object.
+     */
+    virtual Clonable * clone() const = 0;
 };
 
 } //end of namespace bpp.
 
-#endif	//_CLONABLE_H_
+#endif  //_CLONABLE_H_
 
