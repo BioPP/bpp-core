@@ -57,7 +57,7 @@ namespace bpp
  * If they are parametrized, the parameters are called \c "theta1",
  * ..., \c "theta(n-1)".
  *
- * Two ways of parametrization are available:
+ * Three ways of parametrization are available:
  *
  * Global ratio:
  *
@@ -83,8 +83,9 @@ namespace bpp
  * @f$i_k=a_k...a_1@f$.
  *
  * Given @f$a_b...a_1@f$ the writing of i in binary where @f$a_b=1@f$,
- * we denote @f$1_i=\sum\{p_{j+1} \text{ such that } j_b=i_b=1i_{b-1}\}@f$ and
- * @f$0_i=\sum\{p_{j+1} \text{ such that }  j_b=0i_{b-1}\}@f$, and then we define:
+ * we denote @f$1_i=\sum_j\{p_{j+1} \text{ such that }
+ * j_b=1i_{b-1}\}@f$ and @f$0_i=\sum_j\{p_{j+1} \text{ such that }
+ * j_b=0i_{b-1}\}@f$, and then we define:
  *
  *
  * @f$\theta_i=\frac{1_i}{1_i+0_i}@f$
