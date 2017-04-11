@@ -58,7 +58,7 @@ namespace bpp
   class BppVector : public Clonable, public std::vector<T>
   {
   public:
-    template <typename Args...>
+    template <typename... Args>
     BppVector(Args&&... args)
       : std::vector<T>(std::forward<Args>(args)...)
     {
