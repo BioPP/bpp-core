@@ -217,6 +217,7 @@ namespace bpp
      */
     OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound);
 
+    double getBadValue () const;
     double getLowerBound() const;
     double getUpperBound() const;
   };

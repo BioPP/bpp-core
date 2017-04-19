@@ -414,7 +414,9 @@ namespace bpp
 
     std::vector<Scalar> row(std::size_t r) const override
     {
-      return {data_.begin() + index(r, 0), data_.begin() + index(r + 1, 0)};
+      using diff_type = typename std::iterator_traits<decltype(data_.begin())>::difference_type;
+      return {data_.begin() + static_cast<diff_type>(index(r, 0)),
+              data_.begin() + static_cast<diff_type>(index(r + 1, 0))};
     }
 
     void resize(std::size_t nbRows, std::size_t nbCols) override

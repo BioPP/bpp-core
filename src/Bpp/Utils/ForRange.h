@@ -70,10 +70,6 @@ namespace bpp
   {
     static_assert(std::is_copy_constructible<T>::value, "bpp::ForRange<T>: T must be copyable");
 
-  private:
-    T begin_;
-    T end_;
-
   public:
     ForRange(const T& beginElem, const T& endElem)
       : begin_(beginElem)
@@ -97,12 +93,15 @@ namespace bpp
      * It is an input iterator (can only read values and increment).
      * It only stores a value of T, returns it on dereference, or increment it.
      */
-    class iterator : public std::iterator<std::input_iterator_tag, T>
+    class iterator
     {
-    private:
-      T v_;
-
     public:
+      using iterator_category = std::input_iterator_tag;
+      using value_type = T;
+      using difference_type = T;
+      using pointer = const T*;
+      using reference = T;
+
       explicit iterator(const T& v = T())
         : v_(v)
       {
@@ -121,10 +120,17 @@ namespace bpp
       bool operator==(iterator other) { return v_ == other.v_; }
       bool operator!=(iterator other) { return !operator==(other); }
       T operator*(void) { return v_; }
+
+    private:
+      T v_;
     };
 
     iterator begin(void) const { return iterator(begin_); }
     iterator end(void) const { return iterator(end_); }
+
+  private:
+    T begin_;
+    T end_;
   };
 
   /** Build a range with type deduction.
