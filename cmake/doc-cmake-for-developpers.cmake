@@ -174,11 +174,11 @@ install (
 # Install libraries, while recording them under "${PROJECT_NAME}-targets"
 
 install (
-  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Bpp
   DESTINATION include
   FILES_MATCHING PATTERN "*.h"
   )
-# Install headers
+# Install headers (using the sub Bpp dir avoids looking into CMake temporary internal dirs in case of in tree build).
 
 install (EXPORT ${PROJECT_NAME}-targets DESTINATION ${cmake-package-location})
 # Install the target export file, that defines "imported targets" with properties for the two libs.
