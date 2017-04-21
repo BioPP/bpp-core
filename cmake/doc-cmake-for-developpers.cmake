@@ -23,15 +23,16 @@ project (bpp-something CXX)
 # - the CMake package
 # Do not change it unless there is a good reason...
 
-set (public-compile-options -std=c++11)
-set (private-compile-options -Wall -Weffc++ -Wshadow -Wconversion)
+set (public-compile-options)
+set (private-compile-options std=c++11 -Wall -Weffc++ -Wshadow -Wconversion)
 # Define compile options to be used with targets (will be used later).
 # Public options will be used to compile the libs and added as a required compile option for
 # dependencies (tests, other bpp components, user programs compiled with cmake).
 # Private options are only used to compute the libraries.
-# NOTE:
-# CMake >= 3.1.x provides a CXX_STANDARD variable to set -std=...
-# It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
+# NOTES:
+# -> public-compile-options was previously used to propagate -std=c++11, but this forced user to user c++11 (instead of c++14 for example). This also made C/C++ interaction problematic as -std=c++11 was given to gcc for C files too in bpp-raa.
+# -> CMake >= 3.1.x provides a CXX_STANDARD variable to set -std=...
+# -> It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
 
 SET(${PROJECT_NAME}_VERSION_CURRENT "2")
 SET(${PROJECT_NAME}_VERSION_REVISION "3")
@@ -77,26 +78,26 @@ include (CMakePackageConfigHelpers)
 # Standard CMake module defining configure_package_config_file and write_basic_package_version_file.
 
 configure_package_config_file (
-  ${PROJECT_NAME}-config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  package.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/package.cmake
   INSTALL_DESTINATION ${cmake-package-location}
   )
-# Generates the CMake package file from the template bpp-something-config.cmake.in
+# Generates the CMake package file from the template package.cmake.in
 # It performs variable substitutions to fill the template with project name and versions.
 
 write_basic_package_version_file (
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/package-version.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion
   )
 # Generates a CMake package version file. Used by find_package to check version numbers.
 
-install (FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-  DESTINATION ${cmake-package-location}
-  )
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/package.cmake DESTINATION ${cmake-package-location}
+  RENAME ${PROJECT_NAME}-config.cmake)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/package-version.cmake DESTINATION ${cmake-package-location}
+  RENAME ${PROJECT_NAME}-config-version.cmake)
 # Install the cmake package files.
+# They are renamed to the name convention required by CMake.
 
 add_subdirectory (src)
 # Define the library targets.
@@ -237,7 +238,10 @@ foreach (test_cpp_file ${test_cpp_files})
   # Each test is named after the cpp file without extension.
 
   target_link_libraries (${test_name} ${PROJECT_NAME}-shared)
-  # Link to bpp-something shared library (pullrequired -I -L -lbpp-*).
+  # Link to bpp-something shared library (pulls required -I -L -lbpp-*).
+
+  target_compile_options (${test_name} PRIVATE ${private-compile-options})
+  # Compile options (mostly -std=c++11).
 
   add_test (
     NAME ${test_name}
