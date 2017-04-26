@@ -50,6 +50,27 @@ class NotToken:
     def match (self, buf):
         return None if self.token.match (buf) is not None else buf
 
+class LSkipAnyUntil:
+    def __init__ (self, token):
+        self.token = token
+    def match (self, buf):
+        while len(buf) > 0:
+            r = self.token.match (buf)
+            if r is not None:
+                return r
+            buf = buf[1:]
+        return None
+class RSkipAnyUntil:
+    def __init__ (self, token):
+        self.token = token
+    def match (self, buf):
+        while len(buf) > 0:
+            r = self.token.match (buf)
+            if r is not None:
+                return r
+            buf = buf[:-1]
+        return None
+
 # Line parser allows to define a chain of tokens that functions as a sort of regexp.
 class LineParser:
     '''
@@ -175,15 +196,15 @@ class BppFile:
     def add_license_line_from_elements (self, elements):
         self.license_lines = self.license_lines if self.license_lines is not None else []
         self.license_lines.append (" ".join (elements))
-    def add_absolute_include_from_elements (self, elements):
+    def add_absolute_include_from_elements (self, elements, comment = None):
         include = " ".join (elements)
-        self.includes.append (include)
+        self.includes.append ((include, comment))
         print ("Found absolute include: {}".format (include))
     def add_relative_include_from_elements (self, elements):
         relative_original_path = pathlib.Path (" ".join (elements))
         absolute_path = self.file_path.parent.joinpath (relative_original_path).resolve ()
         cleaned_relative_path = absolute_path.relative_to (self.bpp_dir.parent)
-        self.includes.append (cleaned_relative_path.as_posix ())
+        self.includes.append ((cleaned_relative_path.as_posix (), comment))
         print ("Found relative include: {} ; converted to absolute: {}".format (relative_original_path, cleaned_relative_path))
 
     # Common parsing functions
@@ -259,13 +280,21 @@ class BppFile:
         # Match a single include line ; returns LineParser with given state
         with line.match_tok ("#include") as include:
             if include:
+                # Strip potential trailing comment
+                comment = None
+                stripped_of_comment = include.match (RSkipAnyUntil (RToken ("//")))
+                if stripped_of_comment:
+                    comment_elems = include.match (LSkipAnyUntil (LToken ("//"))).as_tokens ()
+                    comment = " ".join (comment_elems)
+                    include = stripped_of_comment
+                # Continue processing include (either a quote or a system include)
                 with include.match (LStripToken (LToken ("<"))).match (RStripToken (RToken (">"))) as absolute_inc:
                     if absolute_inc:
-                        self.add_absolute_include_from_elements (absolute_inc.as_tokens ())
+                        self.add_absolute_include_from_elements (absolute_inc.as_tokens (), comment)
                         return absolute_inc
                 with include.match (LStripToken (LToken ("\""))).match (RStripToken (RToken ("\""))) as relative_inc:
                     if relative_inc:
-                        self.add_relative_include_from_elements (relative_inc.as_tokens ())
+                        self.add_relative_include_from_elements (relative_inc.as_tokens (), comment)
                         return relative_inc
         return LineParser ()
     def parse_file_code (self, file_parser):
@@ -291,7 +320,13 @@ class BppFile:
             f.write ("\n")
     def write_file_includes (self, f):
         self.includes.sort () # Sorted include files
-        f.writelines ("#include <{}>\n".format (inc) for inc in self.includes)
+        def include_line (inc):
+            path, comment = inc
+            if comment:
+                return "#include <{}> // {}\n".format (path, comment)
+            else:
+                return "#include <{}>\n".format (path)
+        f.writelines (include_line (inc) for inc in self.includes)
         f.write ("\n")
     def write_file_code (self, f):
         f.writelines ("{}\n".format (l) for l in self.code_lines)
