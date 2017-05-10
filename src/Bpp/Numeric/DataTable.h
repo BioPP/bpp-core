@@ -41,8 +41,7 @@
 #define _DataTable_H_
 
 #include "VectorTools.h"
-#include "DataTableExceptions.h"
-#include "../Exceptions.h"
+#include "TableExceptions.h"
 #include "../Text/TextTools.h"
 #include "../Clonable.h"
 
