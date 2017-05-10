@@ -75,43 +75,22 @@ ENDIF (DOXYGEN_FOUND)
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-core")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.2.0")
+SET(CPACK_PACKAGE_VERSION "2.3.0")
 SET(CPACK_PACKAGE_VERSION_MAJOR "2")
-SET(CPACK_PACKAGE_VERSION_MINOR "2")
+SET(CPACK_PACKAGE_VERSION_MINOR "3")
 SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Core library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
 SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")
 SET(CPACK_RESOURCE_FILE_INSTALL "${CMAKE_SOURCE_DIR}/INSTALL.txt")
 SET(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_SOURCE_IGNORE_FILES
- "CMakeFiles"
- "Makefile"
- "_CPack_Packages"
- "CMakeCache.txt"
- ".*\\\\.cmake"
- ".*\\\\.git"
- ".*\\\\.gz"
- ".*\\\\.deb"
- ".*\\\\.rpm"
- ".*\\\\.dmg"
- ".*\\\\..*\\\\.swp"
- "src/\\\\..*"
- "src/libbpp*"
- "html"
- "Core.tag"
- "Testing"
- "build-stamp"
- "install_manifest.txt"
- "DartConfiguration.tcl"
- ${CPACK_SOURCE_IGNORE_FILES}
-)
-IF (APPLE)
-  SET(CPACK_BUNDLE_NAME "libbpp-core")
-  SET(CPACK_BUNDLE_PLIST "bpp-core-Info.plist")
-  SET(CPACK_BUNDLE_ICON "BppIcon.icns")
-  SET(CPACK_GENERATOR "Bundle")
-ENDIF()
+# /!\ This assumes that an external build is used
+SET(CPACK_SOURCE_IGNORE_FILES 
+       "/build/" 
+       "/\\\\.git/" 
+       "/\\\\.gitignore" 
+       ${CPACK_SOURCE_IGNORE_FILES}
+       )
 
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
 SET(CPACK_DEBSOURCE_PACKAGE_FILE_NAME "lib${CMAKE_PROJECT_NAME}_${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}.orig")
@@ -119,14 +98,6 @@ INCLUDE(CPack)
 
 #This adds the 'dist' target
 ADD_CUSTOM_TARGET(dist COMMAND ${CMAKE_MAKE_PROGRAM} package_source)
-# 'clean' is not (yet) a first class target. However, we need to clean the directories before building the sources:
-IF("${CMAKE_GENERATOR}" MATCHES "Make")
-  ADD_CUSTOM_TARGET(make_clean
-  COMMAND ${CMAKE_MAKE_PROGRAM} clean
-  WORKING_DIRECTORY ${CMAKE_CURRENT_DIR}
-  )
-  ADD_DEPENDENCIES(dist make_clean)
-ENDIF()
 
 IF (UNIX)
 

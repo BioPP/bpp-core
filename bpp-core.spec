@@ -1,5 +1,5 @@
 %define _basename bpp-core
-%define _version 2.2.0
+%define _version 2.3.0
 %define _release 1
 %define _prefix /usr
 
@@ -15,8 +15,8 @@ Summary: Bio++ Core library
 Group: Development/Libraries/C and C++
 
 BuildRoot: %{_builddir}/%{_basename}-root
-BuildRequires: cmake >= 2.6.0
-BuildRequires: gcc-c++ >= 4.0.0
+BuildRequires: cmake >= 2.8.12
+BuildRequires: gcc-c++ >= 4.8.0
 AutoReq: yes
 AutoProv: yes
 
@@ -166,6 +166,9 @@ exit 0
 %{_prefix}/include/*
 
 %changelog
+* Wed May 10 2017 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.3.0-1
+- New graph structures
+- Upgrade to C++11
 * Wed Sep 17 2014 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.2.0-1
 - Reparametrization wrapper debugged
 - Improved and rationalized display of warning messages
