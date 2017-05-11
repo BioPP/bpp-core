@@ -5,11 +5,11 @@
 #   Francois Gindraud (2017)
 # Created: 17/09/2010
 
-cmake_minimum_required (VERSION 2.8.12)
+cmake_minimum_required (VERSION 2.8.11)
 project (bpp-core CXX)
 
 # Compile options
-set (private-compile-options -std=c++11 -Wall -Weffc++ -Wshadow -Wconversion)
+set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
