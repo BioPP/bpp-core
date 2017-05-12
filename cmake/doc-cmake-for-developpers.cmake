@@ -121,13 +121,14 @@ add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
 
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   )
 # Annotates the static lib target with include paths.
 # These paths will be added as -I options:
 # - during compilation of the target, by looking at CMAKE_CURRENT_SOURCE_DIR
 # - during compilation of anything that links to this target, by looking at <install_dir>/include.
 # This allow the code to reference headers by a path relative to src/ instead of using ../OtherDir/blah.h
+# NOTE the "$<INSTALL_PREFIX>/" part is only needed to support 2.8.11 due to a bugged cmake check.
 
 set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 # Set target file name (default is the target name)
