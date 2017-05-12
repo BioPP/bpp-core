@@ -11,9 +11,9 @@
 # Main CMakeLists.txt
 ####################################################################################################
 
-cmake_minimum_required (VERSION 2.8.12)
-# 2.8.12 is required for:
-# - clean target properties (link, include dir, compile options)
+cmake_minimum_required (VERSION 2.8.11)
+# 2.8.11 is required for:
+# - clean target properties (link, include dir)
 
 project (bpp-something CXX)
 # Defines a lot of stuff including PROJECT_NAME which will contain "bpp-something"
@@ -23,14 +23,10 @@ project (bpp-something CXX)
 # - the CMake package
 # Do not change it unless there is a good reason...
 
-set (public-compile-options)
-set (private-compile-options std=c++11 -Wall -Weffc++ -Wshadow -Wconversion)
-# Define compile options to be used with targets (will be used later).
-# Public options will be used to compile the libs and added as a required compile option for
-# dependencies (tests, other bpp components, user programs compiled with cmake).
-# Private options are only used to compute the libraries.
-# NOTES:
-# -> public-compile-options was previously used to propagate -std=c++11, but this forced user to user c++11 (instead of c++14 for example). This also made C/C++ interaction problematic as -std=c++11 was given to gcc for C files too in bpp-raa.
+set (CMAKE_CXX_FLAGS "std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
+# Define compile options to be used for all C++ targets.
+# NOTES for the future:
+# -> CMake >= 2.8.12 adds per target COMPILE_OPTIONS by using target_compile_options (<target> [PRIVATE|PUBLIC] <opt1> ... <optN>)
 # -> CMake >= 3.1.x provides a CXX_STANDARD variable to set -std=...
 # -> It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
 
@@ -125,13 +121,14 @@ add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
 
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
   )
 # Annotates the static lib target with include paths.
 # These paths will be added as -I options:
 # - during compilation of the target, by looking at CMAKE_CURRENT_SOURCE_DIR
 # - during compilation of anything that links to this target, by looking at <install_dir>/include.
 # This allow the code to reference headers by a path relative to src/ instead of using ../OtherDir/blah.h
+# NOTE the "$<INSTALL_PREFIX>/" part is only needed to support 2.8.11 due to a bugged cmake check.
 
 set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 # Set target file name (default is the target name)
@@ -139,14 +136,6 @@ set_target_properties (${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_N
 target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
 # "Links" to all bpp components included by find_package (adds everything, -I, -L -lbpp-comps...)
 # (a manual list of bpp components targets also works here).
-
-target_compile_options (${PROJECT_NAME}-static
-  PUBLIC ${public-compile-options}
-  PRIVATE ${private-compile-options}
-  )
-# Adds compile options to library.
-# Public options are used to build the library, and propagated to targets that link to this library.
-# Private options are only used to build the library.
 
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
@@ -239,9 +228,6 @@ foreach (test_cpp_file ${test_cpp_files})
 
   target_link_libraries (${test_name} ${PROJECT_NAME}-shared)
   # Link to bpp-something shared library (pulls required -I -L -lbpp-*).
-
-  target_compile_options (${test_name} PRIVATE ${private-compile-options})
-  # Compile options (mostly -std=c++11).
 
   add_test (
     NAME ${test_name}

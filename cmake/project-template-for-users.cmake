@@ -12,7 +12,7 @@
 # This is a basic configuration for users with Bio++ libraries installed in a standard system place (/usr/).
 
 # These two lines are CMake boilerplate
-cmake_minimum_required (VERSION 2.8.12) # Test of version. 2.8.12 is the oldest version supported by Bio++
+cmake_minimum_required (VERSION 2.8.11) # Test of version. 2.8.11 is the oldest version supported by Bio++
 project (myproject CXX) # The name is not critical
 
 # Find Bio++ libraries and import their configurations.

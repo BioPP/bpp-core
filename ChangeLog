@@ -1,3 +1,11 @@
+10/0(/17 -*- Version 2.3.0 -*-
+
+26/04/16 Julien Dutheil
+* Upgrading to C++11
+
+10/07/14 Thomas Bigot
+* New graph structures
+
 17/09/14 -*- Version 2.2.0 -*-
 
 16/09/14 Julien Dutheil
