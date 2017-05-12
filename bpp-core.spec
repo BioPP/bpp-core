@@ -15,8 +15,8 @@ Summary: Bio++ Core library
 Group: Development/Libraries/C and C++
 
 BuildRoot: %{_builddir}/%{_basename}-root
-BuildRequires: cmake >= 2.8.11
-BuildRequires: gcc-c++ >= 4.8.0
+BuildRequires: cmake >= 2.8.12
+BuildRequires: gcc-c++ >= 4.7.0
 AutoReq: yes
 AutoProv: yes
 
@@ -69,10 +69,11 @@ rm -rf $RPM_BUILD_ROOT
 %files -n libbpp-core-devel
 %defattr(-,root,root)
 %doc AUTHORS.txt COPYING.txt INSTALL.txt ChangeLog
-%dir %{_prefix}/%{_lib}/cmake/bpp-core
+%dir %{_prefix}/lib/cmake/
+%dir %{_prefix}/lib/cmake/bpp-core
 %{_prefix}/%{_lib}/lib*.so
 %{_prefix}/%{_lib}/lib*.a
-%{_prefix}/%{_lib}/cmake/bpp-core/bpp-core*.cmake
+%{_prefix}/lib/cmake/bpp-core/bpp-core*.cmake
 %{_prefix}/include/*
 
 %changelog
