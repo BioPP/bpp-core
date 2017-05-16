@@ -26,7 +26,7 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
 SET(${PROJECT_NAME}_VERSION_CURRENT "2")
-SET(${PROJECT_NAME}_VERSION_REVISION "3")
+SET(${PROJECT_NAME}_VERSION_REVISION "4")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
 
 # Effective version number computation
