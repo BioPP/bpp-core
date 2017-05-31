@@ -15,7 +15,7 @@ Summary: Bio++ Core library
 Group: Development/Libraries/C and C++
 
 BuildRoot: %{_builddir}/%{_basename}-root
-BuildRequires: cmake >= 2.8.12
+BuildRequires: cmake >= 2.8.11
 BuildRequires: gcc-c++ >= 4.7.0
 AutoReq: yes
 AutoProv: yes
