@@ -362,7 +362,7 @@ class BppHeader (BppFile):
                 continue # Remove current header guard part 2 (must follow part 1)
             if line.match_toks ("#pragma", "once"):
                 file_parser.last_parsed = Element.HeaderGuardOnce
-                continue # Remove pragma once, will be put again
+                continue # Remove pragma once
             if self.parse_include_line (line):
                 file_parser.last_parsed = Element.Include
                 continue # Include line upgraded
@@ -392,7 +392,7 @@ class BppHeader (BppFile):
         with file_path.open ("w") as f:
             self.write_file_header (f)
             self.write_file_license (f)
-            f.write ("#pragma once\n")
+            # f.write ("#pragma once\n") If we want to use it...
             f.write ("#ifndef {}\n".format (self.header_guard))
             f.write ("#define {}\n".format (self.header_guard))
             f.write ("\n")
@@ -444,34 +444,43 @@ def create_bpp_file_object (path, parse_it):
 if __name__ == "__main__":
     # Parse command line
     authors_to_add = []
-    in_place = False
+    overwrite = False
+    overwrite_checked = False
     update_modif_date = True
     create_from = None
     args = sys.argv[1:]
     while True:
         if len (args) >= 2:
-            if args[0] == "author":
+            if args[0] in ("author", "a"):
                 authors_to_add.append (args[1])
                 args = args[2:]
                 continue
-            if args[0] == "create_from":
+            if args[0] in ("create_from", "c"):
                 create_from = args[1]
                 args = args[2:]
                 continue
-        if len (args) >= 1 and args[0] == "in_place":
-            in_place = True
-            args = args[1:]
-            continue
-        if len (args) >= 1 and args[0] == "keep_date":
-            update_modif_date = False
-            args = args[1:]
-            continue
+        if len (args) >= 1:
+            if args[0] in ("overwrite", "O"):
+                overwrite = True
+                overwrite_checked = False
+                args = args[1:]
+                continue
+            if args[0] in ("overwrite_checked", "o"):
+                overwrite = False
+                overwrite_checked = True
+                args = args[1:]
+                continue
+            if args[0] == "keep_date":
+                update_modif_date = False
+                args = args[1:]
+                continue
         if len (args) == 1 and args[0] not in ("help", "-h", "--help"):
             break
         print ("bpp_format.py [args] <file>")
         print ("\t<file> : file to reformat")
         print ("\tauthor [name] : adds [name] as recent author of the file")
-        print ("\tin_place : write directly to <file> (default is writing in <file>.new.<file suffix>)")
+        print ("\toverwrite : write directly to <file> (default is writing in <file>.new.<file suffix>)")
+        print ("\toverwrite_checked : same as overwrite, but shows a diff and ask for confirmation")
         print ("\tkeep_date : do not update the last modification date")
         print ("\tcreate_from [file] : create a new file from [file] (license, date, guard)")
         sys.exit ()
@@ -492,6 +501,27 @@ if __name__ == "__main__":
         bpp_file.license_lines = example_file.license_lines
         bpp_file.creation_date = datetime.date.today ()
     # Write back
-    out_file_path = file_path if in_place else file_path.with_suffix (".new" + file_path.suffix)
+    out_file_path = file_path if overwrite else file_path.with_suffix (".new" + file_path.suffix)
     print ("Writing to {}".format (out_file_path))
     bpp_file.write_file (out_file_path)
+    # If overwrite_checked, show diff, ask before overwriting
+    if overwrite_checked:
+        import subprocess
+        diff_cmd = subprocess.Popen (
+                ["diff", "--color=always", "-U3", file_path.as_posix (), out_file_path.as_posix ()],
+                stdout=subprocess.PIPE)
+        less_cmd = subprocess.Popen (["less"], stdin=diff_cmd.stdout)
+        less_cmd.wait ()
+        diff_cmd.wait ()
+        print ("Overwrite ? [y/N]")
+        ans = input ()
+        if ans in ("y", "Y"):
+            print ("Renaming {} to {}".format (out_file_path, file_path))
+            out_file_path.rename (file_path)
+        else:
+            print ("Delete {} ? [y/N]".format (out_file_path))
+            ans2 = input ()
+            if ans2 in ("y", "Y"):
+                print ("Deleting {}".format (out_file_path))
+                out_file_path.unlink ()
+
