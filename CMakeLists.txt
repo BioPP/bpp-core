@@ -37,8 +37,10 @@ SET(${PROJECT_NAME}_VERSION "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_
 
 set (PROJECT_VERSION ${${PROJECT_NAME}_VERSION})
 
+include (GNUInstallDirs)
+
 # CMake package
-set (cmake-package-location lib/cmake/${PROJECT_NAME})
+set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 include (CMakePackageConfigHelpers)
 configure_package_config_file (
   package.cmake.in
