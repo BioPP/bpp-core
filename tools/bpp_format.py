@@ -177,6 +177,7 @@ class BppFile:
         self.last_modification_date = None
         self.includes = []
         self.code_lines = []
+        self.has_doctest = False
 
     def add_author (self, author_first_last_name):
         # Remove author from list (exclude suffixes)
@@ -200,12 +201,17 @@ class BppFile:
         include = " ".join (elements)
         self.includes.append ((include, comment))
         print ("Found absolute include: {}".format (include))
-    def add_relative_include_from_elements (self, elements):
+    def add_relative_include_from_elements (self, elements, comment = None):
         relative_original_path = pathlib.Path (" ".join (elements))
-        absolute_path = self.file_path.parent.joinpath (relative_original_path).resolve ()
-        cleaned_relative_path = absolute_path.relative_to (self.bpp_dir.parent)
-        self.includes.append ((cleaned_relative_path.as_posix (), comment))
-        print ("Found relative include: {} ; converted to absolute: {}".format (relative_original_path, cleaned_relative_path))
+        if relative_original_path.name == "doctest.h":
+            self.has_doctest = True
+            print ("Found doctest include")
+        else:
+            absolute_path = self.file_path.parent.joinpath (relative_original_path).resolve ()
+            cleaned_relative_path = absolute_path.relative_to (self.bpp_dir.parent)
+            self.includes.append ((cleaned_relative_path.as_posix (), comment))
+            print ("Found relative include: {} ; converted to absolute: {}".format (
+                relative_original_path, cleaned_relative_path))
 
     # Common parsing functions
     def parse_file_header (self, file_parser):
@@ -252,7 +258,7 @@ class BppFile:
                     if file_parser.last_parsed == Element.Author:
                         self.add_authors_from_elements (comment.as_tokens ())
                         continue
-            if line.match_tok ("/*").match_eol () or line.match_tok ("#include") or line.match_tok ("#ifndef") or line.match_tok ("namespace"):
+            if line.match_tok ("/*").match_eol () or line.match_tok ("#include") or line.match_tok ("#ifndef") or line.match_tok ("namespace") or line.match_tok ("#define"):
                 file_parser.unparse_line ()
                 break # Found stuff of next steps, get out
             print ("Unexpected line (parsing file header): {}".format (line.text))
@@ -418,6 +424,9 @@ class BppCpp (BppFile):
             if self.parse_include_line (line):
                 file_parser.last_parsed = Element.Include
                 continue # Include line upgraded
+            if line.match_toks ("#define", "DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN"):
+                self.has_doctest = True
+                continue # Doctest define
             if line.match_toks ("namespace"):
                 file_parser.unparse_line ()
                 break # Start of code
@@ -430,6 +439,10 @@ class BppCpp (BppFile):
         with file_path.open ("w") as f:
             self.write_file_header (f)
             self.write_file_license (f)
+            if self.has_doctest:
+                f.write ("#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n")
+                f.write ("#include \"doctest.h\"\n")
+                f.write ("\n")
             self.write_file_includes (f)
             self.write_file_code (f)
 
@@ -500,6 +513,7 @@ if __name__ == "__main__":
         example_file = create_bpp_file_object (pathlib.Path (create_from), True)
         bpp_file.license_lines = example_file.license_lines
         bpp_file.creation_date = datetime.date.today ()
+        bpp_file.has_doctest = example_file.has_doctest
     # Write back
     out_file_path = file_path if overwrite else file_path.with_suffix (".new" + file_path.suffix)
     print ("Writing to {}".format (out_file_path))
