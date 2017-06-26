@@ -48,9 +48,6 @@
 #include <stdexcept>
 #include <string>
 
-// TODO merge out-of-range like exceptions ? difference in text seems weird
-// TODO extend constructor (adds some text)
-
 namespace bpp
 {
   /** @brief Exception base class.
