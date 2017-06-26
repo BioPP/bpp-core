@@ -54,6 +54,7 @@ set (PROJECT_VERSION ${${PROJECT_NAME}_VERSION})
 if (CMAKE_INSTALL_PREFIX)
   set (CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}" ${CMAKE_PREFIX_PATH})
 endif (CMAKE_INSTALL_PREFIX)
+include (GNUInstallDirs)
 find_package (bpp-neededcomponent x.y.z REQUIRED)
 # Includes other needed bpp components.
 # They must be installed to standard paths, or to the target install path (hence the search path addition).
@@ -65,8 +66,14 @@ find_package (bpp-neededcomponent x.y.z REQUIRED)
 # using target_link_libraries (current_target bpp-neededcomponent-static) will add link, include, and compile option flags to the whole compilation.
 # For convenience package files also define the BPP_LIBS_SHARED and BPP_LIBS_STATIC variables.
 # These variables hold a list of all imported shared or static library targets of bpp.
+# 
+# GNUInstallDirs is a standard CMake module that defines distribution-specific install paths.
+# We use:
+# - CMAKE_INSTALL_LIBDIR : system specific <prefix>/lib.
+#   It automatically adds a '64' suffix if 64 bits, and an arch subdir on debian.
+# - CMAKE_INSTALL_INCLUDEDIR : for homogeneity, in practice it is always <prefix>/include.
 
-set (cmake-package-location lib/cmake/${PROJECT_NAME})
+set (cmake-package-location ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
 # Place where cmake package and target files will be placed at install.
 # This is one of the paths that find_package will check, others are possible, see find_package().
 
@@ -121,7 +128,7 @@ add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
 
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
   )
 # Annotates the static lib target with include paths.
 # These paths will be added as -I options:
@@ -140,7 +147,7 @@ target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
   )
 set_target_properties (${PROJECT_NAME}-shared
   PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
@@ -149,17 +156,14 @@ set_target_properties (${PROJECT_NAME}-shared
   SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR}
   )
 target_link_libraries (${PROJECT_NAME}-shared ${BPP_LIBS_SHARED})
-target_compile_options (${PROJECT_NAME}-shared
-  PUBLIC ${public-compile-options}
-  PRIVATE ${private-compile-options}
-  )
 # Build the shared lib, using the same system
 
 install (
   TARGETS ${PROJECT_NAME}-static ${PROJECT_NAME}-shared
   EXPORT ${PROJECT_NAME}-targets
-  LIBRARY DESTINATION lib${LIB_SUFFIX}
-  ARCHIVE DESTINATION lib${LIB_SUFFIX}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 # Install libraries, while recording them under "${PROJECT_NAME}-targets"
 
