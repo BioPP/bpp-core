@@ -8,6 +8,7 @@ Makefile
 html
 install_manifest.txt
 libbpp-core.*
+.clang_complete
 
 # file to be specifically not ignored by previous rules
 
