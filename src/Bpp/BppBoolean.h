@@ -3,7 +3,7 @@
 // Authors:
 //   Julien Dutheil
 //   Francois Gindraud (2017)
-// Last modified: 2017-03-28
+// Last modified: 2017-06-26
 //
 
 /*
@@ -39,7 +39,6 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#pragma once
 #ifndef BPP_BPPBOOLEAN_H
 #define BPP_BPPBOOLEAN_H
 

@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2003-08-08 12:57:50
-// Last modified: 2017-03-28
+// Last modified: 2017-06-26
 //
 
 /*
@@ -40,7 +40,6 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#pragma once
 #ifndef BPP_TEXT_TEXTTOOLS_H
 #define BPP_TEXT_TEXTTOOLS_H
 
