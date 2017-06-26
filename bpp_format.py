@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# Script that can be used to format the file headers of bpp.
+
 import os
 import sys
 import pathlib
