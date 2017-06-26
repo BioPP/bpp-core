@@ -43,7 +43,6 @@
 #include <Bpp/Exceptions.h>
 #include <Bpp/Numeric/IntegerTools.h>
 #include <Bpp/Text/TextTools.h>
-#include <Bpp/Utils/ForRange.h>
 #include <algorithm>
 #include <cctype>
 #include <iterator>
@@ -287,7 +286,8 @@ namespace bpp
       auto nbChunks = IntegerTools::divideUp(s.size(), n);
       v.reserve(nbChunks);
       // Copy chunks by chunks, and add the last incomplete one if s.size () % n != 0
-      for (auto i : makeRange(IntegerTools::divideDown(s.size(), n)))
+      auto nbCopiedChunks = IntegerTools::divideDown(s.size(), n);
+      for (std::size_t i = 0; i < nbCopiedChunks; ++i)
         v.emplace_back(s.begin() + static_cast<diff_type>(i * n), s.begin() + static_cast<diff_type>((i + 1) * n));
       if (v.size() < nbChunks)
         v.emplace_back(s.begin() + static_cast<diff_type>(v.size() * n), s.end());
@@ -300,7 +300,7 @@ namespace bpp
     {
       std::string result;
       std::size_t blockDepth = 0;
-      for (auto i : makeRange(s.size()))
+      for (std::size_t i = 0; i < s.size(); ++i)
       {
         auto c = s[i];
         if (c == blockBeginning)
@@ -325,7 +325,9 @@ namespace bpp
 
     /******************************************************************************/
 
-    std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding,
+    std::string removeSubstrings(const std::string& s,
+                                 char blockBeginning,
+                                 char blockEnding,
                                  std::vector<std::string>& exceptionsBeginning,
                                  std::vector<std::string>& exceptionsEnding)
     {
