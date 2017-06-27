@@ -419,7 +419,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
 }
 
 void BppODiscreteDistributionFormat::initialize_(
-  DiscreteDistribution& rDist) throw (Exception)
+  DiscreteDistribution& rDist)
 {
   ParameterList pl = rDist.getIndependentParameters();
 

@@ -217,7 +217,7 @@ public:
   static void resolveVariables(std::map<std::string, std::string>& am,
                                char varCode = '$',
                                char varBeg = '(',
-                               char varEnd = ')') throw (Exception);
+                               char varEnd = ')');
 
   /**
    * @brief Global function that reads all parameters from command line and files,
@@ -228,7 +228,7 @@ public:
    * @return An attributes map.
    * @throw Exception in case an option file is not found.
    */
-  static std::map<std::string, std::string> parseOptions(int args, char** argv) throw (Exception);
+  static std::map<std::string, std::string> parseOptions(int args, char** argv);
 
 private:
   /**

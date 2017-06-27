@@ -93,7 +93,7 @@ namespace bpp
 
     void fireParameterChanged(const ParameterList & parameters);
   
-    double randC() const throw (Exception)
+    double randC() const
     {
       double x= RandomTools::randBeta(getParameterValue("alpha"),
                                       getParameterValue("beta"));

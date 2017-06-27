@@ -46,7 +46,7 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split) throw (KeyvalException)
+void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split)
 {
   string::size_type i = desc.find(split);
   if (i == string::npos)
@@ -55,7 +55,7 @@ void KeyvalTools::singleKeyval(const std::string& desc, std::string& key, std::s
   val = desc.substr(i+1);
 }
 
-void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,std::string>& keyvals, const std::string& split, bool nested) throw (KeyvalException)
+void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,std::string>& keyvals, const std::string& split, bool nested)
 {
   unique_ptr<StringTokenizer> st;
   if (nested)
@@ -95,7 +95,7 @@ void KeyvalTools::multipleKeyvals(const std::string& desc, std::map<std::string,
   }
 }
 
-std::string KeyvalTools::changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split, bool nested) throw (KeyvalException)
+std::string KeyvalTools::changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split, bool nested)
 {
   string::size_type begin = desc.find_first_of("(");
   string::size_type end = desc.find_last_of(")");
@@ -169,7 +169,7 @@ std::string KeyvalTools::changeKeyvals(const std::string& desc, const std::map<s
   return newDesc;
 }
 
-void KeyvalTools::parseProcedure(const std::string& desc, std::string& name, std::map<std::string, std::string>& args) throw (KeyvalException)
+void KeyvalTools::parseProcedure(const std::string& desc, std::string& name, std::map<std::string, std::string>& args)
 {
   string::size_type begin = desc.find_first_of("(");
   string::size_type end = desc.find_last_of(")");

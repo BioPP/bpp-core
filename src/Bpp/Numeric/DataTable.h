@@ -91,7 +91,7 @@ public:
    * @param colNames The names of the columns of the DataTable.
    * @throw DuplicatedTableColumnNameException If colnames contains identical names.
    */
-  DataTable(const std::vector<std::string>& colNames) throw (DuplicatedTableColumnNameException);
+  DataTable(const std::vector<std::string>& colNames);
 
   DataTable(const DataTable& table);
 
@@ -108,7 +108,7 @@ public:
    * @param colIndex Column number.
    * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows.
    */
-  std::string& operator()(size_t rowIndex, size_t colIndex) throw (IndexOutOfBoundsException);
+  std::string& operator()(size_t rowIndex, size_t colIndex);
 
   /**
    * @return The element at a given position.
@@ -116,7 +116,7 @@ public:
    * @param colIndex Column number.
    * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows.
    */
-  const std::string& operator()(size_t rowIndex, size_t colIndex) const throw (IndexOutOfBoundsException);
+  const std::string& operator()(size_t rowIndex, size_t colIndex) const;
 
   /**
    * @return The element at a given position.
@@ -126,8 +126,7 @@ public:
    * @throw NoTableColumnNamesException If the table does not have names associated to columns.
    * @throw TableNameNotFoundException If one of rowName or colName do not match existing names.
    */
-  std::string& operator()(const std::string& rowName, const std::string& colName)
-  throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
+  std::string& operator()(const std::string& rowName, const std::string& colName);
 
   /**
    * @return The element at a given position.
@@ -137,8 +136,7 @@ public:
    * @throw NoTableColumnNamesException If the table does not have names associated to columns.
    * @throw TableNameNotFoundException If one of rowName or colName do not match existing names.
    */
-  const std::string& operator()(const std::string& rowName, const std::string& colName) const
-  throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException);
+  const std::string& operator()(const std::string& rowName, const std::string& colName) const;
 
   /**
    * @return The element at a given position.
@@ -148,8 +146,7 @@ public:
    * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns.
    * @throw TableNameNotFoundException If rowName do not match existing names.
    */
-  std::string& operator()(const std::string& rowName, size_t colIndex)
-  throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
+  std::string& operator()(const std::string& rowName, size_t colIndex);
 
   /**
    * @return The element at a given position.
@@ -159,8 +156,7 @@ public:
    * @throw IndexOutOfBoundsException If the index is greater or equal to the number of columns.
    * @throw TableNameNotFoundException If rowName do not match existing names.
    */
-  const std::string& operator()(const std::string& rowName, size_t colIndex) const
-  throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException);
+  const std::string& operator()(const std::string& rowName, size_t colIndex) const;
 
   /**
    * @return The element at a given position.
@@ -170,8 +166,7 @@ public:
    * @throw NoTableColumnNamesException If the table does not have names associated to columns.
    * @throw TableNameNotFoundException If colName do not match existing names.
    */
-  std::string& operator()(size_t rowIndex, const std::string& colName)
-  throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
+  std::string& operator()(size_t rowIndex, const std::string& colName);
 
   /**
    * @return The element at a given position.
@@ -181,8 +176,7 @@ public:
    * @throw NoTableColumnNamesException If the table does not have names associated to columns.
    * @throw TableNameNotFoundException If colName do not match existing names.
    */
-  const std::string& operator()(size_t rowIndex, const std::string& colName) const
-  throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException);
+  const std::string& operator()(size_t rowIndex, const std::string& colName) const;
 
   /**
    * @name Work on columns.
@@ -202,14 +196,14 @@ public:
    * @throw DimensionException If the number of names do not match the number of columns in the table.
    * @throw DuplicatedTableColumnNameException If names are not unique.
    */
-  void setColumnNames(const std::vector<std::string>& colNames) throw (DimensionException, DuplicatedTableColumnNameException);
+  void setColumnNames(const std::vector<std::string>& colNames);
   /**
    * @brief Get the column names of this table.
    *
    * @return The column names of this table.
    * @throw NoTableColumnNamesException If no column names are associated to this table.
    */
-  std::vector<std::string> getColumnNames() const throw (NoTableColumnNamesException);
+  std::vector<std::string> getColumnNames() const;
   /**
    * @brief Get a given column name.
    *
@@ -218,7 +212,7 @@ public:
    * @throw NoTableColumnNamesException If no column names are associated to this table.
    * @throw IndexOutOfBoundsException If index is >= number of columns.
    */
-  std::string getColumnName(size_t index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException);
+  std::string getColumnName(size_t index) const;
 
   /**
    * @return true If column names are associated to this table.
@@ -230,13 +224,13 @@ public:
    * @param index The index of the column.
    * @throw IndexOutOfBoundsException If index is >= number of columns.
    */
-  std::vector<std::string>& getColumn(size_t index) throw (IndexOutOfBoundsException);
+  std::vector<std::string>& getColumn(size_t index);
   /**
    * @return The values in the given column.
    * @param index The index of the column.
    * @throw IndexOutOfBoundsException If index is >= number of columns.
    */
-  const std::vector<std::string>& getColumn(size_t index) const throw (IndexOutOfBoundsException);
+  const std::vector<std::string>& getColumn(size_t index) const;
 
   /**
    * @return The values in the given column.
@@ -244,14 +238,14 @@ public:
    * @throw NoTableColumnNamesException If no column names are associated to this table.
    * @throw TableColumnNameNotFoundException If colName do not match existing column names.
    */
-  std::vector<std::string>& getColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+  std::vector<std::string>& getColumn(const std::string& colName);
   /**
    * @return The values in the given column.
    * @param colName The name of the column.
    * @throw NoTableColumnNamesException If no column names are associated to this table.
    * @throw TableColumnNameNotFoundException If colName do not match existing column names.
    */
-  const std::vector<std::string>& getColumn(const std::string& colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+  const std::vector<std::string>& getColumn(const std::string& colName) const;
 
   /**
    * @brief Tell is a given column exists.
@@ -267,7 +261,7 @@ public:
    * @param index The index of the column.
    * @throw IndexOutOfBoundsException If index is >= number of columns.
    */
-  void deleteColumn(size_t index) throw (IndexOutOfBoundsException);
+  void deleteColumn(size_t index);
 
   /**
    * @brief Delete the given column.
@@ -276,7 +270,7 @@ public:
    * @throw NoTableColumnNamesException If no column names are associated to this table.
    * @throw TableColumnNameNotFoundException If colName do not match existing column names.
    */
-  void deleteColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException);
+  void deleteColumn(const std::string& colName);
 
   /**
    * @brief Add a new column.
@@ -285,7 +279,7 @@ public:
    * @throw DimensionException If the number of values does not match the number of rows.
    * @throw TableColumnNamesException If the table has row names.
    */
-  void addColumn(const std::vector<std::string>& newColumn) throw (DimensionException, TableColumnNamesException);
+  void addColumn(const std::vector<std::string>& newColumn);
   /**
    * @brief Add a new column.
    *
@@ -295,7 +289,7 @@ public:
    * @throw NoTableColumnNamesException If the table does not have row names.
    * @throw DuplicatedTableColumnNameException If colName is already used.
    */
-  void addColumn(const std::string& colName, const std::vector<std::string>& newColumn) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException);
+  void addColumn(const std::string& colName, const std::vector<std::string>& newColumn);
   /** @} */
 
   /**
@@ -316,7 +310,7 @@ public:
    * @throw DimensionException If the number of names do not match the number of rows in the table.
    * @throw DuplicatedTableRowNameException If names are not unique.
    */
-  void setRowNames(const std::vector<std::string>& rowNames) throw (DimensionException, DuplicatedTableRowNameException);
+  void setRowNames(const std::vector<std::string>& rowNames);
 
   /**
    * @brief Get the row names of this table.
@@ -324,7 +318,7 @@ public:
    * @return The row names of this table.
    * @throw NoTableRowNamesException If no row names are associated to this table.
    */
-  std::vector<std::string> getRowNames() const throw (NoTableRowNamesException);
+  std::vector<std::string> getRowNames() const;
 
   /**
    * @brief Tell is a given row exists.
@@ -342,7 +336,7 @@ public:
    * @throw NoTableRowNamesException If no row names are associated to this table.
    * @throw IndexOutOfBoundsException If index is >= number of rows.
    */
-  std::string getRowName(size_t index) const throw (NoTableRowNamesException, IndexOutOfBoundsException);
+  std::string getRowName(size_t index) const;
 
   /**
    * @return true If row names are associated to this table.
@@ -354,7 +348,7 @@ public:
    * @param index The index of the row.
    * @throw IndexOutOfBoundsException If index is >= number of rows.
    */
-  std::vector<std::string> getRow(size_t index) const throw (IndexOutOfBoundsException);
+  std::vector<std::string> getRow(size_t index) const;
 
   /**
    * @return A vector which contains a copy  in the given row.
@@ -362,7 +356,7 @@ public:
    * @throw NoTableRowNamesException If no row names are associated to this table.
    * @throw TableRowNameNotFoundException If rowName do not match existing row names.
    */
-  std::vector<std::string> getRow(const std::string& rowName) const throw (NoTableRowNamesException, TableRowNameNotFoundException);
+  std::vector<std::string> getRow(const std::string& rowName) const;
 
   /**
    * @brief Delete the given row.
@@ -370,7 +364,7 @@ public:
    * @param index The index of the row.
    * @throw IndexOutOfBoundsException If index is >= number of row.
    */
-  void deleteRow(size_t index) throw (IndexOutOfBoundsException);
+  void deleteRow(size_t index);
 
   /**
    * @brief Delete the given row.
@@ -379,7 +373,7 @@ public:
    * @throw NoTableRowNamesException If no row names are associated to this table.
    * @throw TableRowNameNotFoundException If rowName do not match existing column names.
    */
-  void deleteRow(const std::string& rowName) throw (NoTableRowNamesException, TableRowNameNotFoundException);
+  void deleteRow(const std::string& rowName);
 
   /**
    * @brief Add a new row.
@@ -388,7 +382,7 @@ public:
    * @throw DimensionException If the number of values does not match the number of columns.
    * @throw TableRowNamesException If the table has column names.
    */
-  void addRow(const std::vector<std::string>& newRow) throw (DimensionException, TableRowNamesException);
+  void addRow(const std::vector<std::string>& newRow);
   /**
    * @brief Add a new row.
    *
@@ -398,7 +392,7 @@ public:
    * @throw NoTableRowNamesException If the table does not have column names.
    * @throw DuplicatedTableRowNameException If rowName is already used.
    */
-  void addRow(const std::string& rowName, const std::vector<std::string>& newRow) throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException);
+  void addRow(const std::string& rowName, const std::vector<std::string>& newRow);
   /** @} */
 
 public:
@@ -417,8 +411,7 @@ public:
    * @param rowNames Use a column as rowNames. If positive, use the specified column to compute rownames, otherwise use default;
    * @return         A pointer toward a new DataTable object.
    */
-  static DataTable* read(std::istream& in, const std::string& sep = "\t", bool header = true, int rowNames = -1)
-  throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException);
+  static DataTable* read(std::istream& in, const std::string& sep = "\t", bool header = true, int rowNames = -1);
 
   /**
    * @brief Write a DataTable object to stream in CVS-like format.

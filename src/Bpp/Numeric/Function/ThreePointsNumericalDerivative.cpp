@@ -43,7 +43,6 @@ using namespace bpp;
 using namespace std;
 
 void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList parameters)
-throw (ParameterNotFoundException, ConstraintException)
 {
   if (computeD1_ && variables_.size() > 0)
   {

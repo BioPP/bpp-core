@@ -45,7 +45,7 @@ using namespace std;
 
 /******************************************************************************/
   
-double NumTools::uniRoot(Function& f, const std::string& param, double a, double b, double tolerance) throw (Exception)
+double NumTools::uniRoot(Function& f, const std::string& param, double a, double b, double tolerance)
 {
   ParameterList pl;
   pl.addParameter(Parameter(param, a));

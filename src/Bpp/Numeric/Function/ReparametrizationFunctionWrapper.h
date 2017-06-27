@@ -118,7 +118,6 @@ class ReparametrizationFunctionWrapper:
     virtual Function& getFunction() { return *function_; } 
 
     void setParameters(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
 //      parameters.printParameters(std::cout);
       matchParametersValues(parameters);
@@ -127,7 +126,7 @@ class ReparametrizationFunctionWrapper:
       function_->setParameters(functionParameters_.subList(parameters.getParameterNames()));
     }
 
-    double getValue() const throw (Exception)
+    double getValue() const
     {
       return function_->getValue();
     }
@@ -183,7 +182,7 @@ class ReparametrizationDerivableFirstOrderWrapper:
     
     bool enableFirstOrderDerivatives() const { return dynamic_cast<const DerivableFirstOrder&>(getFunction()).enableFirstOrderDerivatives(); }
 
-    double getFirstOrderDerivative(const std::string& variable) const throw (Exception)
+    double getFirstOrderDerivative(const std::string& variable) const
     {
       return dynamic_cast<const DerivableFirstOrder&>(getFunction()).getFirstOrderDerivative(variable)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative();
@@ -239,7 +238,7 @@ class ReparametrizationDerivableSecondOrderWrapper:
     
     bool enableSecondOrderDerivatives() const { return dynamic_cast<const DerivableSecondOrder&>(getFunction()).enableSecondOrderDerivatives(); }
 
-    double getSecondOrderDerivative(const std::string& variable) const throw (Exception)
+    double getSecondOrderDerivative(const std::string& variable) const
     {
       return dynamic_cast<const DerivableSecondOrder&>(getFunction()).getSecondOrderDerivative(variable)
            * pow(dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative(), 2)
@@ -247,7 +246,7 @@ class ReparametrizationDerivableSecondOrderWrapper:
            * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getSecondOrderDerivative();
     }
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const throw (Exception)
+    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
     {
       return dynamic_cast<const DerivableSecondOrder&>(getFunction()).getSecondOrderDerivative(variable1, variable2)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable1)).getFirstOrderDerivative()

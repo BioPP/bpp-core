@@ -219,7 +219,7 @@ public:
     }
   }
 
-  void addRow(const std::vector<Scalar>& newRow) throw (DimensionException)
+  void addRow(const std::vector<Scalar>& newRow)
   {
     if (getNumberOfColumns()!=0 && newRow.size() != getNumberOfColumns())
       throw DimensionException("RowMatrix::addRow: invalid row dimension", newRow.size(), getNumberOfColumns());
@@ -322,7 +322,7 @@ public:
       }
     }
 
-    void addCol(const std::vector<Scalar>& newCol) throw (DimensionException)
+    void addCol(const std::vector<Scalar>& newCol)
     {
       if (getNumberOfRows()!=0 && newCol.size() != getNumberOfRows())
         throw DimensionException("ColMatrix::addCol: invalid column dimension", newCol.size(), getNumberOfRows());

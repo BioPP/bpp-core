@@ -64,7 +64,7 @@ void SimpleNewtonMultiDimensions::setFunction(Function* function)
 
 /******************************************************************************/
 
-void SimpleNewtonMultiDimensions::doInit(const ParameterList& params) throw (Exception)
+void SimpleNewtonMultiDimensions::doInit(const ParameterList& params)
 {
   nbParams_ = params.size();
   if (nbParams_ == 0) return;
@@ -83,7 +83,7 @@ void SimpleNewtonMultiDimensions::doInit(const ParameterList& params) throw (Exc
 
 /******************************************************************************/
 
-double SimpleNewtonMultiDimensions::doStep() throw (Exception)
+double SimpleNewtonMultiDimensions::doStep()
 {
   double f = getFunction()->getValue();
   for (unsigned int i = 0; i < nbParams_; i++)

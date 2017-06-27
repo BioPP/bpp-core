@@ -108,12 +108,12 @@ class GoldenSectionSearch:
 		 * <li>Function evaluation count reseting.</li>
 		 * </ul>
 		 */
-		double getFunctionValue() const throw (NullPointerException);
+		double getFunctionValue() const;
 		/** @} */
 		
-    void doInit(const ParameterList & params) throw (Exception);
+    void doInit(const ParameterList & params);
 
-		double doStep() throw (Exception);
+		double doStep();
 	
 		/**
 		 * @name Specific method

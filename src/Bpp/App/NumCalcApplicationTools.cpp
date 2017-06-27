@@ -68,7 +68,7 @@ vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const s
 
 
 
-vector<double> NumCalcApplicationTools::getVector(const std::string& desc) throw (Exception)
+vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
 {
   vector<double> values;
   string key, val;
@@ -125,7 +125,7 @@ ParameterGrid* NumCalcApplicationTools::getParameterGrid(
     map<string, string>& params,
     const string& suffix,
     bool suffixIsOptional,
-    bool warn) throw (Exception)
+    bool warn)
 {
   unsigned int nbParams = ApplicationTools::getParameter<unsigned int>("grid.number_of_parameters", params, 1, suffix, suffixIsOptional, warn);
   ParameterGrid* grid = new ParameterGrid();

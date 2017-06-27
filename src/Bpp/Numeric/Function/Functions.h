@@ -97,7 +97,7 @@ class Function:
      *
      * @param parameters The parameter set to pass to the function.
      */
-    virtual void setParameters(const ParameterList& parameters) throw (ParameterNotFoundException, ConstraintException, Exception) = 0;
+    virtual void setParameters(const ParameterList& parameters) = 0;
 
     /**
      * @brief Get the value of the function at the current point.
@@ -105,7 +105,7 @@ class Function:
      * @return The value of the function.
      * @throw Exception If no point is specified or if an error occured.
      */
-    virtual double getValue() const throw (Exception) = 0;
+    virtual double getValue() const = 0;
     
     /**
      * @brief Get the value of the function according to a given set of parameters.
@@ -114,7 +114,7 @@ class Function:
      * @return The value of the function with the given parameter set.
      * @throw Exception If an error occured.
      */
-    virtual double f(const ParameterList& parameters) throw (Exception)
+    virtual double f(const ParameterList& parameters)
     {
       setParameters(parameters);
       return getValue();
@@ -158,7 +158,7 @@ class DerivableFirstOrder:
      * @return The value of the function.
      * @throw Exception If no point is specified or if an error occured.
      */
-    virtual double getFirstOrderDerivative(const std::string& variable) const throw (Exception) = 0;
+    virtual double getFirstOrderDerivative(const std::string& variable) const = 0;
     
     /**
      * @brief Get the value of the first derivative of the function
@@ -169,7 +169,7 @@ class DerivableFirstOrder:
      * @return The value of the function with the given parameter set.
      * @throw Exception If an error occured.
      */
-    virtual double df(const std::string& variable, const ParameterList& parameters) throw (Exception)
+    virtual double df(const std::string& variable, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getFirstOrderDerivative(variable);
@@ -214,7 +214,7 @@ class DerivableSecondOrder:
      * @return The value of the function.
      * @throw Exception If no point is specified or if an error occured.
      */
-    virtual double getSecondOrderDerivative(const std::string& variable) const throw (Exception) = 0;
+    virtual double getSecondOrderDerivative(const std::string& variable) const = 0;
   
     /**
      * @brief Get the value of the second order derivative of the function
@@ -225,7 +225,7 @@ class DerivableSecondOrder:
      * @return The value of the function with the given parameter set.
      * @throw Exception If an error occured.
      */
-    virtual double d2f(const std::string& variable, const ParameterList& parameters) throw (Exception)
+    virtual double d2f(const std::string& variable, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getSecondOrderDerivative(variable);
@@ -240,7 +240,7 @@ class DerivableSecondOrder:
      * @return The value of the function with the given parameter set.
      * @throw Exception If an error occured.
      */
-    virtual double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const throw (Exception) = 0;  
+    virtual double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const = 0;  
     
     /**
      * @brief Get the value of the cross derivative of the function
@@ -252,7 +252,7 @@ class DerivableSecondOrder:
      * @return The value of the function with the given parameter set.
      * @throw Exception If an error occured.
      */
-    virtual double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters) throw (Exception)
+    virtual double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getSecondOrderDerivative(variable1, variable2);
@@ -285,56 +285,51 @@ class FunctionWrapper:
     }
 
     void setParameters(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParameters(parameters);
     }
 
-    const ParameterList& getParameters() const throw (Exception)
+    const ParameterList& getParameters() const
     {
       return function_->getParameters();  
     }
 
-    const Parameter& getParameter(const std::string & name) const throw (ParameterNotFoundException)
+    const Parameter& getParameter(const std::string & name) const
     {
       return function_->getParameter(name);
     }
 
-    double getValue() const throw (Exception)
+    double getValue() const
     {
       return function_->getValue();
     }
     
-    double f(const ParameterList& parameters) throw (Exception)
+    double f(const ParameterList& parameters)
     {
       return function_->f(parameters);
     }
     
-    double getParameterValue(const std::string& name) const throw (ParameterNotFoundException)
+    double getParameterValue(const std::string& name) const
     {
       return function_->getParameterValue(name);
     }
       
     void setAllParametersValues(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setAllParametersValues(parameters);
     }
     
     void setParameterValue(const std::string& name, double value)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParameterValue(name, value);
     }
     
     void setParametersValues(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParametersValues(parameters);
     }
     
     bool matchParametersValues(const ParameterList& parameters)
-      throw (ConstraintException)
     {
       return function_->matchParametersValues(parameters);
     }
@@ -383,7 +378,7 @@ class DerivableFirstOrderWrapper:
       return dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives();
     }
 
-    double getFirstOrderDerivative(const std::string& variable) const throw (Exception) {
+    double getFirstOrderDerivative(const std::string& variable) const {
       return dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable);
     }
 
@@ -411,11 +406,11 @@ class DerivableSecondOrderWrapper:
       return dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives();
     }
 
-    double getSecondOrderDerivative(const std::string& variable) const throw (Exception) {
+    double getSecondOrderDerivative(const std::string& variable) const {
       return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable);
     }
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const throw (Exception) {
+    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const {
       return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2);
     }
 
@@ -445,7 +440,6 @@ class InfinityFunctionWrapper:
   public:
 
     void setParameters(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       try
       {
@@ -458,19 +452,18 @@ class InfinityFunctionWrapper:
       }
     }
 
-    double getValue() const throw (Exception)
+    double getValue() const
     {
       return constraintMatch_ ? -log(0.) :  function_->getValue();
     }
     
-    double f(const ParameterList& parameters) throw (Exception)
+    double f(const ParameterList& parameters)
     {
       setParameters(parameters);
       return getValue();
     }
           
     void setAllParametersValues(const ParameterList & parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       try
       {
@@ -484,7 +477,6 @@ class InfinityFunctionWrapper:
     }
     
     void setParameterValue(const std::string& name, double value)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       try
       {
@@ -498,7 +490,6 @@ class InfinityFunctionWrapper:
     }
     
     void setParametersValues(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       try
       {
@@ -512,7 +503,6 @@ class InfinityFunctionWrapper:
     }
     
     bool matchParametersValues(const ParameterList& parameters)
-      throw (ConstraintException)
     {
       try
       {
@@ -545,12 +535,12 @@ class InfinityDerivableFirstOrderWrapper :
 
   public:
     
-    double getFirstOrderDerivative(const std::string& variable) const throw (Exception)
+    double getFirstOrderDerivative(const std::string& variable) const
     {
       return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableFirstOrder *>(function_)->getFirstOrderDerivative(variable));    
     }
     
-    double df(const std::string& variable, const ParameterList& parameters) throw (Exception)
+    double df(const std::string& variable, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getFirstOrderDerivative(variable);
@@ -575,23 +565,23 @@ class InfinityDerivableSecondOrderWrapper :
 
   public:
 
-    double getSecondOrderDerivative(const std::string& variable) const throw (Exception)
+    double getSecondOrderDerivative(const std::string& variable) const
     {
       return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable));          
     }
   
-    double d2f(const std::string & variable, const ParameterList& parameters) throw (Exception)
+    double d2f(const std::string & variable, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getSecondOrderDerivative(variable);
     }    
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const throw (Exception)
+    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
     {
       return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable1, variable2));      
     }
     
-    double d2f(const std::string & variable1, const std::string& variable2, const ParameterList& parameters) throw (Exception)
+    double d2f(const std::string & variable1, const std::string& variable2, const ParameterList& parameters)
     {
       setParameters(parameters);
       return getSecondOrderDerivative(variable1, variable2);
@@ -618,12 +608,12 @@ class TestFunction :
 
     Clonable* clone() const { return new TestFunction(*this); }
 
-    void setParameters(const ParameterList& parameters) throw (Exception) 
+    void setParameters(const ParameterList& parameters) 
     {
       matchParametersValues(parameters);
     }
 
-    double getValue() const throw (Exception)
+    double getValue() const
     {
       double x = getParameter("x").getValue();
       double y = getParameter("y").getValue();

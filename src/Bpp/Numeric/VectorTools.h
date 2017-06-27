@@ -90,7 +90,7 @@ typedef std::vector<VVVint> VVVVuint;
  */
 
 template<class T>
-std::vector<T>  operator+(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+std::vector<T>  operator+(const std::vector<T>& v1, const std::vector<T>& v2)
 {
   size_t size;
   if (v1.size() != v2.size())
@@ -110,7 +110,7 @@ std::vector<T>  operator+(const std::vector<T>& v1, const std::vector<T>& v2) th
 }
 
 template<class T>
-std::vector<T> operator-(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+std::vector<T> operator-(const std::vector<T>& v1, const std::vector<T>& v2)
 {
   size_t size;
   if (v1.size() != v2.size())
@@ -130,7 +130,7 @@ std::vector<T> operator-(const std::vector<T>& v1, const std::vector<T>& v2) thr
 }
 
 template<class T>
-std::vector<T> operator*(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+std::vector<T> operator*(const std::vector<T>& v1, const std::vector<T>& v2)
 {
   size_t size;
   if (v1.size() != v2.size())
@@ -150,7 +150,7 @@ std::vector<T> operator*(const std::vector<T>& v1, const std::vector<T>& v2) thr
 }
 
 template<class T>
-std::vector<T> operator/(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+std::vector<T> operator/(const std::vector<T>& v1, const std::vector<T>& v2)
 {
   size_t size;
   if (v1.size() != v2.size())
@@ -256,7 +256,7 @@ std::vector<T> operator/(const C& c, const std::vector<T>& v1)
 
 
 template<class T>
-void operator+=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+void operator+=(std::vector<T>& v1, const std::vector<T>& v2)
 {
   for (size_t i = 0; i < v1.size(); i++)
   {
@@ -265,7 +265,7 @@ void operator+=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionEx
 }
 
 template<class T>
-void operator-=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+void operator-=(std::vector<T>& v1, const std::vector<T>& v2)
 {
   for (size_t i = 0; i < v1.size(); i++)
   {
@@ -274,7 +274,7 @@ void operator-=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionEx
 }
 
 template<class T>
-void operator*=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+void operator*=(std::vector<T>& v1, const std::vector<T>& v2)
 {
   for (size_t i = 0; i < v1.size(); i++)
   {
@@ -283,7 +283,7 @@ void operator*=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionEx
 }
 
 template<class T>
-void operator/=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+void operator/=(std::vector<T>& v1, const std::vector<T>& v2)
 {
   for (size_t i = 0; i < v1.size(); i++)
   {
@@ -444,7 +444,7 @@ public:
    * @return The position of which in v.
    */
   template<class T>
-  static size_t which(const std::vector<T>& v, const T& which) throw (ElementNotFoundException<T> )
+  static size_t which(const std::vector<T>& v, const T& which)
   {
     for (size_t i = 0; i < v.size(); i++)
     {
@@ -464,7 +464,7 @@ public:
    * @return A std::vector containing the positions of which in v.
    */
   template<class T>
-  static std::vector<size_t> whichAll(const std::vector<T>& v, const T& which) throw (ElementNotFoundException<T> )
+  static std::vector<size_t> whichAll(const std::vector<T>& v, const T& which)
   {
     std::vector<size_t> w;
     for (size_t i = 0; i < v.size(); i++)
@@ -961,7 +961,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType scalar(const std::vector<InputType>& v1, const std::vector<InputType>& v2) throw (DimensionException)
+  static OutputType scalar(const std::vector<InputType>& v1, const std::vector<InputType>& v2)
   {
     if (v1.size() != v2.size())
     {
@@ -991,7 +991,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length or do not match the length of the weights.
    */
   template<class InputType, class OutputType>
-  static OutputType scalar(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w) throw (DimensionException)
+  static OutputType scalar(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w)
   {
     if (v1.size() != w.size())
     {
@@ -1016,7 +1016,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class T>
-  static std::vector<T> kroneckerMult(const std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
+  static std::vector<T> kroneckerMult(const std::vector<T>& v1, const std::vector<T>& v2)
   {
     size_t n1 = v1.size();
     size_t n2 = v2.size();
@@ -1055,7 +1055,7 @@ public:
    * @see scalar.
    */
   template<class InputType, class OutputType>
-  static OutputType norm(const std::vector<InputType>& v1, const std::vector<InputType>& w) throw (DimensionException)
+  static OutputType norm(const std::vector<InputType>& v1, const std::vector<InputType>& w)
   {
     if (v1.size() != w.size())
     {
@@ -1076,7 +1076,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cos(const std::vector<InputType>& v1, const std::vector<InputType>& v2) throw (DimensionException)
+  static OutputType cos(const std::vector<InputType>& v1, const std::vector<InputType>& v2)
   {
     return scalar<InputType, OutputType>(v1, v2)
            / (norm<InputType, OutputType>(v1) * norm<InputType, OutputType>(v2));
@@ -1090,7 +1090,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cos(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w) throw (DimensionException)
+  static OutputType cos(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w)
   {
     return scalar<InputType, OutputType>(v1, v2, w)
            / (norm<InputType, OutputType>(v1, w) * norm<InputType, OutputType>(v2, w));
@@ -1112,7 +1112,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static T min(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static T min(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::min()", &v);
     T mini = v[0];
@@ -1133,7 +1133,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static T max(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static T max(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::max()", &v);
     T maxi = v[0];
@@ -1155,7 +1155,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static size_t whichMax(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static size_t whichMax(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::whichMax()", &v);
     T maxi = v[0];
@@ -1182,7 +1182,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static size_t whichMin(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static size_t whichMin(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorTools::whichMin()", &v);
     T mini = v[0];
@@ -1209,7 +1209,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static std::vector<size_t> whichMaxAll(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static std::vector<size_t> whichMaxAll(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::whichMaxAll()", &v);
     T maxi = max(v);
@@ -1235,7 +1235,7 @@ public:
    * @throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static std::vector<size_t> whichMinAll(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static std::vector<size_t> whichMinAll(const std::vector<T>& v)
   {
     if (v.size() == 0) throw EmptyVectorException<T>("VectorFuntions::whichMinAll()", &v);
     T mini = min(v);
@@ -1261,7 +1261,7 @@ public:
    * throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static std::vector<T> range(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static std::vector<T> range(const std::vector<T>& v)
   {
     if (v.size() == 0)
       throw EmptyVectorException<T>("VectorTools::range()", &v);
@@ -1296,7 +1296,7 @@ public:
    * throw EmptyVectorException If the input std::vector is empty.
    */
   template<class T>
-  static std::vector<size_t> order(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static std::vector<size_t> order(const std::vector<T>& v)
   {
     if (v.size() == 0)
       throw EmptyVectorException<T>("VectorTools::sort()", &v);
@@ -1320,7 +1320,7 @@ public:
    * @return A vector with all absolute values.
    */
   template<class T>
-  static std::vector<T> abs(const std::vector<T>& v) throw (EmptyVectorException<T> )
+  static std::vector<T> abs(const std::vector<T>& v)
   {
     std::vector<T> vabs(v.size());
     for (size_t i = 1; i < v.size(); i++)
@@ -1429,7 +1429,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cov(const std::vector<InputType>& v1, const std::vector<InputType>& v2, bool unbiased = true) throw (DimensionException)
+  static OutputType cov(const std::vector<InputType>& v1, const std::vector<InputType>& v2, bool unbiased = true)
   {
     OutputType n = (OutputType)v1.size();
     OutputType x =  scalar<InputType, OutputType>(
@@ -1451,7 +1451,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cov(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
+  static OutputType cov(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true)
   {
     if (normalizeWeights)
     {
@@ -1500,7 +1500,7 @@ public:
    * @throw DimensionException If v1 and w do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType var(const std::vector<InputType>& v1, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
+  static OutputType var(const std::vector<InputType>& v1, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true)
   {
     return cov<InputType, OutputType>(v1, v1, w, unbiased, normalizeWeights);
   }
@@ -1525,7 +1525,7 @@ public:
    * @throw DimensionException If v1 and w do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType sd(const std::vector<InputType>& v1, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true) throw (DimensionException)
+  static OutputType sd(const std::vector<InputType>& v1, const std::vector<InputType>& w, bool unbiased = true, bool normalizeWeights = true)
   {
     return sqrt(var<InputType, OutputType>(v1, w, unbiased, normalizeWeights));
   }
@@ -1537,7 +1537,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cor(const std::vector<InputType>& v1, const std::vector<InputType>& v2) throw (DimensionException)
+  static OutputType cor(const std::vector<InputType>& v1, const std::vector<InputType>& v2)
   {
     return cov<InputType, OutputType>(v1, v2)
            / ( sd<InputType, OutputType>(v1) * sd<InputType, OutputType>(v2) );
@@ -1552,7 +1552,7 @@ public:
    * @throw DimensionException If the two std::vector do not have the same length.
    */
   template<class InputType, class OutputType>
-  static OutputType cor(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w, bool normalizeWeights = true) throw (DimensionException)
+  static OutputType cor(const std::vector<InputType>& v1, const std::vector<InputType>& v2, const std::vector<InputType>& w, bool normalizeWeights = true)
   {
     if (normalizeWeights)
     {
@@ -1639,7 +1639,7 @@ public:
    * @throw DimensionException if the two vectors do not have the same lengths.
    */
   template<class InputType, class OutputType>
-  static OutputType miDiscrete(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
+  static OutputType miDiscrete(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818)
   {
     if (v1.size() != v2.size())
       throw DimensionException("VectorTools::miDiscrete. The two samples must have the same length.", v2.size(), v1.size());
@@ -1718,7 +1718,7 @@ public:
    * @throw DimensionException if the two vectors do not have the same lengths.
    */
   template<class InputType, class OutputType>
-  static OutputType miContinuous(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818) throw (DimensionException)
+  static OutputType miContinuous(const std::vector<InputType>& v1, const std::vector<InputType>& v2, double base = 2.7182818)
   {
     if (v1.size() != v2.size())
       throw DimensionException("VectorTools::miContinuous. The two samples must have the same length.", v2.size(), v1.size());

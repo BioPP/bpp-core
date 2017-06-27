@@ -70,7 +70,7 @@ namespace bpp
      * @param delimiters Chars that must be considered as delimiters.
      * @param solid      If true, delimiters is considered as a single bloc delimiter.
      */
-    NestedStringTokenizer(const std::string& s, const std::string& open, const std::string& end, const std::string& delimiters = " \t\n\f\r", bool solid = false) throw (Exception);
+    NestedStringTokenizer(const std::string& s, const std::string& open, const std::string& end, const std::string& delimiters = " \t\n\f\r", bool solid = false);
 		
     virtual ~NestedStringTokenizer() {}
 	
@@ -82,7 +82,7 @@ namespace bpp
      *
      * @return The next token if there is one.
      */
-    const std::string& nextToken() throw (Exception);
+    const std::string& nextToken();
 
 
     /**

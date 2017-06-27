@@ -106,9 +106,9 @@ namespace bpp
     
   public:
 		
-    void doInit(const ParameterList& params) throw (Exception);
+    void doInit(const ParameterList& params);
 		
-    double doStep() throw (Exception);
+    double doStep();
 
   protected:
     DerivableFirstOrder* getFunction_()

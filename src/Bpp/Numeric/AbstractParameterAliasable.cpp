@@ -111,7 +111,6 @@ AbstractParameterAliasable::~AbstractParameterAliasable()
 }
 
 void AbstractParameterAliasable::aliasParameters(const std::string& p1, const std::string& p2)
-throw (ParameterNotFoundException, Exception)
 {
   // In case this is the first time we call this method:
   if (getNumberOfParameters() > 0 && independentParameters_.size() == 0)
@@ -214,7 +213,6 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
 
 
 void AbstractParameterAliasable::unaliasParameters(const std::string& p1, const std::string& p2)
-throw (ParameterNotFoundException, Exception)
 {
   if (!hasParameter(p1))
     throw ParameterNotFoundException("AbstractParameterAliasable::unaliasParameters", p1);

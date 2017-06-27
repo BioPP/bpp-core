@@ -335,7 +335,7 @@ public:
    * If B is nonconformant or LU is singular, an Exception is raised.
    *
    */
-  Real solve (const Matrix<Real>& B, Matrix<Real>& X) const throw (BadIntegerException, ZeroDivisionException)
+  Real solve (const Matrix<Real>& B, Matrix<Real>& X) const
   {
     /* Dimensions: A is mxn, X is nxk, B is mxk */
 
@@ -409,7 +409,7 @@ public:
    *
    * If B is nonconformant or LU is singular, an Exception is raised.
    */
-  Real solve (const std::vector<Real>& b, std::vector<Real>& x)  const throw (BadIntegerException, ZeroDivisionException)
+  Real solve (const std::vector<Real>& b, std::vector<Real>& x)  const
   {
     /* Dimensions: A is mxn, X is nxk, B is mxk */
 

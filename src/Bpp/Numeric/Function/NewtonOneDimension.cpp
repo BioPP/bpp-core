@@ -57,7 +57,7 @@ NewtonOneDimension::NewtonOneDimension(DerivableSecondOrder* function) :
 
 /******************************************************************************/
   
-void NewtonOneDimension::doInit(const ParameterList& params) throw (Exception)
+void NewtonOneDimension::doInit(const ParameterList& params)
 {
   // Set the initial value (no use here! Use setInitialValues() instead).
   if (params.size() != 1)
@@ -69,7 +69,7 @@ void NewtonOneDimension::doInit(const ParameterList& params) throw (Exception)
 
 /******************************************************************************/
 
-double NewtonOneDimension::doStep() throw (Exception)
+double NewtonOneDimension::doStep()
 {
   double movement;  
   ParameterList newPoint = getParameters();

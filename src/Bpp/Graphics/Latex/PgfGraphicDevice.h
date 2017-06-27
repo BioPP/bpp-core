@@ -93,13 +93,13 @@ class PgfGraphicDevice:
     void setCurrentBackgroundColor(const RGBColor& color);
     void setCurrentFont(const Font& font);
     void setCurrentPointSize(unsigned int size);
-    void setCurrentLineType(short type) throw (Exception);
+    void setCurrentLineType(short type);
     void setCurrentLayer(int layerIndex);
    
     void drawLine(double x1, double y1, double x2, double y2);
     void drawRect(double x, double y, double width, double height, short fill = FILL_EMPTY);
     void drawCircle(double x, double y, double radius, short fill = FILL_EMPTY);
-    void drawText(double x, double y, const std::string & text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0) throw (UnvalidFlagException);
+    void drawText(double x, double y, const std::string & text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0);
     void comment(const std::string& text)
     {
       content_.push_back("%" + text);

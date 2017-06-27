@@ -65,7 +65,7 @@ BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function) :
 
 /******************************************************************************/
 
-void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
+void BfgsMultiDimensions::doInit(const ParameterList& params)
 {
   size_t nbParams = params.size();
   p_.resize(nbParams);
@@ -123,7 +123,7 @@ void BfgsMultiDimensions::doInit(const ParameterList& params) throw (Exception)
 
 /******************************************************************************/
 
-double BfgsMultiDimensions::doStep() throw (Exception)
+double BfgsMultiDimensions::doStep()
 {
   double f;
   size_t n = getParameters().size();

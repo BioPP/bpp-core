@@ -55,7 +55,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   bool centered,
   bool scaled,
   double tol,
-  bool verbose) throw (Exception) :
+  bool verbose) :
   DualityDiagram(),
   columnMeans_(),
   columnSd_()
@@ -85,7 +85,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   bool centered,
   bool scaled,
   double tol,
-  bool verbose) throw (Exception) :
+  bool verbose) :
   DualityDiagram(),
   columnMeans_(),
   columnSd_()
@@ -117,7 +117,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
 
 /******************************************************************************/
 
-void PrincipalComponentAnalysis::center(Matrix<double>& matrix, const vector<double>& rowW) throw (Exception)
+void PrincipalComponentAnalysis::center(Matrix<double>& matrix, const vector<double>& rowW)
 {
   size_t nRow = matrix.getNumberOfRows();
   size_t nCol = matrix.getNumberOfColumns();
@@ -148,7 +148,7 @@ void PrincipalComponentAnalysis::center(Matrix<double>& matrix, const vector<dou
 
 /******************************************************************************/
 
-void PrincipalComponentAnalysis::scale(Matrix<double>& matrix, const vector<double>& rowW) throw (Exception)
+void PrincipalComponentAnalysis::scale(Matrix<double>& matrix, const vector<double>& rowW)
 {
   size_t nRow = matrix.getNumberOfRows();
   size_t nCol = matrix.getNumberOfColumns();

@@ -46,7 +46,6 @@ using namespace std;
 /******************************************************************************/
 
 void DirectionFunction::setParameters(const ParameterList & params)
-  throw (ParameterNotFoundException, ConstraintException)
 {
   params_ = params;
   double x = params_[0].getValue();
@@ -60,14 +59,14 @@ void DirectionFunction::setParameters(const ParameterList & params)
 
 /******************************************************************************/
 
-double DirectionFunction::getValue() const throw (Exception)
+double DirectionFunction::getValue() const
 {
   return function_->getValue();
 }
 
 /******************************************************************************/
 
-const ParameterList & DirectionFunction::getParameters() const throw (Exception)
+const ParameterList & DirectionFunction::getParameters() const
 {
   return params_;
 }

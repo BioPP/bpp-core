@@ -150,7 +150,7 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
 
 /******************************************************************************/
 	
-void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
+void AbstractOptimizer::init(const ParameterList& params)
 {
   if (!function_) throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
   //We do this in order to keep original constraints:
@@ -185,7 +185,7 @@ void AbstractOptimizer::init(const ParameterList& params) throw (Exception)
 
 /******************************************************************************/
 
-double AbstractOptimizer::step() throw (Exception)
+double AbstractOptimizer::step()
 {
   currentValue_ = doStep();
   printPoint(parameters_, currentValue_);
@@ -205,7 +205,7 @@ double AbstractOptimizer::step() throw (Exception)
 
 /**************************************************************************/
 
-double AbstractOptimizer::optimize() throw (Exception)
+double AbstractOptimizer::optimize()
 {
   if (!isInitialized_)
     throw Exception("AbstractOptimizer::optimize. Optimizer not initialized: call the 'init' method first!");

@@ -51,7 +51,7 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
     HmmStateAlphabet* hiddenAlphabet,
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
-    const std::string& prefix) throw (Exception):
+    const std::string& prefix):
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
@@ -357,7 +357,7 @@ Vdouble RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(siz
 }
 
 
-void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception)
+void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const
 {
   size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);

@@ -83,7 +83,7 @@ class ParameterException :
       return *this;
     }
 	
-		virtual ~ParameterException() throw () {}
+		virtual ~ParameterException() {}
 		
 	public:
 		/**
@@ -115,7 +115,7 @@ class ConstraintException : public ParameterException
 		 */	
 		ConstraintException(const std::string& text, const Parameter* param, double badValue);
 
-		virtual ~ConstraintException() throw () {}
+		virtual ~ConstraintException() {}
 	
 	public:
 		/**
@@ -147,7 +147,7 @@ class ParameterNotFoundException : public Exception
 		 */	
 		ParameterNotFoundException(const std::string& text, const std::string& param = "");
 	
-		virtual ~ParameterNotFoundException() throw () {}
+		virtual ~ParameterNotFoundException() {}
 		
 	public:
 		/**

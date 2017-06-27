@@ -54,8 +54,7 @@ ParameterEvent::ParameterEvent(Parameter* parameter): parameter_(parameter) {}
 
 /** Constructors: *************************************************************/
 
-Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision)
-  throw (ConstraintException) :
+Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision) :
   name_(name), value_(0), precision_(0), constraint_(constraint), attach_(attachConstraint), listeners_(), listenerAttach_()
 {
   // This may throw a ConstraintException:
@@ -63,8 +62,7 @@ Parameter::Parameter(const std::string& name, double value, Constraint* constrai
   setPrecision(precision);
 }
 
-Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision)
-  throw (ConstraintException) :
+Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision) :
   name_(name), value_(0), precision_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
 {
   // This may throw a ConstraintException:
@@ -120,7 +118,7 @@ Parameter::~Parameter()
 
 /** Value: ********************************************************************/
 
-void Parameter::setValue(double value) throw (ConstraintException)
+void Parameter::setValue(double value)
 {
   if (std::abs(value-value_)>precision_/2){
     if (constraint_ && !constraint_->isCorrect(value)) 

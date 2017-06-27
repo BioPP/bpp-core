@@ -66,7 +66,7 @@ DownhillSimplexMethod::DownhillSimplexMethod(Function* function):
 
 /******************************************************************************/
 
-void DownhillSimplexMethod::doInit(const ParameterList& params) throw (Exception)
+void DownhillSimplexMethod::doInit(const ParameterList& params)
 {
 	size_t nDim = getParameters().size();
 	nbEval_ = 0;
@@ -100,7 +100,7 @@ void DownhillSimplexMethod::doInit(const ParameterList& params) throw (Exception
 	
 /******************************************************************************/
 
-double DownhillSimplexMethod::doStep() throw (Exception)
+double DownhillSimplexMethod::doStep()
 {
 	// The number of dimensions of the parameter space:
 	size_t nDim = simplex_.getDimension();
@@ -175,7 +175,7 @@ double DownhillSimplexMethod::doStep() throw (Exception)
 
 /******************************************************************************/
 
-double DownhillSimplexMethod::optimize() throw (Exception)
+double DownhillSimplexMethod::optimize()
 {
   AbstractOptimizer::optimize();
 

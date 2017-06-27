@@ -81,7 +81,7 @@ public:
    * @return A pointer toward a new IDiscreteDistribution object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual IDiscreteDistribution* createReader(const std::string& format) throw (Exception);
+  virtual IDiscreteDistribution* createReader(const std::string& format);
   
   /**
    * @brief Get a new dynamically created ODiscreteDistribution object.
@@ -90,7 +90,7 @@ public:
    * @return A pointer toward a new ODiscreteDistribution object.
    * @throw Exception If the format name do not match any available format.
    */
-  virtual ODiscreteDistribution* createWriter(const std::string& format) throw (Exception);
+  virtual ODiscreteDistribution* createWriter(const std::string& format);
 };
 
 } //end of namespace bpp.
