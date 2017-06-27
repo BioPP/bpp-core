@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2006-05-04 10:21:00
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -43,9 +43,10 @@
 #ifndef BPP_BPPSTRING_H
 #define BPP_BPPSTRING_H
 
-#include <Bpp/Clonable.h>
 #include <iosfwd>
 #include <string>
+
+#include "Clonable.h"
 
 namespace bpp
 {

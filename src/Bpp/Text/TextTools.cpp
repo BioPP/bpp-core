@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2003-08-08 12:57:50
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -40,13 +40,14 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Exceptions.h>
-#include <Bpp/Numeric/IntegerTools.h>
-#include <Bpp/Text/TextTools.h>
 #include <algorithm>
 #include <cctype>
 #include <iterator>
 #include <vector>
+
+#include "../Exceptions.h"
+#include "../Numeric/IntegerTools.h"
+#include "TextTools.h"
 
 namespace bpp
 {

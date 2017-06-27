@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2008-04-07 15:14:00
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -43,9 +43,10 @@
 #ifndef BPP_BPPVECTOR_H
 #define BPP_BPPVECTOR_H
 
-#include <Bpp/Clonable.h>
 #include <utility>
 #include <vector>
+
+#include "Clonable.h"
 
 namespace bpp
 {

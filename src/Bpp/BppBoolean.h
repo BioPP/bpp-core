@@ -3,7 +3,7 @@
 // Authors:
 //   Julien Dutheil
 //   Francois Gindraud (2017)
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -42,8 +42,9 @@
 #ifndef BPP_BPPBOOLEAN_H
 #define BPP_BPPBOOLEAN_H
 
-#include <Bpp/Clonable.h>
 #include <ostream>
+
+#include "Clonable.h"
 
 namespace bpp
 {

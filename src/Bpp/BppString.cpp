@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2006-05-04 10:21:00
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -40,8 +40,9 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/BppString.h>
 #include <ostream>
+
+#include "BppString.h"
 
 namespace bpp
 {

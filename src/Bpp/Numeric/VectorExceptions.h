@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2003-06-26 00:00:00
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -43,9 +43,10 @@
 #ifndef BPP_NUMERIC_VECTOREXCEPTIONS_H
 #define BPP_NUMERIC_VECTOREXCEPTIONS_H
 
-#include <Bpp/Exceptions.h>
 #include <string>
 #include <vector>
+
+#include "../Exceptions.h"
 
 namespace bpp
 {

@@ -6,7 +6,7 @@
 //   Sylvain Gaillard
 //   Francois Gindraud (2017)
 // Created: 2017-03-28 00:00:00
-// Last modified: 2017-06-26
+// Last modified: 2017-06-27
 //
 
 /*
@@ -42,9 +42,10 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include <Bpp/Exceptions.h>
 #include <string>
 #include <utility>
+
+#include "Exceptions.h"
 
 namespace bpp
 {
