@@ -177,7 +177,8 @@ class BppFile:
         self.license_lines = None
         self.creation_date = None
         self.last_modification_date = None
-        self.includes = []
+        self.rel_includes = []
+        self.abs_includes = []
         self.code_lines = []
         self.has_doctest = False
 
@@ -201,7 +202,7 @@ class BppFile:
         self.license_lines.append (" ".join (elements))
     def add_absolute_include_from_elements (self, elements, comment = None):
         include = " ".join (elements)
-        self.includes.append ((include, comment))
+        self.abs_includes.append ((include, comment))
         print ("Found absolute include: {}".format (include))
     def add_relative_include_from_elements (self, elements, comment = None):
         relative_original_path = pathlib.Path (" ".join (elements))
@@ -209,11 +210,8 @@ class BppFile:
             self.has_doctest = True
             print ("Found doctest include")
         else:
-            absolute_path = self.file_path.parent.joinpath (relative_original_path).resolve ()
-            cleaned_relative_path = absolute_path.relative_to (self.bpp_dir.parent)
-            self.includes.append ((cleaned_relative_path.as_posix (), comment))
-            print ("Found relative include: {} ; converted to absolute: {}".format (
-                relative_original_path, cleaned_relative_path))
+            self.rel_includes.append ((relative_original_path, comment))
+            print ("Found relative include: {}".format (relative_original_path))
 
     # Common parsing functions
     def parse_file_header (self, file_parser):
@@ -327,14 +325,19 @@ class BppFile:
             f.write ("*/\n")
             f.write ("\n")
     def write_file_includes (self, f):
-        self.includes.sort () # Sorted include files
-        def include_line (inc):
+        # Sorted include files
+        self.rel_includes.sort ()
+        self.abs_includes.sort ()
+        def include_line (inc, enclose_path):
             path, comment = inc
+            enclosed_path = enclose_path (path)
             if comment:
-                return "#include <{}> // {}\n".format (path, comment)
+                return "#include {} // {}\n".format (enclosed_path, comment)
             else:
-                return "#include <{}>\n".format (path)
-        f.writelines (include_line (inc) for inc in self.includes)
+                return "#include {}\n".format (enclosed_path)
+        f.writelines (include_line (inc, lambda p : "<{}>".format (p)) for inc in self.abs_includes)
+        f.write ("\n")
+        f.writelines (include_line (inc, lambda p : "\"{}\"".format (p)) for inc in self.rel_includes)
         f.write ("\n")
     def write_file_code (self, f):
         f.writelines ("{}\n".format (l) for l in self.code_lines)
