@@ -65,7 +65,7 @@ namespace bpp
 
       std::map<std::string, std::string>& getParams() { return params_; }
 
-      const std::string& getParam(const std::string& name) const throw (Exception)
+      const std::string& getParam(const std::string& name) const
       {
         if (params_.find(name) == params_.end()) throw Exception("BppApplication::getParam(). Parameter '" + name + "' not found.");
         return params_[name];

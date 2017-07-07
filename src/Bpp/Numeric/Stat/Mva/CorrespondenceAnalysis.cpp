@@ -48,7 +48,7 @@ using namespace std;
 CorrespondenceAnalysis::CorrespondenceAnalysis(
   const Matrix<double>& data,
   unsigned int nbAxes,
-  double tol, bool verbose) throw (Exception) :
+  double tol, bool verbose) :
   DualityDiagram(),
   n_()
 {

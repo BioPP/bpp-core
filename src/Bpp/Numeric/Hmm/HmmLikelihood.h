@@ -90,7 +90,7 @@ namespace bpp
     virtual const HmmEmissionProbabilities& getHmmEmissionProbabilities() const = 0;
     virtual HmmEmissionProbabilities& getHmmEmissionProbabilities() = 0;
 
-    virtual void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception) = 0;
+    virtual void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const = 0;
 
     virtual Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const = 0;
 
@@ -165,7 +165,7 @@ namespace bpp
     
     bool enableFirstOrderDerivatives() const { return true;}
 
-    double getFirstOrderDerivative(const std::string& variable) const throw (Exception);
+    double getFirstOrderDerivative(const std::string& variable) const;
 
     double getDLogLikelihood() const
     {
@@ -187,14 +187,14 @@ namespace bpp
     
     bool enableSecondOrderDerivatives() const {return true;}
 
-    double getSecondOrderDerivative(const std::string& variable) const throw (Exception);
+    double getSecondOrderDerivative(const std::string& variable) const;
   
     double getD2LogLikelihood() const
     {
       return d2LogLik_;
     }
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const throw (Exception) {
+    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const {
       throw (NotImplementedException("AbstractHmmLikelihood::getSecondOrderDerivative is not defined for 2 variables."));
     }
     

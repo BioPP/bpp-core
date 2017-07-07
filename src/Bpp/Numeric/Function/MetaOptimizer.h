@@ -224,9 +224,9 @@ namespace bpp
         optDesc_->getOptimizer(i)->setFunction(function);
     }
 
-    void doInit(const ParameterList& parameters) throw (Exception);
+    void doInit(const ParameterList& parameters);
     
-    double doStep() throw (Exception);
+    double doStep();
 
     /**
      * @return The MetaOptimizerInfos object associated to this optimizer.

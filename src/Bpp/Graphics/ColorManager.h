@@ -75,7 +75,7 @@ namespace bpp
          * @return The color associated to a given code.
          * @throw exception if the code is not valid.
          */
-        virtual const RGBColor& getColor(CodeType& code) const throw (Exception) = 0;
+        virtual const RGBColor& getColor(CodeType& code) const = 0;
 
         /**
          * @return All valid codes.
@@ -168,7 +168,7 @@ namespace bpp
         codes_.push_back(currentCode_);
         return currentCode_;
       }
-      const RGBColor& getColor(unsigned int &code) const throw (Exception)
+      const RGBColor& getColor(unsigned int &code) const
       {
         for(unsigned int i = 0; i < codes_.size(); i++)
         {

@@ -43,13 +43,13 @@ using namespace bpp;
 
 const std::string IoDiscreteDistributionFactory::BPPO_FORMAT = "Bpp0"; 
 
-IDiscreteDistribution* IoDiscreteDistributionFactory::createReader(const std::string& format) throw (Exception)
+IDiscreteDistribution* IoDiscreteDistributionFactory::createReader(const std::string& format)
 {
   if(format == BPPO_FORMAT) return new BppODiscreteDistributionFormat();
   else throw Exception("Format " + format + " is not supported for input.");
 }
   
-ODiscreteDistribution* IoDiscreteDistributionFactory::createWriter(const std::string& format) throw (Exception)
+ODiscreteDistribution* IoDiscreteDistributionFactory::createWriter(const std::string& format)
 {
   if(format == BPPO_FORMAT) return new BppODiscreteDistributionFormat();
   else throw Exception("Format " + format + " is not supported for output.");

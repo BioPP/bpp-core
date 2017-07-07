@@ -168,14 +168,14 @@ namespace bpp
     double getSupCumulativeProbability(double category) const;
     double getSSupCumulativeProbability(double category) const;
     double rand() const;
-    double randC() const throw (Exception) { throw Exception("AbstractDiscreteDistribution::randC. No continuous version available for this distribution."); }
+    double randC() const { throw Exception("AbstractDiscreteDistribution::randC. No continuous version available for this distribution."); }
 
     /*
      *@return value of the internal bound
      *
      */
     
-    double getBound(size_t i) const throw (IndexOutOfBoundsException)
+    double getBound(size_t i) const
     {
       if (i >= numberOfCategories_ - 1)
         throw IndexOutOfBoundsException("AbstractDiscreteDistribution::getBound(i)", i , 0, numberOfCategories_-1);

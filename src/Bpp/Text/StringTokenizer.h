@@ -91,7 +91,7 @@ namespace bpp
      *
      * @return The next token if there is one.
      */
-    const std::string& nextToken() throw (Exception)
+    const std::string& nextToken()
     {
       if (!hasMoreToken()) throw Exception("No more token in tokenizer.");
       return tokens_[currentPosition_++];

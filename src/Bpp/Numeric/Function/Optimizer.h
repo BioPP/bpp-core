@@ -139,7 +139,7 @@ namespace bpp
      * @param params The initial values of parameters.
      * @throw Exception If a problem occured during initialization.
      */
-    virtual void init(const ParameterList& params) throw (Exception) = 0;
+    virtual void init(const ParameterList& params) = 0;
 
     /**
      * @return 'true' if this optimizer has been initialized.
@@ -152,7 +152,7 @@ namespace bpp
      * @return the value of the function after this step.
      * @throw Exception If a problem occured during optimization or if the optimizer has not been initialized.
      */
-    virtual double step() throw (Exception) = 0;
+    virtual double step() = 0;
 
     /**
      * @return The parameters with their current values.
@@ -170,7 +170,7 @@ namespace bpp
      * @return The value of the function at the point specified by _parameters.
      * @throw NullPointerException If no function is associated with this optimizer.
      */
-      virtual double getFunctionValue() const throw (NullPointerException) = 0;
+      virtual double getFunctionValue() const = 0;
 		
     /**
      * @brief Perform as many optimization steps untill the stop condition is met.
@@ -178,7 +178,7 @@ namespace bpp
      * @return The value of the function after optimization is completed.
      * @throw Exception If a problem occured during optimization or if the optimizer has not been initialized.
      */
-    virtual double optimize() throw (Exception) = 0;
+    virtual double optimize() = 0;
 	
     /**
      * @brief Set the function to optimize.

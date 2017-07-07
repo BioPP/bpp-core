@@ -67,7 +67,7 @@ class ColorSet
      * @return The color associated to the given name.
      * @throw Exception if the name is not assigned to any color.
      */
-    virtual const RGBColor& getColor(const std::string& name) const throw (Exception) = 0;
+    virtual const RGBColor& getColor(const std::string& name) const = 0;
 
     /**
      * @brief Get the ith color object in the set.
@@ -76,7 +76,7 @@ class ColorSet
      * @return The color associated to the given index.
      * @throw IndexOutOfBoundsException if the index is not assigned to any color.
      */
-    virtual const RGBColor& getColor(unsigned int index) const throw (IndexOutOfBoundsException) = 0;
+    virtual const RGBColor& getColor(unsigned int index) const = 0;
 
     /**
      * @return All valid color names.
@@ -106,14 +106,14 @@ class AbstractColorSet:
     virtual ~AbstractColorSet() {}
 
   public:
-    const RGBColor& getColor(const std::string& name) const throw (Exception)
+    const RGBColor& getColor(const std::string& name) const
     {
       std::map<std::string, RGBColor>::const_iterator it = colors_.find(name);
       if (it != colors_.end()) return it->second;
       else throw Exception("AbstractColorSet::getColor(name): no color with name " + name);
     }
 
-    const RGBColor& getColor(unsigned int index) const throw (IndexOutOfBoundsException)
+    const RGBColor& getColor(unsigned int index) const
     {
       if (index >= colors_.size()) throw IndexOutOfBoundsException("AbstractColorSet::getColor(index): invalid index.", index, 0, colors_.size() - 1);
       std::map<std::string, RGBColor>::const_iterator it = colors_.begin();

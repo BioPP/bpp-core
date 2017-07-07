@@ -174,7 +174,6 @@ void AttributesTools::resolveVariables(
   char varCode,
   char varBeg,
   char varEnd)
-throw (Exception)
 {
   // Now resolve any variable:
   for (map<string, string>::iterator it = am.begin(); it != am.end(); it++)
@@ -241,7 +240,7 @@ std::string AttributesTools::removeComments(
 
 /******************************************************************************/
 
-std::map<std::string, std::string> AttributesTools::parseOptions(int args, char** argv) throw (Exception)
+std::map<std::string, std::string> AttributesTools::parseOptions(int args, char** argv)
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(

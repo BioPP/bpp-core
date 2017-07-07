@@ -57,7 +57,7 @@ NewtonBacktrackOneDimension::NewtonBacktrackOneDimension(Function* function, dou
 
 /******************************************************************************/
   
-void NewtonBacktrackOneDimension::doInit(const ParameterList& params) throw (Exception)
+void NewtonBacktrackOneDimension::doInit(const ParameterList& params)
 {
   // Set the initial value (no use here! Use setInitialValues() instead).
   if(params.size() != 1) throw Exception("NewtonBacktrackOneDimension::init(). This optimizer only deals with one parameter.");
@@ -69,7 +69,7 @@ void NewtonBacktrackOneDimension::doInit(const ParameterList& params) throw (Exc
 
 /******************************************************************************/
 
-double NewtonBacktrackOneDimension::doStep() throw (Exception)
+double NewtonBacktrackOneDimension::doStep()
 {
   if (alam_<alamin_){
     getParameter_(0).setValue(0);

@@ -134,7 +134,7 @@ namespace bpp
      * @throw DimensionException If M is not a square matrix.
      */
     template<class Scalar>
-    static void diag(const Matrix<Scalar>& M, std::vector<Scalar>& O) throw (DimensionException)
+    static void diag(const Matrix<Scalar>& M, std::vector<Scalar>& O)
     {
       size_t nc = M.getNumberOfColumns();
       size_t nr = M.getNumberOfRows();
@@ -199,7 +199,7 @@ namespace bpp
      * @param O [out] The dot product of two matrices.
      */
     template<class Scalar>
-    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
+    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -233,7 +233,7 @@ namespace bpp
      * @throw DimensionException If matrices have not the appropriate size.
      */
     template<class Scalar>
-    static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
+    static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const Matrix<Scalar>& B, Matrix<Scalar>& O)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -272,7 +272,7 @@ namespace bpp
      * @throw DimensionException If matrices have not the appropriate size.
      */
     template<class Scalar>
-    static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const std::vector<Scalar>& U, const std::vector<Scalar>& L, const Matrix<Scalar>& B, Matrix<Scalar>& O) throw (DimensionException)
+    static void mult(const Matrix<Scalar>& A, const std::vector<Scalar>& D, const std::vector<Scalar>& U, const std::vector<Scalar>& L, const Matrix<Scalar>& B, Matrix<Scalar>& O)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -310,7 +310,7 @@ namespace bpp
      */
     
     template<class MatrixA, class MatrixB>
-    static void add(MatrixA& A, const MatrixB& B) throw (DimensionException)
+    static void add(MatrixA& A, const MatrixB& B)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -338,7 +338,7 @@ namespace bpp
      * @throw DimensionException If A and B have note the same size.
      */
     template<class MatrixA, class MatrixB, class Scalar>
-    static void add(MatrixA& A, Scalar& x, const MatrixB& B) throw (DimensionException)
+    static void add(MatrixA& A, Scalar& x, const MatrixB& B)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -368,7 +368,7 @@ namespace bpp
      * @throw DimensionException If m is not a square matrix.
      */
     template<class Matrix>
-    static void pow(const Matrix& A, size_t p, Matrix& O) throw (DimensionException)
+    static void pow(const Matrix& A, size_t p, Matrix& O)
     {
       size_t n = A.getNumberOfRows();
       if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
@@ -407,7 +407,7 @@ namespace bpp
      * @throw DimensionException If m is not a square matrix.
      */
     template<class Scalar>
-    static void pow(const Matrix<Scalar>& A, double p, Matrix<Scalar>& O) throw (DimensionException)
+    static void pow(const Matrix<Scalar>& A, double p, Matrix<Scalar>& O)
     {
       size_t n = A.getNumberOfRows();
       if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::pow(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
@@ -429,7 +429,7 @@ namespace bpp
      * @throw DimensionException If m is not a square matrix.
      */
     template<class Scalar>
-    static void exp(const Matrix<Scalar>& A, Matrix<Scalar>& O) throw (DimensionException)
+    static void exp(const Matrix<Scalar>& A, Matrix<Scalar>& O)
     {
       size_t n = A.getNumberOfRows();
       if (n != A.getNumberOfColumns()) throw DimensionException("MatrixTools::exp(). nrows != ncols.", A.getNumberOfColumns(), A.getNumberOfRows());
@@ -451,7 +451,7 @@ namespace bpp
      */
   
     template<class Matrix, class Scalar>
-    static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> > & vO) throw (DimensionException)
+    static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> > & vO)
     {
       size_t n = A.getNumberOfRows();
       if (n != A.getNumberOfColumns())
@@ -688,7 +688,7 @@ namespace bpp
      * @throw DimensionException If A is not a square matrix.
      */
     template<class Scalar>
-    static Scalar inv(const Matrix<Scalar>& A, Matrix<Scalar>& O) throw (DimensionException, ZeroDivisionException)
+    static Scalar inv(const Matrix<Scalar>& A, Matrix<Scalar>& O)
     {
       if (!isSquare(A)) throw DimensionException("MatrixTools::inv(). Matrix A is not a square matrix.", A.getNumberOfRows(), A.getNumberOfColumns());
       LUDecomposition<Scalar> lu(A);
@@ -707,7 +707,7 @@ namespace bpp
      * @throw DimensionException If A is not a square matrix.
      */
     template<class Scalar>
-    static double det(const Matrix<Scalar>& A) throw (DimensionException)
+    static double det(const Matrix<Scalar>& A)
     {
       if (!isSquare(A)) throw DimensionException("MatrixTools::det(). Matrix A is not a square matrix.", A.getNumberOfRows(), A.getNumberOfColumns());
       LUDecomposition<Scalar> lu(A);
@@ -1093,7 +1093,7 @@ namespace bpp
                       std::vector<int> &rowSol, 
                       std::vector<int> &colSol, 
                       std::vector<Scalar> &u, 
-                      std::vector<Scalar> &v) throw (Exception)
+                      std::vector<Scalar> &v)
     {
       size_t dim = assignCost.getNumberOfRows();
       if (assignCost.getNumberOfColumns() != dim)

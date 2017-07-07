@@ -111,7 +111,6 @@ MetaOptimizer::~MetaOptimizer()
 /**************************************************************************/
 
 void MetaOptimizer::doInit(const ParameterList& parameters)
-  throw (Exception)
 {
   optParameters_.resize(optDesc_->getNumberOfOptimizers());
   for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
@@ -155,7 +154,7 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
 
 /**************************************************************************/
 
-double MetaOptimizer::doStep() throw (Exception)
+double MetaOptimizer::doStep()
 {
   stepCount_++;
   

@@ -100,12 +100,12 @@ class PowellMultiDimensions:
 		 *
 		 * @{
 		 */		
-		double optimize() throw (Exception);
+		double optimize();
 		/** @} */
 
-		void doInit(const ParameterList & params) throw (Exception);
+		void doInit(const ParameterList & params);
 		
-    double doStep() throw (Exception);	
+    double doStep();	
 	
 };
 

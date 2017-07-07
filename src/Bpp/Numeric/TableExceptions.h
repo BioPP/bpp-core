@@ -65,7 +65,7 @@ namespace bpp
   public:
     TableNameNotFoundException(const std::string & text, const std::string & name) :
       Exception("TableNameNotFoundException: " + name + ". " + text), _name(name) {}
-    virtual ~TableNameNotFoundException() throw() {}
+    virtual ~TableNameNotFoundException() {}
 
   public:
     std::string getName() const { return _name; }		
@@ -80,7 +80,7 @@ namespace bpp
   public:
     TableRowNameNotFoundException(const std::string & text, const std::string & name) :
       TableNameNotFoundException("TableRowNameNotFoundException: " + name + ". " + text, name) {}
-    virtual ~TableRowNameNotFoundException() throw() {}
+    virtual ~TableRowNameNotFoundException() {}
   };
 
 /**
@@ -92,7 +92,7 @@ namespace bpp
   public:
     TableColumnNameNotFoundException(const std::string & text, const std::string & name) :
       TableNameNotFoundException("TableColumnNameNotFoundException: " + name + ". " + text, name) {}
-    virtual ~TableColumnNameNotFoundException() throw() {}
+    virtual ~TableColumnNameNotFoundException() {}
   };
 
 /**
@@ -105,7 +105,7 @@ namespace bpp
   public:
     NoTableRowNamesException(const std::string & text) :
       Exception("NoTableRowNamesException: "+text) {}
-    virtual ~NoTableRowNamesException() throw() {}
+    virtual ~NoTableRowNamesException() {}
   };
 
 /**
@@ -118,7 +118,7 @@ namespace bpp
   public:
     NoTableColumnNamesException(const std::string & text) :
       Exception("NoTableColumnNamesException: "+text) {}
-    virtual ~NoTableColumnNamesException() throw() {}
+    virtual ~NoTableColumnNamesException() {}
   };
 
 /**
@@ -130,7 +130,7 @@ namespace bpp
   public:
     TableRowNamesException(const std::string & text) :
       Exception("TableRowNamesException: "+text) {}
-    virtual ~TableRowNamesException() throw() {}
+    virtual ~TableRowNamesException() {}
   };
 
 /**
@@ -142,7 +142,7 @@ namespace bpp
   public:
     TableColumnNamesException(const std::string & text) :
       Exception("TableColumnNamesException: "+text) {}
-    virtual ~TableColumnNamesException() throw() {}
+    virtual ~TableColumnNamesException() {}
   };
 
 /**
@@ -154,7 +154,7 @@ namespace bpp
   public:
     DuplicatedTableRowNameException(const std::string & text) :
       Exception("DuplicatedTableRowNameException: "+text) {}
-    virtual ~DuplicatedTableRowNameException() throw() {}
+    virtual ~DuplicatedTableRowNameException() {}
   };
 
 /**
@@ -166,7 +166,7 @@ namespace bpp
   public:
     DuplicatedTableColumnNameException(const std::string & text) :
       Exception("DuplicatedTableColumnNameException: "+text) {}
-    virtual ~DuplicatedTableColumnNameException() throw() {}
+    virtual ~DuplicatedTableColumnNameException() {}
   };
 
 } //end of namespace bpp.

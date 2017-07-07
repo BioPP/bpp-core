@@ -72,7 +72,7 @@ class TransformedParameter:
      * @param value Parameter value in original coordinates.
      * @throw ConstraintException if the value is not correct.
      */
-    virtual void setOriginalValue(double value) throw (ConstraintException) = 0;
+    virtual void setOriginalValue(double value) = 0;
 
     /**
      * @return The current value of the parameter in orignal coordinates.
@@ -84,14 +84,14 @@ class TransformedParameter:
      * @throw NotImplementedException if the transformation does not support derivation
      * or if the derivation was not implemented.
      */
-    virtual double getFirstOrderDerivative() const throw (NotImplementedException) = 0;
+    virtual double getFirstOrderDerivative() const = 0;
     
     /**
      * @return The second order derivative of the transformation at the original point.
      * @throw NotImplementedException if the transformation does not support derivation
      * or if the derivation was not implemented.
      */
-    virtual double getSecondOrderDerivative() const throw (NotImplementedException) = 0;
+    virtual double getSecondOrderDerivative() const = 0;
 };
 
 /**
@@ -144,7 +144,7 @@ class RTransformedParameter:
     RTransformedParameter* clone() const { return new RTransformedParameter(*this); }
 
   public:
-    void setOriginalValue(double value) throw (ConstraintException) 
+    void setOriginalValue(double value) 
     {
       if (positive_ ? value <= bound_ : value >= bound_) throw ConstraintException("RTransformedParameter::setValue", this, value);
       if (positive_  & (value < 1 + bound_)) setValue(log(scale_ * (value - bound_)));
@@ -164,7 +164,7 @@ class RTransformedParameter:
         else      return - x / scale_ - 1. + bound_;
     }
 
-    double getFirstOrderDerivative() const throw (NotImplementedException)
+    double getFirstOrderDerivative() const
     {
       double x = getValue();
       if (positive_)
@@ -175,7 +175,7 @@ class RTransformedParameter:
         else      return - 1. / scale_;
     }
 
-    double getSecondOrderDerivative() const throw (NotImplementedException)
+    double getSecondOrderDerivative() const
     {
       double x = getValue();
       if (positive_)
@@ -237,7 +237,7 @@ class IntervalTransformedParameter:
     IntervalTransformedParameter* clone() const { return new IntervalTransformedParameter(*this); }
 
   public:
-    void setOriginalValue(double value) throw (ConstraintException) 
+    void setOriginalValue(double value) 
     {
       if (value <= lowerBound_ || value >= upperBound_) throw ConstraintException("IntervalTransformedParameter::setValue", this, value);
       setValue(hyper_ ?
@@ -255,7 +255,7 @@ class IntervalTransformedParameter:
     }
 
 
-    double getFirstOrderDerivative() const throw (NotImplementedException)
+    double getFirstOrderDerivative() const
     {
       double x = getValue();
       double x2 = hyper_ ?
@@ -263,7 +263,7 @@ class IntervalTransformedParameter:
         (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (pow(x / scale_, 2) + 1.));
       return x2;
     }
-    double getSecondOrderDerivative() const throw (NotImplementedException)
+    double getSecondOrderDerivative() const
     {
       double x = getValue();
       double x2 = hyper_ ?
@@ -290,7 +290,7 @@ class PlaceboTransformedParameter:
     PlaceboTransformedParameter* clone() const { return new PlaceboTransformedParameter(*this); }
 
   public:
-    void setOriginalValue(double value) throw (ConstraintException) 
+    void setOriginalValue(double value) 
     {
       setValue(value);
     }
@@ -300,9 +300,9 @@ class PlaceboTransformedParameter:
       return getValue();
     }
     
-    double getFirstOrderDerivative() const throw (NotImplementedException) { return 1.; }
+    double getFirstOrderDerivative() const { return 1.; }
     
-    double getSecondOrderDerivative() const throw (NotImplementedException) { return 0.; }
+    double getSecondOrderDerivative() const { return 0.; }
 };
 
 

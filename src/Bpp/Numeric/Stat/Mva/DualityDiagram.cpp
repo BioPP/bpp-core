@@ -52,7 +52,7 @@ DualityDiagram::DualityDiagram(
   const vector<double>& rowWeights,
   const vector<double>& colWeights,
   unsigned int nbAxes,
-  double tol, bool verbose) throw (Exception) :
+  double tol, bool verbose) :
   rowWeights_(rowWeights),
   colWeights_(colWeights),
   nbAxes_(nbAxes),
@@ -71,7 +71,7 @@ void DualityDiagram::check_(
   const Matrix<double>& matrix,
   const vector<double>& rowWeights,
   const vector<double>& colWeights,
-  unsigned int nbAxes) throw (Exception)
+  unsigned int nbAxes)
 {
   size_t rowNb = matrix.getNumberOfRows();
   size_t colNb = matrix.getNumberOfColumns();
@@ -102,7 +102,7 @@ void DualityDiagram::setData(
   const vector<double>& rowWeights,
   const vector<double>& colWeights,
   unsigned int nbAxes,
-  double tol, bool verbose) throw (Exception)
+  double tol, bool verbose)
 {
   check_(matrix, rowWeights, colWeights, verbose);
   rowWeights_ = rowWeights;

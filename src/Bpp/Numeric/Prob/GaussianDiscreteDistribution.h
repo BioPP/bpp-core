@@ -85,7 +85,7 @@ public:
 
   void fireParameterChanged(const ParameterList & parameters);
   
-  double randC() const throw (Exception)
+  double randC() const
   {
     return RandomTools::randGaussian(mu_,sigma_);
   }

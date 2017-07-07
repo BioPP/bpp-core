@@ -120,14 +120,13 @@ public:
   ThreePointsNumericalDerivative* clone() const { return new ThreePointsNumericalDerivative(*this); }
 
 public:
-  double getValue() const throw (Exception)
+  double getValue() const
   {
     return f2_;
   }
 
 protected:
-  void updateDerivatives(const ParameterList parameters)
-  throw (ParameterNotFoundException, ConstraintException);
+  void updateDerivatives(const ParameterList parameters);
 };
 } // end of namespace bpp.
 

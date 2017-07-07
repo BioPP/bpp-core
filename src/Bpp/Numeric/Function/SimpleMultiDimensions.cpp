@@ -65,7 +65,7 @@ void SimpleMultiDimensions::setFunction(Function* function)
 
 /******************************************************************************/
 
-void SimpleMultiDimensions::doInit(const ParameterList& params) throw (Exception)
+void SimpleMultiDimensions::doInit(const ParameterList& params)
 {
   nbParams_ = params.size();
   if (nbParams_ == 0) return;
@@ -84,7 +84,7 @@ void SimpleMultiDimensions::doInit(const ParameterList& params) throw (Exception
 
 /******************************************************************************/
 
-double SimpleMultiDimensions::doStep() throw (Exception)
+double SimpleMultiDimensions::doStep()
 {
   double f = getFunction()->getValue();
   for (unsigned int i = 0; i < nbParams_; i++)

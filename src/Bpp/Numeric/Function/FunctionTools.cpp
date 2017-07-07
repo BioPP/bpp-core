@@ -46,7 +46,7 @@ using namespace bpp;
 #include <algorithm>
 using namespace std;
 
-void ParameterGrid::addDimension(const std::string& name, const Vdouble& values) throw (Exception)
+void ParameterGrid::addDimension(const std::string& name, const Vdouble& values)
 {
   if (find(names_.begin(), names_.end(), name) != names_.end()) throw Exception("ParameterGrid::addDimension(). A dimension with name '" + name + "' already exists in the grid.");
   if (values.size() == 0) throw Exception("ParameterGrid::addDimension(). Empty vector given! The dimension should at least contain one point.");
@@ -54,7 +54,7 @@ void ParameterGrid::addDimension(const std::string& name, const Vdouble& values)
   grid_.push_back(values);
 }
  
-const Vdouble& ParameterGrid::getPointsForDimension(const std::string& name) const throw (Exception)
+const Vdouble& ParameterGrid::getPointsForDimension(const std::string& name) const
 {
   for(unsigned int i = 0; i < names_.size(); i++)
     if (names_[i] == name)
@@ -62,7 +62,7 @@ const Vdouble& ParameterGrid::getPointsForDimension(const std::string& name) con
   throw Exception("ParameterGrid::getPointsForDimension(). No dimension with name '" + name + "' was found in the grid.");
 }
 
-const Vdouble& ParameterGrid::getPointsForDimension(unsigned int i) const throw (IndexOutOfBoundsException)
+const Vdouble& ParameterGrid::getPointsForDimension(unsigned int i) const
 {
   if (i >= names_.size()) throw IndexOutOfBoundsException("ParameterGrid::getPointsForDimension().", i, 0, names_.size() - 1);
   return grid_[i];
@@ -79,7 +79,7 @@ size_t ParameterGrid::getTotalNumberOfPoints() const
 
 VVdouble* FunctionTools::computeGrid(
     Function& function,
-    const ParameterGrid& grid) throw (Exception)
+    const ParameterGrid& grid)
 {
   //Init stuff...
   size_t n = grid.getNumberOfDimensions();

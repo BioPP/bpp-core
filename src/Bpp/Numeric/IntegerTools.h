@@ -1,9 +1,9 @@
 //
-// File: BppBoolean.h
+// File: IntegerTools.h
 // Authors:
-//   Julien Dutheil
 //   Francois Gindraud (2017)
-// Last modified: 2017-06-27
+// Created: 2017-03-28 00:00:00
+// Last modified: 2017-06-26
 //
 
 /*
@@ -39,34 +39,48 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
-#ifndef BPP_BPPBOOLEAN_H
-#define BPP_BPPBOOLEAN_H
+#ifndef BPP_NUMERIC_INTEGERTOOLS_H
+#define BPP_NUMERIC_INTEGERTOOLS_H
 
-#include <ostream>
-
-#include "Clonable.h"
+#include <type_traits>
 
 namespace bpp
 {
-  /** @brief The BppBoolean object class.
- * This class extends the bool type to support the Clonable interface.
- */
-  class BppBoolean : public virtual Clonable
+  /// Namespace for integer utils.
+  namespace IntegerTools
   {
-  private:
-    bool value_;
 
-  public:
-    BppBoolean(bool value = false)
-      : value_(value)
+    /// Returns floor(n/divisor).
+    template <typename T>
+    T divideDown(T n, T divisor) noexcept
     {
+      static_assert (std::is_integral<T>::value, "T must be an integral type");
+      return n / divisor;
     }
 
-    BppBoolean* clone() const { return new BppBoolean(*this); }
+    /// Returns ceil (n/divisor).
+    template <typename T>
+    T divideUp(T n, T divisor) noexcept
+    {
+      static_assert (std::is_integral<T>::value, "T must be an integral type");
+      return divideDown(n + divisor - 1, divisor);
+    }
 
-    const bool getValue() const { return value_; }
-  };
+    /// Round n to previous divisor multiple.
+    template <typename T>
+    T roundDown(T n, T divisor) noexcept
+    {
+      static_assert (std::is_integral<T>::value, "T must be an integral type");
+      return divisor * divideDown(n, divisor);
+    }
 
-  inline std::ostream& operator<<(std::ostream& out, const BppBoolean& s) { return out << s.getValue(); }
+    /// Round n to next divisor multiple.
+    template <typename T>
+    T roundUp(T n, T divisor) noexcept
+    {
+      static_assert (std::is_integral<T>::value, "T must be an integral type");
+      return divisor * divideUp(n, divisor);
+    }
+  }
 } // namespace bpp
-#endif // BPP_BPPBOOLEAN_H
+#endif // BPP_NUMERIC_INTEGERTOOLS_H

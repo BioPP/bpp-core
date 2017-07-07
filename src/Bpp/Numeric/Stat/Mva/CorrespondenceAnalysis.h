@@ -76,15 +76,14 @@ public:
     const Matrix<double>& data,
     unsigned int nbAxes,
     double tol = 0.0000001,
-    bool verbose = true)
-  throw (Exception);
+    bool verbose = true);
 
   virtual ~CorrespondenceAnalysis() {}
 
   CorrespondenceAnalysis* clone() const { return new CorrespondenceAnalysis(*this); }
 
 public:
-  double getSumOfAllValues() const throw (Exception) { return n_; }
+  double getSumOfAllValues() const { return n_; }
 };
 } // end of namespace bpp.
 

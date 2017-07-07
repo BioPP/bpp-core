@@ -160,7 +160,6 @@ class AbstractNumericalDerivative:
     bool enableFirstOrderDerivatives() const { return computeD1_; }
     
     double getFirstOrderDerivative(const std::string& variable) const
-      throw (Exception)
     {
       std::map<std::string, size_t>::iterator it = index_.find(variable);
       if (computeD1_ && it != index_.end())
@@ -183,7 +182,6 @@ class AbstractNumericalDerivative:
     bool enableSecondOrderDerivatives() const { return computeD2_; }
 
     double getSecondOrderDerivative(const std::string& variable) const
-      throw (Exception)
     {
       std::map<std::string, size_t>::iterator it = index_.find(variable);
       if(computeD2_ && it != index_.end())
@@ -196,7 +194,6 @@ class AbstractNumericalDerivative:
     }
 
     double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
-      throw (Exception)
     {
       std::map<std::string, size_t>::iterator it1 = index_.find(variable1);
       std::map<std::string, size_t>::iterator it2 = index_.find(variable2);
@@ -215,40 +212,35 @@ class AbstractNumericalDerivative:
      *
      * @{
      */
-    double f(const ParameterList& parameters) throw (Exception)
+    double f(const ParameterList& parameters)
     {
       setParameters(parameters);
       return getValue();
     }
     void setParameters(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParameters(parameters);
       updateDerivatives(parameters);
     }
     void setAllParametersValues(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setAllParametersValues(parameters);
       updateDerivatives(parameters);
     }
     
     void setParameterValue(const std::string& name, double value)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParameterValue(name, value);
       updateDerivatives(function_->getParameters().subList(name));
     }
     
     void setParametersValues(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     {
       function_->setParametersValues(parameters);
       updateDerivatives(parameters);
     }
     
     bool matchParametersValues(const ParameterList& parameters)
-      throw (ConstraintException)
     {
       bool test = function_->matchParametersValues(parameters);
       updateDerivatives(parameters);

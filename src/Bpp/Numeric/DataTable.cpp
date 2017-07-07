@@ -69,7 +69,7 @@ DataTable::DataTable(size_t nCol) :
   colNames_(0)
 {}
 
-DataTable::DataTable(const std::vector<std::string>& colNames) throw (DuplicatedTableColumnNameException) :
+DataTable::DataTable(const std::vector<std::string>& colNames) :
   nRow_(0),
   nCol_(colNames.size()),
   data_(colNames.size()),
@@ -125,7 +125,7 @@ DataTable::~DataTable()
 /*                             Cell access                                    */
 /******************************************************************************/
 
-string& DataTable::operator()(size_t rowIndex, size_t colIndex) throw (IndexOutOfBoundsException)
+string& DataTable::operator()(size_t rowIndex, size_t colIndex)
 {
   if (colIndex >= nCol_)
     throw IndexOutOfBoundsException("DataTable::operator(size_t, size_t).", colIndex, 0, nCol_ - 1);
@@ -134,7 +134,7 @@ string& DataTable::operator()(size_t rowIndex, size_t colIndex) throw (IndexOutO
   return data_[colIndex][rowIndex];
 }
 
-const string& DataTable::operator()(size_t rowIndex, size_t colIndex) const throw (IndexOutOfBoundsException)
+const string& DataTable::operator()(size_t rowIndex, size_t colIndex) const
 {
   if (colIndex >= nCol_)
     throw IndexOutOfBoundsException("DataTable::operator(size_t, size_t).", colIndex, 0, nCol_ - 1);
@@ -146,7 +146,6 @@ const string& DataTable::operator()(size_t rowIndex, size_t colIndex) const thro
 /******************************************************************************/
 
 string& DataTable::operator()(const string& rowName, const string& colName)
-throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
@@ -165,7 +164,6 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 }
 
 const string& DataTable::operator()(const string& rowName, const string& colName) const
-throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
@@ -186,7 +184,6 @@ throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundE
 /******************************************************************************/
 
 string& DataTable::operator()(const string& rowName, size_t colIndex)
-throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::operator(const string &, size_t).");
@@ -204,7 +201,6 @@ throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsExc
 }
 
 const string& DataTable::operator()(const string& rowName, size_t colIndex) const
-throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::operator(const string &, size_t).");
@@ -224,7 +220,6 @@ throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsExc
 /******************************************************************************/
 
 string& DataTable::operator()(size_t rowIndex, const string& colName)
-throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::operator(size_t, const string &).");
@@ -242,7 +237,6 @@ throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFound
 }
 
 const string& DataTable::operator()(size_t rowIndex, const string& colName) const
-throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::operator(size_t, const string &).");
@@ -264,7 +258,6 @@ throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFound
 /******************************************************************************/
 
 void DataTable::setRowNames(const vector<string>& rowNames)
-throw (DimensionException, DuplicatedTableRowNameException)
 {
   if (!VectorTools::isUnique(rowNames))
   {
@@ -280,14 +273,14 @@ throw (DimensionException, DuplicatedTableRowNameException)
   }
 }
 
-vector<string> DataTable::getRowNames() const throw (NoTableRowNamesException)
+vector<string> DataTable::getRowNames() const
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::getRowNames().");
   return *rowNames_;
 }
 
-string DataTable::getRowName(size_t index) const throw (NoTableRowNamesException, IndexOutOfBoundsException)
+string DataTable::getRowName(size_t index) const
 {
   if (rowNames_ == NULL)
     throw NoTableRowNamesException("DataTable::getRowName(size_t).");
@@ -299,7 +292,6 @@ string DataTable::getRowName(size_t index) const throw (NoTableRowNamesException
 /******************************************************************************/
 
 void DataTable::setColumnNames(const vector<string>& colNames)
-throw (DimensionException, DuplicatedTableColumnNameException)
 {
   if (!VectorTools::isUnique(colNames))
     throw DuplicatedTableColumnNameException("DataTable::setColumnNames(...). Column names must be unique.");
@@ -313,14 +305,14 @@ throw (DimensionException, DuplicatedTableColumnNameException)
   }
 }
 
-vector<string> DataTable::getColumnNames() const throw (NoTableColumnNamesException)
+vector<string> DataTable::getColumnNames() const
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::getColumnNames().");
   return *colNames_;
 }
 
-string DataTable::getColumnName(size_t index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException)
+string DataTable::getColumnName(size_t index) const
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::getColumnName(size_t).");
@@ -334,7 +326,6 @@ string DataTable::getColumnName(size_t index) const throw (NoTableColumnNamesExc
 /******************************************************************************/
 
 vector<string>& DataTable::getColumn(size_t index)
-throw (IndexOutOfBoundsException)
 {
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::getColumn(size_t).", index, 0, nCol_ - 1);
@@ -342,7 +333,6 @@ throw (IndexOutOfBoundsException)
 }
 
 const vector<string>& DataTable::getColumn(size_t index) const
-throw (IndexOutOfBoundsException)
 {
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::getColumn(size_t).", index, 0, nCol_ - 1);
@@ -350,7 +340,6 @@ throw (IndexOutOfBoundsException)
 }
 
 vector<string>& DataTable::getColumn(const string& colName)
-throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
@@ -366,7 +355,6 @@ throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 }
 
 const vector<string>& DataTable::getColumn(const string& colName) const
-throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
   if (colNames_ == NULL)
     throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
@@ -394,7 +382,6 @@ bool DataTable::hasColumn(const string& colName) const
 }
 
 void DataTable::deleteColumn(size_t index)
-throw (IndexOutOfBoundsException)
 {
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::deleteColumn(size_t).", index, 0, nCol_ - 1);
@@ -405,7 +392,6 @@ throw (IndexOutOfBoundsException)
 }
 
 void DataTable::deleteColumn(const string& colName)
-throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 {
   if (!colNames_)
     throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
@@ -423,7 +409,6 @@ throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
 }
 
 void DataTable::addColumn(const vector<string>& newColumn)
-throw (DimensionException, TableColumnNamesException)
 {
   if (colNames_)
     throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
@@ -434,7 +419,6 @@ throw (DimensionException, TableColumnNamesException)
 }
 
 void DataTable::addColumn(const string& colName, const vector<string>& newColumn)
-throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException)
 {
   if (!colNames_)
   {
@@ -457,7 +441,6 @@ throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNam
 /******************************************************************************/
 
 vector<string> DataTable::getRow(size_t index) const
-throw (IndexOutOfBoundsException)
 {
   if (index >= nRow_)
     throw IndexOutOfBoundsException("DataTable::getRow(size_t).", index, 0, nRow_ - 1);
@@ -470,7 +453,6 @@ throw (IndexOutOfBoundsException)
 }
 
 vector<string> DataTable::getRow(const string& rowName) const
-throw (NoTableRowNamesException, TableRowNameNotFoundException)
 {
   if (!rowNames_)
     throw NoTableRowNamesException("DataTable::getRow(const string &).");
@@ -503,7 +485,6 @@ bool DataTable::hasRow(const string& rowName) const
 }
 
 void DataTable::deleteRow(size_t index)
-throw (IndexOutOfBoundsException)
 {
   for (size_t j = 0; j < nCol_; j++)
   {
@@ -518,7 +499,6 @@ throw (IndexOutOfBoundsException)
 }
 
 void DataTable::deleteRow(const string& rowName)
-throw (NoTableRowNamesException, TableRowNameNotFoundException)
 {
   if (!rowNames_)
     throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
@@ -540,7 +520,6 @@ throw (NoTableRowNamesException, TableRowNameNotFoundException)
 }
 
 void DataTable::addRow(const vector<string>& newRow)
-throw (DimensionException, TableRowNamesException)
 {
   if (rowNames_)
     throw TableRowNamesException("DataTable::addRow. Table has row names.");
@@ -554,7 +533,6 @@ throw (DimensionException, TableRowNamesException)
 }
 
 void DataTable::addRow(const string& rowName, const vector<string>& newRow)
-throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameException)
 {
   if (!rowNames_)
   {
@@ -580,7 +558,6 @@ throw (DimensionException, NoTableRowNamesException, DuplicatedTableRowNameExcep
 /******************************************************************************/
 
 DataTable* DataTable::read(istream& in, const string& sep, bool header, int rowNames)
-throw (DimensionException, IndexOutOfBoundsException, DuplicatedTableRowNameException)
 {
   string firstLine  = FileTools::getNextLine(in);
   StringTokenizer st1(firstLine, sep, false, true);

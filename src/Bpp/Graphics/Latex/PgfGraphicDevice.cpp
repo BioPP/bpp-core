@@ -195,7 +195,7 @@ void PgfGraphicDevice::setCurrentPointSize(unsigned int size)
   content_.push_back(oss.str());
 }
 
-void PgfGraphicDevice::setCurrentLineType(short type) throw (Exception)
+void PgfGraphicDevice::setCurrentLineType(short type)
 { 
   AbstractGraphicDevice::setCurrentLineType(type);
   if(type == LINE_SOLID)
@@ -272,7 +272,7 @@ void PgfGraphicDevice::drawCircle(double x, double y, double radius, short fill)
   contentStarted_ = true;
 }
 
-void PgfGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
+void PgfGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle)
 {
   string anchor;
   if(vpos == TEXT_VERTICAL_BOTTOM)
