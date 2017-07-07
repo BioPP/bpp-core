@@ -11,16 +11,16 @@
   for numerical calculus.
 
   This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
+  abiding by the rules of distribution of free software.  You can  use,
   modify and/ or redistribute the software under the terms of the CeCILL
   license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+  "http://www.cecill.info".
 
   As a counterpart to the access to the source code and  rights to copy,
   modify and redistribute granted by the license, users are provided only
   with a limited warranty  and the software's author,  the holder of the
   economic rights,  and the successive licensors  have only  limited
-  liability. 
+  liability.
 
   In this respect, the user's attention is drawn to the risks associated
   with loading,  using,  modifying and/or developing or reproducing the
@@ -29,180 +29,121 @@
   therefore means  that it is reserved for developers  and  experienced
   professionals having in-depth computer knowledge. Users are therefore
   encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and,  more generally, to use and operate it in the
+  same conditions as regards security.
 
   The fact that you are presently reading this means that you have had
   knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include "Parameter.h"
-#include <cmath>
+#include <algorithm>
 
-//From Utils:
-#include "../Text/TextTools.h"
-
-using namespace bpp;
-
-#include <iostream>
-using namespace std;
-
-/******************************************************************************/
-
-ParameterEvent::ParameterEvent(Parameter* parameter): parameter_(parameter) {}
-
-/** Constructors: *************************************************************/
-
-Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision) :
-  name_(name), value_(0), precision_(0), constraint_(constraint), attach_(attachConstraint), listeners_(), listenerAttach_()
+namespace bpp
 {
-  // This may throw a ConstraintException:
-  setValue(value);
-  setPrecision(precision);
-}
+  /******************************************************************************/
 
-Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision) :
-  name_(name), value_(0), precision_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
-{
-  // This may throw a ConstraintException:
-  setValue(value);
-  setPrecision(precision);
-}
+  ParameterEvent::ParameterEvent(Parameter* parameter) noexcept
+    : parameter_(parameter)
+  {
+  }
 
-Parameter::Parameter(const Parameter& p) :
-  name_(p.name_),
-  value_(p.value_),
-  precision_(p.precision_),
-  constraint_(0),
-  attach_(p.attach_),
-  listeners_(p.listeners_),
-  listenerAttach_(p.listenerAttach_)
-{
-  if (p.attach_ && p.constraint_)
-    constraint_ = p.constraint_->clone();
-  else
-    constraint_ = p.constraint_;
-  for (size_t i = 0; i < listeners_.size(); i++)
-    if (listenerAttach_[i])
-      listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
-}
+  /** Constructors: *************************************************************/
 
-Parameter& Parameter::operator=(const Parameter& p)
-{
-  name_           = p.name_;
-  value_          = p.value_;
-  precision_      = p.precision_;
-  attach_         = p.attach_;
-  if (p.attach_ && p.constraint_)
-    constraint_   = p.constraint_->clone();
-  else
-    constraint_   = p.constraint_;
-  listeners_      = p.listeners_;
-  listenerAttach_ = p.listenerAttach_;
-  for (size_t i = 0; i < listeners_.size(); i++)
-    if (listenerAttach_[i])
-      listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
-  return *this;	
-}
+  Parameter::Parameter() = default;
 
-/** Destructor: ***************************************************************/
+  Parameter::Parameter(const std::string& name,
+                       double value,
+                       Constraint* constraint,
+                       bool attachConstraint,
+                       double precision)
+    : name_(name)
+    , constraint_(constraint, ConditionalDeleter<Constraint>{attachConstraint})
+  {
+    // This may throw a ConstraintException:
+    setValue(value);
+    setPrecision(precision);
+  }
 
-Parameter::~Parameter()
-{
-  if (attach_ && constraint_) delete constraint_;
-  for (size_t i = 0; i < listeners_.size(); i++)
-    if (listenerAttach_[i])
-      delete listeners_[i];
-} 
+  Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision)
+    : name_(name)
+    , constraint_(constraint ? constraint->clone() : nullptr)
+  {
+    // This may throw a ConstraintException:
+    setValue(value);
+    setPrecision(precision);
+  }
 
-/** Value: ********************************************************************/
+  Parameter::~Parameter() = default;
 
-void Parameter::setValue(double value)
-{
-  if (std::abs(value-value_)>precision_/2){
-    if (constraint_ && !constraint_->isCorrect(value)) 
-      throw ConstraintException("Parameter::setValue", this, value);
-    value_ = value;
+  /** Name: *********************************************************************/
+
+  void Parameter::setName(const std::string& name)
+  {
+    name_ = name;
     ParameterEvent event(this);
-    fireParameterValueChanged(event);
+    fireParameterNameChanged(event);
   }
-}
 
-/** Precision: ********************************************************************/
+  /** Value: ********************************************************************/
 
-void Parameter::setPrecision(double precision)
-{
-  precision_=(precision<0)?0:precision;
-}
-
-/** Constraint: ***************************************************************/
-
-void Parameter::setConstraint(Constraint* constraint, bool attach)
-{
-  if (!constraint){
-    if (constraint_ && attach_)
-      delete constraint_;
-    constraint_=0;
-    attach_=false;
-  }
-  else {
-    if (constraint->isCorrect(value_)) {
-      if (constraint_ && attach_)
-        delete constraint_;
-      constraint_ = constraint;
-      attach_= attach;
-    }
-  else throw ConstraintException("Parameter::setConstraint", this, value_);
-  }
-}
-
-
-const Constraint* Parameter::removeConstraint()
-{
-  const Constraint * c = constraint_;
-  constraint_ = 0;
-  return c;
-}
-
-/******************************************************************************/
-
-void Parameter::removeParameterListener(const std::string& listenerId)
-{
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  void Parameter::setValue(double value)
+  {
+    if (std::abs(value - value_) > precision_ / 2)
     {
-      if (listeners_[i]->getId() == listenerId)
-        {
-          if (listenerAttach_[i]) delete listeners_[i];
-          listeners_.erase(listeners_.begin() + i);
-          listenerAttach_.erase(listenerAttach_.begin() + i);
-        }
+      if (constraint_ && !constraint_->isCorrect(value))
+        throw ConstraintException("Parameter::setValue", this, value);
+      value_ = value;
+      ParameterEvent event(this);
+      fireParameterValueChanged(event);
     }
+  }
+
+  /** Precision: ********************************************************************/
+
+  void Parameter::setPrecision(double precision) { precision_ = (precision < 0) ? 0 : precision; }
+
+  /** Constraint: ***************************************************************/
+
+  void Parameter::setConstraint(Constraint* constraint, bool attach)
+  {
+    if (constraint != nullptr && !constraint->isCorrect(value_))
+      throw ConstraintException("Parameter::setConstraint", this, value_);
+    constraint_.reset(constraint);
+    constraint_.get_deleter().ownsPointer = attach;
+  }
+
+  Constraint* Parameter::removeConstraint() { return constraint_.release(); }
+
+  /******************************************************************************/
+
+  void Parameter::removeParameterListener(const std::string& listenerId)
+  {
+    using ConstRef = typename decltype(listeners_)::const_reference;
+    listeners_.erase(std::remove_if(listeners_.begin(),
+                                    listeners_.end(),
+                                    [&listenerId](ConstRef pl) { return pl->getId() == listenerId; }),
+                     listeners_.end());
+  }
+
+  /******************************************************************************/
+
+  bool Parameter::hasParameterListener(const std::string& listenerId)
+  {
+    using ConstRef = typename decltype(listeners_)::const_reference;
+    return std::any_of(
+      listeners_.begin(), listeners_.end(), [&listenerId](ConstRef pl) { return pl->getId() == listenerId; });
+  }
+
+  /******************************************************************************/
+
+  const IntervalConstraint Parameter::R_PLUS(true, 0, true);
+  const IntervalConstraint Parameter::R_PLUS_STAR(true, 0, false);
+  const IntervalConstraint Parameter::R_MINUS(false, 0, true);
+  const IntervalConstraint Parameter::R_MINUS_STAR(false, 0, false);
+  const IntervalConstraint Parameter::PROP_CONSTRAINT_IN(0, 1, true, true);
+  const IntervalConstraint Parameter::PROP_CONSTRAINT_EX(0, 1, false, false);
+
+  /******************************************************************************/
 }
-
-/******************************************************************************/
-
-bool Parameter::hasParameterListener(const std::string& listenerId)
-{
-  for (unsigned int i = 0; i < listeners_.size(); i++)
-    if (listeners_[i]->getId() == listenerId)
-      return true;
-  return false;
-}
-
-/******************************************************************************/
-
-const IntervalConstraint Parameter::R_PLUS(true, 0, true);
-
-const IntervalConstraint Parameter::R_PLUS_STAR(true, 0, false);
-
-const IntervalConstraint Parameter::R_MINUS(false, 0, true);
-
-const IntervalConstraint Parameter::R_MINUS_STAR(false, 0, false);
-
-const IntervalConstraint Parameter::PROP_CONSTRAINT_IN(0, 1, true, true);
-
-const IntervalConstraint Parameter::PROP_CONSTRAINT_EX(0, 1, false, false);
-
-/******************************************************************************/
-
