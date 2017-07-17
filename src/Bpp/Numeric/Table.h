@@ -587,7 +587,7 @@ namespace bpp
       if (pos>(int)nCol_)
         throw DimensionException("Table::addColumn.", pos, nCol_);
       if (pos==-1)
-        pos=nCol_;
+        pos=(int)nCol_;
 
       if (colNames_.size())
         throw TableColumnNamesException("Table::addColumn. Table has column names.");
@@ -654,13 +654,13 @@ namespace bpp
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
 
       if (row.size()!=nRow_+(rowCol>=0)?1:0)
-        throw BadIntegerException("Table::addColumn. Bad number of rows: ", row.size());
+        throw BadIntegerException("Table::addColumn. Bad number of rows: ", (int)row.size());
 
       std::vector<T> newColumn;
       
       for (size_t i=0; i<row.size(); i++)
       {
-        if (i==rowCol)
+        if ((int)i==rowCol)
         {
           std::string colName=row[i];
           if (find(colNames_.begin(), colNames_.end(), colName) != colNames_.end())
@@ -693,7 +693,7 @@ namespace bpp
     
     void setColumn(const std::vector<T>& newColumn, size_t pos) throw (DimensionException, TableColumnNamesException)
     {
-      if (pos>=(int)nCol_)
+      if (pos>=nCol_)
         throw DimensionException("Table::setColumn.", pos, nCol_);
 
       if (newColumn.size() != nRow_)
@@ -1021,7 +1021,7 @@ namespace bpp
       if (pos>(int)nRow_)
         throw DimensionException("Table::addRow.", pos, nRow_);
       if (pos==-1)
-        pos=nRow_;
+        pos=(int)nRow_;
 
       StringTokenizer stok(st, sep, false, true);
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
@@ -1145,7 +1145,7 @@ namespace bpp
 
       bool frontNames=((byRow && data.hasRowNames()) || (!byRow && data.hasColumnNames()));
 
-      if (byRow && data.hasColumnNames() || (!byRow && data.hasRowNames()))
+      if ((byRow && data.hasColumnNames()) || (!byRow && data.hasRowNames()))
       { // Write header
         std::vector<std::string> names = (byRow?data.getColumnNames():data.getRowNames());
         
