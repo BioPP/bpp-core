@@ -81,6 +81,56 @@ namespace bpp
     }
 
     /**
+     * @brief O(i,j)=A(i+1,j) and O(nbRow,j)=0
+     *
+     * @param A [in] Original matrix.
+     * @param O [out] A copy of the given matrix.
+     */
+    
+    template<class MatrixA, class MatrixO>
+    static void copyUp(const MatrixA& A, MatrixO& O)
+    {
+      size_t nr(A.getNumberOfRows()),nc(A.getNumberOfColumns());
+      O.resize(nr,nc);
+      for (size_t i = 0; i < nr-1; i++)
+      {
+        for (size_t j = 0; j < nc; j++)
+        {
+          O(i, j) = A(i+1, j);
+        }
+      }
+      for (size_t j = 0; j < nc; j++)
+      {
+        O(nr, j) = 0;
+      }
+    }
+
+    /**
+     * @brief O(i,j)=A(i-1,j) and O(0,j)=0
+     *
+     * @param A [in] Original matrix.
+     * @param O [out] A copy of the given matrix.
+     */
+    
+    template<class MatrixA, class MatrixO>
+    static void copyDown(const MatrixA& A, MatrixO& O)
+    {
+      size_t nr(A.getNumberOfRows()),nc(A.getNumberOfColumns());
+      O.resize(nr,nc);
+      for (size_t i = 1; i < nr; i++)
+      {
+        for (size_t j = 0; j < nc; j++)
+        {
+          O(i, j) = A(i-1, j);
+        }
+      }
+      for (size_t j = 0; j < nc; j++)
+      {
+        O(0, j) = 0;
+      }
+    }
+
+    /**
      * @brief Get a identity matrix of a given size.
      *
      * @param n the size of the matrix.
