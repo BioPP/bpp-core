@@ -101,7 +101,7 @@ namespace bpp
       }
       for (size_t j = 0; j < nc; j++)
       {
-        O(nr, j) = 0;
+        O(nr-1, j) = 0;
       }
     }
 
