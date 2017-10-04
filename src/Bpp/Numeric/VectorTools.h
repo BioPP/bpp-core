@@ -352,14 +352,13 @@ namespace bpp
      *
      * @{
      */
-    template<class T>
+
     static void resize2(VVdouble& vv, size_t n1, size_t n2)
     {
       vv.resize(n1);
       for (auto & x : vv) { x.resize(n2); }
     }
 
-    template<class T>
     static void resize3(VVVdouble& vvv, size_t n1, size_t n2, size_t n3)
     {
       vvv.resize(n1);
