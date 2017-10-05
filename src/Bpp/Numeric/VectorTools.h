@@ -1659,7 +1659,7 @@ namespace bpp
       double n = static_cast<double>(v1.size());
       for (auto& it1 : counts12)
       {
-        for (auto& it2 : it1->second.begin())
+        for (auto& it2 : it1.second)
         {
           s += static_cast<OutputType>((it2.second / n) * std::log(it2.second * n / (counts1[it1.first] * counts2[it2.first])) / std::log(base));
         }
