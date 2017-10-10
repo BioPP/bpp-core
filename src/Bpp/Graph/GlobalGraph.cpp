@@ -181,7 +181,7 @@ void GlobalGraph::switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB)
   }
 
   // Edge
-  GlobalGraph::Edge& foundEdge = foundForwardRelation->second;
+  GlobalGraph::Edge foundEdge = foundForwardRelation->second;
 
   // Backwards
   map<GlobalGraph::Node, GlobalGraph::Edge>::iterator foundBackwardsRelation = nodeSonRow->second.second.find(father);
