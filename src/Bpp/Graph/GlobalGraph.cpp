@@ -241,7 +241,7 @@ unsigned int GlobalGraph::unlinkInNodeStructure_(const GlobalGraph::Node& nodeA,
   if (foundForwardRelation == nodeARow->second.first.end())
     throw Exception("GlobalGraph::unlinkInNodeStructure_ : no edge to erase " + TextTools::toString(nodeA) + "->" + TextTools::toString(nodeB));
 
-  GlobalGraph::Edge& foundEdge = foundForwardRelation->second;
+  GlobalGraph::Edge foundEdge = foundForwardRelation->second;
   nodeARow->second.first.erase(foundForwardRelation);
 
   // Backwards
