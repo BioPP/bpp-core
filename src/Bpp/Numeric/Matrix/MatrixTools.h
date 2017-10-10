@@ -81,6 +81,56 @@ namespace bpp
     }
 
     /**
+     * @brief O(i,j)=A(i+1,j) and O(nbRow,j)=0
+     *
+     * @param A [in] Original matrix.
+     * @param O [out] A copy of the given matrix.
+     */
+    
+    template<class MatrixA, class MatrixO>
+    static void copyUp(const MatrixA& A, MatrixO& O)
+    {
+      size_t nr(A.getNumberOfRows()),nc(A.getNumberOfColumns());
+      O.resize(nr,nc);
+      for (size_t i = 0; i < nr-1; i++)
+      {
+        for (size_t j = 0; j < nc; j++)
+        {
+          O(i, j) = A(i+1, j);
+        }
+      }
+      for (size_t j = 0; j < nc; j++)
+      {
+        O(nr-1, j) = 0;
+      }
+    }
+
+    /**
+     * @brief O(i,j)=A(i-1,j) and O(0,j)=0
+     *
+     * @param A [in] Original matrix.
+     * @param O [out] A copy of the given matrix.
+     */
+    
+    template<class MatrixA, class MatrixO>
+    static void copyDown(const MatrixA& A, MatrixO& O)
+    {
+      size_t nr(A.getNumberOfRows()),nc(A.getNumberOfColumns());
+      O.resize(nr,nc);
+      for (size_t i = 1; i < nr; i++)
+      {
+        for (size_t j = 0; j < nc; j++)
+        {
+          O(i, j) = A(i-1, j);
+        }
+      }
+      for (size_t j = 0; j < nc; j++)
+      {
+        O(0, j) = 0;
+      }
+    }
+
+    /**
      * @brief Get a identity matrix of a given size.
      *
      * @param n the size of the matrix.
@@ -221,6 +271,42 @@ namespace bpp
     }
 
     /**
+     * @brief Product of complex matrices as couples of matrices
+     *
+     * @param A  [in] First matrix (real part)
+     * @param iA [in] First matrix (imaginary part)
+     * @param B  [in] Second matrix (real part)     
+     * @param iB [in] Second matrix(imaginary part)
+     * @param O  [out] The dot product of two matrices (real part)     
+     * @param iO [out] The dot product of two matrices(imaginary part)
+     */
+    
+    template<class Scalar>
+    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO) throw (DimensionException)
+    {
+      size_t ncA = A.getNumberOfColumns();
+      size_t nrA = A.getNumberOfRows();
+      size_t nrB = B.getNumberOfRows();
+      size_t ncB = B.getNumberOfColumns();
+      if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
+      O.resize(nrA, ncB);
+      iO.resize(nrA, ncB);
+      for (size_t i = 0; i < nrA; i++)
+      {
+        for (size_t j = 0; j < ncB; j++)
+        {
+          O(i, j) = 0;
+          iO(i, j) = 0;
+          for (size_t k = 0; k < ncA; k++)
+          {
+            O(i, j) += A(i, k) * B(k, j) - iA(i,k) * iB(k,j);
+            iO(i, j) += A(i, k) * iB(k, j) + iA(i,k) * B(k,j);
+          }
+        }
+      }
+    }
+
+    /**
      * @brief Compute A . D . B where D is a diagonal matrix in O(n^3).
      *
      * Since D is a diagonal matrix, this function is more efficient than doing
@@ -250,6 +336,54 @@ namespace bpp
           for (size_t k = 0; k < ncA; k++)
           {
             O(i, j) += A(i, k) * B(k, j) * D[k];
+          }
+        }
+      }
+    }
+
+    /**
+     * @brief Compute A . D . B where D is a diagonal matrix in O(n^3).
+     *
+     * Since D is a diagonal matrix, this function is more efficient than doing
+     * mult(mult(A, diag(D)), B), which involves two 0(n^3) operations.
+     *
+     * @param A  [in] First matrix (real part)
+     * @param iA [in] First matrix (imaginary part)
+     * @param D [in] The diagonal matrix (only diagonal elements in a
+     * vector) (real part)
+     * @param iD [in] The diagonal matrix (only diagonal elements in a
+     * vector) (imaginary part)
+     * @param B  [in] Second matrix (real part)     
+     * @param iB [in] Second matrix(imaginary part)
+     * @param O  [out] The dot product of two matrices (real part)     
+     * @param iO [out] The dot product of two matrices(imaginary part)
+     * @throw DimensionException If matrices have not the appropriate size.
+     */
+    template<class Scalar>
+    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const std::vector<Scalar>& D, const std::vector<Scalar>& iD, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO) throw (DimensionException)
+    {
+      size_t ncA = A.getNumberOfColumns();
+      size_t nrA = A.getNumberOfRows();
+      size_t nrB = B.getNumberOfRows();
+      size_t ncB = B.getNumberOfColumns();
+      if (ncA != nrB) throw DimensionException("MatrixTools::mult(). nrows B != ncols A.", nrB, ncA);
+      if (ncA != D.size()) throw DimensionException("MatrixTools::mult(). Vector size is not equal to matrix size.", D.size(), ncA);
+      O.resize(nrA, ncB);
+      Scalar ab,iaib,iab,aib;
+      
+      for (size_t i = 0; i < nrA; i++)
+      {
+        for (size_t j = 0; j < ncB; j++)
+        {
+          O(i, j) = 0;
+          iO(i, j) = 0;
+          for (size_t k = 0; k < ncA; k++)
+          {
+            ab=A(i, k) * B(k, j) - iA(i,k) * iB(k,j);
+            aib=A(i, k) * iB(k, j) + iA(i, k) * B(k, j);
+            
+            O(i, j) += ab * D[k] - aib * iD[k];
+            iO(i, j) += ab * iD[k] + aib * D[k];
           }
         }
       }
@@ -644,6 +778,9 @@ namespace bpp
       out << variableName << "<-matrix(c(";
       for (size_t i = 0; i < m.getNumberOfRows(); i++)
       {
+        if (i>0)
+          out << std::endl;
+        
         for (size_t j = 0; j < m.getNumberOfColumns(); j++)
         {
           if (i > 0 || j > 0)
@@ -901,6 +1038,37 @@ namespace bpp
         for (size_t j = 0; j < ncA; j++)
         {
           O(i, j) = A(i, j) * B(i, j);
+        }
+      }
+    }
+
+    /**
+     * @brief Compute the Hadamard product of two row matrices with same dimensions.
+     *
+     * @param A  [in] First matrix (real part)
+     * @param iA [in] First matrix (imaginary part)
+     * @param B  [in] Second matrix (real part)     
+     * @param iB [in] Second matrix(imaginary part)
+     * @param O [out] The 'Hadamard' product (real part)
+     * @param iO [out] The 'Hadamard' product(imaginary part)
+     */
+    template<class Scalar>
+    static void hadamardMult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO)
+    {
+      size_t ncA = A.getNumberOfColumns();
+      size_t nrA = A.getNumberOfRows();
+      size_t nrB = B.getNumberOfRows();
+      size_t ncB = B.getNumberOfColumns();
+      if (nrA != nrB) throw DimensionException("MatrixTools::hadamardMult(). nrows A != nrows B.", nrA, nrB);
+      if (ncA != ncB) throw DimensionException("MatrixTools::hadamardMult(). ncols A != ncols B.", ncA, ncB);
+      O.resize(nrA, ncA);
+      iO.resize(nrA, ncA);
+      for (size_t i = 0; i < nrA; i++)
+      {
+        for (size_t j = 0; j < ncA; j++)
+        {
+          O(i, j) = A(i, j) * B(i, j) -  iA(i, j) * iB(i, j);
+          iO(i, j) = iA(i, j) * B(i, j) +  A(i, j) * iB(i, j);
         }
       }
     }
