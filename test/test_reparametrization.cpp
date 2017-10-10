@@ -64,12 +64,11 @@ class MyFunction:
     MyFunction* clone() const { return new MyFunction(*this); }
  
   public:
-    void setParameters(const ParameterList& pl) 
-        throw (ParameterNotFoundException, ConstraintException, Exception)
+    void setParameters(const ParameterList& pl)
     {
       matchParametersValues(pl);
     }
-    double getValue() const throw (Exception) { return fval_; }
+    double getValue() const { return fval_; }
  
     void fireParameterChanged(const ParameterList& pl) {
       double x = getParameterValue("x");

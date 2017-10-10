@@ -140,7 +140,7 @@ string ApplicationTools::getAFilePath(
   const string& suffix,
   bool suffixIsOptional,
   const string& defaultPath, 
-  int warn) throw (Exception)
+  int warn)
 {
   string filePath = getStringParameter(parameter, params, defaultPath, suffix, suffixIsOptional, warn);
   if (filePath == "") filePath = "none";

@@ -331,7 +331,7 @@ namespace bpp
       const std::string& suffix = "",
       bool suffixIsOptional = false,
       const std::string& defaultPath = "none", 
-      int warn = 0) throw (Exception);
+      int warn = 0);
 
     /**
      * @brief Get a vector.

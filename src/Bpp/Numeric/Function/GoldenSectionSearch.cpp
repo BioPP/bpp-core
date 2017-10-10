@@ -76,7 +76,7 @@ GoldenSectionSearch::GoldenSectionSearch(Function* function) :
 
 /******************************************************************************/
 
-void GoldenSectionSearch::doInit(const ParameterList& params) throw (Exception)
+void GoldenSectionSearch::doInit(const ParameterList& params)
 {
   // Set the initial value (no use here! Use setInitialValues() instead).
   if(params.size() != 1) throw Exception("GoldenSectionSearch::init(). This optimizer only deals with one parameter.");
@@ -130,7 +130,7 @@ void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 
 /******************************************************************************/
 
-double GoldenSectionSearch::doStep() throw (Exception)
+double GoldenSectionSearch::doStep()
 {
   if (!isInitialIntervalSet_) throw Exception("GoldenSectionSearch::step. Initial interval not set: call the 'setInitialInterval' method first!");
   
@@ -162,7 +162,7 @@ double GoldenSectionSearch::doStep() throw (Exception)
 
 /******************************************************************************/
 
-double GoldenSectionSearch::getFunctionValue() const throw (NullPointerException)
+double GoldenSectionSearch::getFunctionValue() const
 {
   if (!hasFunction())
     throw NullPointerException("GoldenSectionSearch::getFunctionValue. No function associated to this optimizer.");

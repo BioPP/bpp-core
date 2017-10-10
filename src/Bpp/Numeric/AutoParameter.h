@@ -73,7 +73,7 @@ class AutoParameter:
      * between different objects. See Parameter.
 		 * @throw ConstraintException If the parameter value does not match the contraint.
 		 */
-		AutoParameter(const std::string& name = "", double value = 0, Constraint* constraint = 0, bool attachConstraint = false) throw (ConstraintException);
+		AutoParameter(const std::string& name = "", double value = 0, Constraint* constraint = 0, bool attachConstraint = false);
 
 		/**
 		 * @brief Copy constructor.
@@ -116,7 +116,7 @@ class AutoParameter:
 		 * @param value the new parameter value.
 		 * @throw ConstraintException Never thrown!
 		 */
-		virtual void setValue(double value) throw (ConstraintException);
+		virtual void setValue(double value);
 	
 	public: //Specific method:
 		

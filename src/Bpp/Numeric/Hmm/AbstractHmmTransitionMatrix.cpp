@@ -75,7 +75,7 @@ AbstractHmmTransitionMatrix& AbstractHmmTransitionMatrix::operator=(const Abstra
   return *this;
 }
 
-void AbstractHmmTransitionMatrix::setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet) throw (HmmUnvalidAlphabetException)
+void AbstractHmmTransitionMatrix::setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet)
 {
   if (stateAlphabet==NULL)
     throw HmmUnvalidAlphabetException("Null alphabet in AbstractHmmTransitionMatrix::setHmmStateAlphabet");

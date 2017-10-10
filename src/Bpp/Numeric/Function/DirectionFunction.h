@@ -89,10 +89,9 @@ class DirectionFunction:
     DirectionFunction* clone() const { return new DirectionFunction(*this); }
 
   public: // Function interface implementation:
-    void setParameters(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException);
-    double getValue() const throw (Exception);
-    const ParameterList & getParameters() const throw (Exception);
+    void setParameters(const ParameterList& parameters);
+    double getValue() const;
+    const ParameterList & getParameters() const;
 
   public: // Specific methods:
     void init(const ParameterList & p, const std::vector<double> & xi);

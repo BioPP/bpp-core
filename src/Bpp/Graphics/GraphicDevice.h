@@ -166,7 +166,7 @@ namespace bpp
        * @param vpos Vertical adjustment, one of TEXT_VERTICAL_LEFT, TEXT_VERTICAL_CENTER or TEXT_VERTICAL_RIGHT.
        * @param angle Angle i radian to rotate the text.
        */
-      virtual void drawText(double x, double y, const std::string& text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0) throw (UnvalidFlagException) = 0;
+      virtual void drawText(double x, double y, const std::string& text, short hpos = TEXT_HORIZONTAL_LEFT, short vpos = TEXT_VERTICAL_BOTTOM, double angle = 0) = 0;
 
       /**
        * @brief Add a comment in the output.

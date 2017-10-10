@@ -80,7 +80,7 @@ class AbstractGraphicDevice:
     void setCurrentBackgroundColor(const RGBColor& color) { bgColor_ = color; }
     void setCurrentFont(const Font& font) { font_ = font; }
     void setCurrentPointSize(unsigned int size) { pointSize_ = size; }
-    void setCurrentLineType(short type) throw (Exception)
+    void setCurrentLineType(short type)
     { 
       if       (type == LINE_SOLID) lineType_ = type;
       else if (type == LINE_DASHED) lineType_ = type;

@@ -65,7 +65,7 @@ AbstractHmmLikelihood& AbstractHmmLikelihood::operator=(const AbstractHmmLikelih
   return *this;
 }
 
-double AbstractHmmLikelihood::getFirstOrderDerivative(const std::string& variable) const throw (Exception)
+double AbstractHmmLikelihood::getFirstOrderDerivative(const std::string& variable) const
 {
   if (variable!=dVariable_){
     dVariable_=variable;
@@ -77,7 +77,7 @@ double AbstractHmmLikelihood::getFirstOrderDerivative(const std::string& variabl
   
 }
     
-double AbstractHmmLikelihood::getSecondOrderDerivative(const std::string& variable) const throw (Exception)
+double AbstractHmmLikelihood::getSecondOrderDerivative(const std::string& variable) const
 {
   if (variable!=d2Variable_){
     d2Variable_=variable;

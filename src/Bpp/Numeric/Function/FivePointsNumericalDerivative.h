@@ -115,20 +115,18 @@ public:
   FivePointsNumericalDerivative* clone() const { return new FivePointsNumericalDerivative(*this); }
 
 public:
-  double getValue() const throw (Exception)
+  double getValue() const
   {
     return f3_;
   }
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
-  throw (Exception)
   {
     throw Exception("Unimplemented cross derivative.");
   }
 
 protected:
-  void updateDerivatives(const ParameterList parameters)
-  throw (ParameterNotFoundException, ConstraintException);
+  void updateDerivatives(const ParameterList parameters);
 };
 } // end of namespace bpp.
 

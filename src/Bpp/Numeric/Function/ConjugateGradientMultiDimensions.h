@@ -89,9 +89,9 @@ namespace bpp
     {
       return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction());
     }
-    void doInit(const ParameterList& params) throw (Exception);
+    void doInit(const ParameterList& params);
 
-    double doStep() throw (Exception);
+    double doStep();
     /** @} */
 
     void getGradient(std::vector<double>& gradient) const;

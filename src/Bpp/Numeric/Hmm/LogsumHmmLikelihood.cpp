@@ -50,7 +50,7 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
     bool ownsPointers,
-    const std::string& prefix) throw (Exception):
+    const std::string& prefix):
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
@@ -345,7 +345,7 @@ Vdouble LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(size_
   return probs;
 }
 
-void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const throw (Exception)
+void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const
 {
   size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);

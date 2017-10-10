@@ -88,7 +88,7 @@ class KeyvalTools
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
 
-  static void singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split = "=") throw (KeyvalException);
+  static void singleKeyval(const std::string& desc, std::string& key, std::string& val, const std::string& split = "=");
     
     /**
      * @brief Split a string into several keys and corresponding values (General purpose function).
@@ -100,7 +100,7 @@ class KeyvalTools
      * @throw KeyvalException If the syntax describing the keyval is not correct.
      */
   
-    static void multipleKeyvals(const std::string& desc, std::map<std::string, std::string>& keyvals, const std::string& split = ",", bool nested = true) throw (KeyvalException);
+    static void multipleKeyvals(const std::string& desc, std::map<std::string, std::string>& keyvals, const std::string& split = ",", bool nested = true);
 
   /**
    * @brief Change several keys to new corresponding values (General
@@ -119,7 +119,7 @@ class KeyvalTools
    * @throw KeyvalException If the syntax describing the keyval is not correct.
    */
   
-  static std::string changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split = ",", bool nested = true) throw (KeyvalException);
+  static std::string changeKeyvals(const std::string& desc, const std::map<std::string, std::string>& newkeyvals, const std::string& split = ",", bool nested = true);
 
     /**
      * @brief Parse (not recursively) a procedure string.
@@ -129,7 +129,7 @@ class KeyvalTools
      * @param args [out] Fills a map with all keys and values for parameters.
      * @throw KeyvalException If the description is invalid (one parenthesis is missing for instance).
      */
-    static void parseProcedure(const std::string& desc, std::string& name, std::map<std::string, std::string>& args) throw (KeyvalException);
+    static void parseProcedure(const std::string& desc, std::string& name, std::map<std::string, std::string>& args);
 };
 
 } //End of namespace bpp.

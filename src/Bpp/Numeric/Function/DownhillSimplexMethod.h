@@ -128,12 +128,12 @@ class DownhillSimplexMethod:
      * @brief Multidimensional minimization of the function function_ by the
      * downhill simplex method of Nelder and Mead.
      */
-    double optimize() throw (Exception);
+    double optimize();
     /** @} */
 
-    void doInit(const ParameterList& params) throw (Exception);
+    void doInit(const ParameterList& params);
     
-    double doStep() throw (Exception);
+    double doStep();
   
   protected:
     

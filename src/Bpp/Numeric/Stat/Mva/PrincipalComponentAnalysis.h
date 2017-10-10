@@ -83,8 +83,7 @@ public:
     bool centered = true,
     bool scaled = true,
     double tol = 0.0000001,
-    bool verbose = true)
-  throw (Exception);
+    bool verbose = true);
 
   /**
    * @brief Build a new PrincipalComponentAnalysis object and specify default row and column weights.
@@ -103,8 +102,7 @@ public:
     bool centered = true,
     bool scaled = true,
     double tol = 0.0000001,
-    bool verbose = true)
-  throw (Exception);
+    bool verbose = true);
 
   virtual ~PrincipalComponentAnalysis() {}
 
@@ -117,7 +115,7 @@ public:
    * @param matrix The input data (a Matrix) to center.
    * @param rowW A vector with row weights.
    */
-  static void center(Matrix<double>& matrix, const std::vector<double>& rowW) throw (Exception);
+  static void center(Matrix<double>& matrix, const std::vector<double>& rowW);
 
   /**
    * @brief This function allows to center an input matrix from its column means.
@@ -125,11 +123,11 @@ public:
    * @param matrix The input data (a Matrix) to center.
    * @param rowW A vector with row weights.
    */
-  static void scale(Matrix<double>& matrix, const std::vector<double>& rowW) throw (Exception);
+  static void scale(Matrix<double>& matrix, const std::vector<double>& rowW);
 
 public:
-  const std::vector<double>& getColumnMeans() const throw (Exception) { return columnMeans_; }
-  const std::vector<double>& getColumnSd() const throw (Exception) { return columnSd_; }
+  const std::vector<double>& getColumnMeans() const { return columnMeans_; }
+  const std::vector<double>& getColumnSd() const { return columnSd_; }
 };
 
 } // end of namespace bpp.

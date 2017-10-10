@@ -69,11 +69,11 @@ class ParameterGrid
      * @param values The values the parameter will take.
      * @throw Exception in case the dimension is note valid (duplicated parameter name for instance).
      */
-    void addDimension(const std::string& name, const Vdouble& values) throw (Exception);
+    void addDimension(const std::string& name, const Vdouble& values);
 
     const std::vector<std::string>& getDimensionNames() const { return names_; }
     
-    const std::string& getDimensionName(unsigned int i) const throw (IndexOutOfBoundsException)
+    const std::string& getDimensionName(unsigned int i) const
     {
       if (i >= names_.size()) throw IndexOutOfBoundsException("ParameterGrid::getDimensionName().", i, 0, names_.size()-1);
       return names_[i];
@@ -87,8 +87,8 @@ class ParameterGrid
     size_t getTotalNumberOfPoints() const;
 
     const VVdouble& getPoints() const { return grid_; }
-    const Vdouble& getPointsForDimension(unsigned int i) const throw (IndexOutOfBoundsException);
-    const Vdouble& getPointsForDimension(const std::string& name) const throw (Exception);
+    const Vdouble& getPointsForDimension(unsigned int i) const;
+    const Vdouble& getPointsForDimension(const std::string& name) const;
 };
 
 /**
@@ -113,7 +113,7 @@ class FunctionTools
      */
     static VVdouble* computeGrid(
         Function& function,
-        const ParameterGrid& grid) throw (Exception);
+        const ParameterGrid& grid);
 };
 
 } //end of namespace bpp

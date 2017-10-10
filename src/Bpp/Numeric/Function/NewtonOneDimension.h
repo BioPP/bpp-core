@@ -72,9 +72,9 @@ class NewtonOneDimension:
       return dynamic_cast<DerivableSecondOrder*>(AbstractOptimizer::getFunction());
     }
 
-    void doInit(const ParameterList& params) throw (Exception);
+    void doInit(const ParameterList& params);
 		
-    double doStep() throw (Exception);
+    double doStep();
 
     void setMaximumNumberOfCorrections(unsigned int mx) { _maxCorrection = mx; }
 	

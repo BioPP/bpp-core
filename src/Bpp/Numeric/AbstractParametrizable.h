@@ -76,45 +76,40 @@ class AbstractParametrizable:
 
     const ParameterList& getParameters() const { return parameters_; }
     
-    const Parameter& getParameter(const std::string& name) const throw (ParameterNotFoundException)
+    const Parameter& getParameter(const std::string& name) const
     {
       return parameters_.getParameter(prefix_ + name);
     }
 
-  const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const throw (ParameterNotFoundException)
+  const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const
   {
     return parameters_.getSharedParameter(prefix_ + name);
   }
 
     double getParameterValue(const std::string& name) const
-      throw (ParameterNotFoundException)
     { 
       return getParameter(name).getValue();
     }
 
-    void setAllParametersValues(const ParameterList & parameters) 
-      throw (ParameterNotFoundException, ConstraintException)
+    void setAllParametersValues(const ParameterList & parameters)
     {
       parameters_.setAllParametersValues(parameters);
       fireParameterChanged(parameters);
     }
 
-    void setParameterValue(const std::string& name, double value) 
-      throw (ParameterNotFoundException, ConstraintException)
+    void setParameterValue(const std::string& name, double value)
     {
       parameters_.setParameterValue(prefix_ + name, value);
       fireParameterChanged(parameters_.subList(prefix_ + name));
     }
 
     void setParametersValues(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException)
     { 
       parameters_.setParametersValues(parameters);
       fireParameterChanged(parameters);
     }
 
     bool matchParametersValues(const ParameterList& parameters)
-      throw (ConstraintException)
     {
       std::unique_ptr< std::vector<size_t> >updatedParameters(new std::vector<size_t>());
       bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
@@ -169,7 +164,7 @@ class AbstractParametrizable:
     parameters_.includeParameters(parameters);
   }
 
-  virtual void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
+  virtual void deleteParameter_(size_t index)
   {
     if (index >= parameters_.size())
       throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
@@ -196,7 +191,7 @@ class AbstractParametrizable:
      * @return A reference toward the corresponding parameter.
      * @throw ParameterNotFoundException If no parameter with that name is found in the list.
      */
-    Parameter& getParameter_(const std::string& name) throw (ParameterNotFoundException)
+    Parameter& getParameter_(const std::string& name)
     {
       return parameters_.getParameter(prefix_ + name);
     }
@@ -206,7 +201,7 @@ class AbstractParametrizable:
      * @return A reference toward the corresponding parameter.
      * @throw ParameterNotFoundException If no parameter with that name is found in the list.
      */
-    Parameter& getParameterWithNamespace_(const std::string& name) throw (ParameterNotFoundException)
+    Parameter& getParameterWithNamespace_(const std::string& name)
     {
       return getParameter_(name);
     }
@@ -215,19 +210,19 @@ class AbstractParametrizable:
      * @return A reference toward the corresponding parameter.
      * @throw ParameterNotFoundException If no parameter with that name is found in the list.
      */
-    const Parameter& getParameterWithNamespace_(const std::string& name) const throw (ParameterNotFoundException)
+    const Parameter& getParameterWithNamespace_(const std::string& name) const
     {
       return getParameter(name);
     }
 
-    Parameter& getParameter_(size_t index) throw (IndexOutOfBoundsException)
+    Parameter& getParameter_(size_t index)
     {
       if (index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
       return parameters_[index];
     }
 
-  const Parameter& getParameter_(size_t index) const throw (IndexOutOfBoundsException)
+  const Parameter& getParameter_(size_t index) const
     {
       if(index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);

@@ -936,6 +936,7 @@ namespace bpp
     }
 
 
+
     /**
      * @brief Print a std::vector to a stream in R format
      * @param v1 A std::vector.

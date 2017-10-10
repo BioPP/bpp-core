@@ -91,7 +91,7 @@ public:
   TwoPointsNumericalDerivative* clone() const { return new TwoPointsNumericalDerivative(*this); }
 
 public:
-  double getValue() const throw (Exception) { return f1_; }
+  double getValue() const { return f1_; }
 
   /**
    * @name The DerivableSecondOrder interface
@@ -99,21 +99,18 @@ public:
    * @{
    */
   double getSecondOrderDerivative(const std::string& variable) const
-  throw (Exception)
   {
     throw Exception("Second order derivative not avalaible with two points method.");
   }
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
-  throw (Exception)
   {
     throw Exception("Unimplemented cross derivative.");
   }
   /** @} */
 
 protected:
-  void updateDerivatives(const ParameterList parameters)
-  throw (ParameterNotFoundException, ConstraintException);
+  void updateDerivatives(const ParameterList parameters);
 };
 } // end of namespace bpp.
 

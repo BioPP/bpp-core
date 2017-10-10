@@ -199,7 +199,7 @@ namespace bpp
      * @return A random number according to this distribution.
      * @throw Exception If there is no continuous version of this distribution.
      */
-    virtual double randC() const throw (Exception) = 0;
+    virtual double randC() const = 0;
 
     /**
      * @brief Return the quantile of the continuous version of the

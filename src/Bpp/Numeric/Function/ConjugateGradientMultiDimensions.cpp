@@ -56,7 +56,7 @@ ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirs
 
 /******************************************************************************/
 
-void ConjugateGradientMultiDimensions::doInit(const ParameterList & params) throw (Exception)
+void ConjugateGradientMultiDimensions::doInit(const ParameterList & params)
 {
   size_t nbParams = params.size();
   g_.resize(nbParams);
@@ -74,7 +74,7 @@ void ConjugateGradientMultiDimensions::doInit(const ParameterList & params) thro
 
 /******************************************************************************/
 
-double ConjugateGradientMultiDimensions::doStep() throw (Exception)
+double ConjugateGradientMultiDimensions::doStep()
 {
   double gg, gam, f, dgg;
   size_t n = getParameters().size();

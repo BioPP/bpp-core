@@ -153,8 +153,7 @@ namespace bpp
      * and duplicated when the parameter is copied.
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision=0)
-      throw (ConstraintException);
+    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision=0);
 
     /**
      * @brief Build a new parameter.
@@ -165,8 +164,7 @@ namespace bpp
      * @param precision An optional parameter precision (default 0)
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name, double value, const Constraint* constraint = 0, double precision=0)
-      throw (ConstraintException);
+    Parameter(const std::string& name, double value, const Constraint* constraint = 0, double precision=0);
 
 
     /**
@@ -202,7 +200,7 @@ namespace bpp
      *
      * @param value the new parameter value.
      */
-    virtual void setValue(double value) throw (ConstraintException);
+    virtual void setValue(double value);
   
     /**
      * @brief Set the precision of this parameter.

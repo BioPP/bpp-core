@@ -173,19 +173,19 @@ class AbstractOptimizer:
      *
      * Store all parameters, call the doInit method, print to profiler, initialize timer and notify all listeners.
      */
-    void init(const ParameterList& params) throw (Exception);
+    void init(const ParameterList& params);
     /**
      * @brief Basic implementation.
      *
      * Check if the optimizer is initialized, check if parameters need update because of listeners, call the doStep method, print the current point to the profiler, notify all listeners and return the current value of the function.
      */
-    double step() throw (Exception);
+    double step();
     /**
      * @brief Basic implementation.
      *
      * Call the step method untill tolerance is reached.
      */
-    double optimize() throw (Exception);
+    double optimize();
     bool isInitialized() const { return isInitialized_; }
     const ParameterList& getParameters() const { return parameters_; }
   double getParameterValue(const std::string& name) const { return parameters_.getParameterValue(name); }
@@ -197,7 +197,7 @@ class AbstractOptimizer:
     const Function* getFunction() const { return function_; }
     Function* getFunction() { return function_; }
     bool hasFunction() const { return function_ != 0; }
-    double getFunctionValue() const throw (NullPointerException)
+    double getFunctionValue() const
     {
       if (!function_) throw NullPointerException("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
       return currentValue_;
@@ -271,14 +271,14 @@ class AbstractOptimizer:
      *
      * @param params The parameters to use for initialization.
      */
-    virtual void doInit(const ParameterList& params) throw (Exception) = 0;
+    virtual void doInit(const ParameterList& params) = 0;
     
     /**
      * @brief This function is called by the step() method and contains all calculations.
      *
      * @return The value of the function after the optimization step.
      */
-    virtual double doStep() throw (Exception) = 0;
+    virtual double doStep() = 0;
     
     /**
      * @name Inner utilitary functions
