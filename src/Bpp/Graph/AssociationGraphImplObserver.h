@@ -1089,11 +1089,11 @@ public:
   class EdgeIteratorClass :
     public AssociationGraphObserver<N, E>::EdgeIterator
   {
-private:
+  private:
     EdgesIteratorClass<GraphIterator, is_const> it_;
     const AssociationGraphImplObserver<N, E, GraphImpl>& agio_;
-
-public:
+    
+  public:
     EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); };
 

@@ -365,12 +365,22 @@ public:
     return this->incomingNeighborNodesIterator(node);
   }
 
+  std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> fathersIterator(std::shared_ptr<N> node) const
+  {
+    return this->incomingNeighborNodesIterator(node);
+  }
+
   /*
    * @brief builds iterator on the sons of a Node
    *
    */
 
   std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node)
+  {
+    return this->outgoingNeighborNodesIterator(node);
+  }
+
+  std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node) const
   {
     return this->outgoingNeighborNodesIterator(node);
   }

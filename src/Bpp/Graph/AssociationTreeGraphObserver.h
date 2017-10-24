@@ -225,12 +225,16 @@ public:
 
   virtual std::unique_ptr<NodeIterator> sonsIterator(std::shared_ptr<N> node) = 0;
 
+  virtual std::unique_ptr<NodeIterator> sonsIterator(std::shared_ptr<N> node) const = 0;
+
   /*
    * @brief builds iterator on the branches to sons of a Node
    *
    */
 
   virtual std::unique_ptr<EdgeIterator> branchesIterator(std::shared_ptr<N> node) = 0;
+
+  virtual std::unique_ptr<EdgeIterator> branchesIterator(std::shared_ptr<N> node) const = 0;
 
   /**
    * @brief Get a vector of ancestor nodes between to nodes.

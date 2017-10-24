@@ -232,12 +232,16 @@ public:
 
   virtual std::unique_ptr<NodeIterator> sonsIterator(std::shared_ptr<N> node) = 0;
 
+  virtual std::unique_ptr<NodeIterator> sonsIterator(std::shared_ptr<N> node) const = 0;
+
   /*
    * @brief builds iterator on the fathers of a Node
    *
    */
 
   virtual std::unique_ptr<NodeIterator> fathersIterator(std::shared_ptr<N> node) = 0;
+
+  virtual std::unique_ptr<NodeIterator> fathersIterator(std::shared_ptr<N> node) const = 0;
 
   /**
    * @brief Get Below Objects.

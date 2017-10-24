@@ -346,6 +346,11 @@ public:
     return this->outgoingNeighborNodesIterator(node);
   }
 
+  std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node) const
+  {
+    return this->outgoingNeighborNodesIterator(node);
+  }
+
   /*
    * @brief builds iterator on the branches to sons of a Node
    *
@@ -354,6 +359,11 @@ public:
   std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::EdgeIterator> branchesIterator(std::shared_ptr<N> node)
   {
     return this->outgoingEdgesIterator(node);
+  }
+
+  std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::EdgeIterator> branchesIterator(std::shared_ptr<N> node) const
+  {
+    return this->outgoingEdgesIterator(node); 
   }
 
   /**

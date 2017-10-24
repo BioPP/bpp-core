@@ -116,11 +116,15 @@ public:
 
   virtual std::unique_ptr<Graph::NodeIterator> sonsIterator(Graph::NodeId node) = 0;
 
+  virtual std::unique_ptr<Graph::NodeIterator> sonsIterator(Graph::NodeId node) const = 0;
+
   /**
    * Get a iterator on the branches to sons of a node
    */
 
   virtual std::unique_ptr<Graph::EdgeIterator> branchesIterator(Graph::NodeId node) = 0;
+
+  virtual std::unique_ptr<Graph::EdgeIterator> branchesIterator(Graph::NodeId node) const = 0;
 
   /**
    * @brief Get the number of sons node
