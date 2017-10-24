@@ -80,9 +80,9 @@ namespace bpp
   typedef std::vector<VVVint> VVVVint;
 
   typedef std::vector<unsigned int> Vuint;
-  typedef std::vector<Vint> VVuint;
-  typedef std::vector<VVint> VVVuint;
-  typedef std::vector<VVVint> VVVVuint;
+  typedef std::vector<Vuint> VVuint;
+  typedef std::vector<VVuint> VVVuint;
+  typedef std::vector<VVVuint> VVVVuint;
 
 /**
  * @name Element-wise operations.
@@ -253,7 +253,6 @@ namespace bpp
     }
     return result;
   }
-
 
   template<class T>
   void operator+=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
