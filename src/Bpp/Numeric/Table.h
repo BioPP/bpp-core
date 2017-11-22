@@ -642,7 +642,7 @@ namespace bpp
       if (pos>(int)nCol_)
         throw DimensionException("Table::addColumn.", pos, nCol_);
       if (pos==-1)
-        pos=nCol_;
+        pos=(int)nCol_;
 
       StringTokenizer stok(st, sep, false, true);
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
@@ -1021,13 +1021,13 @@ namespace bpp
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
 
       if (row.size()!=nCol_+(rowCol>=0)?1:0)
-        throw BadIntegerException("Table::addRow. Bad number of columns: ", row.size());
+        throw BadIntegerException("Table::addRow. Bad number of columns: ", (int)row.size());
 
       size_t id=0;
       
       for (size_t i=0; i<row.size(); i++)
       {
-        if (i==rowCol)
+        if ((int)i==rowCol)
         {
           std::string rowName=row[i];
           if (find(rowNames_.begin(), rowNames_.end(), rowName) != rowNames_.end())
