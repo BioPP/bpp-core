@@ -1184,6 +1184,11 @@ public:
     return getGraph()->isLeaf(this->getNodeGraphid(node));
   }
 
+  bool isLeaf(const NodeIndex nodeid) const
+  {
+    return getGraph()->isLeaf(this->getNodeGraphid(getNode(nodeid)));
+  }
+
   /**
    * Get nodes located at the extremities of an edge
    * @param edge an edge

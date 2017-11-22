@@ -239,7 +239,7 @@ public:
 
   NodeIndex getSon(const EdgeIndex edge) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
   /**
@@ -255,7 +255,7 @@ public:
 
   NodeIndex getFather(const EdgeIndex edge) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
 
