@@ -1084,6 +1084,19 @@ public:
     return indexesToReturn;
   }
 
+  std::vector<EdgeIndex> getAllEdgesIndexes() const
+  {
+    std::vector<typename AssociationGraphObserver<N, E>::EdgeIndex > indexesToReturn;
+    for (typename std::vector<std::shared_ptr<E> >::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
+    {
+      if (*currEdgeObject != 00)
+      {
+        indexesToReturn.push_back(getEdgeIndex(*currEdgeObject));
+      }
+    }
+    return indexesToReturn;
+  }
+
 
   template<class GraphIterator, bool is_const>
   class EdgeIteratorClass :

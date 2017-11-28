@@ -55,7 +55,7 @@ namespace bpp
  * @brief Defines a Tree Graph Associator. It is a template which follows
  * (subscribed to) a Graph.
  *
- * @author Thomas Bigot
+ * @author Thomas Bigot, Laurent Guéguen
  */
 
 template<class N, class E>
