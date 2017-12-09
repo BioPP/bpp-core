@@ -61,16 +61,15 @@ int ApplicationTools::warningLevel = 0;
 
 /******************************************************************************/
   
-std::vector<std::string> ApplicationTools::matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params)
+vector<string> ApplicationTools::matchingParameters(const string& pattern, const map<string, string>& params)
 {
   vector<string> retv;
 
-  map<string, string>::iterator it;
-  for (it=params.begin(); it!=params.end(); it++)
+  for (const auto& it : params)
   {
     StringTokenizer stj(pattern, "*", true, false);
     size_t pos1, pos2;
-    string parn = it->first;
+    string parn = it.first;
     bool flag(true);
     string g = stj.nextToken();
     pos1 = parn.find(g);
@@ -96,7 +95,7 @@ std::vector<std::string> ApplicationTools::matchingParameters(const std::string&
   return retv;
 }
 
-std::vector<std::string> ApplicationTools::matchingParameters(const std::string& pattern, std::vector<std::string>& params)
+vector<string> ApplicationTools::matchingParameters(const string& pattern, vector<string>& params)
 {
   vector<string> retv;
 
@@ -104,7 +103,7 @@ std::vector<std::string> ApplicationTools::matchingParameters(const std::string&
   {
     StringTokenizer stj(pattern, "*", true, false);
     size_t pos1, pos2;
-    string parn = params[i];
+    string parn = params.at(i);
     bool flag(true);
     string g = stj.nextToken();
     pos1 = parn.find(g);
@@ -134,7 +133,7 @@ std::vector<std::string> ApplicationTools::matchingParameters(const std::string&
 
 string ApplicationTools::getAFilePath(
   const string& parameter,
-  map<string, string>& params,
+  const map<string, string>& params,
   bool isRequired,
   bool mustExist,
   const string& suffix,
@@ -159,21 +158,21 @@ string ApplicationTools::getAFilePath(
 /******************************************************************************/
 
 double ApplicationTools::getDoubleParameter(
-  const std::string& parameterName,
-  std::map<std::string, std::string>& params,
+  const string& parameterName,
+  const map<string, string>& params,
   double defaultValue,
-  const std::string& suffix,
+  const string& suffix,
   bool suffixIsOptional,
   int warn)
 {
   double dParam = defaultValue;
   if (parameterExists(parameterName + suffix, params))
   {
-    dParam = TextTools::toDouble(params[parameterName + suffix]);
+    dParam = TextTools::toDouble(params.at(parameterName + suffix));
   }
   else if (suffixIsOptional && parameterExists(parameterName, params))
   {
-    dParam = TextTools::toDouble(params[parameterName]);
+    dParam = TextTools::toDouble(params.at(parameterName));
   }
   else if(warn <= warningLevel)
   {
@@ -185,18 +184,18 @@ double ApplicationTools::getDoubleParameter(
 /******************************************************************************/
 
 int ApplicationTools::getIntParameter(
-  const std::string & parameterName,
-  std::map<std::string, std::string> & params,
+  const string & parameterName,
+  const map<string, string> & params,
   int defaultValue,
-  const std::string & suffix,
+  const string & suffix,
   bool suffixIsOptional,
   int warn)
 {
   int iParam = defaultValue;
   if (parameterExists(parameterName + suffix, params)) {
-    iParam = TextTools::toInt(params[parameterName + suffix]);
+    iParam = TextTools::toInt(params.at(parameterName + suffix));
   } else if(suffixIsOptional && parameterExists(parameterName, params)) {
-    iParam = TextTools::toInt(params[parameterName]);
+    iParam = TextTools::toInt(params.at(parameterName));
   } else if (warn <= warningLevel) {
     displayWarning("Parameter " + parameterName + suffix + " not specified. Default used instead: " + TextTools::toString(defaultValue));
   }
@@ -207,10 +206,10 @@ int ApplicationTools::getIntParameter(
 
 
 bool ApplicationTools::getBooleanParameter(
-  const std::string& parameterName,
-  std::map<std::string, std::string>& params,
+  const string& parameterName,
+  const map<string, string>& params,
   bool defaultValue,
-  const std::string& suffix,
+  const string& suffix,
   bool suffixIsOptional,
   int warn)
 {
@@ -218,11 +217,11 @@ bool ApplicationTools::getBooleanParameter(
   bool bParam = defaultValue;
   if (parameterExists(parameterName + suffix, params))
   {
-    sParam = params[parameterName + suffix];
+    sParam = params.at(parameterName + suffix);
   }
   else if (suffixIsOptional && parameterExists(parameterName, params))
   {
-    sParam = params[parameterName];
+    sParam = params.at(parameterName);
   }
   else {
     if (warn <= warningLevel)
@@ -258,13 +257,13 @@ bool ApplicationTools::getBooleanParameter(
 
 /******************************************************************************/
 
-void ApplicationTools::displayMessage(const std::string& text) { if(message) (*message << text).endLine(); }
+void ApplicationTools::displayMessage(const string& text) { if(message) (*message << text).endLine(); }
     
-void ApplicationTools::displayError(const std::string& text) { if(error) (*error << "ERROR!!! " << text).endLine(); }
+void ApplicationTools::displayError(const string& text) { if(error) (*error << "ERROR!!! " << text).endLine(); }
     
-void ApplicationTools::displayWarning(const std::string& text) { if(warning) (*warning << "WARNING!!! " << text).endLine(); }
+void ApplicationTools::displayWarning(const string& text) { if(warning) (*warning << "WARNING!!! " << text).endLine(); }
 
-void ApplicationTools::displayTask(const std::string& text, bool eof)
+void ApplicationTools::displayTask(const string& text, bool eof)
 {
   if (message)
   {
@@ -278,7 +277,7 @@ void ApplicationTools::displayTaskDone() { if(message) (*message << "Done.").end
 
 /******************************************************************************/
 
-void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, const std::string& mes)
+void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, const string& mes)
 {
   if (!message) return;
   if (total == 0) return;//We do not display anything in that case.
@@ -316,7 +315,7 @@ void ApplicationTools::displayGauge(size_t iter, size_t total, char symbol, cons
 
 /******************************************************************************/
 
-void ApplicationTools::displayUnlimitedGauge(size_t iter, const std::string& mes)
+void ApplicationTools::displayUnlimitedGauge(size_t iter, const string& mes)
 {
   if (!message) return;
   string chars = "-/-\\";
@@ -339,7 +338,7 @@ void ApplicationTools::displayUnlimitedGauge(size_t iter, const std::string& mes
 
 /******************************************************************************/
   
-void ApplicationTools::displayTime(const std::string& msg)
+void ApplicationTools::displayTime(const string& msg)
 {
   time_t endTime;
   time(&endTime);
