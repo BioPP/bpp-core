@@ -630,7 +630,7 @@ namespace bpp
     /**
      * @brief Add a new column
      *
-     * @param stream the input stream
+     * @param st the input sting
      * @param sep The row delimiter
      * @param pos       The position optional (default : nb cols)
      * @param rowCol the indice of row where colnames are, starting
@@ -1003,7 +1003,7 @@ namespace bpp
     /**
      * @brief Add a new row.
      *
-     * @param stream the input stream
+     * @param st the input string
      * @param sep The column delimiter
      * @param pos       The position optional (default : nb rows)
      * @param rowCol the indice of column where rownames are, starting
