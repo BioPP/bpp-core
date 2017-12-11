@@ -1797,6 +1797,16 @@ namespace bpp
       return false;
     }
 
+    template<class T, class U>
+    static bool contains(const std::vector<T>& vec, U el)
+    {
+      for (auto it : vec)
+      {
+        if (it == (T)el) return true;
+      }
+      return false;
+    }
+
     /**
      * @return 'true' if a the first std::vector contains all elements of the second std::vector.
      *
@@ -1865,6 +1875,17 @@ namespace bpp
      */
     template<class T>
     static std::vector<T> vectorIntersection(const std::vector<T>& vec1, const std::vector<T>& vec2)
+    {
+      std::vector<T> interEl;
+      for (auto it : vec1)
+      {
+        if (contains(vec2, it)) interEl.push_back(it);
+      }
+      return interEl;
+    }
+
+    template<class T, class U>
+    static std::vector<T> vectorIntersection(const std::vector<T>& vec1, const std::vector<U>& vec2)
     {
       std::vector<T> interEl;
       for (auto it : vec1)

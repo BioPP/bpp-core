@@ -198,10 +198,13 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
       vProb_[i + 1] = th;
       x += vProb_[i + 1];
     }
-    for (unsigned int i = 0; i < dim_; i++)
-    {
-      vProb_[i] /= x;
-    }
+
+    if (x>NumConstants::TINY()) // avoid rounding pb
+      for (auto& vp : vProb_)
+        vp /= x;
+    else
+      for (auto& vp : vProb_)
+        vp = 1.0/double(dim_);
 
     break;
   case 3:

@@ -526,6 +526,9 @@ public:
    */
   void associateNode(std::shared_ptr<N>  nodeObject, NodeGraphid graphNode)
   {
+    if (NToGraphid_.find(nodeObject) != NToGraphid_.end())
+      throw Exception("AssociationGraphImplObserver::associateNode : node already exists");
+
     // nodes vector must be the right size. Eg: to store a node with
     // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (graphidToN_.size() < graphNode + 1)
@@ -543,7 +546,10 @@ public:
    */
   void associateEdge(std::shared_ptr<E>  edgeObject, EdgeGraphid graphEdge)
   {
-    // nodes vector must be the right size. Eg: to store an edge with
+    if (EToGraphid_.find(edgeObject) != EToGraphid_.end())
+      throw Exception("AssociationGraphImplObserver::associateEdge : edge already exists");
+    
+    // edges vector must be the right size. Eg: to store an edge with
     // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (graphidToE_.size() < graphEdge + 1)
       graphidToE_.resize(graphEdge + 1);
@@ -1084,6 +1090,19 @@ public:
     return indexesToReturn;
   }
 
+  std::vector<EdgeIndex> getAllEdgesIndexes() const
+  {
+    std::vector<typename AssociationGraphObserver<N, E>::EdgeIndex > indexesToReturn;
+    for (typename std::vector<std::shared_ptr<E> >::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
+    {
+      if (*currEdgeObject != 00)
+      {
+        indexesToReturn.push_back(getEdgeIndex(*currEdgeObject));
+      }
+    }
+    return indexesToReturn;
+  }
+
 
   template<class GraphIterator, bool is_const>
   class EdgeIteratorClass :
@@ -1182,6 +1201,11 @@ public:
   bool isLeaf(const std::shared_ptr<N>  node) const
   {
     return getGraph()->isLeaf(this->getNodeGraphid(node));
+  }
+
+  bool isLeaf(const NodeIndex nodeid) const
+  {
+    return getGraph()->isLeaf(this->getNodeGraphid(getNode(nodeid)));
   }
 
   /**
