@@ -78,9 +78,6 @@ public:
    * Constructor
    * @param subjectTreeGraph the graph which is observed
    */
-  AssociationTreeGraphImplObserver(std::shared_ptr<TreeGraphImpl> subjectTreeGraph = 00) :
-    AssociationGraphImplObserver<N, E, TreeGraphImpl>(subjectTreeGraph)
-  {}
 
   AssociationTreeGraphImplObserver(std::shared_ptr<TreeGraphImpl> subjectTreeGraph = 00) :
     AssociationGraphImplObserver<N, E, TreeGraphImpl>(subjectTreeGraph)
