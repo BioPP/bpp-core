@@ -197,7 +197,7 @@ public:
    */
 
   AssociationGraphImplObserver(bool directed = false) :
-    subjectGraph_(new GraphImpl(directed)),
+    subjectGraph_(std::make_shared<GraphImpl>(new GraphImpl(directed))),
     graphidToN_(),
     graphidToE_(),
     NToGraphid_(),
@@ -216,7 +216,7 @@ public:
    */
 
   AssociationGraphImplObserver(std::shared_ptr<GraphImpl> subjectGraph = 00) :
-    subjectGraph_(subjectGraph ? subjectGraph : new GraphImpl()),
+    subjectGraph_(subjectGraph ? subjectGraph : std::make_shared<GraphImpl>(new GraphImpl(true))),
     graphidToN_(),
     graphidToE_(),
     NToGraphid_(),
