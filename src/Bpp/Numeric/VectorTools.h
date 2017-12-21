@@ -393,43 +393,33 @@ namespace bpp
     template<class T>
     static void fill(std::vector<T>& v, T value)
     {
-      for (typename std::vector<T>::iterator it = v.begin(); it < v.end(); it++)
-      {
-        *it = value;
-      }
+      std::fill(v.begin(), v.end(), value);
     }
 
     /**
      * @brief Build a sequence std::vector.
      *
-     * Build a std::vector from a value to another with a specified step.
-     * This works for numerical values for which additions, subtractions and division
-     * makes sens.
+     * Build a std::vector from a value to another with a specified
+     * step. This works for numerical values for which additions,
+     * subtractions and division makes sens.
      *
-     * @param from The begining.
-     * @param to The end.
+     * @param from The begining (included).
+     * @param to The end (included)
      * @param by The step.
      * @return A std::vector containing the sequence.
      */
     template<class T>
     static std::vector<T> seq(T from, T to, T by)
     {
-      std::vector<T> v;
-      if (from < to)
+      std::vector<T> v((size_t)((std::abs(from-to)+by/100)/by)+1);
+      T step=from < to?by:-by;
+      T val(from < to?from:to);
+      for (auto& vi:v)
       {
-        // for (T i = from ; i <= to ; i += by) {           // Not good for double, 'to'
-        for (T i = from; i <= to + (by / 100); i += by)
-        { // must be a little bit larger
-          v.push_back(i);
-        }
+        vi=val;
+        val+=step;
       }
-      else
-      {
-        for (T i = from; i >= to - (by / 100); i -= by)
-        {
-          v.push_back(i);
-        }
-      }
+      
       return v;
     }
 
