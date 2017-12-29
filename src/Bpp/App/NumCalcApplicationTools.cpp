@@ -48,10 +48,10 @@ using namespace std;
 vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const std::string& delim, const std::string& seqdelim)
 {
   vector<int> seq;
-  StringTokenizer * st = new StringTokenizer(s, delim, true);
+  unique_ptr<StringTokenizer> st(new StringTokenizer(s, delim, true));
   while (st->hasMoreToken())
   {
-    StringTokenizer * st2 = new StringTokenizer(st->nextToken(), seqdelim, true);
+    unique_ptr<StringTokenizer> st2(new StringTokenizer(st->nextToken(), seqdelim, true));
 
     if (st2->numberOfRemainingTokens() > 1)
     {
@@ -62,7 +62,7 @@ vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const s
     {
       seq.push_back(TextTools::toInt(st2->getToken(0)));
     }  
-  }  
+  }
   return seq;
 }
 

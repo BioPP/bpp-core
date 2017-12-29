@@ -172,7 +172,7 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
   for (size_t i = 0; i < pl.size(); i++)
   {
     if (unparsedParams.find(pl[i].getName()) == unparsedParams.end())
-      plpars.addParameter(*pl[i].clone());
+      plpars.addParameter(pl[i].clone());
   }
 
   size_t unp_s = unparsedParams.size();
