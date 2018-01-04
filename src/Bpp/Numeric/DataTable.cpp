@@ -69,6 +69,19 @@ DataTable::DataTable(size_t nCol) :
   colNames_(0)
 {}
 
+DataTable::DataTable(size_t nRow, const std::vector<std::string>& colNames) :
+  nRow_(nRow),
+  nCol_(colNames.size()),
+  data_(colNames.size()),
+  rowNames_(0),
+  colNames_(0)
+{
+  for (size_t i = 0; i < nCol_; i++)
+    data_[i].resize(nRow);
+
+  setColumnNames(colNames); // May throw an exception.
+}
+
 DataTable::DataTable(const std::vector<std::string>& colNames) :
   nRow_(0),
   nCol_(colNames.size()),
@@ -270,6 +283,20 @@ void DataTable::setRowNames(const vector<string>& rowNames)
     if (rowNames_ != NULL)
       delete rowNames_;
     rowNames_ = new vector<string>(rowNames.begin(), rowNames.end());
+  }
+}
+
+void DataTable::setRowName(size_t rowId, const string& rowName)
+{
+  if (VectorTools::contains(*rowNames_,rowName))
+  {
+    throw DuplicatedTableRowNameException("DataTable::setRowName(...). New row name " + rowName + " already exists");
+  }
+  if (rowId >= nRow_)
+    throw DimensionException("DataTable::setRowName.", rowId, nRow_);
+  else
+  {
+    (*rowNames_)[rowId]=rowName;
   }
 }
 
@@ -530,6 +557,17 @@ void DataTable::addRow(const vector<string>& newRow)
     data_[j].push_back(newRow[j]);
   }
   nRow_++;
+}
+
+void DataTable::setRow(size_t rowIndex, const vector<string>& newRow)
+{
+  if (rowIndex >= nRow_)
+    throw DimensionException("DataTable::setRow.", rowIndex, nRow_);
+  if (newRow.size() != nCol_)
+    throw DimensionException("DataTable::setRow.", newRow.size(), nCol_);
+  
+  for (size_t j = 0; j < nCol_; j++)
+    data_[j][rowIndex]=newRow[j];
 }
 
 void DataTable::addRow(const string& rowName, const vector<string>& newRow)

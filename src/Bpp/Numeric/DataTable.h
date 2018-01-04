@@ -79,6 +79,15 @@ public:
   DataTable(size_t nRow, size_t nCol);
 
   /**
+   * @brief Build a new void DataTable object with nRow rows and named columns.
+   *
+   * @param nRow The number of rows of the DataTable.
+   * @param colNames The names of the columns of the DataTable.
+   * @throw DuplicatedTableColumnNameException If colnames contains identical names.
+   */
+  DataTable(size_t nRow, const std::vector<std::string>& colNames);
+
+  /**
    * @brief Build a new void DataTable object with nCol columns.
    *
    * @param nCol The number of columns of the DataTable.
@@ -313,6 +322,17 @@ public:
   void setRowNames(const std::vector<std::string>& rowNames);
 
   /**
+   * @brief Set the row name of a row with a given index.
+   *
+   * @param rowIndex the index of the row
+   * @param rowName The row name.
+   * @throw DimensionException If the index does not match.
+   * @throw DuplicatedTableRowNameException If name is already given.
+   */
+  
+  void setRowName(size_t rowIndex, const std::string& rowName);
+
+  /**
    * @brief Get the row names of this table.
    *
    * @return The row names of this table.
@@ -383,6 +403,7 @@ public:
    * @throw TableRowNamesException If the table has column names.
    */
   void addRow(const std::vector<std::string>& newRow);
+
   /**
    * @brief Add a new row.
    *
@@ -392,8 +413,20 @@ public:
    * @throw NoTableRowNamesException If the table does not have column names.
    * @throw DuplicatedTableRowNameException If rowName is already used.
    */
+  
   void addRow(const std::string& rowName, const std::vector<std::string>& newRow);
-  /** @} */
+
+  /**
+   * @brief Sets an existing with a given index.
+   *
+   * @param rowIndex  The index of the row.
+   * @param newRow    The new row values.
+   */
+  
+  void setRow(const size_t rowIndex, const std::vector<std::string>& newRow);
+
+
+/** @} */
 
 public:
   /**
