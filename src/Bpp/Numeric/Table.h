@@ -1198,12 +1198,12 @@ namespace bpp
       for (size_t i = 0; i < m; i++)
       {
         if (frontNames)
-          out << (byRow?data.getRowName(i):data.getColumnName(i) << sep);
+          out << (byRow?data.getRowName(i):data.getColumnName(i)) << sep;
         
         out << (byRow?data(i, 0):data(0, i));
         for (size_t j = 1; j < n; j++)
         {
-          out << sep << byRow?data(i, j):data(j, i);
+          out << sep << (byRow?data(i, j):data(j, i));
         }
         out.endLine();
       }
