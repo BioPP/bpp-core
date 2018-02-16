@@ -49,9 +49,9 @@ using namespace std;
 
 /******************************************************************************/
 
-OutputStream* ApplicationTools::error   = new StdErr();
-OutputStream* ApplicationTools::message = new StdOut();
-OutputStream* ApplicationTools::warning = new StdOut();
+std::shared_ptr<OutputStream> ApplicationTools::error(new StdErr());
+std::shared_ptr<OutputStream> ApplicationTools::message(new StdOut());
+std::shared_ptr<OutputStream> ApplicationTools::warning(new StdOut());
 time_t ApplicationTools::startTime;
 size_t ApplicationTools::terminalWidth = 80;
 float ApplicationTools::terminalSplit = 0.5;
