@@ -70,14 +70,12 @@ public:
   ExponentialDiscreteDistribution(size_t n, double lambda = 1.);
 
   ExponentialDiscreteDistribution(const ExponentialDiscreteDistribution& dist) :
-    AbstractParameterAliasable(dist),
     AbstractDiscreteDistribution(dist),
     lambda_(dist.lambda_)
   {}
 
   ExponentialDiscreteDistribution& operator=(const ExponentialDiscreteDistribution& dist)
   {
-    AbstractParameterAliasable::operator=(dist);    
     AbstractDiscreteDistribution::operator=(dist);
     lambda_ = dist.lambda_;
     return *this;

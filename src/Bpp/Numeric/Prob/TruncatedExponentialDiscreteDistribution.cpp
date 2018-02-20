@@ -51,7 +51,6 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistribution(size_t n, double lambda, double truncationPoint) :
-  AbstractParameterAliasable("TruncExponential."),
   AbstractDiscreteDistribution(n, "TruncExponential."),
   lambda_(lambda),
   tp_(truncationPoint),

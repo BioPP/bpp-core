@@ -52,7 +52,6 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, double beta) :
-  AbstractParameterAliasable("Beta."),
   AbstractDiscreteDistribution(n,NumConstants::VERY_TINY(),"Beta."), alpha_(alpha), beta_(beta), diffln_(0)
 {
   addParameter_(new Parameter("Beta.alpha", alpha, new IntervalConstraint(1, 0.0001, true), true));
@@ -67,14 +66,12 @@ BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, doubl
 }
 
 BetaDiscreteDistribution::BetaDiscreteDistribution(const BetaDiscreteDistribution& bdd) :
-  AbstractParameterAliasable(bdd),
   AbstractDiscreteDistribution(bdd), alpha_(bdd.alpha_), beta_(bdd.beta_), diffln_(bdd.diffln_)
 {
 }
 
 BetaDiscreteDistribution& BetaDiscreteDistribution::operator=(const BetaDiscreteDistribution& bdd)
 {
-  AbstractParameterAliasable::operator=(bdd);
   AbstractDiscreteDistribution::operator=(bdd);
 
   alpha_=bdd.alpha_;

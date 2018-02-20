@@ -48,7 +48,6 @@ using namespace std;
 /******************************************************************************/
 
 ConstantDistribution::ConstantDistribution(double value):
-  AbstractParameterAliasable("Constant."),
   AbstractDiscreteDistribution(1, "Constant."),
   value_(value)
 {
@@ -57,14 +56,12 @@ ConstantDistribution::ConstantDistribution(double value):
 }
 
 ConstantDistribution::ConstantDistribution(const ConstantDistribution& cd) :
-  AbstractParameterAliasable(cd),
   AbstractDiscreteDistribution(cd),
   value_(cd.value_)
 {}
 
 ConstantDistribution& ConstantDistribution::operator=(const ConstantDistribution& cd)
 {
-  AbstractParameterAliasable::operator=(cd);
   AbstractDiscreteDistribution::operator=(cd);
   value_=cd.value_;
 

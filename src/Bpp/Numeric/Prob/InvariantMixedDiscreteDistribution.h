@@ -76,7 +76,6 @@ public:
   }
 
   InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd) :
-    AbstractParameterAliasable(imdd),
     AbstractDiscreteDistribution(imdd),
     dist_(dynamic_cast<DiscreteDistribution*>(imdd.dist_->clone())),
     invariant_(imdd.invariant_),
@@ -86,7 +85,6 @@ public:
 
   InvariantMixedDiscreteDistribution& operator=(const InvariantMixedDiscreteDistribution& imdd)
   {
-    AbstractParameterAliasable::operator=(imdd);
     AbstractDiscreteDistribution::operator=(imdd);
     dist_         = dynamic_cast<DiscreteDistribution*>(imdd.dist_->clone());
     invariant_    = imdd.invariant_;

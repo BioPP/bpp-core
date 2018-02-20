@@ -58,7 +58,7 @@ namespace bpp
    */
   class AbstractDiscreteDistribution :
     public virtual DiscreteDistribution,
-    public virtual AbstractParameterAliasable
+    public AbstractParameterAliasable
   {
 
   public:

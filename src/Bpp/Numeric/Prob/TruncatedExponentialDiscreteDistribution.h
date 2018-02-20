@@ -85,7 +85,6 @@ public:
   TruncatedExponentialDiscreteDistribution(size_t n, double lambda = 1., double truncationPoint = 10);
 
   TruncatedExponentialDiscreteDistribution(const TruncatedExponentialDiscreteDistribution& dist) :
-    AbstractParameterAliasable(dist),
     AbstractDiscreteDistribution(dist),
     lambda_(dist.lambda_),
     tp_(dist.tp_),
@@ -94,7 +93,6 @@ public:
 
   TruncatedExponentialDiscreteDistribution& operator=(const TruncatedExponentialDiscreteDistribution& dist)
   {
-    AbstractParameterAliasable::operator=(dist);
     AbstractDiscreteDistribution::operator=(dist);
     lambda_= dist.lambda_;
     tp_ = dist.tp_;

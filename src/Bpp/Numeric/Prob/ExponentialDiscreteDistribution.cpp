@@ -51,7 +51,6 @@ using namespace std;
 /****************************************************************/
 
 ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(size_t n, double lambda) :
-  AbstractParameterAliasable("Exponential."),
   AbstractDiscreteDistribution(n, "Exponential."),
   lambda_(lambda)
 {

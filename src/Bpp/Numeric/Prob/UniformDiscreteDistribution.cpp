@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (2010)
+Copyright or © or Copr. Bio++ Development Team, (2010)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -51,7 +51,6 @@ using namespace std;
 /** Constructor: **************************************************************/
 
 UniformDiscreteDistribution::UniformDiscreteDistribution(unsigned int n, double min, double max) :
-  AbstractParameterAliasable("Uniform."),
   AbstractDiscreteDistribution(n,"Uniform."),
   min_((min<max)?min:max),
   max_((min<max)?max:min) 
@@ -63,7 +62,6 @@ UniformDiscreteDistribution::UniformDiscreteDistribution(unsigned int n, double 
 }
 
 UniformDiscreteDistribution::UniformDiscreteDistribution(const UniformDiscreteDistribution& udd) : 
-  AbstractParameterAliasable(udd),
   AbstractDiscreteDistribution(udd),
   min_(udd.min_),
   max_(udd.max_)
@@ -72,7 +70,6 @@ UniformDiscreteDistribution::UniformDiscreteDistribution(const UniformDiscreteDi
 
 UniformDiscreteDistribution& UniformDiscreteDistribution::operator=(const UniformDiscreteDistribution& udd) 
 {
-  AbstractParameterAliasable::operator=(udd);
   AbstractDiscreteDistribution::operator=(udd);
   min_=udd.min_;
   max_=udd.max_;
@@ -87,8 +84,4 @@ UniformDiscreteDistribution::~UniformDiscreteDistribution() {}
 void UniformDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
 }
-
-
-
-
 

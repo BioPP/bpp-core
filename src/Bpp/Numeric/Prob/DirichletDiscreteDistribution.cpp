@@ -100,7 +100,7 @@ void DirichletDiscreteDistribution::applyParameters()
 {
   Vdouble valpha;
 
-  for (unsigned int j = 0; j < vpBDD_.size() + 1; j++)
+  for (size_t j = 0; j < vpBDD_.size() + 1; j++)
   {
     valpha.push_back(getParameterValue("alpha_" + TextTools::toString(j + 1)));
   }
@@ -182,7 +182,7 @@ double DirichletDiscreteDistribution::getProbability(Vdouble& category) const
   double sumc = 0;
   double p = 1;
 
-  for (unsigned int j = 0; j < vpBDD_.size(); j++)
+  for (size_t j = 0; j < vpBDD_.size(); j++)
   {
     p *= vpBDD_[j]->getProbability(category[j] / (1 - sumc));
     sumc += category[j];
@@ -199,26 +199,26 @@ VVdouble DirichletDiscreteDistribution::getCategories() const
   double sumc = 0;
 
   vdj = vpBDD_[0]->getCategories();
-  for (unsigned int k = 0; k < vdj.size(); k++)
+  for (size_t k = 0; k < vdj.size(); k++)
   {
     vd.push_back(vdj[k]);
     vvd1.push_back(vd);
     vd.pop_back();
   }
 
-  for (unsigned int j = 1; j < vpBDD_.size(); j++)
+  for (size_t j = 1; j < vpBDD_.size(); j++)
   {
     vdj = vpBDD_[j]->getCategories();
     vvd2.clear();
-    for (unsigned int i = 0; i < vvd1.size(); i++)
+    for (size_t i = 0; i < vvd1.size(); i++)
     {
       vd = vvd1[i];
       sumc = 0;
-      for (unsigned int k = 0; k < vd.size(); k++)
+      for (size_t k = 0; k < vd.size(); k++)
       {
         sumc += vd[k];
       }
-      for (unsigned int k = 0; k < vdj.size(); k++)
+      for (size_t k = 0; k < vdj.size(); k++)
       {
         vd.push_back(vdj[k] * (1 - sumc));
         vvd2.push_back(vd);
@@ -229,11 +229,11 @@ VVdouble DirichletDiscreteDistribution::getCategories() const
   }
 
   vvd2.clear();
-  for (unsigned int i = 0; i < vvd1.size(); i++)
+  for (size_t i = 0; i < vvd1.size(); i++)
   {
     vd = vvd1[i];
     sumc = 0;
-    for (unsigned int k = 0; k < vd.size(); k++)
+    for (size_t k = 0; k < vd.size(); k++)
     {
       sumc += vd[k];
     }

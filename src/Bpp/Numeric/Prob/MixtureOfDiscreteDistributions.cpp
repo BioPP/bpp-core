@@ -47,7 +47,6 @@ using namespace std;
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<DiscreteDistribution*>& distributions,
                                                                const vector<double>& probas ) :
-  AbstractParameterAliasable("Mixture."),
   AbstractDiscreteDistribution(1, "Mixture."),
   vdd_(),
   probas_(),
@@ -108,7 +107,6 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
 }
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd) :
-  AbstractParameterAliasable(mdd),
   AbstractDiscreteDistribution(mdd),
   vdd_(),
   probas_(),
@@ -124,7 +122,6 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDi
 
 MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const MixtureOfDiscreteDistributions& mdd)
 {
-  AbstractParameterAliasable::operator=(mdd);
   AbstractDiscreteDistribution::operator=(mdd);
   vdd_.clear();
   probas_.clear();
