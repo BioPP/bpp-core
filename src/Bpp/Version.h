@@ -40,8 +40,8 @@ knowledge of the CeCILL license and that you accept its terms.
 #ifndef _VERSION_H_
 #define _VERSION_H_
 
-#define BPP_VERSION "2.3.2"
-#define BPP_REL_DATE "08/12/17"
+#define BPP_VERSION "2.4.0"
+#define BPP_REL_DATE "19/02/18"
 
 #endif //_VERSION_H_
 
