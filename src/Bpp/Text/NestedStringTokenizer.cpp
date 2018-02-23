@@ -47,8 +47,7 @@ using namespace bpp;
 
 using namespace std;
 
-NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::string& open, const std::string& end, const std::string& delimiters, bool solid)
-  throw (Exception):
+NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::string& open, const std::string& end, const std::string& delimiters, bool solid):
   StringTokenizer()
 {
   int blocks = 0;
@@ -145,7 +144,7 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
   }
 }
 
-const std::string& NestedStringTokenizer::nextToken() throw (Exception)
+const std::string& NestedStringTokenizer::nextToken()
 {
   if (!hasMoreToken()) throw Exception("No more token in nested tokenizer.");
   return tokens_[currentPosition_++];

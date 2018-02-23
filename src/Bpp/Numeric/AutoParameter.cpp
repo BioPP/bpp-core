@@ -58,10 +58,10 @@ string AutoParameter::CONSTRAINTS_KEEP   = "keep";
 
 /** Constructors: *************************************************************/
 
-AutoParameter::AutoParameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint) throw (ConstraintException):
-Parameter(name, value, constraint, attachConstraint), messageHandler_(ApplicationTools::message) {}
+AutoParameter::AutoParameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint):
+  Parameter(name, value, constraint, attachConstraint), messageHandler_(ApplicationTools::message.get()) {}
 
-AutoParameter::AutoParameter(const Parameter& p): Parameter(p), messageHandler_(ApplicationTools::message) {}
+AutoParameter::AutoParameter(const Parameter& p): Parameter(p), messageHandler_(ApplicationTools::message.get()) {}
 
 AutoParameter::AutoParameter(const AutoParameter& p): Parameter(p), messageHandler_(p.messageHandler_) {}
 
@@ -74,7 +74,7 @@ AutoParameter& AutoParameter::operator=(const AutoParameter& p)
 
 /******************************************************************************/
 
-void AutoParameter::setValue(double value) throw (ConstraintException)
+void AutoParameter::setValue(double value)
 {
   try
   { 

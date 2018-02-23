@@ -72,7 +72,7 @@ namespace bpp {
      * @return The corresponding hidden state.
      * @see getNumberOfStates
      */
-    virtual const Clonable& getState(size_t stateIndex) const throw (HmmBadStateException) = 0;
+    virtual const Clonable& getState(size_t stateIndex) const = 0;
 
 
     virtual size_t getNumberOfStates() const = 0;

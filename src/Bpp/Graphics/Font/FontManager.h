@@ -69,14 +69,14 @@ public:
    * @param font The font to look for.
    * @return The code associated to a given font.
    */
-  virtual CodeType getCode(const Font& font) const throw (Exception) = 0;
+  virtual CodeType getCode(const Font& font) const = 0;
 
   /**
    * @param code The code to look for.
    * @return The font associated to a given code.
    * @throw exception if the code is not valid.
    */
-  virtual const Font& getFont(CodeType& code) const throw (Exception) = 0;
+  virtual const Font& getFont(CodeType& code) const = 0;
 
   /**
    * @return All valid codes.
@@ -108,7 +108,7 @@ public:
   AbstractFontManager() : fonts_(), codes_() {}
 
 public:
-  CodeType getCode(const Font& font) const throw (Exception)
+  CodeType getCode(const Font& font) const
   {
     for (unsigned int i = 0; i < fonts_.size(); i++)
     {
@@ -120,7 +120,7 @@ public:
     throw Exception("AbstractFontManager::getCode. Unknown font: " + font.toString());
   }
 
-  const Font& getFont(int &code) const throw (Exception)
+  const Font& getFont(int &code) const
   {
     for (unsigned int i = 0; i < codes_.size(); i++)
     {

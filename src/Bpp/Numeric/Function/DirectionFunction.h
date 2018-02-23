@@ -65,7 +65,7 @@ class DirectionFunction:
     DirectionFunction(Function* function = 0) :
       params_(), p_(), xt_(), xi_(),
       function_(function), constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
-      messenger_(ApplicationTools::message) {}
+      messenger_(ApplicationTools::message.get()) {}
 
     DirectionFunction(const DirectionFunction& df) :
       ParametrizableAdapter(df), params_(df.params_), p_(df.p_), xt_(df.p_), xi_(df.xi_),
@@ -89,10 +89,9 @@ class DirectionFunction:
     DirectionFunction* clone() const { return new DirectionFunction(*this); }
 
   public: // Function interface implementation:
-    void setParameters(const ParameterList& parameters)
-      throw (ParameterNotFoundException, ConstraintException);
-    double getValue() const throw (Exception);
-    const ParameterList & getParameters() const throw (Exception);
+    void setParameters(const ParameterList& parameters);
+    double getValue() const;
+    const ParameterList & getParameters() const;
 
   public: // Specific methods:
     void init(const ParameterList & p, const std::vector<double> & xi);

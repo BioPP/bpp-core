@@ -62,6 +62,7 @@ public:
   typedef typename AssociationGraphObserver<N, E>::EdgeIndex EdgeIndex;
 
   typedef typename Graph::NodeId NodeGraphid;
+
   typedef typename Graph::EdgeId EdgeGraphid;
 
 public:
@@ -77,10 +78,11 @@ public:
    * Constructor
    * @param subjectTreeGraph the graph which is observed
    */
+
   AssociationTreeGraphImplObserver(std::shared_ptr<TreeGraphImpl> subjectTreeGraph = 00) :
     AssociationGraphImplObserver<N, E, TreeGraphImpl>(subjectTreeGraph)
   {}
-
+  
   /**
    * Copy Constructor
    * @param treeGraphObserver the treeGraphObserver to be copied
@@ -239,7 +241,7 @@ public:
 
   NodeIndex getSon(const EdgeIndex edge) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
   /**
@@ -255,7 +257,7 @@ public:
 
   NodeIndex getFather(const EdgeIndex edge) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
 
@@ -346,6 +348,11 @@ public:
     return this->outgoingNeighborNodesIterator(node);
   }
 
+  std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node) const
+  {
+    return this->outgoingNeighborNodesIterator(node);
+  }
+
   /*
    * @brief builds iterator on the branches to sons of a Node
    *
@@ -354,6 +361,11 @@ public:
   std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::EdgeIterator> branchesIterator(std::shared_ptr<N> node)
   {
     return this->outgoingEdgesIterator(node);
+  }
+
+  std::unique_ptr<typename AssociationTreeGraphObserver<N, E>::EdgeIterator> branchesIterator(std::shared_ptr<N> node) const
+  {
+    return this->outgoingEdgesIterator(node); 
   }
 
   /**

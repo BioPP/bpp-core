@@ -80,9 +80,9 @@ namespace bpp
   typedef std::vector<VVVint> VVVVint;
 
   typedef std::vector<unsigned int> Vuint;
-  typedef std::vector<Vint> VVuint;
-  typedef std::vector<VVint> VVVuint;
-  typedef std::vector<VVVint> VVVVuint;
+  typedef std::vector<Vuint> VVuint;
+  typedef std::vector<VVuint> VVVuint;
+  typedef std::vector<VVVuint> VVVVuint;
 
 /**
  * @name Element-wise operations.
@@ -254,7 +254,6 @@ namespace bpp
     return result;
   }
 
-
   template<class T>
   void operator+=(std::vector<T>& v1, const std::vector<T>& v2) throw (DimensionException)
   {
@@ -352,14 +351,13 @@ namespace bpp
      *
      * @{
      */
-    template<class T>
+
     static void resize2(VVdouble& vv, size_t n1, size_t n2)
     {
       vv.resize(n1);
       for (auto & x : vv) { x.resize(n2); }
     }
 
-    template<class T>
     static void resize3(VVVdouble& vvv, size_t n1, size_t n2, size_t n3)
     {
       vvv.resize(n1);
@@ -395,43 +393,33 @@ namespace bpp
     template<class T>
     static void fill(std::vector<T>& v, T value)
     {
-      for (typename std::vector<T>::iterator it = v.begin(); it < v.end(); it++)
-      {
-        *it = value;
-      }
+      std::fill(v.begin(), v.end(), value);
     }
 
     /**
      * @brief Build a sequence std::vector.
      *
-     * Build a std::vector from a value to another with a specified step.
-     * This works for numerical values for which additions, subtractions and division
-     * makes sens.
+     * Build a std::vector from a value to another with a specified
+     * step. This works for numerical values for which additions,
+     * subtractions and division makes sens.
      *
-     * @param from The begining.
-     * @param to The end.
+     * @param from The begining (included).
+     * @param to The end (included)
      * @param by The step.
      * @return A std::vector containing the sequence.
      */
     template<class T>
     static std::vector<T> seq(T from, T to, T by)
     {
-      std::vector<T> v;
-      if (from < to)
+      std::vector<T> v((size_t)((std::abs(from-to)+by/100)/by)+1);
+      T step=from < to?by:-by;
+      T val(from < to?from:to);
+      for (auto& vi:v)
       {
-        // for (T i = from ; i <= to ; i += by) {           // Not good for double, 'to'
-        for (T i = from; i <= to + (by / 100); i += by)
-        { // must be a little bit larger
-          v.push_back(i);
-        }
+        vi=val;
+        val+=step;
       }
-      else
-      {
-        for (T i = from; i >= to - (by / 100); i -= by)
-        {
-          v.push_back(i);
-        }
-      }
+      
       return v;
     }
 
@@ -935,6 +923,7 @@ namespace bpp
           out << delim;
       }
     }
+
 
 
     /**
@@ -1620,9 +1609,9 @@ namespace bpp
       }
       OutputType s = 0;
       double n = static_cast<double>(v.size());
-      for (auto it : counts)
+      for (auto& it : counts)
       {
-        s += static_cast<OutputType>((it->second / n) * std::log(it->second / n) / std::log(base));
+        s += static_cast<OutputType>((it.second / n) * std::log(it.second / n) / std::log(base));
       }
       return -s;
     }
@@ -1658,11 +1647,11 @@ namespace bpp
       }
       OutputType s = 0;
       double n = static_cast<double>(v1.size());
-      for (auto it1 : counts12)
+      for (auto& it1 : counts12)
       {
-        for (auto it2 : it1->second.begin())
+        for (auto& it2 : it1.second)
         {
-          s += static_cast<OutputType>((it2->second / n) * std::log(it2->second * n / (counts1[it1->first] * counts2[it2->first])) / std::log(base));
+          s += static_cast<OutputType>((it2.second / n) * std::log(it2.second * n / (counts1[it1.first] * counts2[it2.first])) / std::log(base));
         }
       }
       return s;
@@ -1798,6 +1787,16 @@ namespace bpp
       return false;
     }
 
+    template<class T, class U>
+    static bool contains(const std::vector<T>& vec, U el)
+    {
+      for (auto it : vec)
+      {
+        if (it == (T)el) return true;
+      }
+      return false;
+    }
+
     /**
      * @return 'true' if a the first std::vector contains all elements of the second std::vector.
      *
@@ -1866,6 +1865,17 @@ namespace bpp
      */
     template<class T>
     static std::vector<T> vectorIntersection(const std::vector<T>& vec1, const std::vector<T>& vec2)
+    {
+      std::vector<T> interEl;
+      for (auto it : vec1)
+      {
+        if (contains(vec2, it)) interEl.push_back(it);
+      }
+      return interEl;
+    }
+
+    template<class T, class U>
+    static std::vector<T> vectorIntersection(const std::vector<T>& vec1, const std::vector<U>& vec2)
     {
       std::vector<T> interEl;
       for (auto it : vec1)

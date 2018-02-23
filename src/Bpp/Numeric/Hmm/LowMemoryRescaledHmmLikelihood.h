@@ -110,7 +110,7 @@ public:
     HmmTransitionMatrix* transitionMatrix,
     HmmEmissionProbabilities* emissionProbabilities,
     const std::string& prefix,
-    size_t maxSize = 1000000) throw (Exception);
+    size_t maxSize = 1000000);
 
   LowMemoryRescaledHmmLikelihood(const LowMemoryRescaledHmmLikelihood& lik) :
     AbstractHmmLikelihood(lik),
@@ -173,12 +173,12 @@ public:
 
   const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
 
-  void setParameters(const ParameterList& pl) throw (Exception)
+  void setParameters(const ParameterList& pl)
   {
     setParametersValues(pl);
   }
 
-  double getValue() const throw (Exception) { return -logLik_; }
+  double getValue() const { return -logLik_; }
 
   double getLogLikelihood() const { return logLik_; }
 
@@ -202,7 +202,7 @@ public:
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
   }
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const throw (NotImplementedException)
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
   }

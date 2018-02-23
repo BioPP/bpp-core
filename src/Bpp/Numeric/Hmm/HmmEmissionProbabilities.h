@@ -74,7 +74,7 @@ namespace bpp
      * @param stateAlphabet The new state alphabet.
      * @throw UnvalidStateAlphabetException if the new alphabet is uncorrect (for instance is NULL pointer).
      */
-    virtual void setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet) throw (HmmUnvalidAlphabetException) = 0;
+    virtual void setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet) = 0;
 
     /**
      * @brief Operator access to the emission probabilities.

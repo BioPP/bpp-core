@@ -65,12 +65,11 @@ class PolynomialFunction1:
     PolynomialFunction1* clone() const { return new PolynomialFunction1(*this); }
  
   public:
-    void setParameters(const ParameterList& pl) 
-        throw (ParameterNotFoundException, ConstraintException, Exception)
+    void setParameters(const ParameterList& pl)
     {
       matchParametersValues(pl);
     }
-    double getValue() const throw (Exception) { return fval_; }
+    double getValue() const { return fval_; }
  
     void fireParameterChanged(const ParameterList& pl) {
       double x = getParameterValue("x");
@@ -97,8 +96,7 @@ class PolynomialFunction1Der1:
     PolynomialFunction1Der1* clone() const { return new PolynomialFunction1Der1(*this); }
  
   public:
-    void setParameters(const ParameterList& pl) 
-        throw (ParameterNotFoundException, ConstraintException, Exception)
+    void setParameters(const ParameterList& pl)
     {
       matchParametersValues(pl);
     }
@@ -118,7 +116,7 @@ class PolynomialFunction1Der1:
     void enableFirstOrderDerivatives(bool yn) { compFirstDer_ = yn; }
     bool enableFirstOrderDerivatives() const { return compFirstDer_; }
 
-    double getFirstOrderDerivative(const std::string& variable) const throw (Exception) {
+    double getFirstOrderDerivative(const std::string& variable) const {
       if (!compFirstDer_)
         throw Exception("PolynomialFunction1Der1::getFirstOrderDerivative. First order derivatives are not computed.");
       return firstDer_[variable];

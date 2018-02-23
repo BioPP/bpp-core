@@ -153,7 +153,7 @@ void XFigGraphicDevice::drawCircle(double x, double y, double radius, short fill
   content_.push_back(oss.str());
 }
 
-void XFigGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
+void XFigGraphicDevice::drawText(double x, double y, const std::string& text, short hpos, short vpos, double angle)
 {
   int xrel = static_cast<int>(round(x_(x)));
   short sub = 0;

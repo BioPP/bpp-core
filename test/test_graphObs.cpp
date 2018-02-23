@@ -44,7 +44,10 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  AssociationGlobalGraphObserver<string,unsigned int> grObs(true);
+
+  typedef AssociationGlobalGraphObserver<string,unsigned int>  si_Graph;
+  
+  si_Graph grObs(true);
   shared_ptr<string> zero(new string("zero"));
   shared_ptr<string> one(new string("one"));
   shared_ptr<string> two(new string("two"));
@@ -81,7 +84,7 @@ int main() {
   cout << endl;
   cout << "Iteration on all nodes:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::NodeIterator> nIt=grObs.allNodesIterator();
+  unique_ptr<si_Graph::NodeIterator> nIt=grObs.allNodesIterator();
 
   for (;!nIt->end();nIt->next())
   {
@@ -91,7 +94,7 @@ int main() {
   cout << endl;
   cout << "Iteration on all edges:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::EdgeIterator> eIt=grObs.allEdgesIterator();
+  unique_ptr<si_Graph::EdgeIterator> eIt=grObs.allEdgesIterator();
 
   for (;!eIt->end();eIt->next())
   {
@@ -101,7 +104,7 @@ int main() {
   cout << endl;
   cout << "Iteration on outgoing nodes neighbor of 1:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::NodeIterator> on1It=grObs.outgoingNeighborNodesIterator(one);
+  unique_ptr<si_Graph::NodeIterator> on1It=grObs.outgoingNeighborNodesIterator(one);
 
   for (;!on1It->end();on1It->next())
   {
@@ -111,7 +114,7 @@ int main() {
   cout << endl;
   cout << "Iteration on incoming nodes neighbor of 0:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::NodeIterator> in0It=grObs.incomingNeighborNodesIterator(zero);
+  unique_ptr<si_Graph::NodeIterator> in0It=grObs.incomingNeighborNodesIterator(zero);
 
   for (;!in0It->end();in0It->next())
   {
@@ -121,7 +124,7 @@ int main() {
   cout << endl;
   cout << "Iteration on outgoing edges neighbor of 1:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::EdgeIterator> oe1It=grObs.outgoingEdgesIterator(one);
+  unique_ptr<si_Graph::EdgeIterator> oe1It=grObs.outgoingEdgesIterator(one);
 
   for (;!oe1It->end();oe1It->next())
   {
@@ -132,13 +135,27 @@ int main() {
   
   cout << "Iteration on incoming edges neighbor of 0:" << endl;
   
-  unique_ptr<AssociationGlobalGraphObserver<string, unsigned int>::EdgeIterator> ie0It=grObs.incomingEdgesIterator(zero);
+  unique_ptr<si_Graph::EdgeIterator> ie0It=grObs.incomingEdgesIterator(zero);
 
   for (;!ie0It->end();ie0It->next())
   {
     cout << ***ie0It << endl;
   }
 
-    
+  cout << endl;
+  
+  cout << "Test const Iterator on all edges:" << endl;
+
+  
+  const si_Graph& grObs_const=grObs;
+  
+  unique_ptr<si_Graph::EdgeIterator> eIt_const=grObs_const.allEdgesIterator();
+
+  for (;!eIt_const->end();eIt_const->next())
+  {
+    cout << ***eIt_const << endl;
+  }
+
+  cout << endl;
   return (test ? 0 : 1);
 }

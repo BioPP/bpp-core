@@ -173,7 +173,7 @@ public:
    * @return The value of the parameter for which the function is zero.
    * @throw Exception If something bad happened or if the initial interval do not contains a root.
    */
-  static double uniRoot(Function & f, const std::string & param, double a, double b, double tolerance) throw (Exception);
+  static double uniRoot(Function & f, const std::string & param, double a, double b, double tolerance);
   
   /**************************************************************************/
   

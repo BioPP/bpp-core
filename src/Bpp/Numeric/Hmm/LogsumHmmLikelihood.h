@@ -142,7 +142,7 @@ namespace bpp {
       HmmTransitionMatrix* transitionMatrix,
       HmmEmissionProbabilities* emissionProbabilities,
       bool ownsPointers_ = true,
-      const std::string& prefix = "") throw (Exception);
+      const std::string& prefix = "");
 
     LogsumHmmLikelihood(const LogsumHmmLikelihood& lik):
       AbstractHmmLikelihood(lik),
@@ -251,12 +251,12 @@ namespace bpp {
 
     const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
 
-    void setParameters(const ParameterList& pl) throw (Exception)
+    void setParameters(const ParameterList& pl)
     {
       setParametersValues(pl);
     }
 
-    double getValue() const throw (Exception) { return -logLik_; }
+    double getValue() const { return -logLik_; }
 
     double getLogLikelihood() const { return logLik_; }
 
@@ -274,7 +274,7 @@ namespace bpp {
     
     Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const;
 
-    void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const throw (Exception);
+    void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const;
 
     void computeLikelihood();
   protected:

@@ -88,7 +88,7 @@ class NumCalcApplicationTools
      * @return A vector containing the corresponding values as double.
      * @throw Exception If the syntax describing the set is not correct.
      */
-    static std::vector<double> getVector(const std::string& desc) throw (Exception);
+    static std::vector<double> getVector(const std::string& desc);
 
     /**
      * @brief Returns the value of the Parameter of the given name
@@ -125,7 +125,7 @@ class NumCalcApplicationTools
         std::map<std::string, std::string>& params,
         const std::string& suffix = "",
         bool suffixIsOptional = true,
-        bool warn = true) throw (Exception);
+        bool warn = true);
 
 };
 

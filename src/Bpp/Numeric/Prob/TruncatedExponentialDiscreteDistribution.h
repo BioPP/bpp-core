@@ -110,7 +110,7 @@ public:
 
   void fireParameterChanged(const ParameterList& parameters);
 
-  double randC() const throw (Exception)
+  double randC() const
   {
     double x = RandomTools::randExponential(1. / getParameterValue("lambda"));
     while (!intMinMax_.isCorrect(x))

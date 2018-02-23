@@ -82,7 +82,7 @@ double BrentOneDimension::ZEPS  = 1.0e-10;
   
 /******************************************************************************/
   
-void BrentOneDimension::doInit(const ParameterList& params) throw (Exception)
+void BrentOneDimension::doInit(const ParameterList& params)
 {
   if (params.size() != 1)
     throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
@@ -135,7 +135,7 @@ void BrentOneDimension::setInitialInterval(double inf, double sup)
 
 /******************************************************************************/
 
-double BrentOneDimension::doStep() throw (Exception)
+double BrentOneDimension::doStep()
 {
   xm   = 0.5 * (a + b);
   tol2 = 2.0 * (tol1 = getStopCondition()->getTolerance() * NumTools::abs(x) + ZEPS);
@@ -202,7 +202,7 @@ double BrentOneDimension::doStep() throw (Exception)
 
 /******************************************************************************/
   
-double BrentOneDimension::optimize() throw (Exception)
+double BrentOneDimension::optimize()
 {
   if (!isInitialIntervalSet_)
     throw Exception("BrentOneDimension::optimize. Initial interval not set: call the 'setInitialInterval' method first!");

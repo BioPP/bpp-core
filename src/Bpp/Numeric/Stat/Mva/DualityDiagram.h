@@ -102,7 +102,7 @@ public:
     const std::vector<double>& colWeights,
     unsigned int nbAxes,
     double tol = 0.0000001,
-    bool verbose = true) throw (Exception);
+    bool verbose = true);
 
   virtual ~DualityDiagram();
 
@@ -113,7 +113,7 @@ private:
       const Matrix<double>& matrix,
       const std::vector<double>& rowWeights,
       const std::vector<double>& colWeights,
-      unsigned int nbAxes) throw (Exception);
+      unsigned int nbAxes);
   void compute_(const Matrix<double>& matrix, double tol, bool verbose);
 
 public:
@@ -134,18 +134,18 @@ public:
       const std::vector<double>& colWeights,
       unsigned int nbAxes,
       double tol = 0.0000001,
-      bool verbose = true) throw (Exception);
+      bool verbose = true);
  
-  std::vector<double> computeVariancePercentagePerAxis() throw (Exception);
+  std::vector<double> computeVariancePercentagePerAxis();
   
-  size_t getNbOfKeptAxes() const throw (Exception) { return nbAxes_; }
-  const std::vector<double> getRowWeights() const throw (Exception) { return rowWeights_; }
-  const	std::vector<double> getColumnWeights() const throw (Exception) { return colWeights_; }	  
-  const std::vector<double>& getEigenValues() const throw (Exception) { return eigenValues_; }
-  const RowMatrix<double>& getRowCoordinates() const throw (Exception) { return rowCoord_; }
-  const RowMatrix<double>& getColCoordinates() const throw (Exception) { return colCoord_; }
-  const RowMatrix<double>& getPrincipalAxes() const throw (Exception) { return ppalAxes_; }
-  const RowMatrix<double>& getPrincipalComponents() const throw (Exception) { return ppalComponents_; }
+  size_t getNbOfKeptAxes() const { return nbAxes_; }
+  const std::vector<double> getRowWeights() const { return rowWeights_; }
+  const	std::vector<double> getColumnWeights() const { return colWeights_; }	  
+  const std::vector<double>& getEigenValues() const { return eigenValues_; }
+  const RowMatrix<double>& getRowCoordinates() const { return rowCoord_; }
+  const RowMatrix<double>& getColCoordinates() const { return colCoord_; }
+  const RowMatrix<double>& getPrincipalAxes() const { return ppalAxes_; }
+  const RowMatrix<double>& getPrincipalComponents() const { return ppalComponents_; }
 };
 
 } // end of namespace bpp.

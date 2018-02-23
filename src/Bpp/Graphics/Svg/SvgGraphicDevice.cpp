@@ -141,7 +141,7 @@ void SvgGraphicDevice::drawCircle(double x, double y, double radius, short fill)
   layers_[getCurrentLayer()].push_back(oss.str());
 }
 
-void SvgGraphicDevice::drawText(double x, double y, const std::string & text, short hpos, short vpos, double angle) throw (UnvalidFlagException)
+void SvgGraphicDevice::drawText(double x, double y, const std::string & text, short hpos, short vpos, double angle)
 {
   x = x_(x);
   y = y_(y);

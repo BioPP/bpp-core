@@ -180,7 +180,7 @@ namespace bpp
      * @author Sylvain Gaillard
      */
     template<class T>
-    static T pickOne(std::vector<T>& v, bool replace = false) throw (EmptyVectorException<T>) {
+    static T pickOne(std::vector<T>& v, bool replace = false) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne: input vector is empty", &v);
       size_t pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry<size_t>(v.size());
@@ -195,7 +195,7 @@ namespace bpp
     }
 
     template<class T>
-    static T pickOne(const std::vector<T>& v) throw (EmptyVectorException<T>) {
+    static T pickOne(const std::vector<T>& v) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne: input vector is empty", &v);
       size_t pos = RandomTools::giveIntRandomNumberBetweenZeroAndEntry<size_t>(v.size());
@@ -220,7 +220,7 @@ namespace bpp
      * @author Sylvain Gaillard
      */
     template<class T> 
-    static void getSample(const std::vector<T>& vin, std::vector<T>& vout, bool replace = false) throw (EmptyVectorException<T>, IndexOutOfBoundsException)
+    static void getSample(const std::vector<T>& vin, std::vector<T>& vout, bool replace = false)
     {
       if (vout.size() > vin.size() && !replace)
         throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", vout.size(), 0, vin.size());
@@ -247,7 +247,7 @@ namespace bpp
      * @author Julien Dutheil
      */
     template<class T>
-    static T pickOne(std::vector<T>& v, std::vector<double>& w, bool replace = false) throw (EmptyVectorException<T>) {
+    static T pickOne(std::vector<T>& v, std::vector<double>& w, bool replace = false) {
       if (v.empty())
         throw EmptyVectorException<T>("RandomTools::pickOne (with weight): input vector is empty", &v);
       //Compute cumulative sum of weights:
@@ -300,7 +300,7 @@ namespace bpp
      * @author Julien Dutheil
      */
    template<class T> 
-    static void getSample(const std::vector<T>& vin, const std::vector<double>& w, std::vector<T>& vout, bool replace = false) throw (EmptyVectorException<T>, IndexOutOfBoundsException)
+    static void getSample(const std::vector<T>& vin, const std::vector<double>& w, std::vector<T>& vout, bool replace = false)
     {
       if (vout.size() > vin.size() && !replace)
         throw IndexOutOfBoundsException("RandomTools::getSample (with weights): size exceeded v.size.", vout.size(), 0, vin.size());
@@ -451,7 +451,7 @@ namespace bpp
      * @throw Exception If alpha or beta is invalid (<0).
      *
      */
-    static double pGamma(double x, double alpha, double beta) throw (Exception)
+    static double pGamma(double x, double alpha, double beta)
     {
       if (alpha < 0) throw Exception("RandomTools::pGamma. Negative alpha is not allowed.");
       if (beta < 0) throw Exception("RandomTools::pGamma. Negative beta is not allowed.");

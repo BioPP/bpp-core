@@ -217,7 +217,7 @@ public:
 
   NodeIndex getSon(const EdgeIndex edgeId) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edgeId)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(this->getEdge(edgeId)))));
   }
 
 
@@ -234,7 +234,7 @@ public:
 
   NodeIndex getFather(const EdgeIndex edge) const
   {
-    return this->getNodeIndex(this->getNode(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
+    return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
   }
 
   /**
@@ -365,12 +365,22 @@ public:
     return this->incomingNeighborNodesIterator(node);
   }
 
+  std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> fathersIterator(std::shared_ptr<N> node) const
+  {
+    return this->incomingNeighborNodesIterator(node);
+  }
+
   /*
    * @brief builds iterator on the sons of a Node
    *
    */
 
   std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node)
+  {
+    return this->outgoingNeighborNodesIterator(node);
+  }
+
+  std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node) const
   {
     return this->outgoingNeighborNodesIterator(node);
   }

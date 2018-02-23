@@ -78,9 +78,9 @@ class SimpleNewtonMultiDimensions:
 		void setFunction(Function* function);
 		/** @} */
 
-		void doInit(const ParameterList& params) throw (Exception);
+		void doInit(const ParameterList& params);
 
-		double doStep() throw (Exception);
+		double doStep();
 
     /**
      * @return The optimizer used to optimize each parameter.

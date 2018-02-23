@@ -72,7 +72,7 @@ AbstractOptimizer(function), fp_(0), fret_(0), pt_(), xi_(), ncom_(0), pcom_(), 
 
 /******************************************************************************/
 
-void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception)
+void PowellMultiDimensions::doInit(const ParameterList& params)
 {
   // Build the initial matrix:
   size_t n = params.size();
@@ -95,7 +95,7 @@ void PowellMultiDimensions::doInit(const ParameterList& params) throw (Exception
   
 /******************************************************************************/
   
-double PowellMultiDimensions::doStep() throw (Exception)
+double PowellMultiDimensions::doStep()
 {
   size_t n = getParameters().size();
   fp_ = fret_;
@@ -159,7 +159,7 @@ double PowellMultiDimensions::doStep() throw (Exception)
 
 /******************************************************************************/
 
-double PowellMultiDimensions::optimize() throw (Exception)
+double PowellMultiDimensions::optimize()
 {
   AbstractOptimizer::optimize();
   // Apply best parameter:

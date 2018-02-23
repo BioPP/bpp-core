@@ -106,7 +106,7 @@ namespace bpp
      * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
      * @throw Exception when trying to perform non-valid association.
      */
-    virtual void aliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) = 0; 
+    virtual void aliasParameters(const std::string & p1, const std::string & p2) = 0; 
 
     /**
      * @brief alias the parameters following the links described in a
@@ -129,7 +129,7 @@ namespace bpp
      * @throw ParameterNotFoundException if p1 or p2 do not correspond to existing parameters.
      * @throw Exception when trying to perform non-valid dissociation.
      */
-    virtual void unaliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception)  = 0;
+    virtual void unaliasParameters(const std::string & p1, const std::string & p2)  = 0;
 
     /**
      * @brief Get the minimal list of parameters to set the model.
@@ -179,8 +179,8 @@ namespace bpp
      * @{
      */
     const ParameterList & getIndependentParameters() const { return getParameters(); }
-    void aliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) {}
-    void unaliasParameters(const std::string & p1, const std::string & p2) throw (ParameterNotFoundException, Exception) {}
+    void aliasParameters(const std::string & p1, const std::string & p2) {}
+    void unaliasParameters(const std::string & p1, const std::string & p2) {}
     unsigned int getNumberOfIndependentParameters() const{ return 0; }
     std::vector<std::string> getAlias(const std::string& name) const { return std::vector<std::string>(); }
     std::map<std::string, std::string> getAliases() const { return std::map<std::string, std::string>(); }

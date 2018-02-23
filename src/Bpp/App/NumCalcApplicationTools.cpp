@@ -48,10 +48,10 @@ using namespace std;
 vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const std::string& delim, const std::string& seqdelim)
 {
   vector<int> seq;
-  StringTokenizer * st = new StringTokenizer(s, delim, true);
+  unique_ptr<StringTokenizer> st(new StringTokenizer(s, delim, true));
   while (st->hasMoreToken())
   {
-    StringTokenizer * st2 = new StringTokenizer(st->nextToken(), seqdelim, true);
+    unique_ptr<StringTokenizer> st2(new StringTokenizer(st->nextToken(), seqdelim, true));
 
     if (st2->numberOfRemainingTokens() > 1)
     {
@@ -62,13 +62,13 @@ vector<int> NumCalcApplicationTools::seqFromString(const std::string& s, const s
     {
       seq.push_back(TextTools::toInt(st2->getToken(0)));
     }  
-  }  
+  }
   return seq;
 }
 
 
 
-vector<double> NumCalcApplicationTools::getVector(const std::string& desc) throw (Exception)
+vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
 {
   vector<double> values;
   string key, val;
@@ -125,7 +125,7 @@ ParameterGrid* NumCalcApplicationTools::getParameterGrid(
     map<string, string>& params,
     const string& suffix,
     bool suffixIsOptional,
-    bool warn) throw (Exception)
+    bool warn)
 {
   unsigned int nbParams = ApplicationTools::getParameter<unsigned int>("grid.number_of_parameters", params, 1, suffix, suffixIsOptional, warn);
   ParameterGrid* grid = new ParameterGrid();

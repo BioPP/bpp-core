@@ -459,6 +459,8 @@ public:
    */
 
   virtual std::vector<std::shared_ptr<E> > getAllEdges() const = 0;
+  virtual std::vector<EdgeIndex> getAllEdgesIndexes() const = 0;
+
 
   /**
    * Returns the Edge between two nodes nodeA -> nodeB

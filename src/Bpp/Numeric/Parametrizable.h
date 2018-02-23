@@ -87,7 +87,7 @@ class Parametrizable:
      * @return The parameter with given name.
      * @throw ParameterNotFoundException if no parameter with this name is found.
      */
-    virtual const Parameter& getParameter(const std::string& name) const throw (ParameterNotFoundException) = 0;
+    virtual const Parameter& getParameter(const std::string& name) const = 0;
 	
 		/**
 		 * @brief Get the value for parameter of name 'name'.
@@ -96,7 +96,7 @@ class Parametrizable:
 		 * @return the value of parameter <i>name</i>.
 		 */
 		virtual double getParameterValue(const std::string& name) const
-			throw (ParameterNotFoundException) = 0;
+			 = 0;
 
 		/**
 		 * @brief Set the parameters values to be equals to those of <i>parameters</i>.
@@ -109,8 +109,7 @@ class Parametrizable:
 		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual void setAllParametersValues(const ParameterList& parameters) 
-			throw (ParameterNotFoundException, ConstraintException) = 0;
+		virtual void setAllParametersValues(const ParameterList& parameters) = 0;
 
 		/**
 		 * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
@@ -121,8 +120,7 @@ class Parametrizable:
 		 * @throw ConstraintException If <i>value</i> does not match the constraint associated to
 		 * parameter <i>name</i>.
 		 */
-		virtual void setParameterValue(const std::string& name, double value) 
-			throw (ParameterNotFoundException, ConstraintException) = 0;
+		virtual void setParameterValue(const std::string& name, double value) = 0;
 
 		/**
 		 * @brief Update the parameters from <i>parameters</i>.
@@ -134,8 +132,7 @@ class Parametrizable:
 		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual void setParametersValues(const ParameterList& parameters)
-			throw (ParameterNotFoundException, ConstraintException) = 0;
+		virtual void setParametersValues(const ParameterList& parameters) = 0;
 
 		/**
 		 * @brief Update the parameters from <i>parameters</i>.
@@ -147,8 +144,7 @@ class Parametrizable:
 		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
 		 * corresponding parameter in the list.
 		 */
-		virtual bool matchParametersValues(const ParameterList& parameters)
-			throw (ConstraintException) = 0;
+		virtual bool matchParametersValues(const ParameterList& parameters) = 0;
 
     /**
      * @brief Get the number of parameters.
@@ -205,18 +201,13 @@ class ParametrizableAdapter:
 		 */
     bool hasParameter(const std::string & name) const { return parameters_.hasParameter(name); }
 		const ParameterList & getParameters() const { return parameters_; }
-    const Parameter & getParameter(const std::string & name) const throw (ParameterNotFoundException) { return parameter_; }
-		double getParameterValue(const std::string & name) const
-			throw (ParameterNotFoundException) { return 0; };
-		void setAllParametersValues(const ParameterList & parameters) 
-			throw (ParameterNotFoundException, ConstraintException) {}
-		void setParameterValue(const std::string & name, double value) 
-			throw (ParameterNotFoundException, ConstraintException) {}
-		void setParametersValues(const ParameterList & parameters)
-			throw (ParameterNotFoundException, ConstraintException) {}
-		bool matchParametersValues(const ParameterList & parameters)
-			throw (ConstraintException) { return false ;}
-    size_t getNumberOfParameters() const{ return 0; }
+    const Parameter & getParameter(const std::string & name) const { return parameter_; }
+		double getParameterValue(const std::string & name) const { return 0; }
+		void setAllParametersValues(const ParameterList & parameters) {}
+		void setParameterValue(const std::string & name, double value) {}
+		void setParametersValues(const ParameterList & parameters) {}
+		bool matchParametersValues(const ParameterList & parameters) { return false; }
+    size_t getNumberOfParameters() const { return 0; }
     void setNamespace(const std::string& prefix) {}
     std::string getNamespace() const { return ""; }
     std::string getParameterNameWithoutNamespace(const std::string& name) const { return name; }

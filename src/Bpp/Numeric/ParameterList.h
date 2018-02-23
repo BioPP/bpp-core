@@ -110,7 +110,7 @@ public:
    * @return A const reference toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual const Parameter& getParameter(const std::string& name) const throw (ParameterNotFoundException);
+  virtual const Parameter& getParameter(const std::string& name) const;
 
   /**
    * @brief Get the parameter with name <i>name</i> as a shared pointer.
@@ -119,7 +119,7 @@ public:
    * @return A const shared parameter toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const throw (ParameterNotFoundException);
+  virtual const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const;
 
   /**
    * @brief Get the value of the parameter with name <i>name</i>.
@@ -129,7 +129,7 @@ public:
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
 
-  virtual double getParameterValue(const std::string& name) const throw (ParameterNotFoundException);
+  virtual double getParameterValue(const std::string& name) const;
 
   /**
    * @brief Get the parameter with name <i>name</i>.
@@ -138,7 +138,7 @@ public:
    * @return A reference toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual Parameter& getParameter(const std::string& name) throw (ParameterNotFoundException);
+  virtual Parameter& getParameter(const std::string& name);
 
   /**
    * @brief Get the parameter with name <i>name</i> as a shared pointer.
@@ -147,7 +147,7 @@ public:
    * @return A shared parameter toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) throw (ParameterNotFoundException);
+  virtual std::shared_ptr<Parameter>& getSharedParameter(const std::string& name);
 
   /**
    * @brief Get given parameters as a sublist.
@@ -156,7 +156,7 @@ public:
    * @return A list with all parameters specified.
    * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
    */
-  virtual ParameterList subList(const std::vector<std::string>& names) const throw (ParameterNotFoundException);
+  virtual ParameterList subList(const std::vector<std::string>& names) const;
 
   /**
    * @brief Get given parameter as a sublist.
@@ -165,7 +165,7 @@ public:
    * @return A list with the parameter specified.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual ParameterList subList(const std::string& name) const throw (ParameterNotFoundException);
+  virtual ParameterList subList(const std::string& name) const;
 
   /**
    * @brief Get given parameters as a sublist.
@@ -213,7 +213,7 @@ public:
    *
    * @param param The parameter to add to the list.
    */
-  virtual void addParameter(const Parameter& param) throw (ParameterException);
+  virtual void addParameter(const Parameter& param);
 
   /**
    * @brief Add a new parameter at the end of the list.
@@ -225,7 +225,7 @@ public:
    * @param param A ppointer toward the parameter to add to the list.
    */
 
-  virtual void addParameter(Parameter* param) throw (ParameterException);
+  virtual void addParameter(Parameter* param);
 
   /**
    * @brief Share a parameter at the end of the list.
@@ -233,7 +233,7 @@ public:
    * @param param The shared_ptr parameter to add to the list.
    */
   
-  virtual void shareParameter(const std::shared_ptr<Parameter>& param) throw (ParameterException);
+  virtual void shareParameter(const std::shared_ptr<Parameter>& param);
 
 
   /**
@@ -244,9 +244,9 @@ public:
    * @throw IndexOutOfBoundsException if the index is not valid.
    */
   
-  virtual void setParameter(size_t index, const Parameter& param) throw (IndexOutOfBoundsException);
+  virtual void setParameter(size_t index, const Parameter& param);
 
-//  virtual void setParameter(size_t index, Parameter* param) throw (IndexOutOfBoundsException);
+//  virtual void setParameter(size_t index, Parameter* param);
 
   /**
    * @brief Add new parameters at the end of the list.
@@ -254,7 +254,7 @@ public:
    * @param params The parameter list containing the new parameters to
    * add to the list.
    */
-  virtual void addParameters(const ParameterList& params) throw (ParameterException);
+  virtual void addParameters(const ParameterList& params);
 
   /**
    * @brief Share parameters with a given list. They are added the end of this list.
@@ -263,7 +263,7 @@ public:
    * share with to the list.
    */
   
-  virtual void shareParameters(const ParameterList& params) throw (ParameterException);
+  virtual void shareParameters(const ParameterList& params);
 
   /**
    * @brief Add parameters to the list. If the parameter already
@@ -282,8 +282,7 @@ public:
    * @throw ParameterNotFoundException If no parameter with the given name is found in the list.
    * @throw ConstraintException If the value is incorrect.
    */
-  virtual void setParameterValue(const std::string& name, double value)
-    throw (ParameterNotFoundException, ConstraintException);
+  virtual void setParameterValue(const std::string& name, double value);
 
   /**
    * @brief Set the parameters to be equals to <i>params</i>.
@@ -296,8 +295,7 @@ public:
    * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
    * @throw ConstraintException If one value is incorrect (and the two parameter list do not have the same constraints).
    */
-  virtual void setAllParametersValues(const ParameterList& params)
-    throw (ParameterNotFoundException, ConstraintException);
+  virtual void setAllParametersValues(const ParameterList& params);
 
   /**
    * @brief Update the parameters from the ones in <i>params</i>
@@ -339,8 +337,7 @@ public:
    * @see setParameters(), setAllParameters()
    */
 
-  virtual bool matchParametersValues(const ParameterList& params, std::vector<size_t>* updatedParameters = 0)
-    throw (ConstraintException);
+  virtual bool matchParametersValues(const ParameterList& params, std::vector<size_t>* updatedParameters = 0);
 
   /**
    * @brief Set the parameters to be equals to <i>params</i>.
@@ -351,8 +348,7 @@ public:
    * @param params A list with all parameters.
    * @see setParameters(), matchParameters();
    */
-  virtual void setAllParameters(const ParameterList& params)
-    throw (ParameterNotFoundException);
+  virtual void setAllParameters(const ParameterList& params);
 
   /**
    * @brief Update the parameters from <i>params</i>.
@@ -362,8 +358,7 @@ public:
    * @param params A list containing all parameters to update.
    * @see setAllParameters(), matchParameters()
    */
-  virtual void setParameters(const ParameterList& params)
-    throw (ParameterNotFoundException);
+  virtual void setParameters(const ParameterList& params);
 
   /**
    * @brief Update the parameters from <i>params</i>.
@@ -380,7 +375,7 @@ public:
    *
    * @param name The name of the parameter to delete from the list.
    */
-  virtual void deleteParameter(const std::string& name) throw (ParameterNotFoundException);
+  virtual void deleteParameter(const std::string& name);
 
   /**
    * @brief Delete several parameters from the list.
@@ -390,14 +385,14 @@ public:
    *                    not match an extant parameter.
    */
   
-  virtual void deleteParameters(const std::vector<std::string>& names, bool mustExist = true) throw (ParameterNotFoundException);
+  virtual void deleteParameters(const std::vector<std::string>& names, bool mustExist = true);
 
   /**
    * @brief Delete a parameter from the list.
    *
    * @param index The position of the parameter to delete in the list.
    */
-  virtual void deleteParameter(size_t index) throw (IndexOutOfBoundsException);
+  virtual void deleteParameter(size_t index);
 
   /**
    * @brief Delete several parameters from the list.
@@ -405,7 +400,7 @@ public:
    * @param indices The positions of the parameters to delete in the list.
    * Duplicated positions will be considered only one time.
    */
-  virtual void deleteParameters(const std::vector<size_t>& indices) throw (IndexOutOfBoundsException);
+  virtual void deleteParameters(const std::vector<size_t>& indices);
 
   /**
    * @brief Get the position of a given parameter according to its name.
@@ -415,7 +410,7 @@ public:
    * the position of the first one is returned.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual size_t whichParameterHasName(const std::string& name) const throw (ParameterNotFoundException);
+  virtual size_t whichParameterHasName(const std::string& name) const;
 
   /**
    * @brief Print all parameters.

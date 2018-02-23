@@ -100,9 +100,9 @@ public:
 
   void setParameterList(ParameterList* pl) { pl_ = pl; }
 
-  void parameterNameChanged(ParameterEvent& event) throw (Exception) {}
+  void parameterNameChanged(ParameterEvent& event) {}
 
-  void parameterValueChanged(ParameterEvent& event) throw (Exception)
+  void parameterValueChanged(ParameterEvent& event)
   {
     Parameter* p = &(*pl_)[alias_];
     if (p->getName() != name_)
@@ -162,9 +162,9 @@ public:
 
   size_t getNumberOfIndependentParameters() const { return independentParameters_.size(); }
 
-  void aliasParameters(const std::string& p1, const std::string& p2) throw (ParameterNotFoundException, Exception);
+  void aliasParameters(const std::string& p1, const std::string& p2);
 
-  void unaliasParameters(const std::string& p1, const std::string& p2) throw (ParameterNotFoundException, Exception);
+  void unaliasParameters(const std::string& p1, const std::string& p2);
 
   /**
    * @brief alias the parameters following the links described in a
@@ -245,7 +245,7 @@ protected:
   }
 
 
-  void deleteParameter_(size_t index) throw (IndexOutOfBoundsException)
+  void deleteParameter_(size_t index)
   {
     std::string name = getParameterNameWithoutNamespace(getParameter_(index).getName());
     AbstractParametrizable::deleteParameter_(index);
@@ -253,7 +253,7 @@ protected:
       independentParameters_.deleteParameter(name);
   }
 
-  void deleteParameter_(std::string& name) throw (IndexOutOfBoundsException)
+  void deleteParameter_(std::string& name)
   {
     AbstractParametrizable::deleteParameter_(name);
     if (independentParameters_.hasParameter(name))

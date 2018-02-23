@@ -87,7 +87,7 @@ protected:
    * @param rDist The distribution to set up.
    * @throw Exception if an error occured.
    */
-  void initialize_(DiscreteDistribution& rDist) throw (Exception);
+  void initialize_(DiscreteDistribution& rDist);
 };
 
 } // end of namespace bpp.

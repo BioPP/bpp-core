@@ -109,12 +109,12 @@ class BrentOneDimension:
 		 * <li>Function evaluation count reseting.</li>
      * </ul>
 		 */
-    double optimize() throw (Exception); //redefinition
+    double optimize(); //redefinition
 		/** @} */
 		
-    void doInit(const ParameterList& params) throw (Exception);
+    void doInit(const ParameterList& params);
 		
-    double doStep() throw (Exception);
+    double doStep();
 	
 	public:
 

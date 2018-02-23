@@ -96,15 +96,15 @@ namespace bpp
     /**
      * @brief The output stream where errors have to be displayed.
      */
-    static OutputStream* error;
+    static std::shared_ptr<OutputStream> error;
     /**
      * @brief The output stream where messages have to be displayed.
      */
-    static OutputStream* message;
+    static std::shared_ptr<OutputStream> message;
     /**
      * @brief The output stream where warnings have to be displayed.
      */
-    static OutputStream* warning;
+    static std::shared_ptr<OutputStream> warning;
 
     /**
      * @brief Timer variable.
@@ -170,7 +170,7 @@ namespace bpp
      * @param params  The parameter list.
      * @return a vector of matching names.
      */  
-    static std::vector<std::string> matchingParameters(const std::string& pattern, std::map<std::string, std::string>& params);
+    static std::vector<std::string> matchingParameters(const std::string& pattern, const std::map<std::string, std::string>& params);
 
     static std::vector<std::string> matchingParameters(const std::string& pattern, std::vector<std::string>& params);
 
@@ -187,7 +187,7 @@ namespace bpp
      */
     static double getDoubleParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       double defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -206,7 +206,7 @@ namespace bpp
      */
     static int getIntParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       int defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -264,7 +264,7 @@ namespace bpp
      */
     static bool getBooleanParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       bool defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -283,7 +283,7 @@ namespace bpp
      */
     template<class T> static T getParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       T defaultValue,
       const std::string& suffix = "",
       bool suffixIsOptional = true,
@@ -292,11 +292,11 @@ namespace bpp
       T tParam = defaultValue;
       if (parameterExists(parameterName + suffix, params))
       {
-        tParam = TextTools::to<T>(params[parameterName + suffix]);
+        tParam = TextTools::to<T>(params.at(parameterName + suffix));
       }
       else if (suffixIsOptional && parameterExists(parameterName, params))
       {
-        tParam = TextTools::to<T>(params[parameterName]);
+        tParam = TextTools::to<T>(params.at(parameterName));
       }
       else if (warn <= warningLevel)
       {
@@ -325,13 +325,13 @@ namespace bpp
      */
     static std::string getAFilePath(
       const std::string& parameter,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       bool isRequired = true,
       bool mustExist = true,
       const std::string& suffix = "",
       bool suffixIsOptional = false,
       const std::string& defaultPath = "none", 
-      int warn = 0) throw (Exception);
+      int warn = 0);
 
     /**
      * @brief Get a vector.
@@ -347,7 +347,7 @@ namespace bpp
      */
     template<class T> static std::vector<T> getVectorParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       char separator,
       const std::string& defaultValue,
       const std::string& suffix = "",
@@ -389,7 +389,7 @@ namespace bpp
      */
     template<class T> static std::vector<T> getVectorParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       char separator,
       char rangeOperator,
       const std::string& defaultValue,
@@ -449,7 +449,7 @@ namespace bpp
 
     template<class T> static RowMatrix<T> getMatrixParameter(
       const std::string& parameterName,
-      std::map<std::string, std::string>& params,
+      const std::map<std::string, std::string>& params,
       char separator,
       const std::string& defaultValue,
       const std::string& suffix = "",

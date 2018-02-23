@@ -98,7 +98,7 @@ namespace bpp
      * @throw DuplicatedTableColumnNameException If colnames contains identical names.
      */
 
-    Table(const std::vector<std::string>& colNames) throw (DuplicatedTableColumnNameException) :
+    Table(const std::vector<std::string>& colNames) :
       nRow_(0),
       nCol_(colNames.size()),
       data_(colNames.size()),
@@ -178,7 +178,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows.
      */
 
-    T& operator()(size_t rowIndex, size_t colIndex) throw (IndexOutOfBoundsException)
+    T& operator()(size_t rowIndex, size_t colIndex)
     {
       if (colIndex >= nCol_)
         throw IndexOutOfBoundsException("Table::operator(size_t, size_t).", colIndex, 0, nCol_ - 1);
@@ -194,7 +194,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If one of the index is greater or equal to the corresponding number of columns/rows.
      */
 
-    const T& operator()(size_t rowIndex, size_t colIndex) const throw (IndexOutOfBoundsException)
+    const T& operator()(size_t rowIndex, size_t colIndex) const
     {
       if (colIndex >= nCol_)
         throw IndexOutOfBoundsException("Table::operator(size_t, size_t).", colIndex, 0, nCol_ - 1);
@@ -213,7 +213,6 @@ namespace bpp
      */
 
     T& operator()(const std::string& rowName, const std::string& colName)
-      throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::operator(const string &, const string &).");
@@ -241,7 +240,6 @@ namespace bpp
      * not match existing names.
      */
     const T& operator()(const std::string& rowName, const std::string& colName) const
-      throw (NoTableRowNamesException, NoTableColumnNamesException, TableNameNotFoundException)
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::operator(const string &, const string &).");
@@ -271,7 +269,6 @@ namespace bpp
      */
 
     T& operator()(const std::string& rowName, size_t colIndex)
-      throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::operator(const string &, size_t).");
@@ -299,7 +296,6 @@ namespace bpp
      */
 
     const T& operator()(const std::string& rowName, size_t colIndex) const
-      throw (NoTableRowNamesException, TableNameNotFoundException, IndexOutOfBoundsException)
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::operator(const string &, size_t).");
@@ -327,7 +323,6 @@ namespace bpp
      */
 
     T& operator()(size_t rowIndex, const std::string& colName)
-      throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::operator(size_t, const string &).");
@@ -355,7 +350,6 @@ namespace bpp
      */
 
     const T& operator()(size_t rowIndex, const std::string& colName) const
-      throw (IndexOutOfBoundsException, NoTableColumnNamesException, TableNameNotFoundException)
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::operator(size_t, const string &).");
@@ -390,7 +384,7 @@ namespace bpp
      * @throw DimensionException If the number of names do not match the number of columns in the table.
      * @throw DuplicatedTableColumnNameException If names are not unique.
      */
-    void setColumnNames(const std::vector<std::string>& colNames) throw (DimensionException, DuplicatedTableColumnNameException)
+    void setColumnNames(const std::vector<std::string>& colNames)
     {
       if (!VectorTools::isUnique(colNames))
         throw DuplicatedTableColumnNameException("Table::setColumnNames(...). Column names must be unique.");
@@ -408,14 +402,14 @@ namespace bpp
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      */
 
-    const std::vector<std::string>& getColumnNames() const throw (NoTableColumnNamesException)
+    const std::vector<std::string>& getColumnNames() const
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::getColumnNames().");
       return colNames_;
     }
 
-    std::vector<std::string>& getColumnNames() throw (NoTableColumnNamesException)
+    std::vector<std::string>& getColumnNames()
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::getColumnNames().");
@@ -430,7 +424,7 @@ namespace bpp
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    std::string getColumnName(size_t index) const throw (NoTableColumnNamesException, IndexOutOfBoundsException)
+    std::string getColumnName(size_t index) const
     {
       if (colNames_.size() ==0)
         throw NoTableColumnNamesException("Table::getColumnName(size_t).");
@@ -476,7 +470,7 @@ namespace bpp
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw TableColumnNameNotFoundException If colName do not match existing column names.
      */
-    std::vector<T>& getColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+    std::vector<T>& getColumn(const std::string& colName)
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::getColumn(const string &).");
@@ -497,7 +491,7 @@ namespace bpp
      * @throw NoTableColumnNamesException If no column names are associated to this table.
      * @throw TableColumnNameNotFoundException If colName do not match existing column names.
      */
-    const std::vector<T>& getColumn(const std::string& colName) const throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+    const std::vector<T>& getColumn(const std::string& colName) const
     {
       if (colNames_.size() == 0)
         throw NoTableColumnNamesException("Table::getColumn(const string &).");
@@ -538,7 +532,7 @@ namespace bpp
      * @param index The index of the column.
      * @throw IndexOutOfBoundsException If index is >= number of columns.
      */
-    void deleteColumn(size_t index) throw (IndexOutOfBoundsException)
+    void deleteColumn(size_t index)
     {
       if (index >= nCol_)
         throw IndexOutOfBoundsException("Table::deleteColumn(size_t).", index, 0, nCol_ - 1);
@@ -555,7 +549,7 @@ namespace bpp
  * @throw NoTableColumnNamesException If no column names are associated to this table.
  * @throw TableColumnNameNotFoundException If colName do not match existing column names.
  */
-    void deleteColumn(const std::string& colName) throw (NoTableColumnNamesException, TableColumnNameNotFoundException)
+    void deleteColumn(const std::string& colName)
     {
       if ((colNames_.size()==0))
         throw NoTableColumnNamesException("Table::deleteColumn(const string &).");
@@ -582,7 +576,7 @@ namespace bpp
      * @throw TableColumnNamesException If the table has row names.
      */
 
-    void addColumn(const std::vector<T>& newColumn, int pos=-1) throw (DimensionException, TableColumnNamesException)
+    void addColumn(const std::vector<T>& newColumn, int pos=-1)
     {
       if (pos>(int)nCol_)
         throw DimensionException("Table::addColumn.", pos, nCol_);
@@ -609,7 +603,7 @@ namespace bpp
      * @throw DuplicatedTableColumnNameException If colName is already used.
      */
 
-    void addColumn(const std::string& colName, const std::vector<T>& newColumn, int pos=-1) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException)
+    void addColumn(const std::string& colName, const std::vector<T>& newColumn, int pos=-1)
     {
       if (pos>(int)nCol_)
         throw DimensionException("Table::addColumn.", pos, nCol_);
@@ -636,7 +630,7 @@ namespace bpp
     /**
      * @brief Add a new column
      *
-     * @param stream the input stream
+     * @param st the input sting
      * @param sep The row delimiter
      * @param pos       The position optional (default : nb cols)
      * @param rowCol the indice of row where colnames are, starting
@@ -648,7 +642,7 @@ namespace bpp
       if (pos>(int)nCol_)
         throw DimensionException("Table::addColumn.", pos, nCol_);
       if (pos==-1)
-        pos=nCol_;
+        pos=(int)nCol_;
 
       StringTokenizer stok(st, sep, false, true);
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
@@ -691,7 +685,7 @@ namespace bpp
      * @throw TableColumnNamesException If the table has row names.
      */
     
-    void setColumn(const std::vector<T>& newColumn, size_t pos) throw (DimensionException, TableColumnNamesException)
+    void setColumn(const std::vector<T>& newColumn, size_t pos)
     {
       if (pos>=nCol_)
         throw DimensionException("Table::setColumn.", pos, nCol_);
@@ -712,7 +706,7 @@ namespace bpp
      * @throw NoTableColumnNamesException If the table does not have row names.
      * @throw DuplicatedTableColumnNameException If colName is already used.
      */
-    void setColumn(const std::string& colName, const std::vector<T>& newColumn, size_t pos) throw (DimensionException, NoTableColumnNamesException, DuplicatedTableColumnNameException)
+    void setColumn(const std::string& colName, const std::vector<T>& newColumn, size_t pos)
     {
       if (pos>=nCol_)
         throw DimensionException("Table::setColumn.", pos, nCol_);
@@ -751,7 +745,7 @@ namespace bpp
      * @throw DimensionException If the number of names do not match the number of rows in the table.
      * @throw DuplicatedTableRowNameException If names are not unique.
      */
-    void setRowNames(const std::vector<std::string>& rowNames) throw (DimensionException, DuplicatedTableRowNameException)
+    void setRowNames(const std::vector<std::string>& rowNames)
     { 
       if (!VectorTools::isUnique(rowNames))
       {
@@ -773,14 +767,14 @@ namespace bpp
      * @throw NoTableRowNamesException If no row names are associated to this table.
      */
     
-    std::vector<std::string> getRowNames() throw (NoTableRowNamesException)
+    std::vector<std::string> getRowNames()
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::getRowNames().");
       return rowNames_;
     }
 
-    const std::vector<std::string>& getRowNames() const throw (NoTableRowNamesException)
+    const std::vector<std::string>& getRowNames() const
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::getRowNames().");
@@ -815,7 +809,7 @@ namespace bpp
      * @throw NoTableRowNamesException If no row names are associated to this table.
      * @throw IndexOutOfBoundsException If index is >= number of rows.
      */
-    std::string getRowName(size_t index) const throw (NoTableRowNamesException, IndexOutOfBoundsException)
+    std::string getRowName(size_t index) const
     {
       if (rowNames_.size() == 0)
         throw NoTableRowNamesException("Table::getRowName(size_t).");
@@ -835,7 +829,7 @@ namespace bpp
      * @param index The index of the row.
      * @throw IndexOutOfBoundsException If index is >= number of rows.
      */
-    std::vector<T> getRow(size_t index) const throw (IndexOutOfBoundsException)
+    std::vector<T> getRow(size_t index) const
     {
       if (index >= nRow_)
         throw IndexOutOfBoundsException("Table::getRow(size_t).", index, 0, nRow_ - 1);
@@ -854,7 +848,7 @@ namespace bpp
      * @throw NoTableRowNamesException If no row names are associated to this table.
      * @throw TableRowNameNotFoundException If rowName do not match existing row names.
      */
-    std::vector<T> getRow(const std::string& rowName) const throw (NoTableRowNamesException, TableRowNameNotFoundException)
+    std::vector<T> getRow(const std::string& rowName) const
     {
       if ((rowNames_.size()==0))
         throw NoTableRowNamesException("Table::getRow(const string &).");
@@ -881,7 +875,7 @@ namespace bpp
      * @param index The index of the row.
      * @throw IndexOutOfBoundsException If index is >= number of row.
      */
-    void deleteRow(size_t index) throw (IndexOutOfBoundsException)
+    void deleteRow(size_t index)
     {
       for (size_t j = 0; j < nCol_; j++)
       {
@@ -903,7 +897,7 @@ namespace bpp
      * @throw IndexOutOfBoundsException If index is >= number of row.
      */
     
-    void deleteRows(size_t index, size_t len) throw (IndexOutOfBoundsException)
+    void deleteRows(size_t index, size_t len)
     {
       for (size_t j = 0; j < nCol_; j++)
       {
@@ -925,7 +919,7 @@ namespace bpp
      * @throw NoTableRowNamesException If no row names are associated to this table.
      * @throw TableRowNameNotFoundException If rowName do not match existing column names.
      */
-    void deleteRow(const std::string& rowName) throw (NoTableRowNamesException, TableRowNameNotFoundException)
+    void deleteRow(const std::string& rowName)
     {
       if ((rowNames_.size()==0))
         throw NoTableRowNamesException("Table::deleteRow(const string &).");
@@ -1009,7 +1003,7 @@ namespace bpp
     /**
      * @brief Add a new row.
      *
-     * @param stream the input stream
+     * @param st the input string
      * @param sep The column delimiter
      * @param pos       The position optional (default : nb rows)
      * @param rowCol the indice of column where rownames are, starting
@@ -1027,13 +1021,13 @@ namespace bpp
       std::vector<std::string> row(stok.getTokens().begin(), stok.getTokens().end());
 
       if (row.size()!=nCol_+(rowCol>=0)?1:0)
-        throw BadIntegerException("Table::addRow. Bad number of columns: ", row.size());
+        throw BadIntegerException("Table::addRow. Bad number of columns: ", (int)row.size());
 
       size_t id=0;
       
       for (size_t i=0; i<row.size(); i++)
       {
-        if (i==rowCol)
+        if ((int)i==rowCol)
         {
           std::string rowName=row[i];
           if (find(rowNames_.begin(), rowNames_.end(), rowName) != rowNames_.end())
@@ -1204,12 +1198,12 @@ namespace bpp
       for (size_t i = 0; i < m; i++)
       {
         if (frontNames)
-          out << (byRow?data.getRowName(i):data.getColumnName(i) << sep);
+          out << (byRow?data.getRowName(i):data.getColumnName(i)) << sep;
         
         out << (byRow?data(i, 0):data(0, i));
         for (size_t j = 1; j < n; j++)
         {
-          out << sep << byRow?data(i, j):data(j, i);
+          out << sep << (byRow?data(i, j):data(j, i));
         }
         out.endLine();
       }
