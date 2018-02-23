@@ -49,7 +49,6 @@ using namespace std;
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const map<double, double>& distribution,
                                                        double prec,
                                                        bool fixed) :
-  AbstractParameterAliasable("Simple."),
   AbstractDiscreteDistribution(distribution.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -87,7 +86,6 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& val
                                                        double prec,
                                                        bool fixed
                                                        ) :
-  AbstractParameterAliasable("Simple."),
   AbstractDiscreteDistribution(values.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -129,7 +127,6 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
                                                        const std::vector<double>& probas,
                                                        double prec,
                                                        bool fixed) :
-  AbstractParameterAliasable("Simple."),
   AbstractDiscreteDistribution(values.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -193,14 +190,12 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
 
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const SimpleDiscreteDistribution& sdd) :
-  AbstractParameterAliasable(sdd),
   AbstractDiscreteDistribution(sdd),
   givenRanges_(sdd.givenRanges_)
 {}
 
 SimpleDiscreteDistribution& SimpleDiscreteDistribution::operator=(const SimpleDiscreteDistribution& sdd)
 {
-  AbstractParameterAliasable::operator=(sdd);
   AbstractDiscreteDistribution::operator=(sdd);
   givenRanges_ = sdd.givenRanges_;
 

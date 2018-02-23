@@ -48,7 +48,6 @@ using namespace std;
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
   DiscreteDistribution* dist, double p, double invariant) :
-  AbstractParameterAliasable("Invariant."),
   AbstractDiscreteDistribution(1, "Invariant."),
   dist_(dist),
   invariant_(invariant),
