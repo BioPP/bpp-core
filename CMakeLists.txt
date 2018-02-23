@@ -89,7 +89,8 @@ SET(CPACK_SOURCE_GENERATOR "TGZ")
 # /!\ This assumes that an external build is used
 SET(CPACK_SOURCE_IGNORE_FILES 
        "/build/" 
-       "/html/" 
+       "/html/"
+       "/BppCore.tag"
        "/\\\\.git/" 
        "/\\\\.gitignore" 
        ${CPACK_SOURCE_IGNORE_FILES}
