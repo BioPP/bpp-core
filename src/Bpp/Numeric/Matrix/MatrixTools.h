@@ -282,7 +282,7 @@ namespace bpp
      */
     
     template<class Scalar>
-    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO) throw (DimensionException)
+    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
@@ -360,7 +360,7 @@ namespace bpp
      * @throw DimensionException If matrices have not the appropriate size.
      */
     template<class Scalar>
-    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const std::vector<Scalar>& D, const std::vector<Scalar>& iD, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO) throw (DimensionException)
+    static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const std::vector<Scalar>& D, const std::vector<Scalar>& iD, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO)
     {
       size_t ncA = A.getNumberOfColumns();
       size_t nrA = A.getNumberOfRows();
