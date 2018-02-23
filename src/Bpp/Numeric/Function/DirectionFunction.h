@@ -65,7 +65,7 @@ class DirectionFunction:
     DirectionFunction(Function* function = 0) :
       params_(), p_(), xt_(), xi_(),
       function_(function), constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
-      messenger_(ApplicationTools::message) {}
+      messenger_(ApplicationTools::message.get()) {}
 
     DirectionFunction(const DirectionFunction& df) :
       ParametrizableAdapter(df), params_(df.params_), p_(df.p_), xt_(df.p_), xi_(df.xi_),

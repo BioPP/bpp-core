@@ -42,6 +42,7 @@
 #include "BinaryOperator.h"
 #include "FunctionOperator.h"
 #include "ConstantOperator.h"
+#include "NegativeOperator.h"
 #include "MathOperator.h"
 
 #include <algorithm>
@@ -60,12 +61,13 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
                             str2.end(),
                             [](char x){return std::isspace(x);}),
              str2.end());
+  string form2=TextTools::removeWhiteSpaces(formula);
 
   setRoot(readFormula_(str2, functionNames));
 }
 
 std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, Function*>& functionNames)
-{
+{  
   unsigned int level = 0;
   //inside parentheses check
   //case + or -
@@ -89,10 +91,8 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       continue;
 
     if ((c == '+' || c == '-') && !(i==1 || formula[i-2] == '*' || formula[i-2] == '/'
-                                  || formula[i-2] == '+' || formula[i-2] == '-'))
+                                    || formula[i-2] == '+' || formula[i-2] == '-' || formula[i-2] == '('))
     {
-
-      //if sign
 
       std::shared_ptr<Operator> left=readFormula_(formula.substr(0,i-1), functionNames);
       std::shared_ptr<Operator> right=readFormula_(formula.substr(i), functionNames);
@@ -155,46 +155,53 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
     try
     {
       double v = TextTools::toDouble(formula);
-      here = shared_ptr<Operator>(new ConstantOperator(v));
+      here =  shared_ptr<Operator>(new ConstantOperator(v));
     }
     catch (Exception e)
     {
-      std::map<std::string, Function*>::const_iterator it(functionNames.find(formula));
-
-      if (it!=functionNames.end())
+      if (formula[0]=='-')
       {
-        if (dynamic_cast<const DerivableSecondOrder*>(it->second))
-          here=shared_ptr<Operator>(new FunctionOperator<DerivableSecondOrder>(*dynamic_cast<DerivableSecondOrder*>(it->second),formula));
-        else
-          if (dynamic_cast<const DerivableFirstOrder*>(it->second))
-            here=shared_ptr<Operator>(new FunctionOperator<DerivableFirstOrder>(*dynamic_cast<DerivableFirstOrder*>(it->second),formula));
-        else
-          here=shared_ptr<Operator>(new FunctionOperator<Function>(*it->second,formula));
+        std::shared_ptr<Operator> son=readFormula_(formula.substr(1), functionNames);
+        here=shared_ptr<Operator>(new NegativeOperator(son));
       }
       else
       {
-        size_t posp=formula.find("(");
-        if (posp==string::npos)
-          throw Exception("ComputationTree::readFormula_ : unknown formula : "+ formula);
         
-        std::shared_ptr<Operator> son=readFormula_(formula.substr(posp), functionNames);
-        string fonc=formula.substr(0,posp);
-        
-        if (fonc=="exp")
-          here=shared_ptr<Operator>(new MathOperator(&exp,"exp",son));
-        else if (fonc=="log")
-          here=shared_ptr<Operator>(new MathOperator(&log,"log",son));
+        std::map<std::string, Function*>::const_iterator it(functionNames.find(formula));
+
+        if (it!=functionNames.end())
+        {
+          if (dynamic_cast<const DerivableSecondOrder*>(it->second))
+            here=shared_ptr<Operator>(new FunctionOperator<DerivableSecondOrder>(*dynamic_cast<DerivableSecondOrder*>(it->second),formula));
+          else
+            if (dynamic_cast<const DerivableFirstOrder*>(it->second))
+              here=shared_ptr<Operator>(new FunctionOperator<DerivableFirstOrder>(*dynamic_cast<DerivableFirstOrder*>(it->second),formula));
+            else
+              here=shared_ptr<Operator>(new FunctionOperator<Function>(*it->second,formula));
+      }
         else
-          throw Exception("ComputationTree::readFormula_ : unknown formula : "+ formula);
+        {
+          size_t posp=formula.find("(");
+          if (posp==string::npos)
+            throw Exception("ComputationTree::readFormula_ : unknown formula : "+ formula);
+          
+          std::shared_ptr<Operator> son=readFormula_(formula.substr(posp), functionNames);
+          string fonc=formula.substr(0,posp);
+          
+          if (fonc=="exp")
+            here=shared_ptr<Operator>(new MathOperator(&exp,"exp",son));
+          else if (fonc=="log")
+            here=shared_ptr<Operator>(new MathOperator(&log,"log",son));
+          else
+            throw Exception("ComputationTree::readFormula_ : unknown formula : "+ formula);
+        }
       }
     }
     
     this->getGraph();
     createNode(here);
     return here;
-  }
-  
-  return NULL;
+  }return NULL;
   //never
 }
 

@@ -96,15 +96,15 @@ namespace bpp
     /**
      * @brief The output stream where errors have to be displayed.
      */
-    static OutputStream* error;
+    static std::shared_ptr<OutputStream> error;
     /**
      * @brief The output stream where messages have to be displayed.
      */
-    static OutputStream* message;
+    static std::shared_ptr<OutputStream> message;
     /**
      * @brief The output stream where warnings have to be displayed.
      */
-    static OutputStream* warning;
+    static std::shared_ptr<OutputStream> warning;
 
     /**
      * @brief Timer variable.

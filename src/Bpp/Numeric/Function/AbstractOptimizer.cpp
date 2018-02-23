@@ -54,8 +54,8 @@ using namespace bpp;
 AbstractOptimizer::AbstractOptimizer(Function* function):
   function_(function),
   parameters_(),
-  messageHandler_(ApplicationTools::message),
-  profiler_(ApplicationTools::message),
+  messageHandler_(ApplicationTools::message.get()),
+  profiler_(ApplicationTools::message.get()),
   constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
   stopCondition_(0), defaultStopCondition_(0),
   verbose_(true), isInitialized_(false), startTime_(), listeners_(),
