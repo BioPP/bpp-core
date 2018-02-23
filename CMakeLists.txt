@@ -25,7 +25,7 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(${PROJECT_NAME}_VERSION_CURRENT "3")
+SET(${PROJECT_NAME}_VERSION_CURRENT "4")
 SET(${PROJECT_NAME}_VERSION_REVISION "0")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
 
@@ -77,10 +77,10 @@ ENDIF (DOXYGEN_FOUND)
 # Packager
 SET(CPACK_PACKAGE_NAME "libbpp-core")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.3.1")
+SET(CPACK_PACKAGE_VERSION "2.4.0")
 SET(CPACK_PACKAGE_VERSION_MAJOR "2")
-SET(CPACK_PACKAGE_VERSION_MINOR "3")
-SET(CPACK_PACKAGE_VERSION_PATCH "1")
+SET(CPACK_PACKAGE_VERSION_MINOR "4")
+SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Core library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
 SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")
@@ -89,6 +89,8 @@ SET(CPACK_SOURCE_GENERATOR "TGZ")
 # /!\ This assumes that an external build is used
 SET(CPACK_SOURCE_IGNORE_FILES 
        "/build/" 
+       "/html/"
+       "/BppCore.tag"
        "/\\\\.git/" 
        "/\\\\.gitignore" 
        ${CPACK_SOURCE_IGNORE_FILES}

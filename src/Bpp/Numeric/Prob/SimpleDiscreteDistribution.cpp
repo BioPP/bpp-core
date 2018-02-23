@@ -110,7 +110,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& val
   if (!fixed)
   {
     double y = 1;
-    for (unsigned int i = 0; i < size - 1; i++)
+    for (size_t i = 0; i < size - 1; i++)
     {
       addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
       addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));

@@ -31,7 +31,7 @@ set (CMAKE_CXX_FLAGS "std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
 # -> It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
 
 SET(${PROJECT_NAME}_VERSION_CURRENT "2")
-SET(${PROJECT_NAME}_VERSION_REVISION "3")
+SET(${PROJECT_NAME}_VERSION_REVISION "4")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
 MATH(EXPR ${PROJECT_NAME}_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_CURRENT} - ${${PROJECT_NAME}_VERSION_AGE}")
 SET(${PROJECT_NAME}_VERSION_MINOR ${${PROJECT_NAME}_VERSION_AGE})

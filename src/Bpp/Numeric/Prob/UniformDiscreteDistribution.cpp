@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (2010)
+Copyright or © or Copr. Bio++ Development Team, (2010)
 
 This software is a computer program whose purpose is to provide classes
 for numerical calculus.
@@ -84,8 +84,4 @@ UniformDiscreteDistribution::~UniformDiscreteDistribution() {}
 void UniformDiscreteDistribution::fireParameterChanged(const ParameterList& parameters)
 {
 }
-
-
-
-
 
