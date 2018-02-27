@@ -218,3 +218,16 @@ bool ComputationTree::isAllSum()
   return true;
   
 }
+
+
+std::string ComputationTree::output() const
+{
+  std::string op = getRoot()->output();
+  while (op.size()>1 && op[0]=='(' && op[op.size()-1]==')')
+  {
+    op=op.substr(1,op.size()-2);
+  }
+  return(op);
+}
+
+

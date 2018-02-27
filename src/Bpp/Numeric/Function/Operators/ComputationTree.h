@@ -94,10 +94,7 @@ namespace bpp
       readFormula_(formula, functionNames);
     }
     
-    std::string output() const
-    {
-      return getRoot()->output();
-    }
+    std::string output() const;
 
     /*
      * Return true if all binary operators are '+' or '-'
