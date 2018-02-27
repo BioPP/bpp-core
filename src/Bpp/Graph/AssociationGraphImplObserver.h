@@ -1039,6 +1039,22 @@ public:
     return leavesToReturn;
   }
 
+  std::vector<typename AssociationGraphObserver<N, E>::NodeIndex > getAllLeavesIndexes() const
+  {
+    std::vector<typename AssociationGraphObserver<N, E>::NodeIndex > leavesToReturn;
+
+    // fetching all the graph Leaves
+    std::vector<NodeGraphid> graphLeaves = getGraph()->getAllLeaves();
+    // testing if they are defined in this observer
+    for (typename std::vector<NodeGraphid>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
+    {
+      std::shared_ptr<N>  foundLeafObject = graphidToN_.at(*currGraphLeave);
+      if (foundLeafObject != 00)
+        leavesToReturn.push_back(getNodeIndex(foundLeafObject));
+    }
+    return leavesToReturn;
+  }
+
   /**
    * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
    * @return a vector containing the inner nodes.

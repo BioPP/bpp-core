@@ -400,6 +400,7 @@ public:
    * @return a vector containing the leaves
    */
   virtual std::vector<std::shared_ptr<N> > getAllLeaves() const = 0;
+  virtual std::vector<NodeIndex> getAllLeavesIndexes() const = 0;
 
   /**
    * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
