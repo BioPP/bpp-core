@@ -7,7 +7,7 @@ Version: 2.4.0
 Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
-Source: %{name}-%{_version}.tar.gz
+Source: %{name}-%{version}.tar.gz
 Summary: Bio++ Core library
 Group: Development/Libraries/C and C++
 
@@ -28,7 +28,7 @@ Group: Development/Libraries/C and C++
 This library contains the core classes and utilitary functions of the Bio++ project.
 
 %package -n libbpp-core-devel
-Summary: Libraries, includes to develop applications with %{_basename}
+Summary: Libraries, includes to develop applications with %{name}
 Group: Development/Libraries/C and C++
 Requires: libbpp-core4 = %{version}
 
