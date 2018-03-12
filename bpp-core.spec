@@ -1,20 +1,17 @@
-%define _basename bpp-core
-%define _version 2.4.0
-%define _release 1
 %define _prefix /usr
 
-URL: http://biopp.univ-montp2.fr/
+URL: https://github.com/BioPP/bpp-core
 
-Name: %{_basename}
-Version: %{_version}
-Release: %{_release}
+Name: bpp-core
+Version: 2.4.0
+Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
-Source: http://biopp.univ-montp2.fr/repos/sources/%{_basename}-%{_version}.tar.gz
+Source: %{name}-%{_version}.tar.gz
 Summary: Bio++ Core library
 Group: Development/Libraries/C and C++
 
-BuildRoot: %{_builddir}/%{_basename}-root
+BuildRoot: %{_builddir}/%{name}-root
 BuildRequires: cmake >= 2.8.11
 BuildRequires: gcc-c++ >= 4.7.0
 AutoReq: yes
@@ -33,7 +30,7 @@ This library contains the core classes and utilitary functions of the Bio++ proj
 %package -n libbpp-core-devel
 Summary: Libraries, includes to develop applications with %{_basename}
 Group: Development/Libraries/C and C++
-Requires: libbpp-core4 = %{_version}
+Requires: libbpp-core4 = %{version}
 
 %description -n libbpp-core-devel
 The libbpp-core-devel package contains the header files and static libraries for
@@ -74,8 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/*
 
 %changelog
-* Tue Feb 20 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.0-1
+* Mon Mar 12 2018 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.4.0-1
 - Increased interface number
+- Removed dynamic exceptions specifications.
 - Graphs classes improvements
 * Tue Jun 06 2017 Julien Dutheil <julien.dutheil@univ-montp2.fr> 2.3.1-1
 - Increased interface number
