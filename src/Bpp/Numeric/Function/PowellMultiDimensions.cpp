@@ -105,10 +105,10 @@ double PowellMultiDimensions::doStep()
   
   // In each iteration, loop over all directions in the set.
   double fptt;
-  for(unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
   {
     // Copy the direction:
-    for(unsigned int j = 0; j < n; j++)
+    for (size_t j = 0; j < n; j++)
     {
       xit[j] = xi_[j][i];
     }
@@ -127,7 +127,7 @@ double PowellMultiDimensions::doStep()
   }
 
   ParameterList ptt = getParameters();
-  for (unsigned int j = 0; j < n; j++)
+  for (size_t j = 0; j < n; j++)
   {
     ptt[j].setValue(2.0 * getParameters()[j].getValue() - pt_[j].getValue());
     xit[j] = getParameters()[j].getValue() - pt_[j].getValue();
@@ -144,8 +144,9 @@ double PowellMultiDimensions::doStep()
           getParameters_(), xit, getStopCondition()->getTolerance(),
           0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
       fret_ = getFunction()->f(getParameters());
-      if (fret_ > fp_) throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
-      for (unsigned int j = 0; j < n; j++)
+      if (fret_ > fp_)
+        throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
+      for (size_t j = 0; j < n; j++)
       {
         xi_[j][ibig]  = xi_[j][n - 1];
         xi_[j][n - 1] = xit[j];
