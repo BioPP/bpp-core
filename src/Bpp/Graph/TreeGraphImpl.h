@@ -272,7 +272,7 @@ namespace bpp
   {
     std::vector<Graph::NodeId> incomers = getIncomingNeighbors(node);
     if (incomers.size() > 1)
-      throw Exception("TreeGraphImpl<GraphImpl>::getFather: more than one father for Node " + TextTools::toString(node) + " : " + VectorTools::paste(incomers, ",") + ". Should never happen since validity has been controled. Please report this bug.");
+      throw Exception("TreeGraphImpl<GraphImpl>::getFather: more than one father for Node " + TextTools::toString(node) + " : " + VectorTools::paste(incomers, ",") + ". Should never happen since validity has been controlled. Please report this bug.");
     if (incomers.size() == 0)
       throw Exception("TreeGraphImpl<GraphImpl>::getFather: node " + TextTools::toString(node) + " has no father.");
     return *incomers.begin();

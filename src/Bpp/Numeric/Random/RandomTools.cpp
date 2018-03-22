@@ -517,10 +517,10 @@ double RandomTools::qBeta(double prob, double alpha, double beta)
   volatile double xinbta;
 
   if (alpha <= 0. || beta < 0.)
-    throw ("RandomTools::qBeta wih non positive parameters");
+    throw ("RandomTools::qBeta with non positive parameters");
 
   if (prob < 0. || prob > 1.)
-    throw ("RandomTools::qBeta wih bad probability");
+    throw ("RandomTools::qBeta with bad probability");
 
   /* initialize */
   logbeta = lnBeta(alpha, beta);
