@@ -99,7 +99,7 @@ double PowellMultiDimensions::doStep()
 {
   size_t n = getParameters().size();
   fp_ = fret_;
-  unsigned int ibig = 0;
+  size_t ibig = 0;
   double del = 0.0; // Will be the biggest function decrease
   Vdouble xit(n);
   
