@@ -450,7 +450,7 @@ namespace bpp
       size_t nrA = A.getNumberOfRows();
       size_t nrB = B.getNumberOfRows();
       size_t ncB = B.getNumberOfColumns();
-      if (ncA > ncB) throw DimensionException("MatrixTools::operator+=(). A and B must have the same number of colums.", ncB, ncA);
+      if (ncA > ncB) throw DimensionException("MatrixTools::operator+=(). A and B must have the same number of columns.", ncB, ncA);
       if (nrA > nrB) throw DimensionException("MatrixTools::operator+=(). A and B must have the same number of rows.", nrB, nrA);
       
       
@@ -478,7 +478,7 @@ namespace bpp
       size_t nrA = A.getNumberOfRows();
       size_t nrB = B.getNumberOfRows();
       size_t ncB = B.getNumberOfColumns();
-      if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of colums.", ncB, ncA);
+      if (ncA != ncB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of columns.", ncB, ncA);
       if (nrA != nrB) throw DimensionException("MatrixTools::operator+(). A and B must have the same number of rows.", nrB, nrA);
       
       for (size_t i = 0; i < nrA; i++)
