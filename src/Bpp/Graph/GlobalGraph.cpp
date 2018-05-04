@@ -564,7 +564,7 @@ Graph::EdgeId GlobalGraph::getAnyEdge(Graph::NodeId nodeA, Graph::NodeId nodeB) 
     // trying in the given order A->B
     return getEdge(nodeA, nodeB);
   }
-  catch (Exception e)
+  catch (Exception& e)
   {
     // didn’t work, hence trying in the opposite order B->A
     return getEdge(nodeB, nodeA);

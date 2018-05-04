@@ -157,7 +157,7 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       double v = TextTools::toDouble(formula);
       here =  shared_ptr<Operator>(new ConstantOperator(v));
     }
-    catch (Exception e)
+    catch (Exception& e)
     {
       if (formula[0]=='-')
       {
