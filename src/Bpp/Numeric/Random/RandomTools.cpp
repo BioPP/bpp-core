@@ -47,7 +47,7 @@
 using namespace bpp;
 using namespace std;
 
-RandomFactory* RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
+std::shared_ptr<RandomFactory> RandomTools::DEFAULT_GENERATOR(new Uniform01K(time(NULL)));
 
 // Initiate random seed :
 // RandomTools::RandInt RandomTools::r = time(NULL) ;
