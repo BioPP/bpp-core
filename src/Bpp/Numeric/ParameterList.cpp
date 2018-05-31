@@ -496,13 +496,11 @@ void ParameterList::matchParameters(const ParameterList& params)
 /******************************************************************************/
 void ParameterList::deleteParameter(const std::string& name)
 {
-  for (unsigned int i = 0; i < size(); i++)
+  for (auto it = parameters_.begin(); it != parameters_.end(); ++it)
   {
-    Parameter* p = parameters_[i].get();
-    
-    if (p->getName() == name)
+    if ((*it)->getName() == name)
     {
-      parameters_.erase(parameters_.begin() + i);
+      it = parameters_.erase(it);
       return;
     }
   }
@@ -512,11 +510,11 @@ void ParameterList::deleteParameter(const std::string& name)
 /******************************************************************************/
 void ParameterList::deleteParameters(const std::vector<std::string>& names, bool mustExist)
 {
-  for (unsigned int i = 0; i < names.size(); i++)
+  for (auto it = names.begin(); it != names.end(); ++it)
   {
     try
     {
-      deleteParameter(names[i]);
+      deleteParameter(*it);
     }
     catch (ParameterNotFoundException& e)
     {
@@ -532,8 +530,6 @@ void ParameterList::deleteParameters(const std::vector<std::string>& names, bool
 void ParameterList::deleteParameter(size_t index)
 {
   if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
-  // Parameter* p = parameters_[index].get();
-  // delete p;
   parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
 }
 

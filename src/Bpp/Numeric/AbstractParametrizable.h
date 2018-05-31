@@ -193,6 +193,8 @@ class AbstractParametrizable:
      */
     Parameter& getParameter_(const std::string& name)
     {
+      if (!hasParameter(prefix_ + name))
+        throw ParameterNotFoundException("AbstractParametrizable::getParameter_().", prefix_ + name);
       return parameters_.getParameter(prefix_ + name);
     }
   

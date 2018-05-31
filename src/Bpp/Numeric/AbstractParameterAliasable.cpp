@@ -166,6 +166,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
 
 void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedParams, bool verbose)
 {
+cout << endl << endl << "starts here" << endl << endl << endl;
   const ParameterList& pl = getParameters();
   ParameterList plpars;
 
@@ -174,17 +175,21 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
     if (unparsedParams.find(pl[i].getName()) == unparsedParams.end())
       plpars.addParameter(pl[i].clone());
   }
+cout << "ok 0" << endl;
 
   size_t unp_s = unparsedParams.size();
   while (unp_s != 0)
   {
-    map<string, string>::iterator it;
-    for (it = unparsedParams.begin(); it != unparsedParams.end(); it++)
+cout << "ok 0.1" << endl;
+    for (auto it = unparsedParams.begin(); it != unparsedParams.end(); it++)
     {
+cout << "ok 0.2" << endl;
       Parameter* pp = 0;
       try
       {
+cout << "ok 0.3" << endl;
         pp = &plpars.getParameter(it->second);
+cout << "ok 0.4" << endl;
       }
       catch (ParameterNotFoundException& e)
       {
@@ -192,14 +197,17 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
           throw ParameterNotFoundException("Unknown aliasing parameter", it->first + "->" + it->second);
         continue;
       }
+cout << "ok 0.5" << endl;
       unique_ptr<Parameter> p2(pp->clone());
       p2->setName(it->first);
       plpars.addParameter(p2.release());
       plpars.getParameter(it->first);
+cout << "ok 0.6" << endl;
       aliasParameters(it->second, it->first);
+cout << "ok 0.7" << endl;
       if (verbose)
         ApplicationTools::displayResult("Parameter alias found", it->first + " -> " + it->second + " = " + TextTools::toString(pp->getValue()));
-      unparsedParams.erase(it);
+      it = unparsedParams.erase(it);
     }
 
     if (unparsedParams.size() == unp_s)
@@ -207,8 +215,10 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
     else
       unp_s = unparsedParams.size();
   }
+cout << "ok 1" << endl;
 
   matchParametersValues(plpars);
+  cout << "ends here" << endl;
 }
 
 
