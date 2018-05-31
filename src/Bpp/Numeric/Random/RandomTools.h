@@ -92,7 +92,7 @@ namespace bpp
                                    double maxgam);
   
   public:
-    static RandomFactory* DEFAULT_GENERATOR;
+    static std::shared_ptr<RandomFactory> DEFAULT_GENERATOR;
     
     /**
      * @brief Get a double random value (between 0 and specified range).
