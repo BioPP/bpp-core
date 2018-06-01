@@ -199,6 +199,8 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
       if (verbose)
         ApplicationTools::displayResult("Parameter alias found", it->first + " -> " + it->second + " = " + TextTools::toString(pp->getValue()));
       it = unparsedParams.erase(it);
+      if (it == unparsedParams.end())
+	break;
     }
 
     if (unparsedParams.size() == unp_s)
