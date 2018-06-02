@@ -48,7 +48,7 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
   independentParameters_(),
   aliasListenersRegister_()
 {
-  for (size_t i=0; i<ap.independentParameters_.size(); i++)
+  for (size_t i = 0; i < ap.independentParameters_.size(); i++)
     independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
   
   // Actualize the register with adequate pointers:
@@ -178,7 +178,8 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
   size_t unp_s = unparsedParams.size();
   while (unp_s != 0)
   {
-    for (auto it = unparsedParams.begin(); it != unparsedParams.end(); it++)
+    auto it = unparsedParams.begin();
+    while (it != unparsedParams.end())
     {
       Parameter* pp = 0;
       try
