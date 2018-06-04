@@ -44,6 +44,7 @@
 #include <fstream>
 #include <algorithm>
 
+
 using namespace std;
 
 #include "AttributesTools.h"
@@ -52,6 +53,8 @@ using namespace std;
 #include "../Io/FileTools.h"
 
 using namespace bpp;
+
+std::vector<std::string> AttributesTools::vParam_;
 
 /******************************************************************************/
 
@@ -119,13 +122,16 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
       string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
-      // if ((name == "param") || (name == "params"))
-      // {
-      //   //Recursive inclusion:
-      //   getAttributesMapFromFile(value, am, delimiter);
-      // }
-      // else
-      am[name] = value;
+      if ((name == "param") || (name == "params"))
+      {
+        if (std::find(vParam_.begin(),vParam_.end(),value)!=vParam_.end())
+          throw Exception("Param name " + value + " already seen.");
+        
+        //Recursive inclusion:
+        getAttributesMapFromFile(value, am, delimiter);
+        vParam_.push_back(value);
+      }
+      else am[name] = value;
     }
   }
 }
@@ -162,8 +168,7 @@ void AttributesTools::actualizeAttributesMap(
 {
   for (map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
   {
-    if ((i->first != "param") && (i->first != "params"))
-      attMap[i->first] = i->second;
+    attMap[i->first] = i->second;
   }
 }
 
@@ -248,20 +253,45 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 
   // Look for a specified file with parameters:
   map<string, string> params;
-  std::map<std::string, std::string>::iterator it;
-
-  if (cmdParams.find("param") != cmdParams.end())
+  if (cmdParams.find("param") != cmdParams.end() || cmdParams.find("params") != cmdParams.end())
   {
-    string file = cmdParams["param"];
-    if (!FileTools::fileExists(file))
+    string file;
+    if (cmdParams.find("param") != cmdParams.end())
     {
-      throw Exception("AttributesTools::parseOptions(). Parameter file not found.");
+      file=cmdParams["param"];
+      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
+        throw Exception("Param name " + file + " already seen.");
+
+      if (!FileTools::fileExists(file))
+      {
+        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
+      }
+      else
+      {
+        params = getAttributesMapFromFile(file, "=");
+        // Actualize attributes with ones passed to command line:
+        actualizeAttributesMap(params, cmdParams);
+      }
+      vParam_.push_back(file);
+      
     }
-    else
+    if (cmdParams.find("params") != cmdParams.end())
     {
-      params = getAttributesMapFromFile(file, "=");
-      // Actualize attributes with ones passed to command line:
-      actualizeAttributesMap(params, cmdParams);
+      file=cmdParams["params"];
+      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
+        throw Exception("Param name " + file + " already seen.");
+
+      if (!FileTools::fileExists(file))
+      {
+        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
+      }
+      else
+      {
+        params = getAttributesMapFromFile(file, "=");
+        // Actualize attributes with ones passed to command line:
+        actualizeAttributesMap(params, cmdParams);
+      }
+      vParam_.push_back(file);
     }
   }
   else
@@ -270,46 +300,6 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
   }
   // Resolve variables:
   resolveVariables(params);
-
-  std::vector<string> mapfile;
-  std::vector<string>::iterator imapfile;
-  string file;
-
-  while (true)
-  {
-    it = params.find("param");
-    if (it != params.end())
-    {
-      file = it->second;
-      if (std::find(mapfile.begin(), mapfile.end(), file) == mapfile.end())
-      {
-        params.erase(it);
-        mapfile.push_back(file);
-        getAttributesMapFromFile(file, params, "=");
-        resolveVariables(params);
-        continue;
-      }
-      else
-        throw Exception("parsing error : Already used file " + file);
-    }
-    it = params.find("params");
-    if (it != params.end())
-    {
-      file = it->second;
-      if (find(mapfile.begin(), mapfile.end(), file) == mapfile.end())
-      {
-        params.erase(it);
-        mapfile.push_back(file);
-        getAttributesMapFromFile(file, params, "=");
-        resolveVariables(params);
-        continue;
-      }
-      else
-        throw Exception("parsing error : Already used file " + file);
-    }
-    break;
-  }
-
   return params;
 }
 

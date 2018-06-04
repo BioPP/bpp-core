@@ -126,6 +126,14 @@ namespace bpp
  */
 class AttributesTools
 {
+private:
+  /*
+   * vector of param names already seen, to avoid infinite recursion
+   *
+   */
+  
+  static std::vector<std::string> vParam_;
+  
 public:
   AttributesTools() {}
   virtual ~AttributesTools() {}
