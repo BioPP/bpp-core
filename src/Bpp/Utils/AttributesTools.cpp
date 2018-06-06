@@ -99,7 +99,10 @@ void AttributesTools::getAttributesMap(
     arg = TextTools::removeWhiteSpaces(arg);
     argv2[i] = arg;
   }
+  
   // Now parse arguments:
+  vector<string> newParam;
+  
   for (size_t i = 0; i < argv.size(); i++)
   {
     string arg = argv2[i];
@@ -128,12 +131,22 @@ void AttributesTools::getAttributesMap(
           throw Exception("Param name " + value + " already seen.");
         
         //Recursive inclusion:
-        getAttributesMapFromFile(value, am, delimiter);
-        vParam_.push_back(value);
+        newParam.push_back(value);
       }
-      else am[name] = value;
+      else
+        am[name] = value;
     }
   }
+
+  for (const auto& name : newParam)
+  {
+    string nname=resolveVariable(name,am);
+    getAttributesMapFromFile(nname, am, delimiter);
+    vParam_.push_back(nname);
+  }
+
+  resolveVariables(am);
+  
 }
 
 /******************************************************************************/
@@ -166,9 +179,9 @@ void AttributesTools::actualizeAttributesMap(
   std::map<std::string, std::string>& attMap,
   const std::map<std::string, std::string>& atts)
 {
-  for (map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
+  for (const auto& i : atts)
   {
-    attMap[i->first] = i->second;
+    attMap[i.first] = i.second;
   }
 }
 
@@ -180,39 +193,50 @@ void AttributesTools::resolveVariables(
   char varBeg,
   char varEnd)
 {
-  // Now resolve any variable:
-  for (map<string, string>::iterator it = am.begin(); it != am.end(); it++)
+  for (auto& it : am)
+    it.second=resolveVariable(it.second, am, varCode, varBeg, varEnd);
+}
+
+
+string AttributesTools::resolveVariable(
+  const string& value,
+  std::map<std::string, std::string>& am,
+  char varCode,
+  char varBeg,
+  char varEnd)
+{
+  string newValue(value);
+  
+  string::size_type index1 = newValue.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
+  while (index1 != string::npos)
   {
-    string value = it->second;
-    string::size_type index1 = value.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
-    while (index1 != string::npos)
+    string::size_type index2 = newValue.find(TextTools::toString(varEnd), index1);
+    if (index2 != string::npos)
     {
-      string::size_type index2 = value.find(TextTools::toString(varEnd), index1);
-      if (index2 != string::npos)
+      string varName  = newValue.substr(index1 + 2, index2 - index1 - 2);
+      map<string, string>::iterator varIt = am.find(varName);
+      string varValue = "";
+      if (varIt == am.end())
       {
-        string varName  = value.substr(index1 + 2, index2 - index1 - 2);
-        map<string, string>::iterator varIt = am.find(varName);
-        string varValue = "";
-        if (varIt == am.end())
-        {
-          if (ApplicationTools::error)
-            (*ApplicationTools::error << "Variable '" << varName << "' is undefined and was ignored.").endLine();
-        }
-        else
-        {
-          varValue = varIt->second;
-        }
-        // Modify original field:
-        string newValue = value.substr(0, index1) + varValue + value.substr(index2 + 1);
-        it->second = newValue;
+        if (ApplicationTools::error)
+          (*ApplicationTools::error << "Variable '" << varName << "' is undefined and was ignored.").endLine();
       }
       else
-        throw Exception("Syntax error, variable name is not closed.");
-      value = it->second;
-      index1 = value.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
+      {
+        varValue = varIt->second;
+      }
+      // Modify original field:
+      newValue = newValue.substr(0, index1) + varValue + newValue.substr(index2 + 1);
     }
+    else
+      throw Exception("Syntax error, variable name is not closed: " + newValue);
+    index1 = newValue.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
   }
+
+  return newValue;
 }
+
+/******************************************************************************/
 
 /******************************************************************************/
 
@@ -248,58 +272,9 @@ std::string AttributesTools::removeComments(
 std::map<std::string, std::string> AttributesTools::parseOptions(int args, char** argv)
 {
   // Get the parameters from command line:
-  map<string, string> cmdParams = AttributesTools::getAttributesMap(
+  map<string, string> params = AttributesTools::getAttributesMap(
     AttributesTools::getVector(args, argv), "=");
 
-  // Look for a specified file with parameters:
-  map<string, string> params;
-  if (cmdParams.find("param") != cmdParams.end() || cmdParams.find("params") != cmdParams.end())
-  {
-    string file;
-    if (cmdParams.find("param") != cmdParams.end())
-    {
-      file=cmdParams["param"];
-      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
-        throw Exception("Param name " + file + " already seen.");
-
-      if (!FileTools::fileExists(file))
-      {
-        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
-      }
-      else
-      {
-        params = getAttributesMapFromFile(file, "=");
-        // Actualize attributes with ones passed to command line:
-        actualizeAttributesMap(params, cmdParams);
-      }
-      vParam_.push_back(file);
-      
-    }
-    if (cmdParams.find("params") != cmdParams.end())
-    {
-      file=cmdParams["params"];
-      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
-        throw Exception("Param name " + file + " already seen.");
-
-      if (!FileTools::fileExists(file))
-      {
-        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
-      }
-      else
-      {
-        params = getAttributesMapFromFile(file, "=");
-        // Actualize attributes with ones passed to command line:
-        actualizeAttributesMap(params, cmdParams);
-      }
-      vParam_.push_back(file);
-    }
-  }
-  else
-  {
-    params = cmdParams;
-  }
-  // Resolve variables:
-  resolveVariables(params);
   return params;
 }
 
