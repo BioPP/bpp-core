@@ -1,3 +1,7 @@
+06/06/18 Julien Dutheil
+* Recursive param argument issue solved (closes #17).
+* New version number: current 4 -> 5, age 0 -> 1 because of new symbol in AttributeTools. 
+
 19/02/17 -*- Version 2.4.0 -*-
 
 04/01/18 Laurent Guéguen
