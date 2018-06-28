@@ -47,6 +47,7 @@
 #include <ostream>
 #include <type_traits>
 #include <vector>
+#include <algorithm>
 
 #include "../Clonable.h"
 #include "../Exceptions.h"
@@ -797,12 +798,32 @@ public:
   }
 
   /**
+   * Return if as Node matching NodeIndex
+   * @param NodeIndex node index
+   */
+
+  bool hasNode(NodeIndex node) const
+  {
+    return (node<indexToN_.size() && indexToN_.at(node));
+  }
+
+  /**
+   * Return if as Tree matching EdgeIndex
+   * @param EdgeIndex edge index
+   */
+
+  bool hasEdge(EdgeIndex edge) const
+  {
+    return (edge<indexToE_.size() && indexToE_.at(edge));
+  }
+
+  /**
    * Return the associated Node index
    * @param node object which to return the node index
    * @return a node index
    */
 
-  std::shared_ptr<N>  getNode(NodeIndex node) const
+  std::shared_ptr<N> getNode(NodeIndex node) const
   {
     return indexToN_.at(node);
   }
@@ -813,7 +834,7 @@ public:
    * @return a node index
    */
 
-  std::shared_ptr<E>  getEdge(EdgeIndex edge) const
+  std::shared_ptr<E> getEdge(EdgeIndex edge) const
   {
     return indexToE_.at(edge);
   }
