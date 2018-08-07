@@ -226,7 +226,30 @@ public:
                                char varCode = '$',
                                char varBeg = '(',
                                char varEnd = ')');
-
+  /**
+   * @deprecated 
+   * @brief Resolve the variables.
+   *
+   * If used prior to the actualizeAttributesMap, this function will make the
+   * variables 'local', whereas using them after will make them 'global'.
+   *
+   * @param value the name of the variable to resolve
+   * @param am The attributes map.
+   * @param varCode   The code that defines variable recalls.
+   * @param varBeg    Variables begin name code.
+   * @param varEnd    Variables end name code.
+   * @throw Exception If there is a syntax error.
+   */
+  static std::string resolveVariable(const std::string& value,
+                                     std::map<std::string, std::string>& am,
+                                     char varCode = '$',
+                                     char varBeg = '(',
+                                     char varEnd = ')')
+  {
+    throw Exception("Deprecated resolveVariable function will be removed.");
+  }
+  
+   
   /**
    * @brief Global function that reads all parameters from command line and files,
    * and set the values in a map.
