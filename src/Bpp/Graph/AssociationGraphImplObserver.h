@@ -799,7 +799,7 @@ public:
 
   /**
    * Return if as Node matching NodeIndex
-   * @param NodeIndex node index
+   * @param node NodeIndex index
    */
 
   bool hasNode(NodeIndex node) const
@@ -809,7 +809,7 @@ public:
 
   /**
    * Return if as Tree matching EdgeIndex
-   * @param EdgeIndex edge index
+   * @param edge EdgeIndex index
    */
 
   bool hasEdge(EdgeIndex edge) const

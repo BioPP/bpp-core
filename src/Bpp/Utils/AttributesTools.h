@@ -233,7 +233,7 @@ public:
    * If used prior to the actualizeAttributesMap, this function will make the
    * variables 'local', whereas using them after will make them 'global'.
    *
-   * @parem value the name of the variable to resolve
+   * @param value the name of the variable to resolve
    * @param am The attributes map.
    * @param varCode   The code that defines variable recalls.
    * @param varBeg    Variables begin name code.
