@@ -226,7 +226,7 @@ public:
                                char varCode = '$',
                                char varBeg = '(',
                                char varEnd = ')');
-
+   
   /**
    * @brief Global function that reads all parameters from command line and files,
    * and set the values in a map.
