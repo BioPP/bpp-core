@@ -338,11 +338,12 @@ namespace bpp
      *
      * @param parameterName    The name of the corresponding parameter.
      * @param params           The attribute map where options may be found.
-     * @param separator        The character used to delimit values.
+     * @param separator        The character used to delimit values (cannot be a space character).
      * @param defaultValue     The default value to use if the parameter is not found.
      * @param suffix           A suffix to be applied to the parameter name.
      * @param suffixIsOptional Tell if the suffix is absolutely required.
      * @param warn             Tell if a warning must be sent in case the parameter is not found.
+     * @throw Exception If a space character is used as separator.
      * @return The corresponding value.
      */
     template<class T> static std::vector<T> getVectorParameter(
@@ -354,6 +355,7 @@ namespace bpp
       bool suffixIsOptional = true,
       int warn = 0)
     {
+      if (separator == ' ') throw Exception("ApplicationTools::getVectorParameter(). Separator cannot be a space character.");
       std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
       if (TextTools::isEmpty(s)) return std::vector<T>(0);
       if (s[0] == '(' && s[s.size() - 1] == ')') {
