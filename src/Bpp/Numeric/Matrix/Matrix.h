@@ -375,32 +375,22 @@ public:
     rows_(nRow),
     cols_(nCol) { resize_(nRow, nCol); }
 
-  LinearMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfRows() * m.getNumberOfColumns())
+  LinearMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfRows() * m.getNumberOfColumns()), rows_(m.getNumberOfRows()), cols_(m.getNumberOfColumns()) 
   {
-    size_t nr = m.getNumberOfRows();
-    size_t nc = m.getNumberOfColumns();
-    for (size_t i = 0; i < nr; i++)
-    {
-      for (size_t j = 0; j < nc; j++)
-      {
+    for (size_t i = 0; i < rows_; i++)
+      for (size_t j = 0; j < cols_; j++)
         m_[i * cols_ + j] = m(i, j);
-      }
-    }
   }
 
   LinearMatrix& operator=(const Matrix<Scalar>& m)
   {
-    size_t nr = m.getNumberOfRows();
-    size_t nc = m.getNumberOfColumns();
-    m_.resize(nr * nc);
-    for (size_t i = 0; i < nr; i++)
-    {
-      m_[i].resize(nc);
-      for (size_t j = 0; j < nc; j++)
-      {
+    rows_ = m.getNumberOfRows();
+    cols_ = m.getNumberOfColumns();
+    m_.resize(rows_ * cols_);
+    for (size_t i = 0; i < rows_; i++)
+      for (size_t j = 0; j < cols_; j++)
         m_[i * cols_ + j] = m(i, j);
-      }
-    }
+    
     return *this;
   }
 

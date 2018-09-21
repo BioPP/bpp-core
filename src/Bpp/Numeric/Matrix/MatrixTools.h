@@ -869,6 +869,27 @@ namespace bpp
     }
 
     /**
+     * @param A [in] The matrix to transpose.
+     * @return if symmetric
+     */
+    template<class MatrixA>
+    static bool isSymmetric(const MatrixA& A)
+    {
+      if (A.getNumberOfColumns()!=A.getNumberOfRows())
+        return false;
+      
+      for (size_t i = 0; i < A.getNumberOfColumns(); i++)
+      {
+        for (size_t j = i+1; j < A.getNumberOfRows(); j++)
+        {
+          if (A(i, j) != A(j, i))
+            return false;
+        }
+      }
+      return true;
+    }
+
+    /**
      * @brief Compute the variance-covariance matrix of an input matrix.
      *
      * The input matrix represent a n-sample of a random vector of dimension r.
