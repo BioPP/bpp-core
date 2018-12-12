@@ -48,7 +48,9 @@ using namespace std;
 
 int main() {
   AssociationTreeGlobalGraphObserver<string,unsigned int> grObs(true);
-  
+
+  AssociationTreeGlobalGraphObserver<unsigned int,unsigned int> grObs2(true);
+
   shared_ptr<string> zero(new string("zero"));
   shared_ptr<string> one(new string("one"));
   shared_ptr<string> two(new string("two"));
@@ -67,7 +69,7 @@ int main() {
   grObs.link(zero,one,r2);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "The father branch of zero is " << *(grObs.getEdgeToFather(one)) << endl;
-  cout << "The father node of one is " << *(grObs.getFather(one)) << endl;
+  cout << "The father node of one is " << *(grObs.getFatherOfNode(one)) << endl;
   
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   

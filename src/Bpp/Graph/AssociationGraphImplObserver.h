@@ -696,13 +696,13 @@ public:
    * @brief Return if object has an index.
    *
    */
-  bool hasIndex(const std::shared_ptr<N> nodeObject) const
+  bool hasNodeIndex(const std::shared_ptr<N> nodeObject) const
   {
     typename std::map<std::shared_ptr<N>, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator found = NToIndex_.find(nodeObject);
     return found != NToIndex_.end();
   }
 
-  bool hasIndex(const std::shared_ptr<E> edgeObject) const
+  bool hasEdgeIndex(const std::shared_ptr<E> edgeObject) const
   {
     typename std::map<std::shared_ptr<E>, typename AssociationGraphObserver<N, E>::EdgeIndex>::const_iterator found = EToIndex_.find(edgeObject);
     return found != EToIndex_.end();

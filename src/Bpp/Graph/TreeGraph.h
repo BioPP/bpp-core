@@ -69,7 +69,7 @@ public:
    * @return the father node
    */
 
-  virtual Graph::NodeId getFather(Graph::NodeId nodeid) const = 0;
+  virtual Graph::NodeId getFatherOfNode(Graph::NodeId nodeid) const = 0;
 
   /**
    * Get the branch leading to the father in a rooted tree

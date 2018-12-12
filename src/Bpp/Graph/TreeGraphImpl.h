@@ -116,7 +116,7 @@ namespace bpp
      * @return the father node
      */
 
-    Graph::NodeId getFather(Graph::NodeId nodeid) const;
+    Graph::NodeId getFatherOfNode(Graph::NodeId nodeid) const;
 
     /**
      * Get the branch leading to the father in a rooted tree
@@ -268,7 +268,7 @@ namespace bpp
   }
 
   template<class GraphImpl>
-  Graph::NodeId TreeGraphImpl<GraphImpl>::getFather(Graph::NodeId node) const
+  Graph::NodeId TreeGraphImpl<GraphImpl>::getFatherOfNode(Graph::NodeId node) const
   {
     std::vector<Graph::NodeId> incomers = getIncomingNeighbors(node);
     if (incomers.size() > 1)
@@ -281,7 +281,7 @@ namespace bpp
   template<class GraphImpl>
   Graph::EdgeId TreeGraphImpl<GraphImpl>::getEdgeToFather(Graph::NodeId node) const
   {
-    Graph::NodeId father = getFather(node);
+    Graph::NodeId father = getFatherOfNode(node);
     return GraphImpl::getEdge(father, node);
   }
 
@@ -375,7 +375,7 @@ namespace bpp
   {
     if (hasFather(node))
     {
-      NodeId father = getFather(node);
+      NodeId father = getFatherOfNode(node);
       propagateDirection_(father);
       GraphImpl::switchNodes(father, node);
     }
@@ -385,7 +385,7 @@ namespace bpp
   void TreeGraphImpl<GraphImpl>::setFather(Graph::NodeId node, Graph::NodeId fatherNode)
   {
     if (hasFather(node))
-      GraphImpl::unlink(getFather(node), node);
+      GraphImpl::unlink(getFatherOfNode(node), node);
     GraphImpl::link(fatherNode, node);
     topologyHasChanged_();
   }
@@ -394,7 +394,7 @@ namespace bpp
   void TreeGraphImpl<GraphImpl>::setFather(Graph::NodeId node, Graph::NodeId fatherNode, Graph::EdgeId edgeId)
   {
     if (hasFather(node))
-      GraphImpl::unlink(getFather(node), node);
+      GraphImpl::unlink(getFatherOfNode(node), node);
     GraphImpl::link(fatherNode, node, edgeId);
     topologyHasChanged_();
   }
@@ -497,7 +497,7 @@ namespace bpp
     mustBeRooted_();
     deleteNode(GraphImpl::getRoot());
 
-    Graph::NodeId newRoot = GraphImpl::createNodeFromEdge(getEdge(getFather(newOutGroup), newOutGroup));
+    Graph::NodeId newRoot = GraphImpl::createNodeFromEdge(getEdge(getFatherOfNode(newOutGroup), newOutGroup));
     rootAt(newRoot);
   }
 
@@ -514,7 +514,7 @@ namespace bpp
     while (hasFather(nodeUp))
     {
       pathMatrix1.push_back(nodeUp);
-      nodeUp = getFather(nodeUp);
+      nodeUp = getFatherOfNode(nodeUp);
     }
     pathMatrix1.push_back(nodeUp); // The root.
 
@@ -522,7 +522,7 @@ namespace bpp
     while (hasFather(nodeUp))
     {
       pathMatrix2.push_back(nodeUp);
-      nodeUp = getFather(nodeUp);
+      nodeUp = getFatherOfNode(nodeUp);
     }
     pathMatrix2.push_back(nodeUp); // The root.
     // Must check that the two nodes have the same root!!!

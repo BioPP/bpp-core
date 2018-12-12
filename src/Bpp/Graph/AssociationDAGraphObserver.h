@@ -135,8 +135,8 @@ public:
    * @return the father Node
    */
 
-  virtual std::shared_ptr<N> getFather(const std::shared_ptr<E>  edge) const = 0;
-  virtual NodeIndex getFather(const EdgeIndex edge) const = 0;
+  virtual std::shared_ptr<N> getFatherOfEdge(const std::shared_ptr<E>  edge) const = 0;
+  virtual NodeIndex getFatherOfEdge(const EdgeIndex edge) const = 0;
 
   /**
    * Return the number of sons
