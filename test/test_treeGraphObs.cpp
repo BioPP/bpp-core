@@ -195,8 +195,8 @@ int main() {
   grObs.rootAt(one);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
-  // the tree must be considered as unvalid at this point
-  test &= !grObs.isValid();
+  // the tree must be considered as valid at this point
+  test &= grObs.isValid();
 
   cout << endl << "------------------------------------------" << endl << endl;
 
