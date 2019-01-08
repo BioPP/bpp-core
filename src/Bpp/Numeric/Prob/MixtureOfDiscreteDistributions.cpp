@@ -76,7 +76,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<Disc
   double y = 1;
   for (size_t i = 0; i < size - 1; i++)
   {
-    addParameter_(new Parameter("Mixture.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+    addParameter_(new Parameter("Mixture.theta" + TextTools::toString(i + 1), probas[i] / y, Parameter::PROP_CONSTRAINT_IN));
     y -= probas[i];
   }
 
@@ -229,8 +229,8 @@ void MixtureOfDiscreteDistributions::updateDistribution()
     }
   }
 
-  intMinMax_.setLowerBound(lB, slB);
-  intMinMax_.setUpperBound(uB, suB);
+  intMinMax_->setLowerBound(lB, slB);
+  intMinMax_->setUpperBound(uB, suB);
 
   // Compute midpoint bounds_:
   vector<double> values = MapTools::getKeys<double, double, AbstractDiscreteDistribution::Order>(distribution_);

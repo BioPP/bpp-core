@@ -54,9 +54,9 @@ ExponentialDiscreteDistribution::ExponentialDiscreteDistribution(size_t n, doubl
   AbstractDiscreteDistribution(n, "Exponential."),
   lambda_(lambda)
 {
-  addParameter_(new Parameter("Exponential.lambda", lambda,  &Parameter::R_PLUS));
+  addParameter_(new Parameter("Exponential.lambda", lambda, Parameter::R_PLUS));
 
-  intMinMax_.setLowerBound(0, true);
+  intMinMax_->setLowerBound(0, true);
   discretize();
 }
 

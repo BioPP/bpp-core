@@ -72,7 +72,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const map<double, double>
       if (n != numberOfCategories_)
       {
         x = i->second;
-        addParameter_(new Parameter("Simple.theta" + TextTools::toString(n), x / y, &Parameter::PROP_CONSTRAINT_IN));
+        addParameter_(new Parameter("Simple.theta" + TextTools::toString(n), x / y, Parameter::PROP_CONSTRAINT_IN));
         y -= x;
       }
       n++;
@@ -113,7 +113,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& val
     for (size_t i = 0; i < size - 1; i++)
     {
       addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
-      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, Parameter::PROP_CONSTRAINT_IN));
       y -= probas[i];
     }
     addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size - 1]));
@@ -160,13 +160,13 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
       {
         if (values[i] >= it->second[0] &&  values[i] <= it->second[1])
         {
-          addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i], new IntervalConstraint(it->second[0], it->second[1], true, true), true));
+          addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i], std::make_shared<IntervalConstraint>(it->second[0], it->second[1], true, true)));
           givenRanges_[i + 1] = it->second;
         }
         else
           throw Exception("SimpleDiscreteDistribution. Value and given range of parameter V" + TextTools::toString(i + 1) + " do not match: " + TextTools::toString(values[i]) + " vs [" + TextTools::toString(it->second[0]) + ";" + TextTools::toString(it->second[1]) + "]");
       }
-      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, &Parameter::PROP_CONSTRAINT_IN));
+      addParameter_(new Parameter("Simple.theta" + TextTools::toString(i + 1), probas[i] / y, Parameter::PROP_CONSTRAINT_IN));
       y -= probas[i];
     }
 
@@ -177,7 +177,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
     {
       if (values[size - 1] >= it->second[0] &&  values[size - 1] <= it->second[1])
       {
-        addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size - 1], new IntervalConstraint(it->second[0], it->second[1], true, true), true));
+        addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size - 1], std::make_shared<IntervalConstraint>(it->second[0], it->second[1], true, true)));
         givenRanges_[size] = it->second;
       }
       else
@@ -218,11 +218,11 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
       if (distribution_.find(v) != distribution_.end())
       {
         int j = 1;
-        int f = ((v + precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+        int f = ((v + precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
         while (distribution_.find(v + f * j * precision()) != distribution_.end())
         {
           j++;
-          f = ((v + f * j * precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+          f = ((v + f * j * precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
         }
         v += f * j * precision();
         // approximation to avoid useless computings:
@@ -236,11 +236,11 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     if (distribution_.find(v) != distribution_.end())
     {
       int j = 1;
-      int f = ((v + precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+      int f = ((v + precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
       while (distribution_.find(v + f * j * precision()) != distribution_.end())
       {
         j++;
-        f = ((v + f * j * precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+        f = ((v + f * j * precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
       }
       v += f * j * precision();
       // approximation to avoid useless computings:
@@ -333,12 +333,11 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
   {
     map<size_t, vector<double> >::const_iterator itr = givenRanges_.find(i + 1);
     if (itr == givenRanges_.end())
-      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_.clone(), true);
+      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_);
     else
     {
-      const Constraint* pc = getParameter_("V" + TextTools::toString(i + 1)).removeConstraint();
-      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(*pc & *intMinMax_.clone(), true);
-      delete pc;
+      std::shared_ptr<Constraint> pc = getParameter_("V" + TextTools::toString(i + 1)).removeConstraint();
+      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(std::shared_ptr<Constraint>(*pc & *intMinMax_));
     }
   }
 }

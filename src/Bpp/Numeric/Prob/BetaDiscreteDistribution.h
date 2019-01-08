@@ -97,7 +97,7 @@ namespace bpp
     {
       double x= RandomTools::randBeta(getParameterValue("alpha"),
                                       getParameterValue("beta"));
-      while (!intMinMax_.isCorrect(x))
+      while (!intMinMax_->isCorrect(x))
         x= RandomTools::randBeta(getParameterValue("alpha"),
                                  getParameterValue("beta"));
       return x;

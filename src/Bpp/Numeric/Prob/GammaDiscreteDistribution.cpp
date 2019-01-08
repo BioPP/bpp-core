@@ -63,14 +63,14 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, dou
   // may have the same category value, leading to a classe number lower than expected.
   // NB: if this is the case, then a warning is shown. This may happen in optimization
   // algorithms.
-  addParameter_(new Parameter("Gamma.alpha", alpha, new IntervalConstraint(1, minimumAlpha, true), true));
-  addParameter_(new Parameter("Gamma.beta", beta, new IntervalConstraint(1, minimumBeta, true), true));
+  addParameter_(new Parameter("Gamma.alpha", alpha, std::make_shared<IntervalConstraint>(1, minimumAlpha, true)));
+  addParameter_(new Parameter("Gamma.beta", beta, std::make_shared<IntervalConstraint>(1, minimumBeta, true)));
   if (paramOffset)
     addParameter_(new Parameter("Gamma.offset", offset));
   
   ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
 
-  intMinMax_.setLowerBound(offset_, true);
+  intMinMax_->setLowerBound(offset_, true);
   discretize();
 }
 

@@ -113,7 +113,7 @@ public:
   double randC() const
   {
     double x = RandomTools::randExponential(1. / getParameterValue("lambda"));
-    while (!intMinMax_.isCorrect(x))
+    while (!intMinMax_->isCorrect(x))
       x = RandomTools::randExponential(1. / getParameterValue("lambda"));
 
     return x;

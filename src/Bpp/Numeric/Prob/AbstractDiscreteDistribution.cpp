@@ -51,7 +51,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, con
   numberOfCategories_(nbClasses),
   distribution_(),
   bounds_(nbClasses-1),
-  intMinMax_(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true),
+  intMinMax_(new IntervalConstraint(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true)),
   median_(false)
 {}
 
@@ -60,7 +60,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, dou
   numberOfCategories_(nbClasses),
   distribution_(Order(delta)),
   bounds_(nbClasses-1),
-  intMinMax_(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(),true, true),
+  intMinMax_(new IntervalConstraint(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(),true, true)),
   median_(false)
 {}
 
@@ -69,7 +69,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscret
   numberOfCategories_(adde.numberOfCategories_),
   distribution_(adde.distribution_),
   bounds_(adde.bounds_),
-  intMinMax_(adde.intMinMax_),
+  intMinMax_(adde.intMinMax_->clone()),
   median_(adde.median_)
 {
 }
@@ -80,7 +80,7 @@ AbstractDiscreteDistribution& AbstractDiscreteDistribution::operator=(const Abst
   numberOfCategories_=adde.numberOfCategories_;
   distribution_=adde.distribution_;
   bounds_=adde.bounds_;
-  intMinMax_=adde.intMinMax_;
+  intMinMax_=std::shared_ptr<IntervalConstraint>(adde.intMinMax_->clone());
   median_=adde.median_;
 
   return *this;
@@ -288,7 +288,7 @@ void AbstractDiscreteDistribution::print(OutputStream& out) const
 
 double AbstractDiscreteDistribution::getValueCategory(double value) const
 {
-  if (!(intMinMax_.isCorrect(value)))
+  if (!(intMinMax_->isCorrect(value)))
     throw Exception("AbstractDiscreteDistribution::getValueCategory out of bounds:" + TextTools::toString(value));
 
   map<double, double>::const_iterator it = distribution_.begin();
@@ -313,8 +313,8 @@ void AbstractDiscreteDistribution::discretize()
   distribution_.clear();
   bounds_.resize(numberOfCategories_ - 1);
 
-  double minX = pProb(intMinMax_.getLowerBound());
-  double maxX = pProb(intMinMax_.getUpperBound());
+  double minX = pProb(intMinMax_->getLowerBound());
+  double maxX = pProb(intMinMax_->getUpperBound());
 
   double ec;
   size_t i;
@@ -341,7 +341,7 @@ void AbstractDiscreteDistribution::discretize()
       for (i = 0, t = 0; i < numberOfCategories_; i++)
         t += values[i];
 
-      double mean = Expectation(intMinMax_.getUpperBound()) - Expectation(intMinMax_.getLowerBound());
+      double mean = Expectation(intMinMax_->getUpperBound()) - Expectation(intMinMax_->getLowerBound());
 
       for (i = 0; i < numberOfCategories_; i++)
         values[i] *= mean / t / ec;
@@ -350,38 +350,38 @@ void AbstractDiscreteDistribution::discretize()
       // for each category, sets the value v such that
       //      v * length_of_the_interval = the surface of the category
       {
-      double a = Expectation(intMinMax_.getLowerBound()), b;
+      double a = Expectation(intMinMax_->getLowerBound()), b;
       for (i = 0; i < numberOfCategories_-1; i++)
         {
           b = Expectation(bounds_[i]);
           values[i] = (b - a) / ec;
           a = b;
         }
-      values[numberOfCategories_-1] = (Expectation(intMinMax_.getUpperBound())-a) / ec;
+      values[numberOfCategories_-1] = (Expectation(intMinMax_->getUpperBound())-a) / ec;
     }
   }
   else 
     // if maxX==minX, uniform discretization of the range
   {
-    ec = (intMinMax_.getUpperBound() - intMinMax_.getLowerBound()) / static_cast<double>(numberOfCategories_);
+    ec = (intMinMax_->getUpperBound() - intMinMax_->getLowerBound()) / static_cast<double>(numberOfCategories_);
     for (i = 1; i < numberOfCategories_; i++)
-      bounds_[i-1] = intMinMax_.getLowerBound() + static_cast<double>(i) * ec;
+      bounds_[i-1] = intMinMax_->getLowerBound() + static_cast<double>(i) * ec;
 
-    values[0] = (intMinMax_.getLowerBound() + bounds_[0]) / 2;
+    values[0] = (intMinMax_->getLowerBound() + bounds_[0]) / 2;
     
     for (i = 1; i < numberOfCategories_-1; i++)
       values[i] = (bounds_[i-1] + bounds_[i]) / 2;
 
-    values[numberOfCategories_-1] = (intMinMax_.getUpperBound()+bounds_[numberOfCategories_ - 1]) / 2;
+    values[numberOfCategories_-1] = (intMinMax_->getUpperBound()+bounds_[numberOfCategories_ - 1]) / 2;
   }
 
   // adjustments near the boundaries of the domain, according to the precision chosen
-  if (intMinMax_.strictLowerBound())
+  if (intMinMax_->strictLowerBound())
   {
     for (i = 0; i < numberOfCategories_; i++)
     {
-      if (values[i] < intMinMax_.getLowerBound() + precision())
-        values[i] = intMinMax_.getLowerBound() + precision();
+      if (values[i] < intMinMax_->getLowerBound() + precision())
+        values[i] = intMinMax_->getLowerBound() + precision();
       else
         break;
     }
@@ -390,19 +390,19 @@ void AbstractDiscreteDistribution::discretize()
   {
     for (i = 0; i < numberOfCategories_; i++)
     {
-      if (values[i] < intMinMax_.getLowerBound())
-        values[i] = intMinMax_.getLowerBound() + precision();
+      if (values[i] < intMinMax_->getLowerBound())
+        values[i] = intMinMax_->getLowerBound() + precision();
       else
         break;
     }
   }
 
-  if (intMinMax_.strictUpperBound())
+  if (intMinMax_->strictUpperBound())
   {
     for (i = numberOfCategories_; i > 0; i--)
     {
-      if (values[i-1] > intMinMax_.getUpperBound() - precision())
-        values[i-1] = intMinMax_.getUpperBound() - precision();
+      if (values[i-1] > intMinMax_->getUpperBound() - precision())
+        values[i-1] = intMinMax_->getUpperBound() - precision();
       else
         break;
     }
@@ -411,8 +411,8 @@ void AbstractDiscreteDistribution::discretize()
   {
     for (i = numberOfCategories_; i > 0; i--)
     {
-      if (values[i-1] > intMinMax_.getUpperBound())
-        values[i-1] = intMinMax_.getUpperBound() - precision();
+      if (values[i-1] > intMinMax_->getUpperBound())
+        values[i-1] = intMinMax_->getUpperBound() - precision();
       else
         break;
     }
@@ -426,11 +426,11 @@ void AbstractDiscreteDistribution::discretize()
     if (distribution_.find(values[i]) != distribution_.end())
     {
       int j = 1;
-      int f = ((values[i] + NumConstants::TINY()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+      int f = ((values[i] + NumConstants::TINY()) >= intMinMax_->getUpperBound()) ? -1 : 1;
       while (distribution_.find(values[i] + f * j * precision()) != distribution_.end())
       {
         j++;
-        f = ((values[i] + f * j * precision()) >= intMinMax_.getUpperBound()) ? -1 : 1;
+        f = ((values[i] + f * j * precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
       }
       distribution_[values[i] + f * j * precision()] = p;
     }
@@ -458,9 +458,9 @@ void AbstractDiscreteDistribution::restrictToConstraint(const Constraint& c)
   if (!pi)
     throw Exception("AbstractDiscreteDistribution::restrictToConstraint: the constraint is not an interval");
 
-  if (!(intMinMax_ <= (*pi)))
+  if (!(*intMinMax_ <= (*pi)))
   {
-    intMinMax_ &= c;
+    *intMinMax_ &= c;
     discretize();
   }
 }
