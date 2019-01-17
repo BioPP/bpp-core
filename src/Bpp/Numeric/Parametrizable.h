@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _PARAMETRIZABLE_H_
@@ -56,14 +56,14 @@ namespace bpp
  *
  * @see Parameter, ParameterList
  */
-class Parametrizable:
-  public virtual Clonable
-{
-	public:
-		Parametrizable() {}
-		virtual ~Parametrizable() {}
+  class Parametrizable:
+    public virtual Clonable
+  {
+  public:
+    Parametrizable() {}
+    virtual ~Parametrizable() {}
 
-	public:
+  public:
     /**
      * @brief Tell if there is a parameter with specified name.
      *
@@ -72,13 +72,13 @@ class Parametrizable:
      */
     virtual bool hasParameter(const std::string& name) const = 0;
 	
-		/**
-		 * @brief Get all parameters available.
+    /**
+     * @brief Get all parameters available.
      *
      * @see getIndependentParameters if some parameters are aliased.
-		 * @return A list with all parameters available.
-		 */
-		virtual const ParameterList& getParameters() const = 0;
+     * @return A list with all parameters available.
+     */
+    virtual const ParameterList& getParameters() const = 0;
 
     /**
      * @brief Get the parameter with specified name.
@@ -89,62 +89,62 @@ class Parametrizable:
      */
     virtual const Parameter& getParameter(const std::string& name) const = 0;
 	
-		/**
-		 * @brief Get the value for parameter of name 'name'.
-		 *
-		 * @param name The name of the parameter.
-		 * @return the value of parameter <i>name</i>.
-		 */
-		virtual double getParameterValue(const std::string& name) const
-			 = 0;
+    /**
+     * @brief Get the value for parameter of name 'name'.
+     *
+     * @param name The name of the parameter.
+     * @return the value of parameter <i>name</i>.
+     */
+    virtual double getParameterValue(const std::string& name) const
+    = 0;
 
-		/**
-		 * @brief Set the parameters values to be equals to those of <i>parameters</i>.
-		 *
-		 * The list must contain exactly the same parameters (ie same names)
-		 * than the parameters available.
-		 *
-		 * @param parameters A list with all parameters.
-		 * @throw ParameterNotFoundException If a some parameter in the list is not in <i>params</i>.
-		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
-		 * corresponding parameter in the list.
-		 */
-		virtual void setAllParametersValues(const ParameterList& parameters) = 0;
+    /**
+     * @brief Set the parameters values to be equals to those of <i>parameters</i>.
+     *
+     * The list must contain exactly the same parameters (ie same names)
+     * than the parameters available.
+     *
+     * @param parameters A list with all parameters.
+     * @throw ParameterNotFoundException If a some parameter in the list is not in <i>params</i>.
+     * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
+     * corresponding parameter in the list.
+     */
+    virtual void setAllParametersValues(const ParameterList& parameters) = 0;
 
-		/**
-		 * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
-		 *
-		 * @param name the name of the parameter to set.
-		 * @param value The value of the parameter.
-		 * @throw ParameterNotFoundException If no parameter in the list has the name <i>name</i>.
-		 * @throw ConstraintException If <i>value</i> does not match the constraint associated to
-		 * parameter <i>name</i>.
-		 */
-		virtual void setParameterValue(const std::string& name, double value) = 0;
+    /**
+     * @brief Set the value of parameter with name <i>name</i> to be equal to <i>value</i>.
+     *
+     * @param name the name of the parameter to set.
+     * @param value The value of the parameter.
+     * @throw ParameterNotFoundException If no parameter in the list has the name <i>name</i>.
+     * @throw ConstraintException If <i>value</i> does not match the constraint associated to
+     * parameter <i>name</i>.
+     */
+    virtual void setParameterValue(const std::string& name, double value) = 0;
 
-		/**
-		 * @brief Update the parameters from <i>parameters</i>.
-		 *
-		 * <i>parameters</i> must be a subset of all parameters available.
-		 *
-		 * @param parameters A list containing all parameters to update.
-		 * @throw ParameterNotFoundException If a some parameter in <i>params</i> is not in the list.
-		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
-		 * corresponding parameter in the list.
-		 */
-		virtual void setParametersValues(const ParameterList& parameters) = 0;
+    /**
+     * @brief Update the parameters from <i>parameters</i>.
+     *
+     * <i>parameters</i> must be a subset of all parameters available.
+     *
+     * @param parameters A list containing all parameters to update.
+     * @throw ParameterNotFoundException If a some parameter in <i>params</i> is not in the list.
+     * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
+     * corresponding parameter in the list.
+     */
+    virtual void setParametersValues(const ParameterList& parameters) = 0;
 
-		/**
-		 * @brief Update the parameters from <i>parameters</i>.
-		 *
-		 * Only common parameters with <i>parameters</i> will be updated.
-		 *
-		 * @param parameters A list of parameters.
+    /**
+     * @brief Update the parameters from <i>parameters</i>.
+     *
+     * Only common parameters with <i>parameters</i> will be updated.
+     *
+     * @param parameters A list of parameters.
      * @return True if at least one parameter value has been changed.
-		 * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
-		 * corresponding parameter in the list.
-		 */
-		virtual bool matchParametersValues(const ParameterList& parameters) = 0;
+     * @throw ConstraintException If a value in <i>parameters</i> does not match the constraint in the
+     * corresponding parameter in the list.
+     */
+    virtual bool matchParametersValues(const ParameterList& parameters) = 0;
 
     /**
      * @brief Get the number of parameters.
@@ -174,46 +174,46 @@ class Parametrizable:
      */
     virtual std::string getParameterNameWithoutNamespace(const std::string& name) const = 0;
 
-};
+  };
 
 /**
  * @brief A low-level implementation of the Parametrizable interface with void functions.
  *
  * @see Parameter, ParameterList, Parametrizable
  */
-class ParametrizableAdapter:
-  public virtual Parametrizable
-{
+  class ParametrizableAdapter:
+    public virtual Parametrizable
+  {
   protected:
     ParameterList parameters_;
     Parameter parameter_;
 
-	public:
-		ParametrizableAdapter(): parameters_(), parameter_() {}
-		virtual ~ParametrizableAdapter() {}
+  public:
+    ParametrizableAdapter(): parameters_(), parameter_() {}
+    virtual ~ParametrizableAdapter() {}
 
-	public:
+  public:
 
-		/**
-		 * @name The Parametrizable interface.
-		 *
-		 * @{
-		 */
+    /**
+     * @name The Parametrizable interface.
+     *
+     * @{
+     */
     bool hasParameter(const std::string & name) const { return parameters_.hasParameter(name); }
-		const ParameterList & getParameters() const { return parameters_; }
+    const ParameterList & getParameters() const { return parameters_; }
     const Parameter & getParameter(const std::string & name) const { return parameter_; }
-		double getParameterValue(const std::string & name) const { return 0; }
-		void setAllParametersValues(const ParameterList & parameters) {}
-		void setParameterValue(const std::string & name, double value) {}
-		void setParametersValues(const ParameterList & parameters) {}
-		bool matchParametersValues(const ParameterList & parameters) { return false; }
+    double getParameterValue(const std::string & name) const { return 0; }
+    void setAllParametersValues(const ParameterList & parameters) {}
+    void setParameterValue(const std::string & name, double value) {}
+    void setParametersValues(const ParameterList & parameters) {}
+    bool matchParametersValues(const ParameterList & parameters) { return false; }
     size_t getNumberOfParameters() const { return 0; }
     void setNamespace(const std::string& prefix) {}
     std::string getNamespace() const { return ""; }
     std::string getParameterNameWithoutNamespace(const std::string& name) const { return name; }
-		/** @} */
+    /** @} */
 
-};
+  };
 
 } //end of namespace bpp.
 

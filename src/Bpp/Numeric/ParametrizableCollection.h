@@ -156,14 +156,14 @@ namespace bpp
       std::map<size_t, ParameterList > mNumPl;
       
       for (size_t i=0; i<parameters.size(); i++)
-        {
-          std::string n=parameters[i].getName();
-          size_t t=n.rfind("_");
-          if (t==std::string::npos)
-            continue;
-          size_t num=(size_t)atoi(n.substr(t+1).c_str());
-          mNumPl[num].addParameter(Parameter(n.substr(0,t),parameters[i].getValue()));
-        }
+      {
+        std::string n=parameters[i].getName();
+        size_t t=n.rfind("_");
+        if (t==std::string::npos)
+          continue;
+        size_t num=(size_t)atoi(n.substr(t+1).c_str());
+        mNumPl[num].addParameter(Parameter(n.substr(0,t),parameters[i].getValue()));
+      }
 
       std::map<size_t, ParameterList >::iterator it;
       
@@ -298,21 +298,21 @@ namespace bpp
       nplm=object->getParameters().getParameterNames();
 
       for (size_t i  = 0; i < nplm.size(); i++)
-        {
-          pname = nplm[i];
-          Parameter* p = new Parameter(object->getParameters().getParameter(pname));
-          p->setName(pname + "_" + TextTools::toString(objectIndex));
-          addParameter_(p);
-        }
+      {
+        pname = nplm[i];
+        Parameter* p = new Parameter(object->getParameters().getParameter(pname));
+        p->setName(pname + "_" + TextTools::toString(objectIndex));
+        addParameter_(p);
+      }
 
       if (dynamic_cast<ParameterAliasable*>(object)){
         ParameterAliasable* ppa=dynamic_cast<ParameterAliasable*>(object);
         for (size_t i  = 0; i < nplm.size(); i++)
-          {
-            std::vector<std::string> va=ppa->getAlias(nplm[i]);
-            for (size_t j=0;j<va.size();j++)
-              aliasParameters(nplm[i] + "_" + TextTools::toString(objectIndex), va[j] + "_" + TextTools::toString(objectIndex));
-          }
+        {
+          std::vector<std::string> va=ppa->getAlias(nplm[i]);
+          for (size_t j=0;j<va.size();j++)
+            aliasParameters(nplm[i] + "_" + TextTools::toString(objectIndex), va[j] + "_" + TextTools::toString(objectIndex));
+        }
       }
     }
 
@@ -337,24 +337,24 @@ namespace bpp
       ParameterList pl=getParameters();
       
       for (size_t i = pl.size(); i>0; i--)
-        {
-          std::string pn=pl[i-1].getName();
+      {
+        std::string pn=pl[i-1].getName();
           
-          size_t pu=pn.rfind("_");
-          int nm=atoi(pn.substr(pu+1).c_str());
-          if (nm==(int)objectIndex){
-            std::vector<std::string> alpn=getAlias(pn);
-            for (unsigned j=0; j<alpn.size(); j++)
-              try {
-                unaliasParameters(alpn[j],pn);
-              }
-              catch (Exception& e)
-                {
-                  continue;
-                }
-            deleteParameter_(i-1);
-          }
+        size_t pu=pn.rfind("_");
+        int nm=atoi(pn.substr(pu+1).c_str());
+        if (nm==(int)objectIndex){
+          std::vector<std::string> alpn=getAlias(pn);
+          for (unsigned j=0; j<alpn.size(); j++)
+            try {
+              unaliasParameters(alpn[j],pn);
+            }
+            catch (Exception& e)
+            {
+              continue;
+            }
+          deleteParameter_(i-1);
         }
+      }
       
       return pm;
     }
