@@ -121,7 +121,7 @@ namespace bpp
      *
      */
     
-    IntervalConstraint intMinMax_;    
+    std::shared_ptr<IntervalConstraint> intMinMax_;    
 
     /**
      * Tells if the values in the classes is associated to the median or not (default: false)
@@ -191,22 +191,22 @@ namespace bpp
 
     double getLowerBound() const
     {
-      return intMinMax_.getLowerBound();
+      return intMinMax_->getLowerBound();
     }
 
     double getUpperBound() const
     {
-      return intMinMax_.getUpperBound();
+      return intMinMax_->getUpperBound();
     }
 
     bool strictLowerBound() const
     {
-      return intMinMax_.strictLowerBound();
+      return intMinMax_->strictLowerBound();
     }
 
     bool strictUpperBound() const
     {
-      return intMinMax_.strictUpperBound();
+      return intMinMax_->strictUpperBound();
     }
 
     Vdouble getBounds() const;

@@ -58,7 +58,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool 
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
-  const Constraint* pc = (allowNull ? &Parameter::PROP_CONSTRAINT_IN : &Parameter::PROP_CONSTRAINT_EX);
+  std::shared_ptr<Constraint> pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
 
   for (unsigned int i = 0; i < dim_; i++)
   {
@@ -132,7 +132,7 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
     vProb_.push_back(1. / static_cast<double>(dim_));
   }
 
-  const Constraint* pc = (allowNull ? &Parameter::PROP_CONSTRAINT_IN : &Parameter::PROP_CONSTRAINT_EX);
+  std::shared_ptr<Constraint> pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
 
   double y = 1;
   switch (method_)

@@ -48,6 +48,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 namespace bpp
 {
@@ -110,6 +111,13 @@ namespace bpp
      * @param event Event associated to the acion.
      */
     virtual void parameterValueChanged(ParameterEvent& event) = 0;
+
+    /**
+     * @brief Notify a constraint change.
+     *
+     * @param event Event associated to the acion.
+     */
+    virtual void parameterConstraintChanged(ParameterEvent& event) = 0;
   };
 
   /**
@@ -129,8 +137,7 @@ namespace bpp
     std::string name_;             //Parameter name
     double value_;            //Parameter value
     double precision_;  // Precision needed for Parameter value
-    Constraint* constraint_; //A constraint on the value
-    bool attach_;   // Tells if the constraint is attached to the Parameter
+    std::shared_ptr<Constraint> constraint_;
     std::vector<ParameterListener*> listeners_;
     std::vector<bool> listenerAttach_;
   
@@ -139,21 +146,7 @@ namespace bpp
     /**
      * @brief Default contructor. Creates a parameter with no name, no constraint, and a value of 0.
      */
-    Parameter(): name_(""), value_(0), precision_(0), constraint_(0), attach_(true), listeners_(), listenerAttach_() {}
-    /**
-     * @brief Build a new parameter.
-     *
-     * @param name       The parameter name.
-     * @param value      The parameter value.
-     * @param constraint A  pointer toward a constraint Object.
-     * @param attachConstraint Tell if the constraint must be attached to this parameter, or shared
-     * @param precision An optional parameter precision (default 0)
-     * between different objects (the default behavior, for backward compatibility).
-     * If the first case, the constraint object will be destroyed when the parameter is destroyed,
-     * and duplicated when the parameter is copied.
-     * @throw ConstraintException If the parameter value does not match the contraint.
-     */
-    Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision=0);
+    Parameter(): name_(""), value_(0), precision_(0), constraint_(0), listeners_(), listenerAttach_() {}
 
     /**
      * @brief Build a new parameter.
@@ -164,7 +157,7 @@ namespace bpp
      * @param precision An optional parameter precision (default 0)
      * @throw ConstraintException If the parameter value does not match the contraint.
      */
-    Parameter(const std::string& name, double value, const Constraint* constraint = 0, double precision=0);
+    Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint = 0, double precision=0);
 
 
     /**
@@ -233,16 +226,21 @@ namespace bpp
     /**
      * @brief Return the constraint associated to this parameter if there is one.
      *
-     * @return A pointer toward the constraint, or NULL if there is no constraint.
+     * @return A shared pointer toward the constraint, or NULL if
+     * there is no constraint.
      */
-    virtual const Constraint* getConstraint() const { return constraint_; }
+    
+    virtual const std::shared_ptr<Constraint> getConstraint() const { return constraint_; }
     
     /**
-     * @brief Return the constraint associated to this parameter if there is one.
+     * @brief Return the constraint associated to this parameter if
+     * there is one.
      *
-     * @return A pointer toward the constraint, or NULL if there is no constraint.
+     * @return A shared pointer toward the constraint, or NULL if there is no
+     * constraint.
      */
-    virtual Constraint* getConstraint() { return constraint_; }
+    
+    virtual std::shared_ptr<Constraint> getConstraint() { return constraint_; }
 
     /**
      * @brief Tells if this parameter has a constraint.
@@ -258,16 +256,16 @@ namespace bpp
      *
      * @return A pointer toward the formerly used contraint.
      */
-    virtual const Constraint* removeConstraint();
+    
+    virtual std::shared_ptr<Constraint> removeConstraint();
 
     /**
      * @brief Set a constraint to this parameter.
      *
      * @param constraint a pointer to the constraint (may be null)
-     * @param attach says if the constraint is attached to the Parameter (default: false).
      */
     
-    virtual void setConstraint(Constraint* constraint, bool attach = false);
+    virtual void setConstraint(std::shared_ptr<Constraint> constraint);
 
     /**
      * @brief Add a new listener to this parameter.
@@ -305,19 +303,26 @@ namespace bpp
       for(std::vector<ParameterListener *>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
         (*it)->parameterNameChanged(event);
     }
+
     void fireParameterValueChanged(ParameterEvent& event)
     {
       for(std::vector<ParameterListener *>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
         (*it)->parameterValueChanged(event);
     }
-  
+
+    void fireParameterConstraintChanged(ParameterEvent& event)
+    {
+      for(std::vector<ParameterListener *>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
+        (*it)->parameterConstraintChanged(event);
+    }
+
   public:
-    static const IntervalConstraint R_PLUS;
-    static const IntervalConstraint R_PLUS_STAR;
-    static const IntervalConstraint R_MINUS;
-    static const IntervalConstraint R_MINUS_STAR;
-    static const IntervalConstraint PROP_CONSTRAINT_IN;
-    static const IntervalConstraint PROP_CONSTRAINT_EX;
+    static const std::shared_ptr<IntervalConstraint> R_PLUS;
+    static const std::shared_ptr<IntervalConstraint> R_PLUS_STAR;
+    static const std::shared_ptr<IntervalConstraint> R_MINUS;
+    static const std::shared_ptr<IntervalConstraint> R_MINUS_STAR;
+    static const std::shared_ptr<IntervalConstraint> PROP_CONSTRAINT_IN;
+    static const std::shared_ptr<IntervalConstraint> PROP_CONSTRAINT_EX;
   };
 
 } //end of namespace bpp.

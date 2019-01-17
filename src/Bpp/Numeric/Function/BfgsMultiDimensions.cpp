@@ -84,7 +84,7 @@ void BfgsMultiDimensions::doInit(const ParameterList& params)
 
   for (size_t i = 0; i < nbParams; i++)
   {
-    const Constraint* cp = params[i].getConstraint();
+    std::shared_ptr<Constraint> cp = params[i].getConstraint();
     if (!cp)
     {
       Up_[i] = NumConstants::VERY_BIG();

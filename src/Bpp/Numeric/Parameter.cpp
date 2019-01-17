@@ -54,18 +54,9 @@ ParameterEvent::ParameterEvent(Parameter* parameter): parameter_(parameter) {}
 
 /** Constructors: *************************************************************/
 
-Parameter::Parameter(const std::string& name, double value, Constraint* constraint, bool attachConstraint, double precision) :
-  name_(name), value_(0), precision_(0), constraint_(constraint), attach_(attachConstraint), listeners_(), listenerAttach_()
+Parameter::Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint, double precision) :
+  name_(name), value_(0), precision_(0), constraint_(constraint), listeners_(), listenerAttach_()
 {
-  // This may throw a ConstraintException:
-  setValue(value);
-  setPrecision(precision);
-}
-
-Parameter::Parameter(const std::string& name, double value, const Constraint* constraint, double precision) :
-  name_(name), value_(0), precision_(0), constraint_(constraint ? constraint->clone() : 0), attach_(true), listeners_(), listenerAttach_()
-{
-  // This may throw a ConstraintException:
   setValue(value);
   setPrecision(precision);
 }
@@ -74,15 +65,10 @@ Parameter::Parameter(const Parameter& p) :
   name_(p.name_),
   value_(p.value_),
   precision_(p.precision_),
-  constraint_(0),
-  attach_(p.attach_),
+  constraint_(p.constraint_?std::shared_ptr<Constraint>(p.constraint_->clone()):0),
   listeners_(p.listeners_),
   listenerAttach_(p.listenerAttach_)
 {
-  if (p.attach_ && p.constraint_)
-    constraint_ = p.constraint_->clone();
-  else
-    constraint_ = p.constraint_;
   for (size_t i = 0; i < listeners_.size(); i++)
     if (listenerAttach_[i])
       listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
@@ -93,11 +79,7 @@ Parameter& Parameter::operator=(const Parameter& p)
   name_           = p.name_;
   value_          = p.value_;
   precision_      = p.precision_;
-  attach_         = p.attach_;
-  if (p.attach_ && p.constraint_)
-    constraint_   = p.constraint_->clone();
-  else
-    constraint_   = p.constraint_;
+  constraint_     = p.constraint_?std::shared_ptr<Constraint>(p.constraint_->clone()):0;
   listeners_      = p.listeners_;
   listenerAttach_ = p.listenerAttach_;
   for (size_t i = 0; i < listeners_.size(); i++)
@@ -110,7 +92,6 @@ Parameter& Parameter::operator=(const Parameter& p)
 
 Parameter::~Parameter()
 {
-  if (attach_ && constraint_) delete constraint_;
   for (size_t i = 0; i < listeners_.size(); i++)
     if (listenerAttach_[i])
       delete listeners_[i];
@@ -138,29 +119,18 @@ void Parameter::setPrecision(double precision)
 
 /** Constraint: ***************************************************************/
 
-void Parameter::setConstraint(Constraint* constraint, bool attach)
+void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 {
-  if (!constraint){
-    if (constraint_ && attach_)
-      delete constraint_;
-    constraint_=0;
-    attach_=false;
-  }
-  else {
-    if (constraint->isCorrect(value_)) {
-      if (constraint_ && attach_)
-        delete constraint_;
-      constraint_ = constraint;
-      attach_= attach;
-    }
-  else throw ConstraintException("Parameter::setConstraint", this, value_);
-  }
+  if (constraint!=0 && !constraint->isCorrect(value_))
+    throw ConstraintException("Parameter::setConstraint", this, value_);
+
+  constraint_ = constraint;
 }
 
 
-const Constraint* Parameter::removeConstraint()
+std::shared_ptr<Constraint> Parameter::removeConstraint()
 {
-  const Constraint * c = constraint_;
+  auto c = constraint_;
   constraint_ = 0;
   return c;
 }
@@ -192,17 +162,12 @@ bool Parameter::hasParameterListener(const std::string& listenerId)
 
 /******************************************************************************/
 
-const IntervalConstraint Parameter::R_PLUS(true, 0, true);
-
-const IntervalConstraint Parameter::R_PLUS_STAR(true, 0, false);
-
-const IntervalConstraint Parameter::R_MINUS(false, 0, true);
-
-const IntervalConstraint Parameter::R_MINUS_STAR(false, 0, false);
-
-const IntervalConstraint Parameter::PROP_CONSTRAINT_IN(0, 1, true, true);
-
-const IntervalConstraint Parameter::PROP_CONSTRAINT_EX(0, 1, false, false);
+const std::shared_ptr<IntervalConstraint> Parameter::R_PLUS(new IntervalConstraint(true, 0, true));
+const std::shared_ptr<IntervalConstraint> Parameter::R_PLUS_STAR(new IntervalConstraint(true, 0, false));
+const std::shared_ptr<IntervalConstraint> Parameter::R_MINUS(new IntervalConstraint(false, 0, true));
+const std::shared_ptr<IntervalConstraint> Parameter::R_MINUS_STAR(new IntervalConstraint(false, 0, false));
+const std::shared_ptr<IntervalConstraint> Parameter::PROP_CONSTRAINT_IN(new IntervalConstraint(0, 1, true, true));
+const std::shared_ptr<IntervalConstraint> Parameter::PROP_CONSTRAINT_EX(new IntervalConstraint(0, 1, false, false));
 
 /******************************************************************************/
 

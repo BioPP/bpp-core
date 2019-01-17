@@ -55,7 +55,7 @@ GaussianDiscreteDistribution::GaussianDiscreteDistribution(size_t n, double mu, 
   AbstractDiscreteDistribution(n,"Gaussian."), mu_(mu), sigma_(sigma)
 {
   addParameter_(new Parameter("Gaussian.mu", mu));
-  addParameter_(new Parameter("Gaussian.sigma", sigma, &Parameter::R_PLUS_STAR));
+  addParameter_(new Parameter("Gaussian.sigma", sigma, Parameter::R_PLUS_STAR));
   discretize();
 }
 

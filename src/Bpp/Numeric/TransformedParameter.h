@@ -5,36 +5,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _TRANSFORMEDPARAMETER_H_
@@ -56,16 +56,16 @@ namespace bpp
  * It uses a transformation in order to do this, typically using a bijection.
  * The exact function used to achieve the transformation depends on the implementation of the interface.
  */ 
-class TransformedParameter:
-  public Parameter
-{
-	public:
+  class TransformedParameter:
+    public Parameter
+  {
+  public:
     TransformedParameter(const std::string& name, double value):
       Parameter(name, value) {}
 		
-		TransformedParameter* clone() const = 0;
+    TransformedParameter* clone() const = 0;
 	
-	public:
+  public:
     /**
      * @brief Set the value of the parameter using the orignal coordinate system.
      *
@@ -92,7 +92,7 @@ class TransformedParameter:
      * or if the derivation was not implemented.
      */
     virtual double getSecondOrderDerivative() const = 0;
-};
+  };
 
 /**
  * @brief Parameter transformation from ] b, +inf [ or ] -inf, b [ to ]-inf, + inf [.
@@ -114,9 +114,9 @@ class TransformedParameter:
  * \end{cases}
  * @f]
  */
-class RTransformedParameter:
-  public TransformedParameter
-{
+  class RTransformedParameter:
+    public TransformedParameter
+  {
   private:
     double scale_;
     double bound_;
@@ -186,7 +186,7 @@ class RTransformedParameter:
         else      return 0;
     }
 
-};
+  };
 
 /**
  * @brief Parameter transformation from ] a, b [ to ]-inf, + inf [.
@@ -202,9 +202,9 @@ class RTransformedParameter:
  * @f]
  *
  */
-class IntervalTransformedParameter:
-  public TransformedParameter
-{
+  class IntervalTransformedParameter:
+    public TransformedParameter
+  {
   private:
     double scale_;
     double lowerBound_;
@@ -225,8 +225,8 @@ class IntervalTransformedParameter:
      */
     IntervalTransformedParameter(const std::string& name, double value, double lowerBound = 0, double upperBound = 1, double scale = 1, bool hyper = true):
       TransformedParameter(name, hyper ?
-          scale * atanh(2. * (value - lowerBound) / (upperBound - lowerBound) - 1.) :
-          scale * tan(NumConstants::PI() * (value - lowerBound)/(upperBound - lowerBound) - NumConstants::PI() / 2.)),
+                           scale * atanh(2. * (value - lowerBound) / (upperBound - lowerBound) - 1.) :
+                           scale * tan(NumConstants::PI() * (value - lowerBound)/(upperBound - lowerBound) - NumConstants::PI() / 2.)),
       scale_(scale),
       lowerBound_(lowerBound),
       upperBound_(upperBound),
@@ -241,8 +241,8 @@ class IntervalTransformedParameter:
     {
       if (value <= lowerBound_ || value >= upperBound_) throw ConstraintException("IntervalTransformedParameter::setValue", this, value);
       setValue(hyper_ ?
-          scale_ * atanh(2. * (value - lowerBound_) / (upperBound_ - lowerBound_) - 1.) :
-          scale_ * std::tan(NumConstants::PI() * (value - lowerBound_)/(upperBound_ - lowerBound_) - NumConstants::PI() / 2.));
+               scale_ * atanh(2. * (value - lowerBound_) / (upperBound_ - lowerBound_) - 1.) :
+               scale_ * std::tan(NumConstants::PI() * (value - lowerBound_)/(upperBound_ - lowerBound_) - NumConstants::PI() / 2.));
     }
 
     double getOriginalValue() const
@@ -271,7 +271,7 @@ class IntervalTransformedParameter:
         -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * pow(scale_, 3) * pow((pow(x / scale_, 2) + 1.), 2));
       return x2;
     }
-};
+  };
 
 /**
  * @brief 'Placebo' parameter transformation from ] b, +inf [ or ] -inf, b [ to ]-inf, + inf [.
@@ -279,9 +279,9 @@ class IntervalTransformedParameter:
  * The class create a Transformed parameter which is exactly the same as a standard parameter.
  * It only implements the setOriginalValue and getOriginalValue methods, and remove the constraint.
  */
-class PlaceboTransformedParameter:
-  public TransformedParameter
-{
+  class PlaceboTransformedParameter:
+    public TransformedParameter
+  {
   public:
     PlaceboTransformedParameter(const std::string& name, double value):
       TransformedParameter(name, value)
@@ -303,7 +303,7 @@ class PlaceboTransformedParameter:
     double getFirstOrderDerivative() const { return 1.; }
     
     double getSecondOrderDerivative() const { return 0.; }
-};
+  };
 
 
 } //end of namespace bpp.

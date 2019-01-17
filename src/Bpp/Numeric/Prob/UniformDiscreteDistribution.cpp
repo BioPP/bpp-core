@@ -55,8 +55,8 @@ UniformDiscreteDistribution::UniformDiscreteDistribution(unsigned int n, double 
   min_((min<max)?min:max),
   max_((min<max)?max:min) 
 {
-  intMinMax_.setLowerBound(min_,false);
-  intMinMax_.setUpperBound(max_,false);
+  intMinMax_->setLowerBound(min_,false);
+  intMinMax_->setUpperBound(max_,false);
 
   discretize();
 }

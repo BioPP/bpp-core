@@ -110,6 +110,14 @@ public:
     p->setValue(event.getParameter()->getValue());
   }
 
+  void parameterConstraintChanged(ParameterEvent& event)
+  {
+    Parameter* p = &(*pl_)[alias_];
+    if (p->getName() != name_)
+      throw Exception("AbstractParameterAliasable::AliasParameterListener::parameterConstraintChanged. Error, aliased parameter have change, maybe because it was renamed, or a parameter was removed?");
+    p->setConstraint(event.getParameter()->getConstraint());
+  }
+
   const std::string& getName() const { return name_; }
 
   void rename(const std::string& name) { name_ = name; }
