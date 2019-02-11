@@ -100,7 +100,7 @@ namespace bpp
     void setParameterValue(const std::string& name, double value)
     {
       parameters_.setParameterValue(prefix_ + name, value);
-      fireParameterChanged(parameters_.subList(prefix_ + name));
+      fireParameterChanged(parameters_.createSubList(prefix_ + name));
     }
 
     void setParametersValues(const ParameterList& parameters)
@@ -114,7 +114,7 @@ namespace bpp
       std::unique_ptr< std::vector<size_t> >updatedParameters(new std::vector<size_t>());
       bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
       if (test) 
-        fireParameterChanged(parameters.subList(*updatedParameters));
+        fireParameterChanged(parameters.createSubList(*updatedParameters));
       return test;
     }
 

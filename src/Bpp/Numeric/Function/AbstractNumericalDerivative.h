@@ -231,7 +231,7 @@ class AbstractNumericalDerivative:
     void setParameterValue(const std::string& name, double value)
     {
       function_->setParameterValue(name, value);
-      updateDerivatives(function_->getParameters().subList(name));
+      updateDerivatives(function_->getParameters().createSubList(name));
     }
     
     void setParametersValues(const ParameterList& parameters)

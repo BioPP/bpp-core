@@ -156,7 +156,17 @@ namespace bpp
      * @return A list with all parameters specified.
      * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
      */
-    virtual ParameterList subList(const std::vector<std::string>& names) const;
+    virtual ParameterList createSubList(const std::vector<std::string>& names) const;
+
+    /**
+     * @brief Share given parameters as a sublist.
+     *
+     * @param names Name of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
+     */
+
+    virtual ParameterList shareSubList(const std::vector<std::string>& names) const;
 
     /**
      * @brief Get given parameter as a sublist.
@@ -165,7 +175,7 @@ namespace bpp
      * @return A list with the parameter specified.
      * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
-    virtual ParameterList subList(const std::string& name) const;
+    virtual ParameterList createSubList(const std::string& name) const;
 
     /**
      * @brief Get given parameters as a sublist.
@@ -173,7 +183,7 @@ namespace bpp
      * @param parameters Positions of the parameters to be included in the list.
      * @return A list with all parameters specified.
      */
-    virtual ParameterList subList(const std::vector<size_t>& parameters) const;
+    virtual ParameterList createSubList(const std::vector<size_t>& parameters) const;
 
     /**
      * @brief Get given parameter as a sublist.
@@ -181,7 +191,7 @@ namespace bpp
      * @param parameter Position of the parameters to be included in the list.
      * @return A list with the parameter specified.
      */
-    virtual ParameterList subList(size_t parameter) const;
+    virtual ParameterList createSubList(size_t parameter) const;
 
     /**
      * @brief Get the sublist containing all common parameter between this list and pl.

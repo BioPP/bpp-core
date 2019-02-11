@@ -90,7 +90,7 @@ VVdouble* FunctionTools::computeGrid(
 
   //Get the parameter list. this may throw an exception if the grid does not
   //match the function parameters...
-  ParameterList pl = function.getParameters().subList(grid.getDimensionNames());
+  ParameterList pl = function.getParameters().createSubList(grid.getDimensionNames());
   for(unsigned int i = 0; i < n; i++)
     pl.setParameterValue(grid.getDimensionName(i), grid.getPointsForDimension(i)[0]);
 

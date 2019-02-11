@@ -82,7 +82,7 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
                                      bool printLocalAliases,
                                      bool printComma) const
 {
-  ParameterList pl = parametrizable->getIndependentParameters().subList(names);
+  ParameterList pl = parametrizable->getIndependentParameters().createSubList(names);
   int p = out.getPrecision();
   out.setPrecision(12);
   bool flag = printComma;

@@ -98,7 +98,7 @@ double SimpleMultiDimensions::doStep()
     double v = getParameters()[i].getValue();
     double t = std::max(0.000001, std::min(std::abs(v), getStopCondition()->getTolerance()));
     optimizer_.setInitialInterval(v - t, v + t);
-    optimizer_.init(getParameters().subList(i));
+    optimizer_.init(getParameters().createSubList(i));
 
     // Optimize through this dimension:
     f = optimizer_.optimize();

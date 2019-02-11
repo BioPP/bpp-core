@@ -76,11 +76,11 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
         vector<string> vars(2);
         vars[0] = var;
         vars[1] = lastVar;
-        p = parameters.subList(vars);
+        p = parameters.createSubList(vars);
       }
       else
       {
-        p = parameters.subList(var);
+        p = parameters.createSubList(var);
         start = false;
       }
       lastVar = var;
@@ -100,7 +100,7 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
           p[0].setValue(value + h);
           function_->setParameters(p); // also reset previous parameter...
 
-          p = p.subList(0);
+          p = p.createSubList(0);
           f1_ = function_->getValue();
           if ((abs(f1_) >= NumConstants::VERY_BIG()) || std::isnan(f1_))
             throw ConstraintException("f1_ too large", &p[0], f1_);
@@ -134,7 +134,7 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
             p[0].setValue(value + h);
             function_->setParameters(p); // also reset previous parameter...
 
-            p = p.subList(0);
+            p = p.createSubList(0);
             f3_ = function_->getValue();
             if ((abs(f3_) >= NumConstants::VERY_BIG()) || std::isnan(f3_))
               throw ConstraintException("f3_ too large", &p[0], f3_);
@@ -195,7 +195,7 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
             if (lastVar2 != var1 && lastVar2 != var2)
               vars.push_back(lastVar2);
           }
-          p = parameters.subList(vars);
+          p = parameters.createSubList(vars);
 
           double value1 = function_->getParameterValue(var1);
           double value2 = function_->getParameterValue(var2);
@@ -211,19 +211,19 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
             vector<size_t> tmp(2);
             tmp[0] = 0;
             tmp[1] = 1;
-            p = p.subList(tmp); // removed the previous parameters.
+            p = p.createSubList(tmp); // removed the previous parameters.
             f11_ = function_->getValue();
 
             p[1].setValue(value2 + h2);
-            function_->setParameters(p.subList(1));
+            function_->setParameters(p.createSubList(1));
             f12_ = function_->getValue();
 
             p[0].setValue(value1 + h1);
-            function_->setParameters(p.subList(0));
+            function_->setParameters(p.createSubList(0));
             f22_ = function_->getValue();
 
             p[1].setValue(value2 - h2);
-            function_->setParameters(p.subList(1));
+            function_->setParameters(p.createSubList(1));
             f21_ = function_->getValue();
 
             crossDer2_(i, j) = ((f22_ - f21_) - (f12_ - f11_)) / (4 * h1 * h2);
@@ -245,7 +245,7 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
     if (function2_)
       function2_->enableSecondOrderDerivatives(computeD2_);
     if (functionChanged)
-      function_->setParameters(parameters.subList(lastVar));
+      function_->setParameters(parameters.createSubList(lastVar));
   }
   else
   {

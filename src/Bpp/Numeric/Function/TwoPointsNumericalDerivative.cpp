@@ -68,11 +68,11 @@ void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList paramet
         vars[1] = lastVar;
         lastVar = var;
         functionChanged = true;
-        p = parameters.subList(vars);
+        p = parameters.createSubList(vars);
       }
       else
       {
-        p = parameters.subList(var);
+        p = parameters.createSubList(var);
         lastVar = var;
         functionChanged = true;
         start = false;
@@ -109,7 +109,7 @@ void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList paramet
     if (function1_)
       function1_->enableFirstOrderDerivatives(computeD1_);
     if (functionChanged)
-      function_->setParameters(parameters.subList(lastVar));
+      function_->setParameters(parameters.createSubList(lastVar));
   }
   else
   {

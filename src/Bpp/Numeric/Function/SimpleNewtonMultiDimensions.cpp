@@ -94,7 +94,7 @@ double SimpleNewtonMultiDimensions::doStep()
       cout.flush();
     }
     // Re-init optimizer according to new values:
-    optimizer_.init(getParameters().subList(i));
+    optimizer_.init(getParameters().createSubList(i));
 
     // Optimize through this dimension:
     f = optimizer_.optimize();
