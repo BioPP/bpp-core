@@ -185,11 +185,25 @@ ParameterList ParameterList::createSubList(const std::string& name) const
 ParameterList ParameterList::createSubList(const std::vector<size_t>& parameters) const
 {
   ParameterList pl;
-  for (size_t i = 0; i < parameters.size(); i++)
+  for (auto iparam : parameters)
   {
-    if (parameters[i] < size())
-      pl.parameters_.push_back(shared_ptr<Parameter>(parameters_[parameters[i]]->clone()));
+    if (iparam < size())
+      pl.parameters_.push_back(shared_ptr<Parameter>(parameters_[iparam]->clone()));
   }
+  return pl;
+}
+
+/******************************************************************************/
+
+ParameterList ParameterList::shareSubList(const std::vector<size_t>& parameters) const
+{
+  ParameterList pl;
+  for (auto iparam : parameters)
+  {
+    if (iparam < size())
+      pl.shareParameter(parameters_[iparam]);
+  }
+  
   return pl;
 }
 

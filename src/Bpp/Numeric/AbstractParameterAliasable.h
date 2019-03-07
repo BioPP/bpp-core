@@ -107,7 +107,7 @@ namespace bpp
       Parameter* p = &(*pl_)[alias_];
       if (p->getName() != name_)
         throw Exception("AbstractParameterAliasable::AliasParameterListener::parameterValueChanged. Error, aliased parameter have change, maybe because it was renamed, or a parameter was removed?");
-      p->setValue(event.getParameter()->getValue());
+      p->setValue(event.getParameter()->Parameter::getValue());
     }
 
     void parameterConstraintChanged(ParameterEvent& event)
@@ -255,7 +255,7 @@ namespace bpp
 
     void deleteParameter_(size_t index)
     {
-      std::string name = getParameterNameWithoutNamespace(getParameter_(index).getName());
+      std::string name = getParameter_(index).getName();
       AbstractParametrizable::deleteParameter_(index);
       if (independentParameters_.hasParameter(name))
         independentParameters_.deleteParameter(name);

@@ -186,6 +186,15 @@ namespace bpp
     virtual ParameterList createSubList(const std::vector<size_t>& parameters) const;
 
     /**
+     * @brief Share given parameters in a sublist.
+     *
+     * @param parameters Positions of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     */
+    
+    virtual ParameterList shareSubList(const std::vector<size_t>& parameters) const;
+
+    /**
      * @brief Get given parameter as a sublist.
      *
      * @param parameter Position of the parameters to be included in the list.
