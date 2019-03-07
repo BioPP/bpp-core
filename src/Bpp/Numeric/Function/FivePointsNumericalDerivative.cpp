@@ -65,11 +65,11 @@ void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parame
         vector<string> vars(2);
         vars[0] = var;
         vars[1] = lastVar;
-        p = parameters.subList(vars);
+        p = parameters.createSubList(vars);
       }
       else
       {
-        p = parameters.subList(var);
+        p = parameters.createSubList(var);
         start = true;
       }
       lastVar = var;
@@ -129,7 +129,7 @@ void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parame
     if (function2_)
       function2_->enableSecondOrderDerivatives(computeD2_);
     if (functionChanged)
-      function_->setParameters(parameters.subList(lastVar));
+      function_->setParameters(parameters.createSubList(lastVar));
   }
   else
   {

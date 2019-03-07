@@ -159,6 +159,7 @@ namespace bpp
      */
     Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint = 0, double precision=0);
 
+    Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint, bool precision) = delete;
 
     /**
      * @brief Copy constructor.
