@@ -398,8 +398,8 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
         if (it != range.end())
           out << ",";
       }
+      out << ")";
     }
-    out << ")";
 
     for (size_t i = 1; i < nd; i++)
     {
