@@ -158,6 +158,53 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
 
 /******************************************************************************/
 
+Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
+  double a,
+  double b,
+  Function* function,
+  ParameterList parameters,
+  uint intervalsNum)
+{
+  Bracket bracket;
+  // Copy the parameter to use.
+  bracket.a.x = a;
+  parameters[0].setValue(bracket.a.x); bracket.a.f = function->f(parameters);
+  bracket.b.x = b;
+  parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+
+  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  {
+    bracket.b.x /= 1.1;
+    parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+  }
+  
+  double bestMiddleX, bestMiddleF;
+  double curr, fcurr, jump;
+
+  // look for bracket.c.x by scanning n possible assignments and assigining c the best one over the examined values
+  curr = bracket.a.x;
+  fcurr = bracket.a.f;
+  bestMiddleX = (bracket.a.f < bracket.b.f ? bracket.a.x : bracket.b.x); // determine the currently optimal point with respect to f out of a and b 
+  bestMiddleF = (bracket.a.f < bracket.b.f ? bracket.a.f : bracket.b.f); // determine the currently optimal point with respect to f out of a and b 
+  jump = (b - a) / static_cast<double>(intervalsNum); // Determine the spacing appropriate to the mesh.
+  for (size_t i=1; i<=intervalsNum; i++) 
+  { // Loop over all intervals
+    curr += jump;
+    parameters[0].setValue(curr); fcurr = function->f(parameters); 
+    // If c yields better likelihood than a and b
+    if (fcurr < bestMiddleF) 
+    {
+        bestMiddleX = curr;
+        bestMiddleF = fcurr;
+    } 
+  }
+  bracket.c.x = bestMiddleX;
+  parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
+  return bracket;
+}
+
+/******************************************************************************/
+
 unsigned int OneDimensionOptimizationTools::lineMinimization(
   DirectionFunction& f1dim,
   ParameterList& parameters,

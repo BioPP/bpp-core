@@ -111,6 +111,19 @@ public:
    */
   static Bracket bracketMinimum(double a, double b, Function* function, ParameterList parameters);
 
+  /**
+   * @brief Bracket a minimum by a search within thw parameter's bounds.
+   *
+   * This implementation follows numerical recipes, page 352, inwards bracketing
+   *
+   * @param a, b       Two initial values for the parameter.
+   * @param function   The function to bracket.
+   * @param parameters The parameter to use as a variable.
+   * @return           A bracket object.
+   */
+  static Bracket inwardBracketMinimum(double a, double b, Function* function, ParameterList parameters, uint intervalsNum=10);
+
+
   static unsigned int lineMinimization(DirectionFunction& f1dim, ParameterList& parameters, std::vector<double>& xi, double tolerance, OutputStream* profiler = 0, OutputStream* messenger = 0, unsigned int verbose = 2);
 
   /**
