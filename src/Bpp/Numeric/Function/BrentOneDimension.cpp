@@ -69,7 +69,7 @@ double BrentOneDimension::BODStopCondition::getCurrentTolerance() const
 BrentOneDimension::BrentOneDimension(Function* function) :
   AbstractOptimizer(function),
   a(0), b(0), d(0), e(0), etemp(0), fu(0), fv(0), fw(0), fx(0), p(0), q(0), r(0), tol1(0), tol2(0),
-  u(0), v(0), w(0), x(0), xm(0), _xinf(0), _xsup(0), isInitialIntervalSet_(false)
+  u(0), v(0), w(0), x(0), xm(0), _xinf(0), _xsup(0), isInitialIntervalSet_(false), bracketing_(BrentOneDimension::BRACKET_OUTWARD)
 {
   setDefaultStopCondition_(new BODStopCondition(this));
   setStopCondition(*getDefaultStopCondition());
@@ -88,7 +88,16 @@ void BrentOneDimension::doInit(const ParameterList& params)
     throw Exception("BrentOneDimension::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
-  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters());
+  Bracket bracket;
+  if (bracketing_ == BrentOneDimension::BRACKET_OUTWARD)
+  {
+    bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters()); 
+  }
+  else
+  {
+    bracket = OneDimensionOptimizationTools::inwardBracketMinimum(_xinf, _xsup, getFunction(), getParameters());
+  }
+  
   if (getVerbose() > 0)
   {
     printMessage("Initial bracketing:");
