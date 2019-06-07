@@ -53,7 +53,7 @@ int main() {
   optimizer.setBracketing(BrentOneDimension::BRACKET_INWARD);
   ParameterList parameter;
   parameter.addParameter(f.getParameter("z"));
-  const IntervalConstraint* parameterBounds = dynamic_cast<const IntervalConstraint*>((parameter[0]).getConstraint());
+  const auto& parameterBounds = dynamic_pointer_cast<const IntervalConstraint>((parameter[0]).getConstraint());
   optimizer.setInitialInterval(parameterBounds->getLowerBound(), parameterBounds->getUpperBound()); // search within stricter bounds that the actual ones of pi0 to avoid failute of stochasitc mapping
   optimizer.init(parameter);
   optimizer.optimize();
