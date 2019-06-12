@@ -664,8 +664,9 @@ public:
 
 
   /**
-   * @brief set the root (but no checking, prefer rootAt)
+   * @brief set the root (but no checking, to be used at first construction)
    */
+  
   void setRoot(const std::shared_ptr<N> newRoot)
   {
     return getGraph()->setRoot(getNodeGraphid(newRoot));
@@ -698,14 +699,12 @@ public:
    */
   bool hasNodeIndex(const std::shared_ptr<N> nodeObject) const
   {
-    typename std::map<std::shared_ptr<N>, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator found = NToIndex_.find(nodeObject);
-    return found != NToIndex_.end();
+    return NToIndex_.find(nodeObject) != NToIndex_.end();
   }
 
   bool hasEdgeIndex(const std::shared_ptr<E> edgeObject) const
   {
-    typename std::map<std::shared_ptr<E>, typename AssociationGraphObserver<N, E>::EdgeIndex>::const_iterator found = EToIndex_.find(edgeObject);
-    return found != EToIndex_.end();
+    return EToIndex_.find(edgeObject) != EToIndex_.end();
   }
 
   /**
@@ -758,15 +757,18 @@ public:
   /**
    * Set an index associated to a node
    * @param nodeObject object to which one want to set the index
-   * @param index intex to be given, 0 to get the first free index
+   * @param index index to be given
    * @return the given index
    */
   NodeIndex setNodeIndex(const std::shared_ptr<N>  nodeObject, NodeIndex index)
   {
-    // TODO: check if this object has already an index?
-
     // nodes vector must be the right size. Eg: to store a node with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+    if (hasNode(index))
+      throw Exception("AssociationGraphImplObserver::setNodeIndex : index already exists: " + TextTools::toString(index));
+    if (NToIndex_.find(nodeObject)!=NToIndex_.end())
+      throw Exception("AssociationGraphImplObserver::setNodeIndex : nodeObject has already an index: " + TextTools::toString(NToIndex_.at(nodeObject)));
+    
     if (index >= indexToN_.size())
       indexToN_.resize(index + 1);
 
@@ -784,10 +786,13 @@ public:
    */
   EdgeIndex setEdgeIndex(const std::shared_ptr<E>  edgeObject, EdgeIndex index)
   {
-    // TODO: check if this object has already an index?
-
     // nodes vector must be the right size. Eg: to store an edge with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+    if (hasEdge(index))
+      throw Exception("AssociationGraphImplObserver::setEdgeIndex : index already exists: " + TextTools::toString(index));
+    if (EToIndex_.find(edgeObject)!=EToIndex_.end())
+      throw Exception("AssociationGraphImplObserver::setEdgeIndex : edgeObject has already an index: " + TextTools::toString(EToIndex_.at(edgeObject)));
+      
     if (index >= indexToE_.size())
       indexToE_.resize(index + 1);
 
@@ -798,7 +803,65 @@ public:
   }
 
   /**
-   * Return if as Node matching NodeIndex
+   * Set an new index associated to a node
+   * @param nodeObject object to which one want to set the index
+   * @return the given index
+   */
+  NodeIndex addNodeIndex(const std::shared_ptr<N>  nodeObject)
+  {
+    // nodes vector must be the right size. Eg: to store a node with
+    // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+    if (NToIndex_.find(nodeObject)!=NToIndex_.end())
+      throw Exception("AssociationGraphImplObserver::addNodeIndex : nodeObject has already an index: " + TextTools::toString(NToIndex_.at(nodeObject)));
+
+    NodeIndex index=indexToN_.size();
+    for (auto i=0;i<indexToN_.size();i++)
+      if (!indexToN_.at(i))
+      {
+        index=i;
+        break;
+      }
+    
+    if (index >= indexToN_.size())
+      indexToN_.resize(index + 1);
+
+    // now storing the node
+    indexToN_.at(index) = nodeObject;
+    NToIndex_[nodeObject] = index;
+    return index;
+  }
+
+  /**
+   * Add an index associated to an edge
+   * @param edgeObject object to which one want to set the index
+   * @return the given index
+   */
+  EdgeIndex addEdgeIndex(const std::shared_ptr<E>  edgeObject)
+  {
+    // nodes vector must be the right size. Eg: to store an edge with
+    // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
+    if (EToIndex_.find(edgeObject)!=EToIndex_.end())
+      throw Exception("AssociationGraphImplObserver::addEdgeIndex : edgeObject has already an index: " + TextTools::toString(EToIndex_.at(edgeObject)));
+
+    EdgeIndex index=indexToE_.size();
+    for (auto i=0;i<indexToE_.size();i++)
+      if (!indexToE_.at(i))
+      {
+        index=i;
+        break;
+      }
+    
+    if (index >= indexToE_.size())
+      indexToE_.resize(index + 1);
+
+    // now storing the edge
+    indexToE_.at(index) = edgeObject;
+    EToIndex_[edgeObject] = index;
+    return index;
+  }
+
+  /**
+   * Return if has Node matching NodeIndex
    * @param node NodeIndex index
    */
 
@@ -808,7 +871,7 @@ public:
   }
 
   /**
-   * Return if as Tree matching EdgeIndex
+   * Return if has Edge matching EdgeIndex
    * @param edge EdgeIndex index
    */
 
