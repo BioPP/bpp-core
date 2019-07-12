@@ -45,6 +45,7 @@
 #include <map>
 #include <memory>
 #include <ostream>
+#include <fstream>
 #include <type_traits>
 #include <vector>
 #include <algorithm>
@@ -67,6 +68,9 @@ public:
   typedef Graph::NodeId NodeGraphid;
   typedef Graph::EdgeId EdgeGraphid;
 
+  using Eref = std::shared_ptr<E>;
+  using Nref = std::shared_ptr<N>;
+  
 protected:
   /**
    * The observed Graph. Anytime this graph is observed,
@@ -86,23 +90,23 @@ private:
    * List of nodes, stored at the same ID than the corresponding nodes
    * in the observed graph.
    */
-  std::vector<std::shared_ptr<N> > graphidToN_;
+  std::vector<Nref > graphidToN_;
 
   /**
    * List of edges, stored at the same ID than the corresponding edges
    * in the observed graph.
    */
-  std::vector<std::shared_ptr<E> > graphidToE_;
+  std::vector<Eref > graphidToE_;
 
   /**
    * Can find a Node with the corresponding object.
    */
-  std::map<std::shared_ptr<N>, NodeGraphid> NToGraphid_;
+  std::map<Nref, NodeGraphid> NToGraphid_;
 
   /**
    * Can find an Edge with the corresponding object.
    */
-  std::map<std::shared_ptr<E>, EdgeGraphid> EToGraphid_;
+  std::map<Eref, EdgeGraphid> EToGraphid_;
 
   /*
    * @}
@@ -117,27 +121,80 @@ private:
   /**
    * List of nodes, stored at a given index.
    */
-  std::vector<std::shared_ptr<N> > indexToN_;
+  std::vector<Nref > indexToN_;
 
   /**
    * List of edges, stored at a given index.
    */
-  std::vector<std::shared_ptr<E> > indexToE_;
+  std::vector<Eref > indexToE_;
 
   /**
    * Can find a Node index with the corresponding object.
    */
-  std::map<std::shared_ptr<N>, NodeIndex> NToIndex_;
+  std::map<Nref, NodeIndex> NToIndex_;
 
   /**
    * Can find an Edge index with the corresponding object.
    */
-  std::map<std::shared_ptr<E>, EdgeIndex> EToIndex_;
+  std::map<Eref, EdgeIndex> EToIndex_;
 
   /*
    * @}
    */
 
+  /*
+   *@brief Check if has node/edge
+   *
+   */
+
+public:
+  bool hasNode(Nref nodeObject) const
+  {
+    if (nodeObject==0)
+      return false;
+    return (NToGraphid_.find(nodeObject) != NToGraphid_.end());
+  }
+
+  bool hasEdge(Eref edgeObject) const
+  {
+    if (edgeObject==0)
+      return false;
+    return (EToGraphid_.find(edgeObject) != EToGraphid_.end());
+  }
+
+  /*
+   * @brief Text description of objects
+   */
+
+  std::string nodeToString(const Nref nodeObject) const
+  {
+    auto mess=TextTools::toString(nodeObject);
+    
+    if (!hasNode(nodeObject))
+      return mess;
+
+    mess += ":Id=" + TextTools::toString(NToGraphid_.at(nodeObject));
+    if (hasNodeIndex(nodeObject))
+      mess += ":Index=" + TextTools::toString(getNodeIndex(nodeObject));
+
+    return mess;
+  }
+
+  std::string edgeToString(const Eref edgeObject) const
+  {
+    auto mess=TextTools::toString(edgeObject);
+    
+    if (!hasEdge(edgeObject))
+      return mess;
+
+    mess += ":Id=" + TextTools::toString(EToGraphid_.at(edgeObject));
+    if (hasEdgeIndex(edgeObject))
+      mess += ":Index=" + TextTools::toString(getEdgeIndex(edgeObject));
+
+    return mess;
+  }
+
+private:
 
   /**
    * defines a type of neighbors : incoming and/or outgoing
@@ -148,7 +205,7 @@ private:
    * Get incoming / outgoing neighbors according to the enum type
    */
 
-  std::vector<std::shared_ptr<N> > getNeighbors_(const std::shared_ptr<N>  nodeObject, neighborType type) const
+  std::vector<Nref > getNeighbors_(const Nref  nodeObject, neighborType type) const
   {
     NodeGraphid node = getNodeGraphid(nodeObject);
 
@@ -171,7 +228,7 @@ private:
   /**
    * Get incoming / outgoing edges according to the enum type
    */
-  std::vector<std::shared_ptr<E> > getEdges_(const std::shared_ptr<N>  nodeObject, neighborType type) const
+  std::vector<Eref > getEdges_(const Nref  nodeObject, neighborType type) const
   {
     NodeGraphid node = getNodeGraphid(nodeObject);
 
@@ -247,15 +304,14 @@ public:
     NToIndex_(),
     EToIndex_()
   {
-    for (typename std::map<std::shared_ptr<N2>, NodeGraphid >::const_iterator itN = graphObserver.NToGraphid_.begin();
-         itN != graphObserver.NToGraphid_.end(); itN++)
+    for (const auto& itN:graphObserver.NToGraphid_)
     {
-      std::shared_ptr<N> node(AssociationGraphObserver<N, E>::template copy<N2, N>(*itN->first));
+      Nref node(AssociationGraphObserver<N, E>::template copy<N2, N>(*itN.first));
 
-      NToGraphid_[node] = itN->second;
-      graphidToN_[itN->second] = node;
+      NToGraphid_[node] = itN.second;
+      graphidToN_[itN.second] = node;
 
-      typename std::map<std::shared_ptr<N2>, typename AssociationGraphObserver<N2, E2>::NodeIndex>::const_iterator indN = graphObserver.NToIndex_.find(itN->first);
+      const auto& indN = graphObserver.NToIndex_.find(itN.first);
 
       if (indN != graphObserver.NToIndex_.end())
       {
@@ -264,16 +320,15 @@ public:
       }
     }
 
-    for (typename std::map<std::shared_ptr<E2>, EdgeGraphid >::const_iterator itE = graphObserver.EToGraphid_.begin();
-         itE != graphObserver.EToGraphid_.end(); itE++)
+    for (const auto& itE:graphObserver.EToGraphid_)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<N, E>::template copy<E2, E>(*itE->first));
+      Eref edge(AssociationGraphObserver<N, E>::template copy<E2, E>(*itE.first));
 
-      EToGraphid_[edge] = itE->second;
-      graphidToE_[itE->second] = edge;
+      EToGraphid_[edge] = itE.second;
+      graphidToE_[itE.second] = edge;
 
-      typename std::map<std::shared_ptr<E2>, typename AssociationGraphObserver<N2, E2>::EdgeIndex>::const_iterator indE = graphObserver.EToIndex_.find(itE->first);
-
+      const auto& indE = graphObserver.EToIndex_.find(itE.first);
+      
       if (indE != graphObserver.EToIndex_.end())
       {
         EToIndex_[edge] = indE->second;
@@ -295,15 +350,14 @@ public:
     NToIndex_(),
     EToIndex_()
   {
-    for (typename std::map<std::shared_ptr<N>, NodeGraphid >::const_iterator itN = graphObserver.NToGraphid_.begin();
-         itN != graphObserver.NToGraphid_.end(); itN++)
+    for (const auto& itN:graphObserver.NToGraphid_)
     {
-      std::shared_ptr<N> node(AssociationGraphObserver<N, E>::template copy<N, N>(*itN->first));
+      Nref node(AssociationGraphObserver<N, E>::template copy<N, N>(*itN.first));
 
-      NToGraphid_[node] = itN->second;
-      graphidToN_[itN->second] = node;
+      NToGraphid_[node] = itN.second;
+      graphidToN_[itN.second] = node;
 
-      typename std::map<std::shared_ptr<N>, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator indN = graphObserver.NToIndex_.find(itN->first);
+      const auto& indN = graphObserver.NToIndex_.find(itN.first);
 
       if (indN != graphObserver.NToIndex_.end())
       {
@@ -312,15 +366,14 @@ public:
       }
     }
 
-    for (typename std::map<std::shared_ptr<E>, EdgeGraphid >::const_iterator itE = graphObserver.EToGraphid_.begin();
-         itE != graphObserver.EToGraphid_.end(); itE++)
+    for (const auto& itE:graphObserver.EToGraphid_)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<N, E>::template copy<E, E>(*itE->first));
+      Eref edge(AssociationGraphObserver<N, E>::template copy<E, E>(*itE.first));
 
-      EToGraphid_[edge] = itE->second;
-      graphidToE_[itE->second] = edge;
+      EToGraphid_[edge] = itE.second;
+      graphidToE_[itE.second] = edge;
 
-      typename std::map<std::shared_ptr<E>, typename AssociationGraphObserver<N, E>::EdgeIndex>::const_iterator indE = graphObserver.EToIndex_.find(itE->first);
+      const auto& indE = graphObserver.EToIndex_.find(itE.first);
 
       if (indE != graphObserver.EToIndex_.end())
       {
@@ -345,15 +398,14 @@ public:
     this->indexToN_.resize(graphObserver.indexToN_.size());
     this->indexToE_.resize(graphObserver.indexToE_.size());
 
-    for (typename std::map<std::shared_ptr<N>, NodeGraphid >::const_iterator itN = graphObserver.NToGraphid_.begin();
-         itN != graphObserver.NToGraphid_.end(); itN++)
+    for (const auto& itN:graphObserver.NToGraphid_)
     {
-      std::shared_ptr<N> node(AssociationGraphObserver<N, E>::template copy<N, N>(*itN->first));
+      Nref node(AssociationGraphObserver<N, E>::template copy<N, N>(*itN.first));
 
-      NToGraphid_[node] = itN->second;
-      graphidToN_[itN->second] = node;
+      NToGraphid_[node] = itN.second;
+      graphidToN_[itN.second] = node;
 
-      typename std::map<std::shared_ptr<N>, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator indN = graphObserver.NToIndex_.find(itN->first);
+      const auto& indN = graphObserver.NToIndex_.find(itN.first);
 
       if (indN != graphObserver.NToIndex_.end())
       {
@@ -362,14 +414,14 @@ public:
       }
     }
 
-    for (typename std::map<std::shared_ptr<E>, EdgeGraphid >::const_iterator itE = graphObserver.EToGraphid_.begin(); itE != graphObserver.EToGraphid_.end(); itE++)
+    for (const auto& itE:graphObserver.EToGraphid_)
     {
-      std::shared_ptr<E> edge(AssociationGraphObserver<N, E>::template copy<E, E>(*itE->first));
+      Eref edge(AssociationGraphObserver<N, E>::template copy<E, E>(*itE.first));
 
-      EToGraphid_[edge] = itE->second;
-      graphidToE_[itE->second] = edge;
+      EToGraphid_[edge] = itE.second;
+      graphidToE_[itE.second] = edge;
 
-      typename std::map<std::shared_ptr<E>, typename AssociationGraphObserver<N, E>::EdgeIndex>::const_iterator indE = graphObserver.EToIndex_.find(itE->first);
+      const auto& indE = graphObserver.EToIndex_.find(itE.first);
 
       if (indE != graphObserver.EToIndex_.end())
       {
@@ -429,10 +481,10 @@ public:
    * @param nodeObject the N object associated to the node in the graph.
    *
    */
-  void createNode(std::shared_ptr<N>  nodeObject)
+  void createNode(Nref nodeObject)
   {
-    if (NToGraphid_.find(nodeObject) != NToGraphid_.end())
-      throw Exception("AssociationGraphImplObserver::createNode : node already exists");
+    if (hasNode(nodeObject))
+      throw Exception("AssociationGraphImplObserver::createNode : node already exists: " + nodeToString(nodeObject));
 
     unsigned int newGraphNode = getGraph()->createNode();
     associateNode(nodeObject, newGraphNode);
@@ -446,7 +498,7 @@ public:
    * @param newEdgeObject the optional edge  between the nodes (default
    * = 00)
    */
-  void createNode(std::shared_ptr<N>  objectOriginNode, std::shared_ptr<N>  newNodeObject, std::shared_ptr<E>  newEdgeObject = 00)
+  void createNode(Nref  objectOriginNode, Nref  newNodeObject, Eref  newEdgeObject = 00)
   {
     createNode(newNodeObject);
     link(objectOriginNode, newNodeObject, newEdgeObject);
@@ -461,21 +513,22 @@ public:
    * @param edgeObject the optional edge  between the nodes (default
    * = 00)
    */
-  void link(std::shared_ptr<N>  nodeObjectA, std::shared_ptr<N>  nodeObjectB, std::shared_ptr<E>  edgeObject = 00)
+  void link(Nref  nodeObjectA, Nref  nodeObjectB, Eref  edgeObject = 00)
   {
     // checking the nodes
-    typename std::map<std::shared_ptr<N>, NodeGraphid>::iterator foundNodeA, foundNodeB;
-    foundNodeA = NToGraphid_.find(nodeObjectA);
-    foundNodeB = NToGraphid_.find(nodeObjectB);
-    if (foundNodeA == NToGraphid_.end() || foundNodeB == NToGraphid_.end())
-      throw Exception("One of the nodes is not in the graph observer.");
-
+    if (!hasNode(nodeObjectA))
+      throw Exception("First node is not in the graph observer: " + nodeToString(nodeObjectA));
+    if (!hasNode(nodeObjectB))
+      throw Exception("Second node is not in the graph observer:" + nodeToString(nodeObjectB));
+    
     // checking if the edge is not already in the GraphObserver
-    if (edgeObject != 00 && EToGraphid_.find(edgeObject) != EToGraphid_.end())
-      throw Exception("The given edge is already associated to a relation in the subjectGraph.");
-
-//  std::cout << "Trying to link node " << foundNodeA->second << " -> " << foundNodeB->second << std::endl;
-    EdgeGraphid newGraphEdge = getGraph()->link(foundNodeA->second, foundNodeB->second);
+    if (edgeObject != 00 && hasEdge(edgeObject))
+    {
+      auto nodes=getNodes(edgeObject);
+      throw Exception("AssociationGraphImplObserver::link: The given edge is already associated to a relation in the subjectGraph: " + edgeToString(edgeObject) + ":" + nodeToString(nodes.first) + " -> " + nodeToString(nodes.second));
+    }
+    
+    EdgeGraphid newGraphEdge = getGraph()->link(NToGraphid_.at(nodeObjectA), NToGraphid_.at(nodeObjectB));
 
     if (graphidToE_.size() < newGraphEdge + 1)
       graphidToE_.resize(newGraphEdge + 1);
@@ -487,16 +540,15 @@ public:
   /**
    * Deletes the link between two existing nodes in the graph.
    */
-  void unlink(std::shared_ptr<N>  nodeObjectA, std::shared_ptr<N>  nodeObjectB)
+  void unlink(Nref  nodeObjectA, Nref  nodeObjectB)
   {
     // checking the nodes
-    typename std::map<std::shared_ptr<N>, NodeGraphid>::iterator foundNodeA, foundNodeB;
-    foundNodeA = NToGraphid_.find(nodeObjectA);
-    foundNodeB = NToGraphid_.find(nodeObjectB);
-    if (foundNodeA == NToGraphid_.end() || foundNodeB == NToGraphid_.end())
-      throw Exception("One of the nodes is not in the graph observer.");
+    if (!hasNode(nodeObjectA))
+      throw Exception("First node is not in the graph observer: " + nodeToString(nodeObjectA));
+    if (!hasNode(nodeObjectB))
+      throw Exception("Second node is not in the graph observer:" + nodeToString(nodeObjectB));
 
-    getGraph()->unlink(foundNodeA->second, foundNodeB->second);
+    getGraph()->unlink(NToGraphid_.at(nodeObjectA), NToGraphid_.at(nodeObjectB));
   }
 
 public:
@@ -504,7 +556,7 @@ public:
    * Deletes a node
    * @param nodeObject node to be deleted. The N node object given in argument is not deleted.
    */
-  void deleteNode(std::shared_ptr<N>  nodeObject)
+  void deleteNode(Nref  nodeObject)
   {
     // first deleting the node in the graph
     getGraph()->deleteNode(getNodeGraphid(nodeObject));
@@ -525,10 +577,10 @@ public:
    * @param nodeObject object to associate
    * @param graphNode existing node to be associated
    */
-  void associateNode(std::shared_ptr<N>  nodeObject, NodeGraphid graphNode)
+  void associateNode(Nref  nodeObject, NodeGraphid graphNode)
   {
-    if (NToGraphid_.find(nodeObject) != NToGraphid_.end())
-      throw Exception("AssociationGraphImplObserver::associateNode : node already exists");
+    if (hasNode(nodeObject))
+      throw Exception("AssociationGraphImplObserver::associateNode : node already exists: " + nodeToString(nodeObject));
 
     // nodes vector must be the right size. Eg: to store a node with
     // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
@@ -545,10 +597,10 @@ public:
    * @param edgeObject object to associate
    * @param graphEdge existing edge to be associated
    */
-  void associateEdge(std::shared_ptr<E>  edgeObject, EdgeGraphid graphEdge)
+  void associateEdge(Eref  edgeObject, EdgeGraphid graphEdge)
   {
-    if (EToGraphid_.find(edgeObject) != EToGraphid_.end())
-      throw Exception("AssociationGraphImplObserver::associateEdge : edge already exists");
+    if (hasEdge(edgeObject))
+      throw Exception("AssociationGraphImplObserver::associateEdge : edge already exists: " + edgeToString(edgeObject));
     
     // edges vector must be the right size. Eg: to store an edge with
     // the ID 3, the vector must be of size 4: {0,1,2,3} (size = 4)
@@ -564,17 +616,17 @@ public:
    * Dissociate a N or E object to a node or an edge in the graph.
    * @param nodeObject object to dissociate
    */
-  void dissociateNode(std::shared_ptr<N>  nodeObject)
+  void dissociateNode(Nref  nodeObject)
   {
-    typename std::map<std::shared_ptr<N>, NodeGraphid>::iterator nodeToForget = NToGraphid_.find(nodeObject);
+    typename std::map<Nref, NodeGraphid>::iterator nodeToForget = NToGraphid_.find(nodeObject);
     graphidToN_.at(nodeToForget->second) = 00;
     NToGraphid_.erase(nodeToForget);
   }
 
 
-  void dissociateEdge(std::shared_ptr<E>  edgeObject)
+  void dissociateEdge(Eref  edgeObject)
   {
-    typename std::map<std::shared_ptr<E>, EdgeGraphid>::iterator edgeToForget = EToGraphid_.find(edgeObject);
+    typename std::map<Eref, EdgeGraphid>::iterator edgeToForget = EToGraphid_.find(edgeObject);
     graphidToE_.at(edgeToForget->second) = 00;
     EToGraphid_.erase(edgeToForget);
   }
@@ -585,11 +637,11 @@ public:
    * @param nodeObject object which to return the node ID
    * @return a node ID
    */
-  NodeGraphid getNodeGraphid(const std::shared_ptr<N>  nodeObject) const
+  NodeGraphid getNodeGraphid(const Nref  nodeObject) const
   {
-    typename std::map<std::shared_ptr<N>, NodeGraphid>::const_iterator found = NToGraphid_.find(nodeObject);
+    typename std::map<Nref, NodeGraphid>::const_iterator found = NToGraphid_.find(nodeObject);
     if (found == NToGraphid_.end())
-      throw Exception("Unexisting node object.");
+      throw Exception("Unexisting node object: " + TextTools::toString(nodeObject));
     return found->second;
   }
 
@@ -599,11 +651,11 @@ public:
    * @param edgeObject object which to return the node ID
    * @return a edge ID
    */
-  EdgeGraphid getEdgeGraphid(const std::shared_ptr<E>  edgeObject) const
+  EdgeGraphid getEdgeGraphid(const Eref  edgeObject) const
   {
-    typename std::map<std::shared_ptr<E>, EdgeGraphid>::const_iterator found = EToGraphid_.find(edgeObject);
+    typename std::map<Eref, EdgeGraphid>::const_iterator found = EToGraphid_.find(edgeObject);
     if (found == EToGraphid_.end())
-      throw Exception("Unexisting edge object.");
+      throw Exception("Unexisting edge object: " + TextTools::toString(edgeObject));
     return found->second;
   }
 
@@ -611,24 +663,28 @@ public:
   /**
    * Transforms an (a list of) id(s) into an (a list of) object(s)
    */
-  std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid node)
+  Nref getNodeFromGraphid(NodeGraphid node)
   {
+    if (node>=graphidToN_.size())
+      return 0;
     return graphidToN_.at(node);
   }
 
-  const std::shared_ptr<N> getNodeFromGraphid(NodeGraphid node) const
+  const Nref getNodeFromGraphid(NodeGraphid node) const
   {
+    if (node>=graphidToN_.size())
+      return 0;
     return graphidToN_.at(node);
   }
 
-  std::vector<std::shared_ptr<N> > getNodesFromGraphid(std::vector<NodeGraphid> nodes) const
+  std::vector<Nref > getNodesFromGraphid(std::vector<NodeGraphid> nodes) const
   {
-    std::vector<std::shared_ptr<N> > nodeObjects;
+    std::vector<Nref > nodeObjects;
     for (typename std::vector<NodeGraphid>::iterator currNode = nodes.begin(); currNode != nodes.end(); currNode++)
     {
       if (*currNode > graphidToN_.size())
         continue;
-      std::shared_ptr<N>  foundNodeObject = graphidToN_.at(*currNode);
+      Nref  foundNodeObject = graphidToN_.at(*currNode);
       if (!foundNodeObject)
         continue;
       nodeObjects.push_back(foundNodeObject);
@@ -636,25 +692,30 @@ public:
     return nodeObjects;
   }
 
-  std::shared_ptr<E> getEdgeFromGraphid(EdgeGraphid edge)
+  Eref getEdgeFromGraphid(EdgeGraphid edge)
   {
+    if (edge>=graphidToE_.size())
+      return 0;
+
     return graphidToE_.at(edge);
   }
 
-  const std::shared_ptr<E> getEdgeFromGraphid(EdgeGraphid edge) const
+  const Eref getEdgeFromGraphid(EdgeGraphid edge) const
   {
+    if (edge>=graphidToE_.size())
+      return 0;
+
     return graphidToE_.at(edge);
   }
 
-
-  std::vector<std::shared_ptr<E> > getEdgesFromGraphid(std::vector<EdgeGraphid> edges) const
+  std::vector<Eref > getEdgesFromGraphid(std::vector<EdgeGraphid> edges) const
   {
-    std::vector<std::shared_ptr<E> > edgeObjects;
-    for (typename std::vector<EdgeGraphid>::iterator currEdge = edges.begin(); currEdge != edges.end(); currEdge++)
+    std::vector<Eref > edgeObjects;
+    for (const auto& currEdge:edges)
     {
-      if (*currEdge > graphidToE_.size())
+      if (currEdge > graphidToE_.size())
         continue;
-      std::shared_ptr<E>  foundEdgeObject = graphidToE_.at(*currEdge);
+      Eref foundEdgeObject = graphidToE_.at(currEdge);
       if (!foundEdgeObject)
         continue;
       edgeObjects.push_back(foundEdgeObject);
@@ -667,7 +728,7 @@ public:
    * @brief set the root (but no checking, to be used at first construction)
    */
   
-  void setRoot(const std::shared_ptr<N> newRoot)
+  void setRoot(const Nref newRoot)
   {
     return getGraph()->setRoot(getNodeGraphid(newRoot));
   }
@@ -676,7 +737,7 @@ public:
    * @return the root
    */
 
-  std::shared_ptr<N> getRoot() const
+  Nref getRoot() const
   {
     return this->getNodeFromGraphid(this->getGraph()->getRoot());
   }
@@ -697,14 +758,29 @@ public:
    * @brief Return if object has an index.
    *
    */
-  bool hasNodeIndex(const std::shared_ptr<N> nodeObject) const
+  bool hasNodeIndex(const Nref nodeObject) const
   {
     return NToIndex_.find(nodeObject) != NToIndex_.end();
   }
 
-  bool hasEdgeIndex(const std::shared_ptr<E> edgeObject) const
+  bool hasEdgeIndex(const Eref edgeObject) const
   {
     return EToIndex_.find(edgeObject) != EToIndex_.end();
+  }
+
+  /*
+   * @brief Return the maximum index.
+   *
+   */
+  
+  bool maxNodeIndex() const
+  {
+    return indexToN_.size()-1;
+  }
+
+  bool maxEdgeIndex() const
+  {
+    return indexToE_.size()-1;
   }
 
   /**
@@ -712,22 +788,21 @@ public:
    * @param nodeObject object which to return the node index
    * @return a node index
    */
-  NodeIndex getNodeIndex(const std::shared_ptr<N>  nodeObject) const
+  NodeIndex getNodeIndex(const Nref  nodeObject) const
   {
-    typename std::map<std::shared_ptr<N>, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator found = NToIndex_.find(nodeObject);
+    typename std::map<Nref, typename AssociationGraphObserver<N, E>::NodeIndex>::const_iterator found = NToIndex_.find(nodeObject);
     if (found == NToIndex_.end())
-      throw Exception("Node object with graph id " + TextTools::toString(getNodeGraphid(nodeObject)) + " has no index.");
+      throw Exception("getNodeIndex: Node object has no index : " + nodeToString(nodeObject));
 
     return found->second;
   }
 
-  std::vector<NodeIndex> getNodeIndexes(std::vector<std::shared_ptr<N> > nodes) const
+  std::vector<NodeIndex> getNodeIndexes(std::vector<Nref > nodes) const
   {
     std::vector<NodeIndex> nodeIndexes;
-    for (typename std::vector<std::shared_ptr<N> >::iterator currNode = nodes.begin(); currNode != nodes.end(); currNode++)
-    {
-      nodeIndexes.push_back(getNodeIndex(*currNode));
-    }
+    for (const auto& currNode:nodes)
+      nodeIndexes.push_back(getNodeIndex(currNode));
+
     return nodeIndexes;
   }
 
@@ -736,21 +811,20 @@ public:
    * @param edgeObject object which to return the node index
    * @return a node index
    */
-  EdgeIndex getEdgeIndex(const std::shared_ptr<E>  edgeObject) const
+  EdgeIndex getEdgeIndex(const Eref  edgeObject) const
   {
-    typename std::map<std::shared_ptr<E>, typename AssociationGraphObserver<N, E>::EdgeIndex>::const_iterator found = EToIndex_.find(edgeObject);
+    auto found = EToIndex_.find(edgeObject);
     if (found == EToIndex_.end())
-      throw Exception("Edge object with graph id " + TextTools::toString(getEdgeGraphid(edgeObject)) + " has no index.");
+      throw Exception("getEdgeIndex: Edge object has no index: " + edgeToString(edgeObject));
     return found->second;
   }
 
-  std::vector<EdgeIndex> getEdgeIndexes(std::vector<std::shared_ptr<E> > edges) const
+  std::vector<EdgeIndex> getEdgeIndexes(std::vector<Eref > edges) const
   {
     std::vector<EdgeIndex> edgeIndexes;
-    for (typename std::vector<std::shared_ptr<E> >::iterator currEdge = edges.begin(); currEdge != edges.end(); currEdge++)
-    {
-      edgeIndexes.push_back(getEdgeIndex(*currEdge));
-    }
+    for (const auto& currEdge:edges)
+      edgeIndexes.push_back(getEdgeIndex(currEdge));
+
     return edgeIndexes;
   }
 
@@ -760,14 +834,14 @@ public:
    * @param index index to be given
    * @return the given index
    */
-  NodeIndex setNodeIndex(const std::shared_ptr<N>  nodeObject, NodeIndex index)
+  NodeIndex setNodeIndex(const Nref  nodeObject, NodeIndex index)
   {
     // nodes vector must be the right size. Eg: to store a node with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (hasNode(index))
-      throw Exception("AssociationGraphImplObserver::setNodeIndex : index already exists: " + TextTools::toString(index));
+      throw Exception("AssociationGraphImplObserver::setNodeIndex : index already exists: " + nodeToString(nodeObject));
     if (NToIndex_.find(nodeObject)!=NToIndex_.end())
-      throw Exception("AssociationGraphImplObserver::setNodeIndex : nodeObject has already an index: " + TextTools::toString(NToIndex_.at(nodeObject)));
+      throw Exception("AssociationGraphImplObserver::setNodeIndex : nodeObject has already an index: " + nodeToString(nodeObject));
     
     if (index >= indexToN_.size())
       indexToN_.resize(index + 1);
@@ -784,14 +858,14 @@ public:
    * @param index intex to be given, 0 to get the first free index
    * @return the given index
    */
-  EdgeIndex setEdgeIndex(const std::shared_ptr<E>  edgeObject, EdgeIndex index)
+  EdgeIndex setEdgeIndex(const Eref  edgeObject, EdgeIndex index)
   {
     // nodes vector must be the right size. Eg: to store an edge with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (hasEdge(index))
-      throw Exception("AssociationGraphImplObserver::setEdgeIndex : index already exists: " + TextTools::toString(index));
+      throw Exception("AssociationGraphImplObserver::setEdgeIndex : index already exists: " + edgeToString(edgeObject));
     if (EToIndex_.find(edgeObject)!=EToIndex_.end())
-      throw Exception("AssociationGraphImplObserver::setEdgeIndex : edgeObject has already an index: " + TextTools::toString(EToIndex_.at(edgeObject)));
+      throw Exception("AssociationGraphImplObserver::setEdgeIndex : edgeObject has already an index: " + edgeToString(edgeObject));
       
     if (index >= indexToE_.size())
       indexToE_.resize(index + 1);
@@ -807,12 +881,12 @@ public:
    * @param nodeObject object to which one want to set the index
    * @return the given index
    */
-  NodeIndex addNodeIndex(const std::shared_ptr<N>  nodeObject)
+  NodeIndex addNodeIndex(const Nref  nodeObject)
   {
     // nodes vector must be the right size. Eg: to store a node with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (NToIndex_.find(nodeObject)!=NToIndex_.end())
-      throw Exception("AssociationGraphImplObserver::addNodeIndex : nodeObject has already an index: " + TextTools::toString(NToIndex_.at(nodeObject)));
+      throw Exception("AssociationGraphImplObserver::addNodeIndex : nodeObject has already an index: " + nodeToString(nodeObject));
 
     NodeIndex index=indexToN_.size();
     for (auto i=0;i<indexToN_.size();i++)
@@ -836,12 +910,12 @@ public:
    * @param edgeObject object to which one want to set the index
    * @return the given index
    */
-  EdgeIndex addEdgeIndex(const std::shared_ptr<E>  edgeObject)
+  EdgeIndex addEdgeIndex(const Eref  edgeObject)
   {
     // nodes vector must be the right size. Eg: to store an edge with
     // the index 3, the vector must be of size 4: {0,1,2,3} (size = 4)
     if (EToIndex_.find(edgeObject)!=EToIndex_.end())
-      throw Exception("AssociationGraphImplObserver::addEdgeIndex : edgeObject has already an index: " + TextTools::toString(EToIndex_.at(edgeObject)));
+      throw Exception("AssociationGraphImplObserver::addEdgeIndex : edgeObject has already an index: " + edgeToString(edgeObject));
 
     EdgeIndex index=indexToE_.size();
     for (auto i=0;i<indexToE_.size();i++)
@@ -886,7 +960,7 @@ public:
    * @return a node index
    */
 
-  std::shared_ptr<N> getNode(NodeIndex node) const
+  Nref getNode(NodeIndex node) const
   {
     return indexToN_.at(node);
   }
@@ -897,7 +971,7 @@ public:
    * @return a node index
    */
 
-  std::shared_ptr<E> getEdge(EdgeIndex edge) const
+  Eref getEdge(EdgeIndex edge) const
   {
     return indexToE_.at(edge);
   }
@@ -908,6 +982,71 @@ public:
    *  These methodes of the graph concern the topology exploration.
    */
   // /@{
+
+   /*
+   * @brief Output graph in a dot format.
+   *
+   * Nodes are labeled as "n[Index_]Id", and edge are labeled as
+   * "e[Index]_Id".
+   *
+   * Existing edge between nodes are plain, otherwise dotted.
+   *
+   * @param fname the name of the file where the DOT format will be output
+   * @param name a string naming the graph
+   *
+   */
+
+  void outputToDot(const std::string& fname, const std::string& name) const
+  {
+    std::ofstream out;
+    out.open(fname);
+    outputToDot(out, name);
+    out.close();
+  }
+ 
+  void outputToDot(std::ostream& out, const std::string& name) const
+  {
+    out << (getGraph()->isDirected() ? "digraph" : "graph") << " " << name << " {\n   ";
+    std::set<std::pair<Nref, Nref> > alreadyFigured;
+    auto allNodes = getAllNodes();
+
+    for (const auto& node: allNodes)
+    {
+      auto children = getOutgoingNeighbors(node);
+      for (const auto& currChild : children)
+      {
+        if (alreadyFigured.find(std::pair<Nref, Nref>(node, currChild)) != alreadyFigured.end() || (getGraph()->isDirected() && alreadyFigured.find(std::pair<Nref, Nref>(currChild, node)) != alreadyFigured.end()))
+        continue;
+
+        alreadyFigured.insert(std::pair<Nref, Nref>(node, currChild));
+
+        out << "n";
+        if (hasNodeIndex(node))
+          out << getNodeIndex(node) << "_" ;
+        out << NToGraphid_.at(node);
+      
+        out << (getGraph()->isDirected() ? " -> " : " -- ");
+
+        out << "n";
+        if (hasNodeIndex(currChild))
+          out << getNodeIndex(currChild) << "_" ;
+        out << NToGraphid_.at(currChild);
+
+        auto edge = getEdgeLinking(node, currChild);
+        if (!edge)
+          out << " [style = dotted]";
+        else
+        {
+          out << " [label = e";
+          if (hasEdgeIndex(edge))
+            out << getEdgeIndex(edge) << "_" ;
+          out << EToGraphid_.at(edge) << "]";
+        }
+        out << ";\n   ";
+      }
+    }
+    out << "}";
+  }
 
   /**
    * @name Iterators on Nodes
@@ -929,10 +1068,10 @@ public:
     NodeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); };
 
-    NodeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    NodeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) {start(); };
 
-    NodeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    NodeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) {start(); };
 
     ~NodeIteratorClass<GraphIterator, is_const>() {}
@@ -943,7 +1082,7 @@ public:
 
     void start() { it_.start(); while (!it_.end() && (agio_.getNodeFromGraphid(*it_) == 0)) it_.next(); }
 
-    std::shared_ptr<N> operator*() {return agio_.getNodeFromGraphid(*it_); }
+    Nref operator*() {return agio_.getNodeFromGraphid(*it_); }
   };
 
 
@@ -963,12 +1102,12 @@ public:
    *
    */
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(Nref node)
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
   }
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(std::shared_ptr<N> node) const
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(Nref node) const
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
   }
@@ -979,12 +1118,12 @@ public:
    *
    */
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(Nref node)
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
   }
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(std::shared_ptr<N> node) const
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(Nref node) const
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
   }
@@ -995,9 +1134,9 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the neighbors
    */
-  std::vector<std::shared_ptr<N> > getNeighbors(const std::shared_ptr<N>  node) const
+  std::vector<Nref > getNeighbors(const Nref  node) const
   {
-    return getNeighbors_(node, BOTH);
+    return getNodesFromGraphid(getGraph()->getNeighbors(getNodeGraphid(node)));
   }
 
   std::vector<NodeIndex> getNeighbors(NodeIndex node) const
@@ -1011,9 +1150,9 @@ public:
    * @return a vector containing the edges
    */
 
-  std::vector<std::shared_ptr<E> > getEdges(const std::shared_ptr<N>  node) const
+  std::vector<Eref > getEdges(const Nref  node) const
   {
-    return getEdges_(node, BOTH);
+    return getEdgesFromGraphid(getGraph()->getEdges(getNodeGraphid(node)));
   }
 
   std::vector<EdgeIndex> getEdges(NodeIndex node) const
@@ -1028,9 +1167,9 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  std::vector<std::shared_ptr<N> > getOutgoingNeighbors(const std::shared_ptr<N>  node) const
+  std::vector<Nref > getOutgoingNeighbors(const Nref  node) const
   {
-    return getNeighbors_(node, OUTGOING);
+    return getNodesFromGraphid(getGraph()->getOutgoingNeighbors(getNodeGraphid(node)));
   }
 
   std::vector<NodeIndex> getOutgoingNeighbors(NodeIndex node) const
@@ -1044,9 +1183,9 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the outgoing edges
    */
-  std::vector<std::shared_ptr<E> > getOutgoingEdges(const std::shared_ptr<N>  node) const
+  std::vector<Eref > getOutgoingEdges(const Nref  node) const
   {
-    return getEdges_(node, OUTGOING);
+    return getEdgesFromGraphid(getGraph()->getOutgoingEdges(getNodeGraphid(node)));
   }
 
   std::vector<EdgeIndex> getOutgoingEdges(NodeIndex node) const
@@ -1061,9 +1200,9 @@ public:
    * @return a vector containing the incoming neighbors
    */
 
-  std::vector<std::shared_ptr<N> > getIncomingNeighbors(const std::shared_ptr<N>  node) const
+  std::vector<Nref > getIncomingNeighbors(const Nref  node) const
   {
-    return getNeighbors_(node, INCOMING);
+    return getNodesFromGraphid(getGraph()->getIncomingNeighbors(getNodeGraphid(node)));
   }
 
   std::vector<NodeIndex> getIncomingNeighbors(NodeIndex node) const
@@ -1079,9 +1218,9 @@ public:
    * @return a vector containing the incoming edges
    */
 
-  std::vector<std::shared_ptr<E> > getIncomingEdges(const std::shared_ptr<N>  node) const
+  std::vector<Eref > getIncomingEdges(const Nref  node) const
   {
-    return getEdges_(node, INCOMING);
+    return getEdgesFromGraphid(getGraph()->getIncomingEdges(getNodeGraphid(node)));
   }
 
   std::vector<EdgeIndex> getIncomingEdges(NodeIndex node) const
@@ -1098,7 +1237,7 @@ public:
    * @return a vector containing the leaves
    */
 
-  std::vector<std::shared_ptr<N> > getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const
+  std::vector<Nref > getLeavesFromNode(Nref  node, unsigned int maxDepth) const
   {
     return getNodesFromGraphid(getGraph()->getLeavesFromNode(getNodeGraphid(node), maxDepth));
   }
@@ -1108,15 +1247,15 @@ public:
    * @return a vector containing the leaves
    */
 
-  std::vector<std::shared_ptr<N> > getAllLeaves() const
+  std::vector<Nref > getAllLeaves() const
   {
-    std::vector<std::shared_ptr<N> > leavesToReturn;
+    std::vector<Nref > leavesToReturn;
     // fetching all the graph Leaves
     std::vector<NodeGraphid> graphLeaves = getGraph()->getAllLeaves();
     // testing if they are defined in this observer
     for (typename std::vector<NodeGraphid>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
     {
-      std::shared_ptr<N>  foundLeafObject = graphidToN_.at(*currGraphLeave);
+      Nref  foundLeafObject = graphidToN_.at(*currGraphLeave);
       if (foundLeafObject != 00)
         leavesToReturn.push_back(foundLeafObject);
     }
@@ -1132,7 +1271,7 @@ public:
     // testing if they are defined in this observer
     for (typename std::vector<NodeGraphid>::iterator currGraphLeave = graphLeaves.begin(); currGraphLeave != graphLeaves.end(); currGraphLeave++)
     {
-      std::shared_ptr<N>  foundLeafObject = graphidToN_.at(*currGraphLeave);
+      Nref  foundLeafObject = graphidToN_.at(*currGraphLeave);
       if (foundLeafObject != 00)
         leavesToReturn.push_back(getNodeIndex(foundLeafObject));
     }
@@ -1144,15 +1283,15 @@ public:
    * @return a vector containing the inner nodes.
    */
 
-  virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const
+  virtual std::vector<Nref > getAllInnerNodes() const
   {
-    std::vector<std::shared_ptr<N> > nodesToReturn;
+    std::vector<Nref > nodesToReturn;
     // fetching all the graph Leaves
     std::vector<NodeGraphid> graphNodes = getGraph()->getAllInnerNodes();
     // testing if they are defined in this observer
     for (typename std::vector<NodeGraphid>::iterator currGraphNode = graphNodes.begin(); currGraphNode != graphNodes.end(); currGraphNode++)
     {
-      std::shared_ptr<N>  foundNodeObject = graphidToN_.at(*currGraphNode);
+      Nref  foundNodeObject = graphidToN_.at(*currGraphNode);
       if (foundNodeObject != 00)
         nodesToReturn.push_back(foundNodeObject);
     }
@@ -1164,10 +1303,10 @@ public:
    * @return a vector containing the nodesObjects
    */
 
-  std::vector<std::shared_ptr<N> > getAllNodes() const
+  std::vector<Nref > getAllNodes() const
   {
-    std::vector<std::shared_ptr<N> > nodesToReturn;
-    for (typename std::vector<std::shared_ptr<N> >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
+    std::vector<Nref > nodesToReturn;
+    for (typename std::vector<Nref >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
     {
       if (*currNodeObject != 00)
       {
@@ -1180,7 +1319,7 @@ public:
   std::vector<NodeIndex> getAllNodesIndexes() const
   {
     std::vector<typename AssociationGraphObserver<N, E>::NodeIndex > indexesToReturn;
-    for (typename std::vector<std::shared_ptr<N> >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
+    for (typename std::vector<Nref >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
     {
       if (*currNodeObject != 00)
       {
@@ -1193,7 +1332,7 @@ public:
   std::vector<EdgeIndex> getAllEdgesIndexes() const
   {
     std::vector<typename AssociationGraphObserver<N, E>::EdgeIndex > indexesToReturn;
-    for (typename std::vector<std::shared_ptr<E> >::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
+    for (typename std::vector<Eref >::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
     {
       if (*currEdgeObject != 00)
       {
@@ -1216,13 +1355,13 @@ public:
     EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); };
 
-    EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl> &agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) { start(); };
 
     EdgeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); };
 
-    EdgeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio, std::shared_ptr<N> n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    EdgeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl> &agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) { start(); };
 
     ~EdgeIteratorClass<GraphIterator, is_const>() {}
@@ -1233,7 +1372,7 @@ public:
 
     void start() { it_.start(); while (!it_.end() && (agio_.getEdgeFromGraphid(*it_) == 0)) it_.next(); }
 
-    std::shared_ptr<E> operator*() {return agio_.getEdgeFromGraphid(*it_); }
+    Eref operator*() {return agio_.getEdgeFromGraphid(*it_); }
   };
 
 
@@ -1252,12 +1391,12 @@ public:
    *
    */
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(Nref node)
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
   }
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(std::shared_ptr<N> node) const
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(Nref node) const
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
   }
@@ -1267,12 +1406,12 @@ public:
    *
    */
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(std::shared_ptr<N> node)
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(Nref node)
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
   }
 
-  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(std::shared_ptr<N> node) const
+  std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(Nref node) const
   {
     return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
   }
@@ -1282,10 +1421,10 @@ public:
    * @return a vector containing the branchesObjects
    */
 
-  std::vector<std::shared_ptr<E> > getAllEdges() const
+  std::vector<Eref > getAllEdges() const
   {
-    std::vector<std::shared_ptr<E> > branchesToReturn;
-    for (typename std::vector<std::shared_ptr<E> >::const_iterator currBrObject = graphidToE_.begin(); currBrObject != graphidToE_.end(); currBrObject++)
+    std::vector<Eref > branchesToReturn;
+    for (typename std::vector<Eref >::const_iterator currBrObject = graphidToE_.begin(); currBrObject != graphidToE_.end(); currBrObject++)
     {
       if (*currBrObject != 00)
       {
@@ -1298,7 +1437,7 @@ public:
   /**
    * @brief Is  the node a leaf?
    */
-  bool isLeaf(const std::shared_ptr<N>  node) const
+  bool isLeaf(const Nref  node) const
   {
     return getGraph()->isLeaf(this->getNodeGraphid(node));
   }
@@ -1315,20 +1454,20 @@ public:
    *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
    */
 
-  std::pair<std::shared_ptr<N>, std::shared_ptr<N> > getNodes(std::shared_ptr<E>  edge) const
+  std::pair<Nref, Nref> getNodes(Eref  edge) const
   {
     std::pair<NodeGraphid, NodeGraphid> nodes = getGraph()->getNodes(getEdgeGraphid(edge));
-    return std::pair<std::shared_ptr<N>, std::shared_ptr<N> >(getNodeFromGraphid(nodes.first), getNodeFromGraphid(nodes.second));
+    return std::pair<Nref, Nref >(getNodeFromGraphid(nodes.first), getNodeFromGraphid(nodes.second));
   }
 
   /**
    * Returns the Edge between two nodes nodeA -> nodeB
    * @param nodeA source node (if directed)
    * @param nodeB destination node (if directed)
-   * @return the edge between these two nodes
+   * @return the edge between these two nodes, or 0 if edge does not exist
    */
 
-  std::shared_ptr<E>  getEdgeLinking(std::shared_ptr<N>  nodeA, std::shared_ptr<N>  nodeB) const
+  Eref getEdgeLinking(Nref nodeA, Nref nodeB) const
   {
     return getEdgeFromGraphid(getGraph()->getEdge(getNodeGraphid(nodeA), getNodeGraphid(nodeB)));
   }
@@ -1339,7 +1478,7 @@ public:
    * @param nodeB destination node (if directed)
    * @param edge the edge between these two nodes
    */
-  void setEdgeLinking(std::shared_ptr<N>  nodeA, std::shared_ptr<N>  nodeB, std::shared_ptr<E> edge)
+  void setEdgeLinking(Nref  nodeA, Nref  nodeB, Eref edge)
   {
     associateEdge(edge, getGraph()->getEdge(getNodeGraphid(nodeA), getNodeGraphid(nodeB)));
   }
@@ -1362,7 +1501,7 @@ public:
     {
       if (graphidToE_.size() > *currEdge)
       {
-        std::shared_ptr<E>  edgeObject = graphidToE_.at(*currEdge);
+        Eref  edgeObject = graphidToE_.at(*currEdge);
         graphidToE_.at(*currEdge) = 00;
 
         EToGraphid_.erase(edgeObject);
@@ -1380,7 +1519,7 @@ public:
     {
       if (graphidToN_.size() > *currNode)
       {
-        std::shared_ptr<N>  nodeObject = graphidToN_.at(*currNode);
+        Nref  nodeObject = graphidToN_.at(*currNode);
         graphidToN_.at(*currNode) = 00;
 
         NToGraphid_.erase(nodeObject);
@@ -1424,7 +1563,7 @@ public:
   size_t getNumberOfLeaves() const
   {
     size_t nb = 0;
-    for (typename std::vector<std::shared_ptr<N> >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
+    for (typename std::vector<Nref >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
     {
       if ((*currNodeObject != 00) && (isLeaf(*currNodeObject)))
         nb++;
@@ -1438,7 +1577,7 @@ public:
    * @param node the concerned node
    * @return the number of neighbors
    */
-  size_t getDegree(const std::shared_ptr<N>  node) const
+  size_t getDegree(const Nref  node) const
   {
     return getGraph()->getDegree(getNodeGraphid(node));
   }

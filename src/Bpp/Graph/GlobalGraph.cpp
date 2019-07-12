@@ -89,21 +89,13 @@ GlobalGraph& GlobalGraph::operator=(const GlobalGraph& gg)
 void GlobalGraph::nodeMustExist_(const GlobalGraph::Node& node, string name) const
 {
   if (nodeStructure_.find(node) == nodeStructure_.end())
-  {
-    ostringstream errMessage;
-    errMessage << "This node must exist: " << node << " as " << name << ".";
-    throw (Exception(errMessage.str()));
-  }
+    throw Exception("This node must exist: " + TextTools::toString(node) + " as " + name + ".");
 }
 
 void GlobalGraph::edgeMustExist_(const GlobalGraph::Edge& edge, string name) const
 {
   if (edgeStructure_.find(edge) == edgeStructure_.end())
-  {
-    ostringstream errMessage;
-    errMessage << "This edge must exist: " << edge << " as " << name << ".";
-    throw (Exception(errMessage.str()));
-  }
+    throw Exception("This edge must exist: " + TextTools::toString(edge) + " as " + name + ".");
 }
 
 
@@ -497,7 +489,6 @@ std::pair<Graph::NodeId, Graph::NodeId> GlobalGraph::getNodes(Graph::EdgeId edge
 {
   edgeMustExist_(edge);
   edgeStructureType::const_iterator found = edgeStructure_.find(edge);
-  // TODO Except if not found
   return found->second;
 }
 
@@ -680,6 +671,7 @@ bool GlobalGraph::isDA() const
 {
   GlobalGraph gg(*this);
 
+  gg.observers_.clear();
   // Algo: remove recursively all nodes with no sons from graph
 
   std::vector<Graph::NodeId> vL;
@@ -719,7 +711,8 @@ void GlobalGraph::orientate()
     makeDirected();
 
   GlobalGraph gg(*this);
-
+  gg.observers_.clear();
+  
   // Algo: remove recursively all nodes from graph, starting with
   // root_
 

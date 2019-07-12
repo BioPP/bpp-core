@@ -560,6 +560,7 @@ public:
    * @return a pair of the IDs of the Nodes at each extremity of the edge
    *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
    */
+  
   std::pair<Graph::NodeId, Graph::NodeId> getNodes(Graph::EdgeId edge) const;
 
   /**
