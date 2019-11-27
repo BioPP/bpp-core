@@ -58,7 +58,7 @@ class PolynomialFunction1:
       //We declare parameters here:
       addParameter_(new Parameter("x", 0));
       addParameter_(new Parameter("y", 0));
-      addParameter_(new Parameter("z", 0));
+      addParameter_(new Parameter("z", 0.5, std::make_shared<IntervalConstraint>(0.01, 1, true, true)));
       fireParameterChanged(getParameters());
     }
  

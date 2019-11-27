@@ -212,42 +212,37 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
     distribution_.clear();
     double x = 1.0;
     double v;
-    for (size_t i = 0; i < size - 1; i++)
+    for (size_t i = 0; i < size; i++)
     {
       v = getParameterValue("V" + TextTools::toString(i + 1));
-      if (distribution_.find(v) != distribution_.end())
+      double v2(v);
+      if (distribution_.find(v2) != distribution_.end())
       {
-        int j = 1;
-        int f = ((v + precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
-        while (distribution_.find(v + f * j * precision()) != distribution_.end())
+        int j(1);
+        while (true)
         {
+          v2 = v + j * precision();
+          if (v2 < intMinMax_->getUpperBound() && (distribution_.find(v2) == distribution_.end()))
+            break;
+
+          v2 = v - j * precision();
+          if (v2 > intMinMax_->getLowerBound() && (distribution_.find(v2) == distribution_.end()))
+            break;
           j++;
-          f = ((v + f * j * precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
         }
-        v += f * j * precision();
         // approximation to avoid useless computings:
         // setParameterValue("V"+TextTools::toString(i+1),v);
       }
-      distribution_[v] = getParameterValue("theta" + TextTools::toString(i + 1)) * x;
-      x *= 1 - getParameterValue("theta" + TextTools::toString(i + 1));
-    }
-
-    v = getParameterValue("V" + TextTools::toString(size));
-    if (distribution_.find(v) != distribution_.end())
-    {
-      int j = 1;
-      int f = ((v + precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
-      while (distribution_.find(v + f * j * precision()) != distribution_.end())
+      if (i<size-1)
       {
-        j++;
-        f = ((v + f * j * precision()) >= intMinMax_->getUpperBound()) ? -1 : 1;
+        distribution_[v2] = getParameterValue("theta" + TextTools::toString(i + 1)) * x;
+        x *= 1 - getParameterValue("theta" + TextTools::toString(i + 1));
       }
-      v += f * j * precision();
-      // approximation to avoid useless computings:
-      // setParameterValue("V"+TextTools::toString(size),v);
+      else
+        distribution_[v2] = x;
     }
-    distribution_[v] = x;
   }
+  
   discretize();
 }
 
