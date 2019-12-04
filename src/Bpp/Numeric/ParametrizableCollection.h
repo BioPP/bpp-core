@@ -68,7 +68,7 @@ namespace bpp
      * @brief Contains all objects used.
      */
     
-    std::map<size_t, N* > objectsSet_;
+    std::map<size_t, std::shared_ptr<N> > objectsSet_;
 
     /**
      * @brief A vector of the numbers of objects that have changed
@@ -97,9 +97,9 @@ namespace bpp
       vChanged_(set.vChanged_)
     {
       // Duplicate all objects:
-      typename std::map<size_t, N* >::const_iterator it;
-      for (it=set.objectsSet_.begin(); it!=set.objectsSet_.end(); it++)
-        objectsSet_[it->first]=it->second->clone();
+
+      for (const auto& it:set.objectsSet_)
+        objectsSet_[it.first]=std::shared_ptr<N>(it.second->clone());
     }
 
     ParametrizableCollection<N>& operator=(const ParametrizableCollection<N>& set)
@@ -110,9 +110,9 @@ namespace bpp
       vChanged_ = set.vChanged_;
       
       // Duplicate all objects:
-      typename std::map<size_t, N* >::const_iterator it;
-      for (it=set.objectsSet_.begin(); it!=set.objectsSet_.end(); it++)
-        objectsSet_[it->first]=it->second->clone();
+
+      for (const auto& it:set.objectsSet_)
+        objectsSet_[it.first]=std::shared_ptr<N>(it.second->clone());
 
       return *this;
     }
@@ -126,9 +126,6 @@ namespace bpp
     {
       resetParameters_();
       
-      typename std::map<size_t, N*>::const_iterator it;
-      for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
-        delete it->second;
       objectsSet_.clear();
       vChanged_.empty();
     }
@@ -197,9 +194,44 @@ namespace bpp
      * @return true or false.
      */
   
-    const bool hasObject(size_t objectIndex) const
+    bool hasObject(size_t objectIndex) const
     {
       return (objectsSet_.find(objectIndex)!=objectsSet_.end());
+    }
+
+    /**
+     * @brief Says if there is an object in the map.
+     *
+     * @param object Object in the set.
+     * @return true or false.
+     */
+  
+    bool hasObject(std::shared_ptr<N> object) const
+    {
+      
+      for (const auto key : objectsSet_)
+        if (key.second==object)
+          return true;
+      return false;
+    }
+
+    /**
+     * @brief Return the first key mapping an object in the map.
+     *
+     * @param object Object in the set.
+     * @return the key of the object.
+     *
+     * Throw Exception if object not found.
+     */
+  
+    size_t getFirstKey(std::shared_ptr<N> object) const
+    {
+      for (const auto key:objectsSet_)
+        if (key.second==object)
+          return key.first;
+
+      throw Exception("ParametrizableCollection::getFirstKey: Unknown object");
+      return 0;
     }
 
     /**
@@ -210,14 +242,12 @@ namespace bpp
     const std::vector<size_t> keys() const
     {
       std::vector<size_t> vkeys;
-      typename std::map<size_t, N*>::const_iterator it;
 
-      for (it=objectsSet_.begin(); it!=objectsSet_.end(); it++)
-        vkeys.push_back(it->first);
+      for (const auto& it:objectsSet_)
+        vkeys.push_back(it.first);
             
       return vkeys;
     }
-
   
     /**
      * @brief Get one object from the set knowing its index.
@@ -226,18 +256,18 @@ namespace bpp
      * @return A pointer toward the corresponding object.
      */
   
-    const N* operator[](size_t objectIndex) const
+    std::shared_ptr<const N> operator[](size_t objectIndex) const
     {
-      typename std::map<size_t, N*>::const_iterator it=objectsSet_.find(objectIndex);
+      const auto it=objectsSet_.find(objectIndex);
       if (it==objectsSet_.end())
         throw BadIntegerException("ParametrizableCollection::getObject().", (int)objectIndex);
     
-      return dynamic_cast<const N*>(it->second);
+      return std::dynamic_pointer_cast<const N>(it->second);
     }
 
-    N* operator[](size_t objectIndex)
+    std::shared_ptr<N> operator[](size_t objectIndex)
     {
-      typename std::map<size_t, N*>::iterator it=objectsSet_.find(objectIndex);
+      auto it=objectsSet_.find(objectIndex);
       if (it==objectsSet_.end())
         throw BadIntegerException("ParametrizableCollection::getObject().", (int)objectIndex);
     
@@ -255,12 +285,12 @@ namespace bpp
     ParameterList getParametersForObject(size_t objectIndex) const
     {
       ParameterList pl;
-      typename std::map<size_t, N*>::const_iterator it=objectsSet_.find(objectIndex);
+      const auto it=objectsSet_.find(objectIndex);
 
       if (it!=objectsSet_.end())
       {
-        if (dynamic_cast<const ParameterAliasable*>(it->second)!=NULL)
-          pl = dynamic_cast<const ParameterAliasable*>(it->second)->getIndependentParameters();
+        if (std::dynamic_pointer_cast<const ParameterAliasable>(it->second)!=NULL)
+          pl = std::dynamic_pointer_cast<const ParameterAliasable>(it->second)->getIndependentParameters();
         else
           pl = it->second->getParameters();
         
@@ -270,7 +300,7 @@ namespace bpp
       return pl;
     }
     
-    /**
+     /**
      * @brief Add a new object to the set with a given number.
      *
      * @throw Exception if the number is already used. See replace function instead.
@@ -284,9 +314,9 @@ namespace bpp
      * 
      */
 
-    void addObject(N* object, size_t objectIndex)
+    void addObject(std::shared_ptr<N> object, size_t objectIndex)
     {
-      typename std::map<size_t, N*>::iterator it=objectsSet_.find(objectIndex);
+      auto it=objectsSet_.find(objectIndex);
       if (it!=objectsSet_.end())
         throw BadIntegerException("ParametrizableCollection<N>::addObject. Object objectIndex already used", (int)objectIndex);
 
@@ -297,21 +327,20 @@ namespace bpp
       std::vector<std::string> nplm;
       nplm=object->getParameters().getParameterNames();
 
-      for (size_t i  = 0; i < nplm.size(); i++)
+      for (const auto& pname :nplm)
       {
-        pname = nplm[i];
         Parameter* p = new Parameter(object->getParameters().getParameter(pname));
         p->setName(pname + "_" + TextTools::toString(objectIndex));
         addParameter_(p);
       }
 
-      if (dynamic_cast<ParameterAliasable*>(object)){
-        ParameterAliasable* ppa=dynamic_cast<ParameterAliasable*>(object);
-        for (size_t i  = 0; i < nplm.size(); i++)
+      if (std::dynamic_pointer_cast<ParameterAliasable>(object)){
+        auto ppa=std::dynamic_pointer_cast<ParameterAliasable>(object);
+        for (const auto& name:nplm)
         {
-          std::vector<std::string> va=ppa->getAlias(nplm[i]);
-          for (size_t j=0;j<va.size();j++)
-            aliasParameters(nplm[i] + "_" + TextTools::toString(objectIndex), va[j] + "_" + TextTools::toString(objectIndex));
+          std::vector<std::string> va=ppa->getAlias(name);
+          for (const auto& alias:va)
+            aliasParameters(name + "_" + TextTools::toString(objectIndex), alias + "_" + TextTools::toString(objectIndex));
         }
       }
     }
@@ -324,12 +353,12 @@ namespace bpp
      * @return the removed N*. 
      */
   
-    N* removeObject(size_t objectIndex)
+    std::shared_ptr<N> removeObject(size_t objectIndex)
     {
       if (objectsSet_.find(objectIndex)==objectsSet_.end())
         throw BadIntegerException("ParametrizableCollection<N>::removeObject. None Object at this objectIndex", (int)objectIndex);
 
-      N* pm=objectsSet_[objectIndex];
+      auto pm=objectsSet_[objectIndex];
       objectsSet_.erase(objectIndex);
       
       // Erase all parameter references to this object and translate other indices...
@@ -367,9 +396,9 @@ namespace bpp
      * @return the replaced N*. 
      */
 
-    N* replaceObject(N* object, size_t objectIndex)
+    std::shared_ptr<N> replaceObject(std::shared_ptr<N> object, size_t objectIndex)
     {
-      N* pm=removeObject(objectIndex);
+      auto pm=removeObject(objectIndex);
       addObject(object, objectIndex);
       return pm;
     }
