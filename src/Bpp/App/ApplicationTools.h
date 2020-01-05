@@ -366,9 +366,60 @@ namespace bpp
       NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
       size_t n = st.numberOfRemainingTokens();
       std::vector<T> v(n);
-      for (size_t i = 0; i < n; i++)
-      {
+      for (size_t i = 0; i < n; ++i) {
         v[i] = TextTools::fromString<T>(st.nextToken());
+      }
+      return v;
+    }
+
+    /**
+     * @brief Get a vector of vectors.
+     *
+     * @param parameterName    The name of the corresponding parameter.
+     * @param params           The attribute map where options may be found.
+     * @param separator        The character used to delimit values (cannot be a space character).
+     * @param defaultValue     The default value to use if the parameter is not found.
+     * @param suffix           A suffix to be applied to the parameter name.
+     * @param suffixIsOptional Tell if the suffix is absolutely required.
+     * @param warn             Tell if a warning must be sent in case the parameter is not found.
+     * @throw Exception If a space character is used as separator.
+     * @return The corresponding value.
+     */
+    template<class T> static std::vector< std::vector<T> > getVectorOfVectorsParameter(
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
+    {
+      if (separator == ' ') throw Exception("ApplicationTools::getVectorOfVectorsParameter(). Separator cannot be a space character.");
+      std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
+      if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+      if (s[0] == '(' && s[s.size() - 1] == ')') {
+        //This is a delimited vector:
+        s = s.substr(1, s.size() - 2);
+        if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+      }
+      NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
+      size_t n = st.numberOfRemainingTokens();
+      std::string s2;
+      std::vector< std::vector<T> > v(n);
+      for (size_t i = 0; i < n; ++i) {
+        s2 = st.nextToken();
+        if (s2[0] == '(' && s2[s2.size() - 1] == ')') {
+          //This is a delimited vector:
+          s2 = s2.substr(1, s2.size() - 2);
+        }
+        if (!TextTools::isEmpty(s2)) {
+          NestedStringTokenizer st2(s2, "(", ")", TextTools::toString(separator));
+          size_t n2 = st2.numberOfRemainingTokens();
+          v[i].resize(n2);
+          for (size_t j = 0; j < n2; ++j) {
+            v[i][j] = TextTools::fromString<T>(st2.nextToken());
+          }
+        }
       }
       return v;
     }
@@ -408,7 +459,7 @@ namespace bpp
       StringTokenizer st(s, TextTools::toString(separator));
       size_t n = st.numberOfRemainingTokens();
       std::vector<T> v;
-      for (size_t i = 0; i < n; i++)
+      for (size_t i = 0; i < n; ++i)
       {
         std::string token = st.nextToken();
         std::string::size_type pos = token.find(rangeOperator);
