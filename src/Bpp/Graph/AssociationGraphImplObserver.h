@@ -113,7 +113,7 @@ private:
    */
 
   /**
-   * Registration with own Ids.
+   * Registration with own Ids (named as index).
    *
    * @{
    */
@@ -463,13 +463,14 @@ public:
     return subjectGraph_;
   }
 
-  /**
-   * This function is called to tell the observer that the subject
-   * has changed and hence the observer has to take the changes
-   * into account.
-   */
-  void update();
-
+  void setGraph(std::shared_ptr<GraphImpl> newgraph)
+  {
+    if (subjectGraph_!=0)
+      subjectGraph_->unregisterObserver(this);
+    
+    subjectGraph_=newgraph;
+    subjectGraph_->registerObserver(this);
+  }
 
   /** @name Graph Relations Management
    *  Modificating the structure of the graph.
