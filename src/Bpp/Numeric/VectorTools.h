@@ -791,9 +791,9 @@ namespace bpp
     template<class T>
     static std::vector<T> log(const std::vector<T>& v1)
     {
-      std::vector<double> v2(v1.size());
+      std::vector<T> v2(v1.size());
       for (size_t i = 0; i < v2.size(); i++)
-        v2[i] = std::log(v1[i]); 
+        v2[i] = log(v1[i]); 
       return v2;
     }
 
