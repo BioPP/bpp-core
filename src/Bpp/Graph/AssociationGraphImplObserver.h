@@ -769,21 +769,6 @@ public:
     return EToIndex_.find(edgeObject) != EToIndex_.end();
   }
 
-  /*
-   * @brief Return the maximum index.
-   *
-   */
-  
-  bool maxNodeIndex() const
-  {
-    return indexToN_.size()-1;
-  }
-
-  bool maxEdgeIndex() const
-  {
-    return indexToE_.size()-1;
-  }
-
   /**
    * Return the associated Node index
    * @param nodeObject object which to return the node index

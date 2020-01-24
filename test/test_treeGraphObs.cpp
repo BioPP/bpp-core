@@ -196,9 +196,13 @@ int main() {
   grObs.getGraph()->makeUndirected();
   grObs.rootAt(one);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
+  cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl << endl;
   // the tree must be considered as valid at this point
   test &= grObs.isValid();
+  
+  cout << "MRCA of 3 and 4: " << *grObs.MRCA({three, four})  << endl;
+  cout << "MRCA of 3 and 0: " << *grObs.MRCA({three, zero})  << endl;
+  
 
   cout << endl << "------------------------------------------" << endl << endl;
 

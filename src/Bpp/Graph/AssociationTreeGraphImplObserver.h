@@ -397,6 +397,22 @@ public:
   {
     return AssociationGraphImplObserver<N, E, TreeGraphImpl>::getEdgesFromGraphid(this->getGraph()->getSubtreeEdges(this->getNodeGraphid(localRoot)));
   }
+
+  /**
+   * Return, in a rooted tree, the MRCA node of a vector of nodes
+   * @param vNodeObject the vector of concerned nodes
+   * @return the MRCA
+   */
+
+  std::shared_ptr<N>  MRCA(const std::vector<std::shared_ptr<N>>  vNodeObject) const
+  {
+    std::vector<Graph::NodeId> vNid(vNodeObject.size());
+    
+    std::transform(vNodeObject.begin(), vNodeObject.end(), vNid.begin(), [this](const std::shared_ptr<N>& nodeObject){return this->getNodeGraphid(nodeObject);});
+    
+    return this->getNodeFromGraphid(this->getGraph()->MRCA(vNid));
+  }
+
 };
 
 /********************/
