@@ -323,11 +323,10 @@ namespace bpp
       objectsSet_[objectIndex]=object;
 
       // Associate parameters:
-      std::string pname;
       std::vector<std::string> nplm;
       nplm=object->getParameters().getParameterNames();
 
-      for (const auto& pname :nplm)
+      for (const auto& pname:nplm)
       {
         Parameter* p = new Parameter(object->getParameters().getParameter(pname));
         p->setName(pname + "_" + TextTools::toString(objectIndex));
