@@ -148,7 +148,7 @@ shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(const std::vector<std::string>& names) const
+ParameterList ParameterList::createSubList(const std::vector<std::string>& names) const
 {
   ParameterList pl;
   for (size_t i = 0; i < names.size(); i++)
@@ -161,7 +161,18 @@ ParameterList ParameterList::subList(const std::vector<std::string>& names) cons
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(const std::string& name) const
+ParameterList ParameterList::shareSubList(const std::vector<std::string>& names) const
+{
+  ParameterList pl;
+  for (const auto& name:names)
+    pl.shareParameter(getSharedParameter(name));
+
+  return pl;
+}
+
+/******************************************************************************/
+
+ParameterList ParameterList::createSubList(const std::string& name) const
 {
   ParameterList pl;
   Parameter param = getParameter(name);
@@ -171,20 +182,34 @@ ParameterList ParameterList::subList(const std::string& name) const
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(const std::vector<size_t>& parameters) const
+ParameterList ParameterList::createSubList(const std::vector<size_t>& parameters) const
 {
   ParameterList pl;
-  for (size_t i = 0; i < parameters.size(); i++)
+  for (auto iparam : parameters)
   {
-    if (parameters[i] < size())
-      pl.parameters_.push_back(shared_ptr<Parameter>(parameters_[parameters[i]]->clone()));
+    if (iparam < size())
+      pl.parameters_.push_back(shared_ptr<Parameter>(parameters_[iparam]->clone()));
   }
   return pl;
 }
 
 /******************************************************************************/
 
-ParameterList ParameterList::subList(size_t parameter) const
+ParameterList ParameterList::shareSubList(const std::vector<size_t>& parameters) const
+{
+  ParameterList pl;
+  for (auto iparam : parameters)
+  {
+    if (iparam < size())
+      pl.shareParameter(parameters_[iparam]);
+  }
+  
+  return pl;
+}
+
+/******************************************************************************/
+
+ParameterList ParameterList::createSubList(size_t parameter) const
 {
   ParameterList pl;
   if (parameter < size())

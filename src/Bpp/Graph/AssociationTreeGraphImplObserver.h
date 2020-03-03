@@ -178,9 +178,9 @@ public:
    * @return the father
    */
 
-  std::shared_ptr<N>  getFather(const std::shared_ptr<N>  nodeObject) const
+  std::shared_ptr<N>  getFatherOfNode(const std::shared_ptr<N>  nodeObject) const
   {
-    return this->getNodeFromGraphid(this->getGraph()->getFather(this->getNodeGraphid(nodeObject)));
+    return this->getNodeFromGraphid(this->getGraph()->getFatherOfNode(this->getNodeGraphid(nodeObject)));
   }
 
   /**
@@ -250,12 +250,12 @@ public:
    * @return the father Node
    */
 
-  std::shared_ptr<N> getFather(const std::shared_ptr<E>  edge) const
+  std::shared_ptr<N> getFatherOfEdge(const std::shared_ptr<E>  edge) const
   {
     return this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(edge)));
   }
 
-  NodeIndex getFather(const EdgeIndex edge) const
+  NodeIndex getFatherOfEdge(const EdgeIndex edge) const
   {
     return this->getNodeIndex(this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(this->getEdge(edge)))));
   }

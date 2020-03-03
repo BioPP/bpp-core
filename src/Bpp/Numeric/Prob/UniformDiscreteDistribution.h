@@ -85,7 +85,7 @@ namespace bpp
     double randC() const
     {
       double x= RandomTools::giveRandomNumberBetweenZeroAndEntry(max_-min_)+min_;
-      while (!intMinMax_.isCorrect(x))
+      while (!intMinMax_->isCorrect(x))
         x= RandomTools::giveRandomNumberBetweenZeroAndEntry(max_-min_)+min_;
       return x;
     }

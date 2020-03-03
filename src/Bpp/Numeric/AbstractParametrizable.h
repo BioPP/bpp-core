@@ -6,36 +6,36 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+  This software is governed by the CeCILL  license under French law and
+  abiding by the rules of distribution of free software.  You can  use, 
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+  As a counterpart to the access to the source code and  rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty  and the software's author,  the holder of the
+  economic rights,  and the successive licensors  have only  limited
+  liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+  In this respect, the user's attention is drawn to the risks associated
+  with loading,  using,  modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean  that it is complicated to manipulate,  and  that  also
+  therefore means  that it is reserved for developers  and  experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or 
+  data to be ensured and,  more generally, to use and operate it in the 
+  same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
 #ifndef _ABSTRACTPARAMETRIZABLE_H_
@@ -59,9 +59,9 @@ namespace bpp
  * All methods call the corresponding method in ParameterList and then call the
  * fireParameterChanged() method.
  */
-class AbstractParametrizable:
-  public virtual Parametrizable
-{
+  class AbstractParametrizable:
+    public virtual Parametrizable
+  {
   private:
     ParameterList parameters_;
     std::string prefix_;
@@ -81,10 +81,10 @@ class AbstractParametrizable:
       return parameters_.getParameter(prefix_ + name);
     }
 
-  const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const
-  {
-    return parameters_.getSharedParameter(prefix_ + name);
-  }
+    const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const
+    {
+      return parameters_.getSharedParameter(prefix_ + name);
+    }
 
     double getParameterValue(const std::string& name) const
     { 
@@ -100,7 +100,7 @@ class AbstractParametrizable:
     void setParameterValue(const std::string& name, double value)
     {
       parameters_.setParameterValue(prefix_ + name, value);
-      fireParameterChanged(parameters_.subList(prefix_ + name));
+      fireParameterChanged(parameters_.createSubList(prefix_ + name));
     }
 
     void setParametersValues(const ParameterList& parameters)
@@ -114,7 +114,7 @@ class AbstractParametrizable:
       std::unique_ptr< std::vector<size_t> >updatedParameters(new std::vector<size_t>());
       bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
       if (test) 
-        fireParameterChanged(parameters.subList(*updatedParameters));
+        fireParameterChanged(parameters.shareSubList(*updatedParameters));
       return test;
     }
 
@@ -132,59 +132,59 @@ class AbstractParametrizable:
      * @param parameters A ParameterList object with parameters that changed.
      */
   
-  virtual void fireParameterChanged(const ParameterList& parameters) {};
+    virtual void fireParameterChanged(const ParameterList& parameters) {};
   
   
 
   protected:
   
-  virtual void addParameter_(Parameter* parameter)
-  {
-    if (parameter)
-      parameters_.addParameter(parameter);
-  }
+    virtual void addParameter_(Parameter* parameter)
+    {
+      if (parameter)
+        parameters_.addParameter(parameter);
+    }
   
-  virtual void addParameters_(const ParameterList& parameters)
-  {
-    parameters_.addParameters(parameters);
-  }
+    virtual void addParameters_(const ParameterList& parameters)
+    {
+      parameters_.addParameters(parameters);
+    }
 
-  void shareParameter_(const std::shared_ptr<Parameter>& parameter)
-  {
-    parameters_.shareParameter(parameter);
-  }
+    void shareParameter_(const std::shared_ptr<Parameter>& parameter)
+    {
+      parameters_.shareParameter(parameter);
+    }
 
-  void shareParameters_(const ParameterList& parameters)
-  {
-    parameters_.shareParameters(parameters);
-  }
+    void shareParameters_(const ParameterList& parameters)
+    {
+      parameters_.shareParameters(parameters);
+    }
 
-  virtual void includeParameters_(const ParameterList& parameters)
-  {
-    parameters_.includeParameters(parameters);
-  }
+    virtual void includeParameters_(const ParameterList& parameters)
+    {
+      parameters_.includeParameters(parameters);
+    }
 
-  virtual void deleteParameter_(size_t index)
-  {
-    if (index >= parameters_.size())
-      throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
-    parameters_.deleteParameter(index);
-  }
+    virtual void deleteParameter_(size_t index)
+    {
+      if (index >= parameters_.size())
+        throw IndexOutOfBoundsException("AbstractParametrizable::deleteParameter_.", index, 0, parameters_.size() - 1);
+      parameters_.deleteParameter(index);
+    }
 
-  virtual void deleteParameter_(std::string& name)
-  {
-    parameters_.deleteParameter(name);
-  }
+    virtual void deleteParameter_(std::string& name)
+    {
+      parameters_.deleteParameter(name);
+    }
 
-  virtual void deleteParameters_(const std::vector<std::string>& names)
-  {
-     parameters_.deleteParameters(names);
-  }
+    virtual void deleteParameters_(const std::vector<std::string>& names)
+    {
+      parameters_.deleteParameters(names);
+    }
 
-  void resetParameters_()
-  {
-    parameters_.reset();
-  }
+    void resetParameters_()
+    {
+      parameters_.reset();
+    }
 
     /**
      * @param name The name of the parameter.
@@ -224,7 +224,7 @@ class AbstractParametrizable:
       return parameters_[index];
     }
 
-  const Parameter& getParameter_(size_t index) const
+    const Parameter& getParameter_(size_t index) const
     {
       if(index >= parameters_.size())
         throw IndexOutOfBoundsException("AbstractParametrizable::getParameter_.", index, 0, parameters_.size() - 1);
@@ -232,23 +232,23 @@ class AbstractParametrizable:
     }
 
 
-  ParameterList& getParameters_() { return parameters_; }
+    ParameterList& getParameters_() { return parameters_; }
 
-  /**
-   * @return The shared_ptr parameter at a given position.
-   * @warning No check is performed on the validity of the index given as input!
-   */ 
-  const std::shared_ptr<Parameter>& getSharedParameter(size_t i) const
-  {
-    return parameters_.getSharedParameter(i);
-  }
+    /**
+     * @return The shared_ptr parameter at a given position.
+     * @warning No check is performed on the validity of the index given as input!
+     */ 
+    const std::shared_ptr<Parameter>& getSharedParameter(size_t i) const
+    {
+      return parameters_.getSharedParameter(i);
+    }
   
-  std::shared_ptr<Parameter>& getSharedParameter(size_t i)
-  {
-    return parameters_.getSharedParameter(i);
-  }
+    std::shared_ptr<Parameter>& getSharedParameter(size_t i)
+    {
+      return parameters_.getSharedParameter(i);
+    }
 
-};
+  };
 
 } //end of namespace bpp.
 

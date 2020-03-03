@@ -65,6 +65,7 @@ void ConjugateGradientMultiDimensions::doInit(const ParameterList & params)
   getFunction_()->enableFirstOrderDerivatives(true);
   getFunction_()->setParameters(params);
   getGradient(xi_);
+  
   for(size_t i = 0; i < nbParams; i++)
   {
     g_[i]  = -xi_[i];

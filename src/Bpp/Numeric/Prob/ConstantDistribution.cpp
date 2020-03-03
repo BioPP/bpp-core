@@ -95,6 +95,5 @@ void ConstantDistribution::restrictToConstraint(const Constraint& c)
 
   AbstractDiscreteDistribution::restrictToConstraint(c);
 
-  Parameter& p=getParameter_("value");
-  p.setConstraint(intMinMax_.clone(),true);
- }
+  getParameter_("value").setConstraint(intMinMax_);
+}

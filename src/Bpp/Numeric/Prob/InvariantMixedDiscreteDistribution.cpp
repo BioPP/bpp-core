@@ -57,7 +57,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
   // We first change the namespace of the nested distribution:
   dist_->setNamespace("Invariant." + nestedPrefix_);
   addParameters_(dist_->getIndependentParameters());
-  addParameter_(new Parameter("Invariant.p", p, &Parameter::PROP_CONSTRAINT_IN));
+  addParameter_(new Parameter("Invariant.p", p, Parameter::PROP_CONSTRAINT_IN));
 
   updateDistribution();
 }
@@ -93,13 +93,13 @@ void InvariantMixedDiscreteDistribution::updateDistribution()
       distribution_[cats[i]] = (1. - p_) * probs[i];
   }
 
-  intMinMax_.setLowerBound(dist_->getLowerBound(), !dist_->strictLowerBound());
-  intMinMax_.setUpperBound(dist_->getUpperBound(), !dist_->strictUpperBound());
+  intMinMax_->setLowerBound(dist_->getLowerBound(), !dist_->strictLowerBound());
+  intMinMax_->setUpperBound(dist_->getUpperBound(), !dist_->strictUpperBound());
 
-  if (invariant_ <= intMinMax_.getLowerBound())
-    intMinMax_.setLowerBound(invariant_, true);
-  if (invariant_ >= intMinMax_.getUpperBound())
-    intMinMax_.setUpperBound(invariant_, true);
+  if (invariant_ <= intMinMax_->getLowerBound())
+    intMinMax_->setLowerBound(invariant_, true);
+  if (invariant_ >= intMinMax_->getUpperBound())
+    intMinMax_->setUpperBound(invariant_, true);
 
   numberOfCategories_ = distribution_.size();
 

@@ -122,16 +122,17 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
       string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
-      if ((name == "param") || (name == "params"))
-      {
-        if (std::find(vParam_.begin(),vParam_.end(),value)!=vParam_.end())
-          throw Exception("Param name " + value + " already seen.");
+      // if ((name == "param") || (name == "params"))
+      // {
+      //   if (std::find(vParam_.begin(),vParam_.end(),value)!=vParam_.end())
+      //     throw Exception("Param name " + value + " already seen.");
         
-        //Recursive inclusion:
-        getAttributesMapFromFile(value, am, delimiter);
-        vParam_.push_back(value);
-      }
-      else am[name] = value;
+      //   //Recursive inclusion:
+      //   getAttributesMapFromFile(value, am, delimiter);
+      //   vParam_.push_back(value);
+      // }
+      // else
+        am[name] = value;
     }
   }
 }
@@ -251,56 +252,37 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
     AttributesTools::getVector(args, argv), "=");
 
+  
   // Look for a specified file with parameters:
+  resolveVariables(cmdParams);
   map<string, string> params;
-  if (cmdParams.find("param") != cmdParams.end() || cmdParams.find("params") != cmdParams.end())
+
+  while (cmdParams.find("param") != cmdParams.end() || cmdParams.find("params") != cmdParams.end())
   {
-    string file;
+    string file=(cmdParams.find("param") != cmdParams.end())?cmdParams["param"]:cmdParams["params"];
+    
+    if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
+      throw Exception("Param name " + file + " already seen.");
+
+    if (!FileTools::fileExists(file))
+      throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
+
+    params = getAttributesMapFromFile(file, "=");
+    // Actualize attributes with ones passed to command line:
     if (cmdParams.find("param") != cmdParams.end())
-    {
-      file=cmdParams["param"];
-      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
-        throw Exception("Param name " + file + " already seen.");
-
-      if (!FileTools::fileExists(file))
-      {
-        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
-      }
-      else
-      {
-        params = getAttributesMapFromFile(file, "=");
-        // Actualize attributes with ones passed to command line:
-        actualizeAttributesMap(params, cmdParams);
-      }
-      vParam_.push_back(file);
+      cmdParams.erase("param");
+    else
+      cmdParams.erase("params");
+    
+    actualizeAttributesMap(params, cmdParams);
+    
+    cmdParams=params;
+    resolveVariables(cmdParams);
       
-    }
-    if (cmdParams.find("params") != cmdParams.end())
-    {
-      file=cmdParams["params"];
-      if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
-        throw Exception("Param name " + file + " already seen.");
+    vParam_.push_back(file);
+  }
 
-      if (!FileTools::fileExists(file))
-      {
-        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
-      }
-      else
-      {
-        params = getAttributesMapFromFile(file, "=");
-        // Actualize attributes with ones passed to command line:
-        actualizeAttributesMap(params, cmdParams);
-      }
-      vParam_.push_back(file);
-    }
-  }
-  else
-  {
-    params = cmdParams;
-  }
-  // Resolve variables:
-  resolveVariables(params);
-  return params;
+  return cmdParams;
 }
 
 /******************************************************************************/

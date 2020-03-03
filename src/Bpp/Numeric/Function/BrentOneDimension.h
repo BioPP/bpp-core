@@ -76,6 +76,12 @@ class BrentOneDimension:
 				bool isToleranceReached() const;
 				double getCurrentTolerance() const;
 		};
+
+		enum Bracketing
+    {
+        BRACKET_OUTWARD = 0,
+        BRACKET_INWARD = 1
+    };
 	
 	friend class BODStopCondition;
 	
@@ -83,6 +89,7 @@ class BrentOneDimension:
 		double a, b, d, e, etemp, fu, fv, fw, fx, p, q, r, tol1, tol2, u, v, w, x, xm;
 		double _xinf, _xsup;
     bool isInitialIntervalSet_;
+		Bracketing bracketing_;
 
 	public:
 		BrentOneDimension(Function* function = 0);
@@ -137,6 +144,16 @@ class BrentOneDimension:
      * @return 'true' if the initial interval has been correctly set.
      */
     bool isInitialIntervalSet() const { return isInitialIntervalSet_; }
+
+		/**
+		 * @brief Get the brackeitng method
+		 */
+		BrentOneDimension::Bracketing getBracketing() const { return bracketing_; }
+
+				/**
+		 * @brief Set the brackeitng method
+		 */
+		void setBracketing(BrentOneDimension::Bracketing bracketing)  { bracketing_ = bracketing; }
 	
 	public:
 		
