@@ -151,6 +151,19 @@ namespace bpp
 
     /**
      * @brief Get given parameters as a sublist.
+     * @deprecated
+     *
+     * @param names Name of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     * @throw ParameterNotFoundException If at least one name does not correspond to a parameter in the list.
+     */
+    virtual ParameterList subList(const std::vector<std::string>& names) const {
+      std::cerr << "Warning, this function is superseeded by createSubList and will be removed." << std::endl;
+      return createSubList(names);
+    }
+
+    /**
+     * @brief Get given parameters as a sublist.
      *
      * @param names Name of the parameters to be included in the list.
      * @return A list with all parameters specified.
@@ -170,12 +183,37 @@ namespace bpp
 
     /**
      * @brief Get given parameter as a sublist.
+     * @deprecated
+     *
+     * @param name Name of the parameter to be included in the list.
+     * @return A list with the parameter specified.
+     * @throw ParameterNotFoundException If no parameter with the given name is found.
+     */
+    virtual ParameterList subList(const std::string& name) const {
+      std::cerr << "Warning, this function is superseeded by createSubList and will be removed." << std::endl;
+      return createSubList(name);
+    }
+
+    /**
+     * @brief Get given parameter as a sublist.
      *
      * @param name Name of the parameter to be included in the list.
      * @return A list with the parameter specified.
      * @throw ParameterNotFoundException If no parameter with the given name is found.
      */
     virtual ParameterList createSubList(const std::string& name) const;
+
+    /**
+     * @brief Get given parameters as a sublist.
+     * @deprecated
+     *
+     * @param parameters Positions of the parameters to be included in the list.
+     * @return A list with all parameters specified.
+     */
+    virtual ParameterList subList(const std::vector<size_t>& parameters) const {
+      std::cerr << "Warning, this function is superseeded by createSubList and will be removed." << std::endl;
+      return createSubList(parameters);
+    }
 
     /**
      * @brief Get given parameters as a sublist.
@@ -193,6 +231,18 @@ namespace bpp
      */
     
     virtual ParameterList shareSubList(const std::vector<size_t>& parameters) const;
+
+    /**
+     * @brief Get given parameter as a sublist.
+     * @deprecated
+     *
+     * @param parameter Position of the parameters to be included in the list.
+     * @return A list with the parameter specified.
+     */
+    virtual ParameterList subList(size_t parameter) const {
+      std::cerr << "Warning, this function is superseeded by createSubList and will be removed." << std::endl;
+      return createSubList(parameter);
+    }
 
     /**
      * @brief Get given parameter as a sublist.
