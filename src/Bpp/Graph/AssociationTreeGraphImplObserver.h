@@ -283,6 +283,10 @@ public:
     return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
   }
 
+  std::vector<NodeIndex> getLeavesUnderNode(NodeIndex node) const
+  {
+    return this->getNodeIndexes(getLeavesUnderNode(this->getNode(node)));
+  }
 
   /**
    * Remove the sons of a node
@@ -388,6 +392,16 @@ public:
     return this->getEdgesFromGraphid(this->getGraph()->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
   }
 
+  std::vector<NodeIndex> getNodePathBetweenTwoNodes(const NodeIndex nodeA, const NodeIndex nodeB, bool includeAncestor = true) const
+  {
+    return getNodeIndexes(getNodePathBetweenTwoNodes(this->getNode(nodeA), this->getNode(nodeB), includeAncestor));
+  }
+ 
+  std::vector<EdgeIndex> getEdgePathBetweenTwoNodes(const NodeIndex nodeA, const NodeIndex nodeB, bool includeAncestor = true) const
+  {
+    return getEdgeIndexes(getEdgePathBetweenTwoNodes(this->getNode(nodeA), this->getNode(nodeB), includeAncestor));
+  }
+
   std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot)
   {
     return this->getNodesFromGraphid(this->getGraph()->getSubtreeNodes(this->getNodeGraphid(localRoot)));
@@ -396,6 +410,16 @@ public:
   std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot)
   {
     return AssociationGraphImplObserver<N, E, TreeGraphImpl>::getEdgesFromGraphid(this->getGraph()->getSubtreeEdges(this->getNodeGraphid(localRoot)));
+  }
+
+  std::vector<NodeIndex> getSubtreeNodes(const NodeIndex localRoot) const
+  {
+    return getNodeIndexes(getSubtreeNodes(this->getNode(localRoot)));
+  }
+
+  std::vector<EdgeIndex> getSubtreeEdges(const EdgeIndex localRoot) const
+  {
+    return getEdgeIndexes(getSubtreeEdges(this->getEdge(localRoot)));
   }
 
   /**

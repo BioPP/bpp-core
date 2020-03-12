@@ -518,6 +518,8 @@ namespace bpp
 
     /**
      * @author Laurent Gueguen
+     * @brief Takes elements of a vector given a vector of positions
+     *
      * @param v1 the std::vector of elements,
      * @param v2 the std::vector of the selected positions
      * @return the std::vector of the selected elements, in the order of the

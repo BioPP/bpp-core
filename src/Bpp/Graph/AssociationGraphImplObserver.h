@@ -785,9 +785,9 @@ public:
 
   std::vector<NodeIndex> getNodeIndexes(std::vector<Nref > nodes) const
   {
-    std::vector<NodeIndex> nodeIndexes;
-    for (const auto& currNode:nodes)
-      nodeIndexes.push_back(getNodeIndex(currNode));
+    std::vector<NodeIndex> nodeIndexes(nodes.size());
+    
+    std::transform(nodes.begin(), nodes.end(), nodeIndexes.begin(), [this](const Nref& nodeObject){return this->getNodeIndex(nodeObject);});
 
     return nodeIndexes;
   }
@@ -807,9 +807,9 @@ public:
 
   std::vector<EdgeIndex> getEdgeIndexes(std::vector<Eref > edges) const
   {
-    std::vector<EdgeIndex> edgeIndexes;
-    for (const auto& currEdge:edges)
-      edgeIndexes.push_back(getEdgeIndex(currEdge));
+    std::vector<EdgeIndex> edgeIndexes(edges.size());
+
+    std::transform(edges.begin(), edges.end(), edgeIndexes.begin(), [this](const Eref& edgeObject){return this->getEdgeIndex(edgeObject);});
 
     return edgeIndexes;
   }
