@@ -53,6 +53,7 @@
 #include <cmath>
 #include <algorithm>
 #include <complex>
+#include <numeric>
 
 namespace bpp
 {
@@ -517,6 +518,8 @@ namespace bpp
 
     /**
      * @author Laurent Gueguen
+     * @brief Takes elements of a vector given a vector of positions
+     *
      * @param v1 the std::vector of elements,
      * @param v2 the std::vector of the selected positions
      * @return the std::vector of the selected elements, in the order of the
@@ -618,8 +621,31 @@ namespace bpp
     static T sum(const std::vector<T>& v1)
     {
       T s = 0;
-      for (auto x : v1) { s += x; }
+      for (const auto& x : v1) { s += x; }
       return s;
+    }
+
+    /**
+     * @author Laurent Gueguen
+     * @return From std::vector v1, return @f$\sum_i(v2_i * v1_i)@f$.
+     * @param v1 a std::vector.
+     * @param v2 another std::vector.
+     */
+    
+    template<class T>
+    static T sumProd(const std::vector<T>& v1, const std::vector<T>& v2)
+    {
+      size_t size;
+      if (v1.size() != v2.size())
+        throw DimensionException("VectorTools::sumProd", v1.size(), v2.size());
+      else
+        size = v1.size();
+
+      T x = v2[0] * v1[0];
+      for (size_t i = 1; i < size; i++)
+        x += v2[i] * v1[i];
+
+      return x;
     }
 
     /**
@@ -630,10 +656,8 @@ namespace bpp
     template<class T>
     static std::vector<T> cumSum(const std::vector<T>& v1)
     {
-      std::vector<T> s(v1.size());
-      if (v1.size() == 0) return s;
-      s[0] = v1[0];
-      for (size_t i = 1; i < v1.size(); i++) { s[i] = v1[i] + s[i - 1]; }
+      auto s(v1);
+      std::partial_sum(s.begin(),s.end(),s.begin());
       return s;
     }
 
@@ -646,13 +670,7 @@ namespace bpp
     template<class T>
     static void logNorm(std::vector<T>& v)
     {
-      T M = max(v);
-      T x = std::exp(v[0] - M);
-      for (size_t i = 1; i < v.size(); i++)
-      {
-        x += std::exp(v[i] - M);
-      }
-      v -= M + std::log(x);
+      v -= VectorTools::logSumExp(v);
     }
 
     /**
@@ -663,15 +681,17 @@ namespace bpp
     template<class T>
     static T logSumExp(const std::vector<T>& v1)
     {
+      if (v1.size()==1)
+        return v1[0];
+      
       T M = max(v1);
       if (std::isinf(M))
         return M;
     
-      T x = std::exp(v1[0] - M);
-      for (size_t i = 1; i < v1.size(); i++)
-      {
-        x += std::exp(v1[i] - M);
-      }
+      T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0]-M),
+                            [&M](T y, T z){
+                              return y + std::exp(z-M);});
+      
       return std::log(x) + M;
     }
 
@@ -684,11 +704,10 @@ namespace bpp
     template<class T>
     static T logSumExp(const std::vector<T>& v1, const std::vector<T>& v2)
     {
-      size_t size;
       if (v1.size() != v2.size())
         throw DimensionException("VectorTools::logsumexp", v1.size(), v2.size());
-      else
-        size = v1.size();
+
+      size_t size = v1.size();
 
       T M = max(v1);
       if (std::isinf(M))
@@ -710,16 +729,7 @@ namespace bpp
     template<class T>
     static T logMeanExp(const std::vector<T>& v1)
     {
-      T M = max(v1);
-      if (std::isinf(M))
-        return M;
-
-      T x = std::exp(v1[0] - M);
-      for (size_t i = 1; i < v1.size(); i++)
-      {
-        x += std::exp(v1[i] - M);
-      }
-      return std::log(x) + M - std::log(v1.size());
+      return VectorTools::logSumExp(v1) - std::log(v1.size());
     }
 
 
@@ -731,15 +741,16 @@ namespace bpp
     template<class T>
     static T sumExp(const std::vector<T>& v1)
     {
+      if (v1.size()==0)
+        return std::exp(v1[0]);
+      
       T M = max(v1);
       if (std::isinf(M))
         return (M<0?0:M);
 
-      T x = std::exp(v1[0] - M);
-      for (size_t i = 1; i < v1.size(); i++)
-      {
-        x += std::exp(v1[i] - M);
-      }
+      T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0]-M),
+                            [&M](T y, T z){
+                              return y + std::exp(z-M);});
       return x * std::exp(M);
     }
 
@@ -752,12 +763,14 @@ namespace bpp
     template<class T>
     static T sumExp(const std::vector<T>& v1, const std::vector<T>& v2)
     {
-      size_t size;
       if (v1.size() != v2.size())
         throw DimensionException("VectorTools::sumExp", v1.size(), v2.size());
-      else
-        size = v1.size();
 
+      size_t size = v1.size();
+
+      if (size==1)
+        return v2[0] * std::exp(v1[0]);
+      
       T M = max(v1);
       if (std::isinf(M))
         throw BadNumberException("VectorTools::sumExp", M);
@@ -781,7 +794,8 @@ namespace bpp
     static std::vector<T> log(const std::vector<T>& v1)
     {
       std::vector<T> v2(v1.size());
-      for (size_t i = 0; i < v2.size(); i++) { v2[i] = VectorTools::log(v1[i]); }
+      for (size_t i = 0; i < v2.size(); i++)
+        v2[i] = log(v1[i]); 
       return v2;
     }
 

@@ -244,6 +244,15 @@ namespace bpp
 
     std::vector<Graph::NodeId> getNodePathBetweenTwoNodes(Graph::NodeId nodeA, Graph::NodeId nodeB, bool includeAncestor = true) const;
     std::vector<Graph::EdgeId> getEdgePathBetweenTwoNodes(Graph::NodeId nodeA, Graph::NodeId nodeB) const;
+
+    
+    /*
+     * @bref Compute the MRCA of the gven nodes
+     *
+     */
+
+    Graph::NodeId MRCA(const std::vector<Graph::NodeId>& nodes) const;
+    
   };
 
 
@@ -603,7 +612,70 @@ namespace bpp
       fillSubtreeMetEdges_(metEdges, GraphImpl::getBottom(*currEdgeToSon));
     }
   }
-}
 
+  template<class GraphImpl>
+  Graph::NodeId TreeGraphImpl<GraphImpl>::MRCA(const std::vector<Graph::NodeId>& nodes) const
+  {
+    mustBeRooted_();
+
+    size_t nbnodes=nodes.size();
+    
+    if (nbnodes==0)
+      throw getRoot();
+    
+    if (nbnodes==1)
+      return nodes[0];
+
+    // Total counts
+    std::map<Graph::NodeId, uint> counts;
+
+    // Forward counts
+    auto fathers = std::make_shared<std::map<Graph::NodeId, uint>>();
+    auto sons = std::make_shared<std::map<Graph::NodeId, uint>>();
+    
+    for (auto nodeid:nodes)
+    {
+      counts[nodeid]=1;
+      (*sons)[nodeid]=1;
+    }
+    
+    while (sons->size()>1)
+    {
+      // From sons to fqthers
+      for (auto son:(*sons))
+      {
+        if (!hasFather(son.first))
+          continue;
+        
+        auto here=getFatherOfNode(son.first);
+
+        if (fathers->find(here)==fathers->end())
+          (*fathers)[here]=son.second;
+        else
+          (*fathers)[here]+=son.second;
+      }
+
+      // add fathers in counts
+      for (auto father:*(fathers))
+      {
+        if (counts.find(father.first)==counts.end())
+          counts[father.first]=father.second;
+        else
+          counts[father.first]+=father.second;
+
+        if (counts[father.first]==nbnodes)
+          return father.first;
+      }
+
+      auto temp=sons;
+      sons=fathers;
+      fathers=temp;
+      fathers->clear();
+    }
+
+    return sons->begin()->first;
+  }
+  
+}
 
 #endif

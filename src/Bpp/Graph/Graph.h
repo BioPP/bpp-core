@@ -132,7 +132,8 @@ public:
   virtual NodeId createNodeFromNode(NodeId origin) = 0;
 
   /**
-   * Creates new node on an existing Edge. A -> B will be A -> N -> B
+   * Creates new node on an existing Edge, splitting an edge0. A -> B
+   * will be A -> N -> B
    * @param edge existing edge.
    * @return the index of the new node
    */
@@ -140,7 +141,7 @@ public:
 
 
   /**
-   * Creates a node linked to new node, splitting an edge.
+   * Creates a node linked to new node.
    * @param origin existing edge. In a directed graph: origin -> newNode.
    * @return the index of the new node
    */

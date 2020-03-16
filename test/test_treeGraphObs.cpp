@@ -87,7 +87,7 @@ int main() {
   cout << "Linking two and three to zero." << endl;
   grObs.link(two,zero,r3);
   grObs.link(three,zero);
-  grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
+  grObs.getGraph()->outputToDot(std::cout,"myTestDirGraph");
 
   vector<shared_ptr<string> > fromOne = grObs.getOutgoingNeighbors(zero);
   vector<shared_ptr<string> > fromThree = grObs.getOutgoingNeighbors(two);
@@ -146,7 +146,8 @@ int main() {
   grObs.link(five,two);
 
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  
+  grObs.outputToDot(std::cout,"myTestDirGrObs");
+
   cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
   // the tree is not valid at this point
   test &= !grObs.isValid();
@@ -168,6 +169,7 @@ int main() {
   }
 
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
+  grObs.outputToDot(std::cout,"myTestDirGrObs");
 
   cout << endl << "------------------------------------------" << endl << endl;
   
@@ -194,9 +196,13 @@ int main() {
   grObs.getGraph()->makeUndirected();
   grObs.rootAt(one);
   grObs.getGraph()->outputToDot(std::cout,"myTestDirGrObs");
-  cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl;
+  cout << "Is this a tree?\n    " << (grObs.isValid()? "TRUE":"FALSE") << endl << endl;
   // the tree must be considered as valid at this point
   test &= grObs.isValid();
+  
+  cout << "MRCA of 3 and 4: " << *grObs.MRCA({three, four})  << endl;
+  cout << "MRCA of 3 and 0: " << *grObs.MRCA({three, zero})  << endl;
+  
 
   cout << endl << "------------------------------------------" << endl << endl;
 

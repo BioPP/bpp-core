@@ -241,7 +241,7 @@ class ReparametrizationDerivableSecondOrderWrapper:
     double getSecondOrderDerivative(const std::string& variable) const
     {
       return dynamic_cast<const DerivableSecondOrder&>(getFunction()).getSecondOrderDerivative(variable)
-           * pow(dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative(), 2)
+           * std::pow(dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative(), 2)
            + dynamic_cast<const DerivableSecondOrder&>(getFunction()).getFirstOrderDerivative(variable)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getSecondOrderDerivative();
     }
