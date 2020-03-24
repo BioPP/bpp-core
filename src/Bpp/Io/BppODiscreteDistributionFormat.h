@@ -69,14 +69,15 @@ public:
 
   const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-  DiscreteDistribution* read(const std::string& distDescription, bool parseArguments = true);
+  DiscreteDistribution* readDiscreteDistribution(const std::string& distDescription, bool parseArguments = true);
 
   const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
-  void write(const DiscreteDistribution& dist,
-             OutputStream& out,
-             std::map<std::string, std::string>& globalAliases,
-             std::vector<std::string>& writtenNames) const;
+  void writeDiscreteDistribution(
+       const DiscreteDistribution& dist,
+       OutputStream& out,
+       std::map<std::string, std::string>& globalAliases,
+       std::vector<std::string>& writtenNames) const;
 
 protected:
   /**

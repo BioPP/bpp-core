@@ -80,7 +80,7 @@ namespace bpp
      * @return A new DiscreteDistribution object according to options specified.
      * @throw Exception if an error occured.
      */
-    virtual DiscreteDistribution* read(
+    virtual DiscreteDistribution* readDiscreteDistribution(
         const std::string& distrDescription,
         bool parseArguments = true) = 0;
 
@@ -112,10 +112,11 @@ namespace bpp
      *        parameters so far [in, out];
      * @throw Exception if an error occured.
      */
-    virtual void write(const DiscreteDistribution& dist,
-                       OutputStream& out,
-                       std::map<std::string, std::string>& globalAliases,
-                       std::vector<std::string>& writtenNames) const = 0;
+    virtual void writeDiscreteDistribution(
+		    const DiscreteDistribution& dist,
+                    OutputStream& out,
+                    std::map<std::string, std::string>& globalAliases,
+                    std::vector<std::string>& writtenNames) const = 0;
   };
 
 
