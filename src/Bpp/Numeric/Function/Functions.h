@@ -119,6 +119,9 @@ class Function:
       setParameters(parameters);
       return getValue();
     }
+
+  friend class FunctionWrapper;
+
 };
 
 /**
@@ -353,6 +356,13 @@ class FunctionWrapper:
     {
       return function_->getParameterNameWithoutNamespace(name);
     }
+  
+protected:
+  ParameterList& getParameters_()
+  {
+    return function_->getParameters_();  
+  }
+
 
 };
 

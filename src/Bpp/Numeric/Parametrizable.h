@@ -174,6 +174,17 @@ namespace bpp
      */
     virtual std::string getParameterNameWithoutNamespace(const std::string& name) const = 0;
 
+  protected:
+
+    /**
+     * @brief Get all parameters available.
+     *
+     * @see getIndependentParameters if some parameters are aliased.
+     * @return A list with all parameters available.
+     */
+
+    virtual ParameterList& getParameters_() = 0;
+
   };
 
 /**

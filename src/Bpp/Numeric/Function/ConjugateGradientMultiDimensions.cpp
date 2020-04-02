@@ -117,7 +117,7 @@ double ConjugateGradientMultiDimensions::doStep()
       xi_[j] = h_[j] = g_[j] + gam * h_[j];
     }
   }
-  
+
   return f;
 }
 

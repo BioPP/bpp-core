@@ -71,6 +71,11 @@ const ParameterList & DirectionFunction::getParameters() const
   return params_;
 }
 
+ParameterList & DirectionFunction::getParameters_()
+{
+  return params_;
+}
+
 /******************************************************************************/
 
 void DirectionFunction::init(const ParameterList & p, const vector<double> & xi)
