@@ -249,13 +249,11 @@ unsigned int GlobalGraph::unlinkInNodeStructure_(const GlobalGraph::Node& nodeA,
 
 void GlobalGraph::linkInNodeStructure_(const GlobalGraph::Node& nodeA, const GlobalGraph::Node& nodeB, const GlobalGraph::Edge& edge)
 {
-  std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
-
+  auto ita = nodeStructure_.find(nodeA);
   if (ita != nodeStructure_.end())
     ita->second.first.insert( pair<GlobalGraph::Node, GlobalGraph::Edge>(nodeB, edge));
 
-  std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator itb = nodeStructure_.find(nodeB);
-
+  auto itb = nodeStructure_.find(nodeB);
   if (itb != nodeStructure_.end())
     nodeStructure_.find(nodeB)->second.second.insert( pair<GlobalGraph::Node, GlobalGraph::Edge>(nodeA, edge));
 
@@ -584,9 +582,10 @@ vector<Graph::NodeId> GlobalGraph::getAllInnerNodes() const
 {
   vector<Graph::NodeId> listOfInNodes;
   for (const auto& it : nodeStructure_)
-    if (this->getDegree(it.first) >= 2)
+  {
+    if (this->getNumberOfOutgoingNeighbors(it.first) >= 1)
       listOfInNodes.push_back(it.first);
-
+  }
   return listOfInNodes;
 }
 
