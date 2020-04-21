@@ -70,6 +70,16 @@ namespace bpp
       return new BinaryOperator(*this);
     }
 
+    std::shared_ptr<Operator> getLeftSon()
+    {
+      return left_;
+    }
+    
+    std::shared_ptr<Operator> getRightSon()
+    {
+      return right_;
+    }
+    
     char getSymbol() const
     {
       return symb_;

@@ -68,6 +68,11 @@ namespace bpp
       return new NegativeOperator(*this);
     }
 
+    std::shared_ptr<Operator> getSon()
+    {
+      return son_;
+    }
+    
     double getValue() const
     {
       return - son_->getValue();

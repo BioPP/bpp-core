@@ -79,13 +79,22 @@ namespace bpp
       return new MathOperator(*this);
     }
     
-
+    std::shared_ptr<Operator> getSon()
+    {
+      return son_;
+    }
+    
     double getValue() const
     {
       if (func_)
         return (*func_)(son_->getValue());
       else
         return son_->getValue();
+    }
+
+    std::string getName() const
+    {
+      return name_;
     }
 
     /**

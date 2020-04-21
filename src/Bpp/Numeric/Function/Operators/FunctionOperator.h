@@ -119,6 +119,11 @@ namespace bpp
       return getSecondOrderDerivative_(variable, std::integral_constant<bool, std::is_base_of<DerivableSecondOrder, F>::value>{});
     }
 
+    std::string getName() const
+    {
+      return name_;
+    }
+
     std::string output() const
     {
       return name_;
