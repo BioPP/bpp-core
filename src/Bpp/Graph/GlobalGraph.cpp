@@ -102,7 +102,7 @@ void GlobalGraph::edgeMustExist_(const GlobalGraph::Edge& edge, string name) con
 GlobalGraph::Edge GlobalGraph::link(Graph::NodeId nodeA, Graph::NodeId nodeB)
 {
   // which ID is available?
-  GlobalGraph::Edge edgeID = ++highestEdgeID_;
+  GlobalGraph::Edge edgeID = highestEdgeID_++;
 
   // writing the new relation to the structure
   linkInNodeStructure_(nodeA, nodeB, edgeID);
@@ -195,17 +195,6 @@ void GlobalGraph::switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB)
   this->topologyHasChanged_();
 }
 
-
-GlobalGraph::Node GlobalGraph::getHighestNodeID() const
-{
-  return highestNodeID_;
-}
-
-
-GlobalGraph::Edge GlobalGraph::getHighestEdgeID() const
-{
-  return highestEdgeID_;
-}
 
 void GlobalGraph::unlinkInEdgeStructure_(const GlobalGraph::Edge& edge)
 {
@@ -437,10 +426,12 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   if (foundNode == nodeStructure_.end())
     throw Exception("GlobalGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
 
-  return (!isDirected() && (foundNode->second.first.size() <= 1))
+  const auto& assoc = foundNode->second;
+  return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-               (foundNode->second.first.size() + foundNode->second.second.size() <= 1)
-               || (foundNode->second.first.size() == 1 &&  foundNode->second.second.size() == 1 && foundNode->second.first.begin()->first == foundNode->second.second.begin()->first)));
+               (assoc.first.size() + assoc.second.size() <= 1)
+               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+                   assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 

@@ -174,17 +174,6 @@ private:
 
 protected:
   /**
-   * get the Highest Node ID (for vector sizing)
-   */
-  Node getHighestNodeID() const;
-
-  /**
-   * get the Highest Node ID (for vector sizing)
-   */
-  Edge getHighestEdgeID() const;
-
-
-  /**
    * Check that a node exists. If not, throw an exception.
    * @param node node that has to be checked
    * @param name common name to give to the user in case of failure (eg: "first node")
