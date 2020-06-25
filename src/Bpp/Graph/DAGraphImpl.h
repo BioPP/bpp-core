@@ -288,7 +288,7 @@ bool DAGraphImpl<GraphImpl>::isRooted() const
 template<class GraphImpl>
 bool DAGraphImpl<GraphImpl>::isLeaf(Graph::NodeId node) const
 {
-  return GraphImpl::isLeaf(node) == 0;
+  return GraphImpl::isLeaf(node);
 }
 
 template<class GraphImpl>
