@@ -161,6 +161,7 @@ namespace bpp
     Vdouble getCategories() const;
     Vdouble getProbabilities() const;
     double getValueCategory(double value) const;
+    size_t getCategoryIndex(double value) const;
     void set(double category, double probability);
     void add(double category, double probability);
     double getInfCumulativeProbability(double category) const;

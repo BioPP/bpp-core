@@ -107,6 +107,15 @@ namespace bpp
     virtual double getValueCategory(double value) const = 0 ;
     
     /**
+     * @param value 
+     * @return The index of the category the value is in. Throws a
+     * OutOfRangeException if the value is off the domain of the
+     * DiscreteDistribution.
+     */
+    
+    virtual size_t getCategoryIndex(double value) const = 0 ;
+    
+    /**
      * @param categoryIndex Class index.
      * @return The value associated to a given class.
      */

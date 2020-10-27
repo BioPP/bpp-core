@@ -301,6 +301,20 @@ double AbstractDiscreteDistribution::getValueCategory(double value) const
   return it->first;
 }
 
+/******************************************************************************/
+
+size_t AbstractDiscreteDistribution::getCategoryIndex(double value) const
+{
+  if (!(intMinMax_->isCorrect(value)))
+    throw Exception("AbstractDiscreteDistribution::getValueCategory out of bounds:" + TextTools::toString(value));
+
+  for (unsigned int i=1;i<bounds_.size();i++)
+    if (value<bounds_[i])
+      return i;
+
+  throw bounds_.size();
+}
+
 /***********************************************************************/
 
 
