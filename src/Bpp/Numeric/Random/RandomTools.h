@@ -276,6 +276,31 @@ namespace bpp
     }
 
     /**
+     * @brief Pick one index from a cumsum vector of probabilities.
+     *
+     * Last probability of the vector is assumed to be one.
+     *
+     * @param w The vector of cumsumed weights.
+     * @return An index from the vector.
+     * @throw EmptyVectorException if the vector is empty.
+     *
+     * @author Laurent Guéguen
+     */
+
+
+    static size_t pickFromCumSum(const std::vector<double>& w) {
+      double prob = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+      size_t pos=0;
+      while (pos < w.size()-1)
+      {
+        if (prob<=w[pos])
+          return pos;
+        pos+=1;
+      }
+      return w.size()-1;
+    }
+
+    /**
      * @brief Sample a vector, with associated probability weights.
      *
      * The sample is a new vector of the specified size.
