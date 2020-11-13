@@ -94,11 +94,12 @@ namespace bpp
 
   IndexOutOfBoundsException::IndexOutOfBoundsException(std::string text, std::size_t badInt, std::size_t lowerBound,
                                                        std::size_t upperBound)
-    : Exception("out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "])" + std::move(text))
+    : Exception(std::to_string(badInt) +" out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "] " + std::move(text))
     , badIndex_(badInt)
     , bounds_{{lowerBound, upperBound}}
   {
   }
+  
   const std::array<std::size_t, 2>& IndexOutOfBoundsException::getBounds() const { return bounds_; }
   std::size_t IndexOutOfBoundsException::getBadIndex() const { return badIndex_; }
 
@@ -114,7 +115,7 @@ namespace bpp
 
   OutOfRangeException::OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound)
     : Exception(std::to_string(badValue) + " out of [" + std::to_string(lowerBound) + ", " +
-                std::to_string(upperBound) + "])" + std::move(text))
+                std::to_string(upperBound) + "]" + std::move(text))
     , badValue_(badValue)
     , bounds_{{lowerBound, upperBound}}
   {
