@@ -55,14 +55,18 @@ namespace bpp
    * @deprecated Do not use in new code anymore.
    */
   template <typename T>
-  class BppVector : public Clonable, public std::vector<T>
+  class BppVector : 
+     public Clonable,
+     public std::vector<T>
   {
   public:
     template <typename... Args>
-    BppVector(Args&&... args)
-      : std::vector<T>(std::forward<Args>(args)...)
+    BppVector(Args&&... args):
+      std::vector<T>(std::forward<Args>(args)...)
     {
     }
+
+    virtual ~BppVector() {}
 
     BppVector<T>* clone() const { return new BppVector<T>(*this); }
 
