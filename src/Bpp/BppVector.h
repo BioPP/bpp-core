@@ -66,8 +66,6 @@ namespace bpp
     {
     }
 
-    virtual ~BppVector() {}
-
     BppVector<T>* clone() const { return new BppVector<T>(*this); }
 
     const std::vector<T>& toSTL() const { return *this; }
