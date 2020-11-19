@@ -3,7 +3,7 @@
 URL: https://github.com/BioPP/bpp-core
 
 Name: bpp-core
-Version: 2.4.1
+Version: 2.4.2
 Release: 1%{?dist}
 License: CECILL-2.0
 Vendor: The Bio++ Project
