@@ -610,13 +610,9 @@ namespace bpp
       if (pos==-1)
         pos=nCol_;
       
-      if ((colNames_.size()==0))
-      {
-        if (nCol_ == 0)
-          colNames_ = new std::vector<std::string>();
-        else
-          throw NoTableColumnNamesException("Table::addColumn. Table has column names.");
-      }
+      if ((colNames_.size()==0) && (nCol_ != 0))
+        throw NoTableColumnNamesException("Table::addColumn. Table has column names.");
+
       if (newColumn.size() != nRow_)
         throw DimensionException("Table::addColumn.", newColumn.size(), nRow_);
       if (nCol_ > 0 && find(colNames_.begin(), colNames_.end(), colName) != colNames_.end())
@@ -981,13 +977,9 @@ namespace bpp
       if (pos==-1)
         pos=nRow_;
 
-      if ((rowNames_.size()==0))
-      {
-        if (nRow_ == 0)
-          rowNames_ = new std::vector<std::string>();
-        else
+      if ((rowNames_.size()==0) && (nRow_ != 0))
           throw NoTableRowNamesException("Table::addRow. Table has row names.");
-      }
+
       if (newRow.size() != nCol_)
         throw DimensionException("Table::addRow.", newRow.size(), nCol_);
       if (nRow_ > 0 && find(rowNames_.begin(), rowNames_.end(), rowName) != rowNames_.end())
