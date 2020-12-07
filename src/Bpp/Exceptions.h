@@ -62,8 +62,10 @@ namespace bpp
   public:
     /** @brief Build a new Exception.
      * @param text A message to be passed to the exception hierarchy.
+     * @param stack deep of the call stack 
      */
-    Exception(std::string text);
+    
+    Exception(std::string text, int stack = 10);
     /** @brief Method to get the message of the exception (STL method redefinition).
      * @return The message passed to the exception hierarchy.
      */

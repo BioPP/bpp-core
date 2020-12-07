@@ -44,15 +44,74 @@
 
 #include <string>
 #include <utility>
+#include <execinfo.h>
+#include <dlfcn.h>     // for dladdr
+#include <cxxabi.h>    // for __cxa_demangle
+#include <iostream>
 
 #include "Exceptions.h"
 
 namespace bpp
 {
-  Exception::Exception(std::string text)
+  Exception::Exception(std::string text, int stack)
     : message_(std::move(text))
   {
+    void *buffer[stack];
+    char **strings;
+
+    int nptrs = backtrace(buffer, stack);
+    
+    /* The call backtrace_symbols_fd(buffer, nptrs, STDOUT_FILENO)
+       would produce similar output to the following: */
+    
+    strings = backtrace_symbols(buffer, nptrs);
+    
+    for (int j = 2; j < nptrs-2; j++)
+    {
+      message_ += "\n\tfrom  ";
+
+      char *begin_name = 0, *end_name = 0;
+
+      // find parentheses of the function  surrounding the mangled name:
+      // ./module(function(...)+0x15c) [0x8048a6d]
+      for (char *p = strings[j]; *p; ++p)
+      {
+        if (*p == '(')
+          begin_name = p;
+        if (*p == '+'){
+            end_name = p;
+            break;
+        }
+      }
+
+      *begin_name++ = '\0';
+      *end_name++ = '\0';
+
+      // mangled name is now in [begin_name, end_name), now apaply
+      // __cxa_demangle():
+        
+      int status;
+      char* ret = abi::__cxa_demangle(begin_name,
+                                      NULL, NULL, &status);
+      if (status == 0) {
+        for (char *p = ret; *p; ++p) // look for "("
+          if (*p == '(')
+          {
+            begin_name = p;
+            break;
+          }
+        *begin_name = '\0';
+        message_ += ret; // use possibly realloc()-ed string
+      }
+      else {
+        message_ += strings[j];
+      }
+    }
+
+    free(strings);
   }
+
+  
   const char* Exception::what() const noexcept { return message_.c_str(); }
   const std::string& Exception::message() const noexcept { return message_; }
 
