@@ -536,9 +536,9 @@ namespace bpp
     {
       if (index >= nCol_)
         throw IndexOutOfBoundsException("Table::deleteColumn(size_t).", index, 0, nCol_ - 1);
-      data_.erase(data_.begin() + (size_t)index); 
+      data_.erase(data_.begin() + (long)index); 
       if (colNames_.size()!=0)
-        colNames_.erase(colNames_.begin() + (size_t)(index));
+        colNames_.erase(colNames_.begin() + (long)(index));
       nCol_--;
     }
 
@@ -900,10 +900,10 @@ namespace bpp
         std::vector<T>* column = &data_[j];
         if (index >= column->size())
           throw IndexOutOfBoundsException("Table::deleteRow(size_t).", index, 0, column->size() - 1);
-        column->erase(column->begin() + index, column->begin() + index + len);
+        column->erase(column->begin() + (long)index, column->begin() + long(index + len));
       }
       if (rowNames_.size()!=0)
-        rowNames_.erase(rowNames_.begin() + index, rowNames_.begin() + index + len);
+        rowNames_.erase(rowNames_.begin() + long(index), rowNames_.begin() + long(index + len));
       nRow_--;
     }
 
@@ -1171,7 +1171,7 @@ namespace bpp
 
       bool frontNames=((byRow && data.hasRowNames()) || (!byRow && data.hasColumnNames()));
 
-      if (byRow && data.hasColumnNames() || (!byRow && data.hasRowNames()))
+      if ((byRow && data.hasColumnNames()) || (!byRow && data.hasRowNames()))
       { // Write header
         std::vector<std::string> names = (byRow?data.getColumnNames():data.getRowNames());
         
