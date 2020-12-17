@@ -131,6 +131,7 @@ install (
   RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 ENDIF()
+
 install (
   TARGETS ${PROJECT_NAME}-shared
   EXPORT ${PROJECT_NAME}-targets
