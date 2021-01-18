@@ -871,11 +871,11 @@ namespace bpp
       if (NToIndex_.find(nodeObject)!=NToIndex_.end())
         throw Exception("AssociationGraphImplObserver::addNodeIndex : nodeObject has already an index: " + nodeToString(nodeObject));
 
-      NodeIndex index=indexToN_.size();
+      NodeIndex index=NodeIndex(indexToN_.size());
       for (auto i=0;i<indexToN_.size();i++)
-        if (!indexToN_.at(i))
+        if (!indexToN_.at(size_t(i)))
         {
-          index=i;
+          index=NodeIndex(i);
           break;
         }
     

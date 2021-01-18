@@ -177,7 +177,7 @@ namespace bpp
     std::vector<T> result(v1.size());
     for (size_t i = 0; i < result.size(); i++)
     {
-      result[i] = v1[i] + c;
+      result[i] = v1[i] + T(c);
     }
     return result;
   }
@@ -187,7 +187,7 @@ namespace bpp
     std::vector<T> result(v1.size());
     for (size_t i = 0; i < result.size(); i++)
     {
-      result[i] = c + v1[i];
+      result[i] = T(c) + v1[i];
     }
     return result;
   }
@@ -198,7 +198,7 @@ namespace bpp
     std::vector<T> result(v1.size());
     for (size_t i = 0; i < result.size(); i++)
     {
-      result[i] = v1[i] - c;
+      result[i] = v1[i] - T(c);
     }
     return result;
   }
@@ -208,7 +208,7 @@ namespace bpp
     std::vector<T> result(v1.size());
     for (size_t i = 0; i < result.size(); i++)
     {
-      result[i] = c - v1[i];
+      result[i] = T(c) - v1[i];
     }
     return result;
   }
