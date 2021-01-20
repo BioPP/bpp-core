@@ -60,12 +60,11 @@ namespace bpp
     char **strings;
 
     int nptrs = backtrace(buffer, stack);
-    
     /* The call backtrace_symbols_fd(buffer, nptrs, STDOUT_FILENO)
        would produce similar output to the following: */
     
     strings = backtrace_symbols(buffer, nptrs);
-    
+
     for (int j = 2; j < nptrs-2; j++)
     {
       message_ += "\n\tfrom  ";
@@ -85,7 +84,8 @@ namespace bpp
       }
 
       *begin_name++ = '\0';
-      *end_name++ = '\0';
+      if (end_name)
+        *end_name++ = '\0';
 
       // mangled name is now in [begin_name, end_name), now apaply
       // __cxa_demangle():
