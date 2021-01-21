@@ -66,7 +66,7 @@ using namespace bpp;
 using namespace std;
 
 
-DiscreteDistribution* BppODiscreteDistributionFormat::read(
+DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
     const std::string& distDescription,
     bool parseArguments)
 {
@@ -85,7 +85,7 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(
     if (verbose_)
       ApplicationTools::displayResult("Invariant Mixed distribution", distName );
     BppODiscreteDistributionFormat nestedReader(verbose_);
-    DiscreteDistribution* nestedDistribution = nestedReader.read(nestedDistDescription, true);
+    DiscreteDistribution* nestedDistribution = nestedReader.readDiscreteDistribution(nestedDistDescription, true);
     map<string, string> unparsedArgumentsNested(nestedReader.getUnparsedArguments());
 
     // Now we create the Invariant rate distribution:
@@ -188,7 +188,7 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(
 
     for (unsigned i = 0; i < v_nestedDistrDescr.size(); i++)
     {
-      pdd = nestedReader.read(v_nestedDistrDescr[i], true);
+      pdd = nestedReader.readDiscreteDistribution(v_nestedDistrDescr[i], true);
       map<string, string> unparsedArgumentsNested(nestedReader.getUnparsedArguments());
 
       for (map<string, string>::iterator it = unparsedArgumentsNested.begin(); it != unparsedArgumentsNested.end(); it++)
@@ -293,10 +293,11 @@ DiscreteDistribution* BppODiscreteDistributionFormat::read(
 }
 
 
-void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
-                                           OutputStream& out,
-                                           std::map<std::string, std::string>& globalAliases,
-                                           std::vector<std::string>& writtenNames) const
+void BppODiscreteDistributionFormat::writeDiscreteDistribution(
+		const DiscreteDistribution& dist,
+                OutputStream& out,
+                std::map<std::string, std::string>& globalAliases,
+                std::vector<std::string>& writtenNames) const
 {
   bool comma = false;
 
@@ -309,7 +310,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
   {
     pd = invar->getVariableSubDistribution();
     out << "dist=";
-    write(*pd, out, globalAliases, writtenNames);
+    writeDiscreteDistribution(*pd, out, globalAliases, writtenNames);
     comma = true;
   }
   else
@@ -318,23 +319,23 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     if (mix)
     {
       size_t nd = mix->getNumberOfDistributions();
-      for (unsigned int i = 0; i < nd; i++)
+      for (size_t i = 0; i < nd; i++)
       {
         if (comma)
           out << ",";
         out << "dist" + TextTools::toString(i + 1) + "=";
-        write(*mix->getNDistribution(i), out, globalAliases, writtenNames);
+        writeDiscreteDistribution(*mix->getNDistribution(i), out, globalAliases, writtenNames);
         comma = true;
       }
       out << ",probas=(";
-      for (unsigned int i = 0; i < nd; i++)
+      for (size_t i = 0; i < nd; i++)
       {
         out << mix->getNProbability(i);
         if (i != nd - 1)
           out << ",";
       }
       out << ")";
-      for (unsigned int i = 1; i < nd; i++)
+      for (size_t i = 1; i < nd; i++)
       {
         writtenNames.push_back(mix->getNamespace() + "theta" + TextTools::toString(i));
       }
@@ -370,7 +371,7 @@ void BppODiscreteDistributionFormat::write(const DiscreteDistribution& dist,
     if (comma)
       out << ",";
     out << "values=(";
-    for (unsigned int i = 0; i < nd; i++)
+    for (size_t i = 0; i < nd; i++)
     {
       out << ps->getCategory(i);
       if (i != nd - 1)

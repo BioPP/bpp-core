@@ -466,16 +466,11 @@ template<class GraphImpl>
 void DAGraphImpl<GraphImpl>::propagateDirection_(Graph::NodeId node)
 {
   std::vector<Graph::NodeId> vFat = getFathers(node);
+  for (auto fat:vFat)
+    propagateDirection_(fat);
 
-  for (size_t i = 0; i < vFat.size(); i++)
-  {
-    propagateDirection_(vFat[i]);
-  }
-
-  for (size_t i = 0; i < vFat.size(); i++)
-  {
-    GraphImpl::switchNodes(vFat[i], node);
-  }
+  for (auto fat:vFat)
+    GraphImpl::switchNodes(fat, node);
 }
 
 

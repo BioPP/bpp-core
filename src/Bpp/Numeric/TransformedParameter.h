@@ -259,16 +259,16 @@ namespace bpp
     {
       double x = getValue();
       double x2 = hyper_ ?
-        1. / (pow(cosh(x / scale_), 2)) * (upperBound_ - lowerBound_) / (2. * scale_) :
-        (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (pow(x / scale_, 2) + 1.));
+        1. / (std::pow(cosh(x / scale_), 2)) * (upperBound_ - lowerBound_) / (2. * scale_) :
+        (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (std::pow(x / scale_, 2) + 1.));
       return x2;
     }
     double getSecondOrderDerivative() const
     {
       double x = getValue();
       double x2 = hyper_ ?
-        - 1. / (pow(cosh(x / scale_), 2)) * tanh(x / scale_) * (upperBound_ - lowerBound_) / (scale_ * scale_) :
-        -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * pow(scale_, 3) * pow((pow(x / scale_, 2) + 1.), 2));
+        - 1. / (std::pow(cosh(x / scale_), 2)) * tanh(x / scale_) * (upperBound_ - lowerBound_) / (scale_ * scale_) :
+        -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * std::pow(scale_, 3) * std::pow((std::pow(x / scale_, 2) + 1.), 2));
       return x2;
     }
   };
