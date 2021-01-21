@@ -5,7 +5,7 @@
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
+Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
 This software is a computer program whose purpose is to provide utilitary
 classes. This file belongs to the Bio++ Project.
@@ -94,24 +94,24 @@ class Font:
     /**
      * @return The style component of this font.
      */
-    const short int getStyle() const { return style_; }
+    short int getStyle() const { return style_; }
 
     /**
      * @brief Alias function for getStyle.
      * @return The shape component of this font.
      */
-    const short int getShape() const { return style_; }
+    short int getShape() const { return style_; }
 
     /**
      * @return The weight component of this font.
      */
-    const short int getWeight() const { return weight_; }
+    short int getWeight() const { return weight_; }
 
     /**
      * @brief Alias function for getWeight
      * @return The series component of this font.
      */
-    const short int getSeries() const { return weight_; }
+    short int getSeries() const { return weight_; }
 
     /**
      * @return The size component of this font.
