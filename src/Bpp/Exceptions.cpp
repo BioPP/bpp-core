@@ -72,21 +72,21 @@ namespace bpp
   }
 
   BadIntegerException::BadIntegerException(std::string text, int badInt)
-    : Exception(std::move(text) + '(' + std::to_string(badInt) + ')')
+    : Exception(text + " (" + std::to_string(badInt) + ")")
     , badInt_(badInt)
   {
   }
   int BadIntegerException::getBadInteger() const { return badInt_; }
 
   BadNumberException::BadNumberException(std::string text, double badNumber)
-    : Exception(std::move(text) + '(' + std::to_string(badNumber) + ')')
+    : Exception(text + " (" + std::to_string(badNumber) + ")")
     , badNumber_(badNumber)
   {
   }
   double BadNumberException::getBadNumber() const { return badNumber_; }
 
   NumberFormatException::NumberFormatException(std::string text, std::string badNumber)
-    : Exception(std::move(text) + '(' + std::move(badNumber) + ')')
+    : Exception(text + " (" + badNumber + ")")
     , badNumber_(badNumber)
   {
   }
@@ -94,7 +94,7 @@ namespace bpp
 
   IndexOutOfBoundsException::IndexOutOfBoundsException(std::string text, std::size_t badInt, std::size_t lowerBound,
                                                        std::size_t upperBound)
-    : Exception("out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "])" + std::move(text))
+    : Exception(std::to_string(badInt) + " out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "]) " + text)
     , badIndex_(badInt)
     , bounds_{{lowerBound, upperBound}}
   {
@@ -103,8 +103,7 @@ namespace bpp
   std::size_t IndexOutOfBoundsException::getBadIndex() const { return badIndex_; }
 
   BadSizeException::BadSizeException(std::string text, std::size_t badSize, std::size_t correctSize)
-    : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " +
-                std::move(text))
+    : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " + text)
     , badSize_(badSize)
     , correctSize_(correctSize)
   {
@@ -114,7 +113,7 @@ namespace bpp
 
   OutOfRangeException::OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound)
     : Exception(std::to_string(badValue) + " out of [" + std::to_string(lowerBound) + ", " +
-                std::to_string(upperBound) + "])" + std::move(text))
+                std::to_string(upperBound) + "]) " + text)
     , badValue_(badValue)
     , bounds_{{lowerBound, upperBound}}
   {
