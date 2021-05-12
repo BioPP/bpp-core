@@ -87,9 +87,9 @@ namespace bpp {
      *
      * @{
      */
-    static double INF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
-    static double PINF() { return std::numeric_limits<double>::has_infinity ? -log(0) : std::numeric_limits<double>::max(); }
-    static double MINF() { return std::numeric_limits<double>::has_infinity ? log(0) : std::numeric_limits<double>::min(); }
+    static double INF() { return std::numeric_limits<double>::has_infinity ? -std::log(0) : std::numeric_limits<double>::max(); }
+    static double PINF() { return std::numeric_limits<double>::has_infinity ? -std::log(0) : std::numeric_limits<double>::max(); }
+    static double MINF() { return std::numeric_limits<double>::has_infinity ? std::log(0) : std::numeric_limits<double>::min(); }
     static double NaN() { return NAN; }
     /** @} */
 

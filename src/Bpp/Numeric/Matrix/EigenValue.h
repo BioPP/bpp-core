@@ -310,7 +310,7 @@ class EigenValue
    
      Real f = 0.0;
      Real tst1 = 0.0;
-     Real eps = pow(2.0,-52.0);
+     Real eps = std::pow(2.0,-52.0);
      for (size_t l = 0; l < n_; ++l)
      {
        // Find small subdiagonal element
@@ -582,7 +582,7 @@ class EigenValue
     int n = nn-1;
     int low = 0;
     int high = nn-1;
-    Real eps = pow(2.0,-52.0);
+    Real eps = std::pow(2.0,-52.0);
     Real exshift = 0.0;
     Real p=0,q=0,r=0,s=0,z=0,t,w,x,y;
    
