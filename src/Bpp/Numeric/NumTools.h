@@ -129,8 +129,8 @@ namespace bpp
      * @return @f$ ln(x+y) @f$.
      */ 
     template<class T> static T logsum(T lnx, T lny) {  return (lny < lnx) ?
-        lnx + log(1. + exp(lny - lnx)) :
-        lny + log(1. + exp(lnx - lny));
+        lnx + std::log(1. + exp(lny - lnx)) :
+        lny + std::log(1. + exp(lnx - lny));
     }
 
     /**************************************************************************/
@@ -158,7 +158,7 @@ namespace bpp
 
     /**************************************************************************/
 
-    template<class T> static T logFact(T n) { return (n == 0) ? 0 : (log(n) + logFact(n - 1)); }
+    template<class T> static T logFact(T n) { return (n == 0) ? 0 : (std::log(n) + logFact(n - 1)); }
 
     /**************************************************************************/
    

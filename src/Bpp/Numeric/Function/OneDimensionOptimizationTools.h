@@ -119,6 +119,8 @@ public:
    * @param a, b       Two initial values for the parameter.
    * @param function   The function to bracket.
    * @param parameters The parameter to use as a variable.
+   * @param intervalsNum number of segments in which [a;b] is splitted.
+   *
    * @return           A bracket object.
    */
   static Bracket inwardBracketMinimum(double a, double b, Function* function, ParameterList parameters, uint intervalsNum=10);

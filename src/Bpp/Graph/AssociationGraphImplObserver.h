@@ -1116,11 +1116,22 @@ namespace bpp
      * Get all the neighbors of a node in the graph.
      * @param node the node one wants to get its neighbors
      * @return a vector containing the neighbors
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
      */
+
     std::vector<Nref > getNeighbors(const Nref  node) const
     {
       return getNodesFromGraphid(getGraph()->getNeighbors(getNodeGraphid(node)));
     }
+
+    /**
+     * Get the index of all neighbors of a node in the graph.
+     * @param node the node one wants to get its neighbors
+     * @return a vector containing the neighbors
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
+     */
 
     std::vector<NodeIndex> getNeighbors(NodeIndex node) const
     {
@@ -1131,6 +1142,7 @@ namespace bpp
      * Get all the edges of a node in the graph.
      * @param node the node one wants to get its edges
      * @return a vector containing the edges
+     *
      */
 
     std::vector<Eref > getEdges(const Nref  node) const
@@ -1218,6 +1230,8 @@ namespace bpp
      * @param node the starting node
      * @param maxDepth the max recursion depth
      * @return a vector containing the leaves
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
      */
 
     std::vector<Nref > getLeavesFromNode(Nref  node, unsigned int maxDepth) const
@@ -1228,6 +1242,8 @@ namespace bpp
     /**
      * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
      * @return a vector containing the leaves
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
      */
 
     std::vector<Nref > getAllLeaves() const
@@ -1244,6 +1260,13 @@ namespace bpp
       }
       return leavesToReturn;
     }
+
+    /**
+     * Get index of the leaves objects of a graph, ie, nodes with only one neighbor,
+     * @return a vector containing the leaves
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
+     */
 
     std::vector<NodeIndex> getAllLeavesIndexes() const
     {
@@ -1264,6 +1287,8 @@ namespace bpp
     /**
      * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
      * @return a vector containing the inner nodes.
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
      */
 
     std::vector<Nref > getAllInnerNodes() const
@@ -1280,6 +1305,13 @@ namespace bpp
       }
       return nodesToReturn;
     }
+
+    /**
+     * Get the indexes of all inner nodes of a graph, ie, nodes with degree >= 2.
+     * @return a vector containing the inner nodes.
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
+     */
 
     std::vector<NodeIndex> getAllInnerNodesIndexes() const
     {
@@ -1299,6 +1331,8 @@ namespace bpp
     /**
      * Get all the defined nodes of a graph,
      * @return a vector containing the nodesObjects
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
      */
 
     std::vector<Nref > getAllNodes() const
@@ -1314,6 +1348,13 @@ namespace bpp
       return nodesToReturn;
     }
 
+    /**
+     * Get indexes of all defined nodes of a graph,
+     * @return a vector containing the nodesObjects
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
+     */
+
     std::vector<NodeIndex> getAllNodesIndexes() const
     {
       std::vector<NodeIndex> indexesToReturn;
@@ -1326,6 +1367,13 @@ namespace bpp
       }
       return indexesToReturn;
     }
+
+    /**
+     * Get indexes of all defined edges of a graph,
+     * @return a vector containing the edgesObjects
+     *
+     * They are in the same order as the graphIds (and not necessary Indexes).
+     */
 
     std::vector<EdgeIndex> getAllEdgesIndexes() const
     {

@@ -83,9 +83,9 @@
  *     - Discrete probability distributions are implemented via the bpp::DiscreteDistribution interface
  *     - Several random numbers generators are available through the bpp::RandomNumberFactory interface, and the
  *       bpp::RandomTools static class provides useful methods to deal with random numbers.
- *     .
- *   .
- * .
+ *     
+ *   
+ * 
  */
 
 namespace bpp

@@ -612,7 +612,7 @@ namespace bpp
       std::vector<size_t> pos(2);
       size_t imax = 0;
       size_t jmax = 0;
-      double currentMax = log(0.);
+      double currentMax = std::log(0.);
       for (size_t i = 0; i < nrows; i++)
       {
         for (size_t j = 0; j < ncols; j++)
@@ -644,7 +644,7 @@ namespace bpp
       std::vector<size_t> pos(2);
       size_t imin = 0;
       size_t jmin = 0;
-      double currentMin = -log(0.);
+      double currentMin = -std::log(0.);
       for (size_t i = 0; i < nrows; i++)
       {
         for (size_t j = 0; j < ncols; j++)
@@ -672,7 +672,7 @@ namespace bpp
     {
       size_t nrows = m.getNumberOfRows();
       size_t ncols = m.getNumberOfColumns();
-      Real currentMax = log(0.);
+      Real currentMax = std::log(0.);
       for (size_t i = 0; i < nrows; i++)
       {
         for (size_t j = 0; j < ncols; j++)
@@ -698,7 +698,7 @@ namespace bpp
     {
       size_t nrows = m.getNumberOfRows();
       size_t ncols = m.getNumberOfColumns();
-      Real currentMin = -log(0.);
+      Real currentMin = -std::log(0.);
       for (size_t i = 0; i < nrows; i++)
       {
         for (size_t j = 0; j < ncols; j++)
@@ -1336,7 +1336,7 @@ namespace bpp
           if (matches[i] == 1)   // transfer reduction from rows that are assigned once.
           {
             j1 = static_cast<size_t>(rowSol[i]); //rowSol[i] is >= 0 here 
-            min = -log(0);
+            min = -std::log(0);
             for (j = 0; j < dim; j++)  
               if (j != j1)
                 if (assignCost(i, j - 1) - v[j] < min) 
@@ -1365,7 +1365,7 @@ namespace bpp
           // find minimum and second minimum reduced cost over columns.
           uMin = assignCost(i, 0) - v[0]; 
           j1 = 0; 
-          uSubMin = static_cast<size_t>(-log(0));
+          uSubMin = static_cast<size_t>(-std::log(0));
           for (j = 1; j < dim; j++) 
           {
             h = assignCost(i, j) - v[j];

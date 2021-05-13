@@ -464,7 +464,7 @@ class InfinityFunctionWrapper:
 
     double getValue() const
     {
-      return constraintMatch_ ? -log(0.) :  function_->getValue();
+      return constraintMatch_ ? -std::log(0.) :  function_->getValue();
     }
     
     double f(const ParameterList& parameters)
@@ -547,7 +547,7 @@ class InfinityDerivableFirstOrderWrapper :
     
     double getFirstOrderDerivative(const std::string& variable) const
     {
-      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableFirstOrder *>(function_)->getFirstOrderDerivative(variable));    
+      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableFirstOrder *>(function_)->getFirstOrderDerivative(variable));    
     }
     
     double df(const std::string& variable, const ParameterList& parameters)
@@ -577,7 +577,7 @@ class InfinityDerivableSecondOrderWrapper :
 
     double getSecondOrderDerivative(const std::string& variable) const
     {
-      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable));          
+      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable));          
     }
   
     double d2f(const std::string & variable, const ParameterList& parameters)
@@ -588,7 +588,7 @@ class InfinityDerivableSecondOrderWrapper :
 
     double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
     {
-      return constraintMatch_ ? -log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable1, variable2));      
+      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable1, variable2));      
     }
     
     double d2f(const std::string & variable1, const std::string& variable2, const ParameterList& parameters)
