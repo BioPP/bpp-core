@@ -67,6 +67,7 @@ namespace bpp
       virtual void done();
 
       virtual const std::map<std::string, std::string>& getParams() const { return params_; }
+      virtual std::map<std::string, std::string>& getParams() { return params_; }
 
       virtual const std::string& getParam(const std::string& name) const
       {
