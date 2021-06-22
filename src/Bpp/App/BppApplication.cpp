@@ -48,9 +48,11 @@ knowledge of the CeCILL license and that you accept its terms.
 using namespace bpp;
 using namespace std;
 
-BppApplication::BppApplication(int argc, char* argv[], const std::string& name): appName_(name), params_(), timerStarted_(false)
+BppApplication::BppApplication(int argc, char* argv[], const std::string& name, bool verbose, int warningLevel):
+    appName_(name), params_(), timerStarted_(false), verbose_(verbose), warn_(warningLevel)
 {
-  cout << "Parsing options:" << endl;  
+  if (verbose_)
+    cout << "Parsing options:" << endl;  
   params_ = AttributesTools::parseOptions(argc, argv);
   ApplicationTools::warningLevel = ApplicationTools::getIntParameter("--warning", params_, 0, "", true, 3);
   bool noint = ApplicationTools::getBooleanParameter("--noninteractive", params_, false, "", true, 3);
@@ -58,7 +60,8 @@ BppApplication::BppApplication(int argc, char* argv[], const std::string& name):
   long seed = ApplicationTools::getParameter<long>("--seed", params_, -1, "", true, 3);
   if (seed >= 0) {
     RandomTools::setSeed(seed);
-    ApplicationTools::displayResult("Random seed set to", seed);
+    if (verbose_)
+      ApplicationTools::displayResult("Random seed set to", seed);
   }
 }
 
@@ -70,8 +73,21 @@ void BppApplication::startTimer()
 
 void BppApplication::done()
 {
-  cout << appName_ << "'s done. Bye." << endl;
-  if (timerStarted_)
-    ApplicationTools::displayTime("Total execution time:");
+  if (verbose_) {
+    cout << appName_ << "'s done. Bye." << endl;
+    if (timerStarted_)
+      ApplicationTools::displayTime("Total execution time:");
+  }
 }
+
+void BppApplication::help(const string& program) const
+{
+  (*ApplicationTools::message << "__________________________________________________________________________").endLine();
+  (*ApplicationTools::message << program << " parameter1_name=parameter1_value parameter2_name=parameter2_value").endLine();
+  (*ApplicationTools::message << "      ... param=option_file").endLine();
+  (*ApplicationTools::message).endLine();
+  (*ApplicationTools::message << "  Refer to the Bio++ Program Suite Manual for a list of available options.").endLine();
+  (*ApplicationTools::message << "__________________________________________________________________________").endLine();
+}
+
 

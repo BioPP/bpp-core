@@ -51,27 +51,36 @@ namespace bpp
 
   class BppApplication
   {
-    private:
+    protected:
       std::string appName_;
       mutable std::map<std::string, std::string> params_;
       bool timerStarted_;
+      bool verbose_;
+      int warn_;
 
     public:
-      BppApplication(int argc, char* argv[], const std::string& name);
+      BppApplication(int argc, char* argv[], const std::string& name, bool verbose = true, int warningLevel = 1);
+      virtual ~BppApplication() {}
 
     public:
-      void startTimer();
-      void done();
+      virtual void startTimer();
+      virtual void done();
 
-      std::map<std::string, std::string>& getParams() { return params_; }
+      virtual const std::map<std::string, std::string>& getParams() const { return params_; }
 
-      const std::string& getParam(const std::string& name) const
+      virtual const std::string& getParam(const std::string& name) const
       {
         if (params_.find(name) == params_.end()) throw Exception("BppApplication::getParam(). Parameter '" + name + "' not found.");
         return params_[name];
       }
       
-      std::string& getParam(const std::string& name) { return params_[name]; }
+      virtual std::string& getParam(const std::string& name) { return params_[name]; }
+
+      virtual bool isVerbose() const { return verbose_; }
+
+      virtual int getWarningLevel() const { return warn_; }
+
+      virtual void help(const std::string& program) const;
 
   };
 
