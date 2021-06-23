@@ -60,7 +60,8 @@ namespace bpp
     std::string message_;
 
   public:
-    /** @brief Build a new Exception.
+    /** 
+     * @brief Build a new Exception.
      * @param text A message to be passed to the exception hierarchy.
      * @param stack deep of the call stack 
      */
@@ -78,19 +79,22 @@ namespace bpp
   class IOException : public Exception
   {
   public:
-    /** @brief Build a new IOException.
+    /** 
+     * @brief Build a new IOException.
      * @param text A message to be passed to the exception hierarchy.
      */
     IOException(std::string text);
   };
 
-  /** @brief The base class exception for NULL pointer error.
+  /** 
+   * @brief The base class exception for NULL pointer error.
    * This exception may be thrown when an unexpected NULL pointer is found.
    */
   class NullPointerException : public Exception
   {
   public:
-    /** @brief Build a new NullPointerException.
+    /**
+     * @brief Build a new NullPointerException.
      * @param text A message to be passed to the exception hierarchy.
      */
     NullPointerException(std::string text);
