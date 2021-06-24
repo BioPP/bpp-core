@@ -69,35 +69,38 @@ namespace bpp
     {
       message_ += "\n\tfrom  ";
 
-      std::string beginName = "", endName = "";
+      std::string beginName = "";
 
       // find parentheses of the function  surrounding the mangled name:
       // ./module(function(...)+0x15c) [0x8048a6d]
+      bool dep=false;
+      
       for (char *p = strings[j]; *p; ++p)
       {
-        if (*p == '(')
-          beginName = p;
-        if (*p == '+'){
-            endName = p;
-            break;
-        }
+        if (*p == '+')
+          break;
+        if ((*p == '(') && !dep)
+          dep=true;
+        else if (dep)
+          beginName += *p;
       }
 
       // mangled name is now in [begin_name, end_name), now apaply
       // __cxa_demangle():
         
       int status;
+      
       char* ret = abi::__cxa_demangle(beginName.c_str(),
                                       NULL, NULL, &status);
+      beginName="";
       if (status == 0) {
         for (char *p = ret; *p; ++p) // look for "("
           if (*p == '(')
-          {
-            beginName = p;
             break;
-          }
-        beginName = "";
-        message_ += ret; // use possibly realloc()-ed string
+          else
+            beginName+=*p;
+        
+        message_ += beginName; 
       }
       else {
         message_ += strings[j];

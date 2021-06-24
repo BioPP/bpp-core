@@ -579,7 +579,7 @@ namespace bpp
     void addColumn(const std::vector<T>& newColumn, int pos=-1)
     {
       if (pos>(int)nCol_)
-        throw DimensionException("Table::addColumn.", pos, nCol_);
+        throw DimensionException("Table::addColumn.", (size_t)pos, nCol_);
       if (pos==-1)
         pos=(int)nCol_;
 
@@ -636,7 +636,7 @@ namespace bpp
     void addColumn(std::string& st, const std::string& sep = "\t", int pos=-1, int rowCol = -1)
     {
       if (pos>(int)nCol_)
-        throw DimensionException("Table::addColumn.", pos, nCol_);
+        throw DimensionException("Table::addColumn.", (size_t)pos, nCol_);
       if (pos==-1)
         pos=(int)nCol_;
 
@@ -656,7 +656,7 @@ namespace bpp
           if (find(colNames_.begin(), colNames_.end(), colName) != colNames_.end())
             throw DuplicatedTableColumnNameException("Table::addColumn(const std::vector<string> &). Column names must be unique.");
 
-          colNames_.insert(colNames_.begin()+(size_t)pos,colName);
+          colNames_.insert(colNames_.begin()+(long)pos,colName);
         }
         else
         {
@@ -1005,7 +1005,7 @@ namespace bpp
     void addRow(std::string& st, const std::string& sep = "\t", int pos=-1, int rowCol = -1)
     {
       if (pos>(int)nRow_)
-        throw DimensionException("Table::addRow.", pos, nRow_);
+        throw DimensionException("Table::addRow.", (size_t)pos, nRow_);
       if (pos==-1)
         pos=(int)nRow_;
 
@@ -1025,14 +1025,14 @@ namespace bpp
           if (find(rowNames_.begin(), rowNames_.end(), rowName) != rowNames_.end())
             throw DuplicatedTableRowNameException("Table::addRow(const std::vector<string> &). Row names must be unique.");
 
-          rowNames_.insert(rowNames_.begin()+(size_t)pos,rowName);
+          rowNames_.insert(rowNames_.begin()+(long)pos,rowName);
         }
         else
         {
           std::stringstream ss(row[i]);
           T t;
           ss >> t;
-          data_[id].insert(data_[id].begin()+(size_t)pos,t);
+          data_[id].insert(data_[id].begin()+(long)pos,t);
           id++;
         }
       }
