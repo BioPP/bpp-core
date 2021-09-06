@@ -170,6 +170,14 @@ namespace bpp
 
     size_t getNumberOfIndependentParameters() const { return independentParameters_.size(); }
 
+    /**
+     * @brief alias the parameters.
+     *
+     * @param p1 name of the parameter to which the other parameter is aliased
+     * @param p2 name of the aliased parameter, which will be deleted from independent parameters list
+     *
+     **/
+    
     void aliasParameters(const std::string& p1, const std::string& p2);
 
     void unaliasParameters(const std::string& p1, const std::string& p2);
