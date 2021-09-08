@@ -121,7 +121,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
   if (!hasParameter(p2))
     throw ParameterNotFoundException("AbstractParameterAliasable::aliasParameters", p2);
   if (!independentParameters_.hasParameter(getNamespace() + p2))
-    throw Exception("AbstractParameterAliasable::aliasParameters. Parameter " + p2 + " is already aliased to a parameter and can't be aliased twice.");
+    throw Exception("AbstractParameterAliasable::aliasParameters. Parameter " + p2 + " does not exist in independent parameters. Perhaps it is already aliased to a parameter and can't be aliased twice.");
 
   string id = "__alias_" + p2 + "_to_" + p1;
   string idCheck = "__alias_" + p1 + "_to_" + p2;

@@ -253,6 +253,19 @@ namespace bpp
         independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
 
+    void shareParameter_(const std::shared_ptr<Parameter>& parameter)
+    {
+      AbstractParametrizable::shareParameter_(parameter);
+      independentParameters_.shareParameter(parameter);
+    }
+
+    void shareParameters_(const ParameterList& parameters)
+    {
+      AbstractParametrizable::shareParameters_(parameters);
+      for (size_t i=0; i<parameters.size(); i++)
+        independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
+    }
+
     void includeParameters_(const ParameterList& parameters)
     {
       AbstractParametrizable::includeParameters_(parameters);

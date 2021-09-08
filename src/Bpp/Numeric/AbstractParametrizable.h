@@ -149,12 +149,12 @@ namespace bpp
       parameters_.addParameters(parameters);
     }
 
-    void shareParameter_(const std::shared_ptr<Parameter>& parameter)
+    virtual void shareParameter_(const std::shared_ptr<Parameter>& parameter)
     {
       parameters_.shareParameter(parameter);
     }
 
-    void shareParameters_(const ParameterList& parameters)
+    virtual void shareParameters_(const ParameterList& parameters)
     {
       parameters_.shareParameters(parameters);
     }
