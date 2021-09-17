@@ -45,6 +45,7 @@
 
 #include <set>
 #include <map>
+#include <limits>
 #include <string>
 #include "Graph.h"
 
