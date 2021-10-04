@@ -130,21 +130,21 @@ namespace bpp
   }
 
   BadIntegerException::BadIntegerException(std::string text, int badInt)
-    : Exception(std::move(text) + '(' + std::to_string(badInt) + ')')
+    : Exception(text + " (" + std::to_string(badInt) + ")")
     , badInt_(badInt)
   {
   }
   int BadIntegerException::getBadInteger() const { return badInt_; }
 
   BadNumberException::BadNumberException(std::string text, double badNumber)
-    : Exception(std::move(text) + '(' + std::to_string(badNumber) + ')')
+    : Exception(text + " (" + std::to_string(badNumber) + ")")
     , badNumber_(badNumber)
   {
   }
   double BadNumberException::getBadNumber() const { return badNumber_; }
 
   NumberFormatException::NumberFormatException(std::string text, std::string badNumber)
-    : Exception(std::move(text) + '(' + std::move(badNumber) + ')')
+    : Exception(text + " (" + badNumber + ")")
     , badNumber_(badNumber)
   {
   }
@@ -162,8 +162,7 @@ namespace bpp
   std::size_t IndexOutOfBoundsException::getBadIndex() const { return badIndex_; }
 
   BadSizeException::BadSizeException(std::string text, std::size_t badSize, std::size_t correctSize)
-    : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " +
-                std::move(text))
+    : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " + text)
     , badSize_(badSize)
     , correctSize_(correctSize)
   {
