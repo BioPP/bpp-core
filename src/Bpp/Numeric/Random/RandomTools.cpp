@@ -109,7 +109,7 @@ std::vector<size_t> RandomTools::randMultinomial(size_t n, const std::vector<dou
     r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
     cumprob = 0;
     bool test = true;
-    for (unsigned int j = 0; test &(j < probs.size()); j++)
+    for (unsigned int j = 0; test& (j < probs.size()); j++)
     {
       cumprob += probs[j] / s;
       if (r <= cumprob)
@@ -147,7 +147,7 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory&
   rgdbl[4] = rgdbl[3] + 2.0;
   rgdbl[5] = 1.0 / sqrt(dblAlpha);
 
-  for ( ; ; )
+  for ( ; ;)
   {
     double dblRand1;
     double dblRand2;
@@ -179,7 +179,7 @@ double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory& ge
   // reference: Ripley, Stochastic Simulation, p.88
   double dblTemp;
   const double dblexp = exp(1.0);
-  for ( ; ; )
+  for ( ; ;)
   {
     double dblRand0 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
     double dblRand1 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
@@ -1031,4 +1031,3 @@ double RandomTools::incompletebetaps(double a, double b, double x, double maxgam
 }
 
 /**************************************************************************/
-

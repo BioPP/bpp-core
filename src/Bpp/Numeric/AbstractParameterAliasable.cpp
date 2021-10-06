@@ -49,8 +49,10 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
   aliasListenersRegister_()
 {
   for (size_t i = 0; i < ap.independentParameters_.size(); i++)
+  {
     independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
-  
+  }
+
   // Actualize the register with adequate pointers:
   for (map<string, AliasParameterListener*>::const_iterator it = ap.aliasListenersRegister_.begin();
        it != ap.aliasListenersRegister_.end();
@@ -74,9 +76,11 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
 AbstractParameterAliasable& AbstractParameterAliasable::operator=(const AbstractParameterAliasable& ap)
 {
   AbstractParametrizable::operator=(ap);
-  
-  for (size_t i=0; i<ap.independentParameters_.size(); i++)
+
+  for (size_t i = 0; i < ap.independentParameters_.size(); i++)
+  {
     independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
+  }
 
   // Actualize the register with adequate pointers:
   for (map<string, AliasParameterListener*>::const_iterator it = ap.aliasListenersRegister_.begin();
@@ -136,20 +140,20 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
     if (param2->hasConstraint())
     {
       ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + ". " + p1 + " gets the constraints of " + p2 + ": " + param2->getConstraint()->getDescription());
-      param1->setConstraint(param2->getConstraint());    
+      param1->setConstraint(param2->getConstraint());
     }
   }
   else
-    // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
-    if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-    {
-      std::shared_ptr<Constraint> nc(*param2->getConstraint() & *param1->getConstraint());
-      ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + " with different constraints. They get the intersection of both constraints : " + nc->getDescription());
-      
-      param2->setConstraint(nc);
-      param1->setConstraint(nc);
-    }
-  
+  // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
+  if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
+  {
+    std::shared_ptr<Constraint> nc(*param2->getConstraint() & *param1->getConstraint());
+    ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + " with different constraints. They get the intersection of both constraints : " + nc->getDescription());
+
+    param2->setConstraint(nc);
+    param1->setConstraint(nc);
+  }
+
   // Every thing seems ok, let's create the listener and register it:
 
   AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_(), p1);
@@ -159,7 +163,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
   // Now we add it to the appropriate parameter, that is p1.
   // The parameter will not own the listener, the bookkeeping being achieved by the register:
   param1->addParameterListener(aliasListener, false);
-  
+
   // Finally we remove p2 from the list of independent parameters:
   independentParameters_.deleteParameter(getNamespace() + p2);
 }

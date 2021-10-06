@@ -54,7 +54,7 @@ namespace bpp
  *
  * The code of this class is deeply inspired from the R code of the dudi.pca function available in the ade4 package.
  */
-class PrincipalComponentAnalysis:
+class PrincipalComponentAnalysis :
   public DualityDiagram
 {
 private:
@@ -129,8 +129,6 @@ public:
   const std::vector<double>& getColumnMeans() const { return columnMeans_; }
   const std::vector<double>& getColumnSd() const { return columnSd_; }
 };
-
 } // end of namespace bpp.
 
-#endif  // _PRINCIPALCOMPONENTANALYSIS_H_
-
+#endif// _PRINCIPALCOMPONENTANALYSIS_H_

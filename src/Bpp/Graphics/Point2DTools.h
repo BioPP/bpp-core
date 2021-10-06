@@ -10,16 +10,16 @@
    for population genetics analysis.
 
    This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use, 
+   abiding by the rules of distribution of free software.  You can  use,
    modify and/ or redistribute the software under the terms of the CeCILL
    license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info". 
+   "http://www.cecill.info".
 
    As a counterpart to the access to the source code and  rights to copy,
    modify and redistribute granted by the license, users are provided only
    with a limited warranty  and the software's author,  the holder of the
    economic rights,  and the successive licensors  have only  limited
-   liability. 
+   liability.
 
    In this respect, the user's attention is drawn to the risks associated
    with loading,  using,  modifying and/or developing or reproducing the
@@ -28,13 +28,13 @@
    therefore means  that it is reserved for developers  and  experienced
    professionals having in-depth computer knowledge. Users are therefore
    encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or 
-   data to be ensured and,  more generally, to use and operate it in the 
-   same conditions as regards security. 
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
    The fact that you are presently reading this means that you have had
    knowledge of the CeCILL license and that you accept its terms.
-   */
+ */
 
 #ifndef _POINT2DTOOLS_H_
 #define _POINT2DTOOLS_H_
@@ -44,36 +44,32 @@
 
 namespace bpp
 {
+/**
+ * @brief Some functions to deal with Point2D.
+ *
+ * @author Sylvain Gaillard
+ */
 
+class CoordsTools
+{
+public:
   /**
-   * @brief Some functions to deal with Point2D.
+   * @brief Get the distance between two Coord objects.
    *
-   * @author Sylvain Gaillard
+   * @param co1 A Point2D object.
+   * @param co2 An other Point2D object.
+   * @return the distance between the 2 points as a double
    */
-
-  class CoordsTools
+  template<class T> static double getDistanceBetween(const Point2D<T>& co1, const Point2D<T>& co2)
   {
-    public:
-      /**
-       * @brief Get the distance between two Coord objects.
-       *
-       * @param co1 A Point2D object.
-       * @param co2 An other Point2D object.
-       * @return the distance between the 2 points as a double
-       */
-      template<class T> static double getDistanceBetween(const Point2D<T>& co1, const Point2D<T>& co2)
-      {
-        T base, height;
-        base = co1.getX() - co2.getX();
-        height = co1.getY() - co2.getY();
-        base = base * base;
-        height = height * height;
-        return sqrt((double)base + (double)height);
-      }
+    T base, height;
+    base = co1.getX() - co2.getX();
+    height = co1.getY() - co2.getY();
+    base = base * base;
+    height = height * height;
+    return sqrt((double)base + (double)height);
+  }
+};
+} // end of namespace bpp;
 
-  };
-
-} //end of namespace bpp;
-
-#endif // _POINT2DTOOLS_H_
-
+#endif// _POINT2DTOOLS_H_

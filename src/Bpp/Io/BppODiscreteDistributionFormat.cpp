@@ -67,8 +67,8 @@ using namespace std;
 
 
 DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
-    const std::string& distDescription,
-    bool parseArguments)
+  const std::string& distDescription,
+  bool parseArguments)
 {
   unparsedArguments_.clear();
   string distName;
@@ -208,20 +208,21 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
 
     if (distName == "Gamma")
     {
-      double offset=0;
+      double offset = 0;
 
       if (args.find("offset") != args.end())
         try
         {
-          offset=TextTools::toDouble(args["offset"]);
+          offset = TextTools::toDouble(args["offset"]);
         }
-        catch (Exception& e) {}
-      
-      if (args.find("ParamOffset") != args.end())        
+        catch (Exception& e)
+        {}
+
+      if (args.find("ParamOffset") != args.end())
         rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, true, offset));
       else
         rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, false, offset));
-      
+
       if (args.find("alpha") != args.end())
         unparsedArguments_["Gamma.alpha"] = args["alpha"];
       if (args.find("beta") != args.end())
@@ -271,9 +272,9 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
       if (args.find("end") == args.end())
         throw Exception("Missing argument 'end' in Uniform distribution");
       rDist.reset(new UniformDiscreteDistribution(
-          nbClasses,
-          TextTools::to<double>(args["begin"]),
-          TextTools::to<double>(args["end"])));
+                    nbClasses,
+                    TextTools::to<double>(args["begin"]),
+                    TextTools::to<double>(args["end"])));
     }
     else
     {
@@ -294,10 +295,10 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
 
 
 void BppODiscreteDistributionFormat::writeDiscreteDistribution(
-		const DiscreteDistribution& dist,
-                OutputStream& out,
-                std::map<std::string, std::string>& globalAliases,
-                std::vector<std::string>& writtenNames) const
+  const DiscreteDistribution& dist,
+  OutputStream& out,
+  std::map<std::string, std::string>& globalAliases,
+  std::vector<std::string>& writtenNames) const
 {
   bool comma = false;
 
@@ -439,18 +440,15 @@ void BppODiscreteDistributionFormat::initialize_(
     if (verbose_)
       ApplicationTools::displayResult("Parameter found", pName + "=" + TextTools::toString(pl[i].getValue()));
   }
-  
+
   rDist.matchParametersValues(pl);
   if (verbose_)
   {
     for (size_t c = 0; c < rDist.getNumberOfCategories(); ++c)
     {
       ApplicationTools::displayResult("- Category " + TextTools::toString(c)
-        + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
-        TextTools::toString(rDist.getCategory(c)));
+                                      + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
+                                      TextTools::toString(rDist.getCategory(c)));
     }
   }
 }
-
-
-

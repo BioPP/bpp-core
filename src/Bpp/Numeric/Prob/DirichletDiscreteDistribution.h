@@ -125,8 +125,8 @@ protected:
   void applyParameters();
 
 public:
-  std::string getName() const {return("Dirichlet");}
-  
+  std::string getName() const {return "Dirichlet";}
+
   void fireParameterChanged(const ParameterList& parameters);
 
   /**
@@ -174,5 +174,4 @@ protected:
 };
 } // end of namespace bpp.
 
-#endif  // _DIRICHLETDISCRETEDISTRIBUTION_H_
-
+#endif// _DIRICHLETDISCRETEDISTRIBUTION_H_

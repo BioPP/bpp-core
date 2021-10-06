@@ -123,7 +123,7 @@ public:
    *
    * @return           A bracket object.
    */
-  static Bracket inwardBracketMinimum(double a, double b, Function* function, ParameterList parameters, uint intervalsNum=10);
+  static Bracket inwardBracketMinimum(double a, double b, Function* function, ParameterList parameters, uint intervalsNum = 10);
 
 
   static unsigned int lineMinimization(DirectionFunction& f1dim, ParameterList& parameters, std::vector<double>& xi, double tolerance, OutputStream* profiler = 0, OutputStream* messenger = 0, unsigned int verbose = 2);
@@ -150,4 +150,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif  // _ONEDIMENSIONOPTIMIZATIONTOOLS_H_
+#endif// _ONEDIMENSIONOPTIMIZATIONTOOLS_H_

@@ -54,10 +54,9 @@ namespace bpp
  *
  * The code of this class is deeply inspired from the R code of the as.dudi function available in the ade4 package.
  */
-class DualityDiagram:
+class DualityDiagram :
   public virtual Clonable
 {
-
 private:
   std::vector<double> rowWeights_;
   std::vector<double> colWeights_;
@@ -110,10 +109,10 @@ public:
 
 private:
   void check_(
-      const Matrix<double>& matrix,
-      const std::vector<double>& rowWeights,
-      const std::vector<double>& colWeights,
-      unsigned int nbAxes);
+    const Matrix<double>& matrix,
+    const std::vector<double>& rowWeights,
+    const std::vector<double>& colWeights,
+    unsigned int nbAxes);
   void compute_(const Matrix<double>& matrix, double tol, bool verbose);
 
 public:
@@ -129,27 +128,24 @@ public:
    * @throw Exception if an error occured.
    */
   void setData(
-      const Matrix<double>& matrix,
-      const std::vector<double>& rowWeights,
-      const std::vector<double>& colWeights,
-      unsigned int nbAxes,
-      double tol = 0.0000001,
-      bool verbose = true);
- 
+    const Matrix<double>& matrix,
+    const std::vector<double>& rowWeights,
+    const std::vector<double>& colWeights,
+    unsigned int nbAxes,
+    double tol = 0.0000001,
+    bool verbose = true);
+
   std::vector<double> computeVariancePercentagePerAxis();
-  
+
   size_t getNbOfKeptAxes() const { return nbAxes_; }
   const std::vector<double> getRowWeights() const { return rowWeights_; }
-  const	std::vector<double> getColumnWeights() const { return colWeights_; }	  
+  const std::vector<double> getColumnWeights() const { return colWeights_; }
   const std::vector<double>& getEigenValues() const { return eigenValues_; }
   const RowMatrix<double>& getRowCoordinates() const { return rowCoord_; }
   const RowMatrix<double>& getColCoordinates() const { return colCoord_; }
   const RowMatrix<double>& getPrincipalAxes() const { return ppalAxes_; }
   const RowMatrix<double>& getPrincipalComponents() const { return ppalComponents_; }
 };
-
 } // end of namespace bpp.
 
-#endif  // _DUALITYDIAGRAM_H_
-
-
+#endif// _DUALITYDIAGRAM_H_

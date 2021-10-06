@@ -6,37 +6,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+
+   This software is a computer program whose purpose is to provide utilitary
+   classes. This file belongs to the Bio++ Project.
+
+   This software is governed by the CeCILL license under French law and
+   abiding by the rules of distribution of free software. You can use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
+
+   As a counterpart to the access to the source code and rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty and the software's author, the holder of the
+   economic rights, and the successive licensors have only limited
+   liability.
+
+   In this respect, the user's attention is drawn to the risks associated
+   with loading, using, modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean that it is complicated to manipulate, and that also
+   therefore means that it is reserved for developers and experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and, more generally, to use and operate it in the
+   same conditions as regards security.
+
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include <algorithm>
 #include <sstream>
@@ -135,7 +135,9 @@ vector<GlobalGraph::Edge> GlobalGraph::unlink(Graph::NodeId nodeA, Graph::NodeId
   deletedEdges.push_back(unlinkInNodeStructure_(nodeA, nodeB));
 
   for (auto& currEdgeToDelete : deletedEdges)
+  {
     unlinkInEdgeStructure_(currEdgeToDelete);
+  }
 
   // telling the observers
   notifyDeletedEdges(deletedEdges);
@@ -325,7 +327,9 @@ std::vector< GlobalGraph::Node > GlobalGraph::getNeighbors_(const GlobalGraph::N
   const std::map<GlobalGraph::Node, GlobalGraph::Edge>& forOrBack = (outgoing ? foundNode->second.first : foundNode->second.second);
   vector<GlobalGraph::Node> result;
   for (auto& currNeighbor : forOrBack)
+  {
     result.push_back(currNeighbor.first);
+  }
 
   return result;
 }
@@ -339,7 +343,9 @@ std::vector< GlobalGraph::Edge > GlobalGraph::getEdges_(const GlobalGraph::Node&
 
   vector<GlobalGraph::Edge> result;
   for (const auto& currNeighbor : forOrBack)
+  {
     result.push_back(currNeighbor.second);
+  }
 
   return result;
 }
@@ -510,18 +516,24 @@ void GlobalGraph::isolate_(GlobalGraph::Node& node)
 {
   vector<Graph::NodeId> oneighbors = getOutgoingNeighbors(node);
   for (auto& currNeighbor : oneighbors)
+  {
     unlink(node, currNeighbor);
+  }
 
   vector<Graph::NodeId> ineighbors = getIncomingNeighbors(node);
   for (auto& currNeighbor : ineighbors)
+  {
     unlink(currNeighbor, node);
+  }
 }
 
 vector<Graph::EdgeId> GlobalGraph::getAllEdges() const
 {
   vector<Graph::EdgeId> listOfEdges;
   for (const auto& it : edgeStructure_)
+  {
     listOfEdges.push_back(it.first);
+  }
 
   return listOfEdges;
 }
@@ -544,8 +556,10 @@ vector<Graph::NodeId> GlobalGraph::getAllLeaves() const
 {
   vector<Graph::NodeId> listOfLeaves;
   for (const auto& it : nodeStructure_)
+  {
     if (this->isLeaf(it.first))
       listOfLeaves.push_back(it.first);
+  }
 
   return listOfLeaves;
 }
@@ -554,8 +568,10 @@ set<Graph::NodeId> GlobalGraph::getSetOfAllLeaves() const
 {
   set<Graph::NodeId> listOfLeaves;
   for (const auto& it : nodeStructure_)
+  {
     if (this->isLeaf(it.first))
       listOfLeaves.insert(it.first);
+  }
 
   return listOfLeaves;
 }
@@ -564,7 +580,9 @@ vector<Graph::NodeId> GlobalGraph::getAllNodes() const
 {
   vector<Graph::NodeId> listOfNodes;
   for (const auto& it : nodeStructure_)
+  {
     listOfNodes.push_back(it.first);
+  }
 
   return listOfNodes;
 }
@@ -588,8 +606,10 @@ void GlobalGraph::fillListOfLeaves_(const GlobalGraph::Node& startingNode, vecto
   {
     if (maxRecursions > 0)
       for (const auto& currNeighbor : neighbors)
+      {
         if (currNeighbor != originNode)
           fillListOfLeaves_(currNeighbor, foundLeaves, startingNode, maxRecursions - 1);
+      }
   }
   else
     foundLeaves.push_back(startingNode);
@@ -617,7 +637,7 @@ void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::
       out << node;
     out << (directed_ ? " -> " : " -- ");
     nodeToDot_(currChild.first, out, alreadyFigured);
-    flag=true;
+    flag = true;
   }
   if (!flag)
     out << ";\n   ";
@@ -633,9 +653,11 @@ bool GlobalGraph::isTree() const
 
   // now they have only been met at most once, they have to be met at least once
   for (const auto& currNode:nodeStructure_)
+  {
     if (metNodes.find(currNode.first) == metNodes.end())
       return false;
-  
+  }
+
   return true;
 }
 
@@ -645,7 +667,7 @@ bool GlobalGraph::nodesAreMetOnlyOnce_(const GlobalGraph::Node& node, set< Globa
   // insert().second <=> not yet in the set
   if (!metNodes.insert(node).second)
     return false;
-  
+
   vector<Graph::NodeId> neighbors = getOutgoingNeighbors(node);
   for (auto currNeighbor:neighbors)
   {
@@ -676,7 +698,9 @@ bool GlobalGraph::isDA() const
   while (vL.size() != 0)
   {
     for (auto& it2 : vL)
+    {
       gg.deleteNode(it2);
+    }
 
     if (gg.getNumberOfNodes() == 0)
       return true;
@@ -702,7 +726,7 @@ void GlobalGraph::orientate()
 
   GlobalGraph gg(*this);
   gg.observers_.clear();
-  
+
   // Algo: remove recursively all nodes from graph, starting with
   // root_
 
@@ -761,7 +785,9 @@ void GlobalGraph::orientate()
 
     vL = gg.getOutgoingNeighbors(nbgg);
     for (auto&  it2:vL)
+    {
       nextNodes.insert(it2);
+    }
 
     gg.deleteNode(nbgg);
     nextNodes.erase(nbgg);
@@ -791,7 +817,9 @@ void GlobalGraph::makeDirected()
   // save and clean the undirectedStructure
   nodeStructureType undirectedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
+  {
     it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+  }
 
   // copy each relation once, without the reciprocal link
   // (first met, first kept)
@@ -823,7 +851,9 @@ void GlobalGraph::makeUndirected()
   // save and clean the undirectedStructure
   nodeStructureType directedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
+  {
     it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+  }
 
   // copy each relation twice, making the reciprocal link
   // eg: A - B in directed is represented as A->B
@@ -919,19 +949,25 @@ void GlobalGraph::outputToDot(ostream& out, const std::string& name) const
   set<pair<Node, Node> > alreadyFigured;
   nodeToDot_(root_, out, alreadyFigured);
   for (const auto& node: nodeStructure_)
-    if (node.first!=root_)
+  {
+    if (node.first != root_)
       nodeToDot_(node.first, out, alreadyFigured);
+  }
   out << "\r}" << endl;
 }
 
 void GlobalGraph::notifyDeletedEdges(const vector<Graph::EdgeId>& edgesToDelete) const
 {
   for (auto& currObserver : observers_)
+  {
     currObserver->deletedEdgesUpdate(edgesToDelete);
+  }
 }
 
 void GlobalGraph::notifyDeletedNodes(const vector<Graph::NodeId>& nodesToDelete) const
 {
   for (auto& currObserver : observers_)
+  {
     currObserver->deletedNodesUpdate(nodesToDelete);
+  }
 }

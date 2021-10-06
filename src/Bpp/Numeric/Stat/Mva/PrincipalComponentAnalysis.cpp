@@ -61,13 +61,13 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   columnSd_()
 {
   RowMatrix<double> tmpData = data;
-  
+
   // Centering of data?
   if (centered)
   {
     center(tmpData, rowW);
   }
-  
+
   // Scaling of data?
   if (scaled)
   {
@@ -105,7 +105,7 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
   {
     center(tmpData, rowW);
   }
-  
+
   // Scaling of data?
   if (scaled)
   {
@@ -179,4 +179,3 @@ void PrincipalComponentAnalysis::scale(Matrix<double>& matrix, const vector<doub
     }
   }
 }
-

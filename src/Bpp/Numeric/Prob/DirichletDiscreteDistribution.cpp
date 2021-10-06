@@ -279,4 +279,3 @@ Vdouble DirichletDiscreteDistribution::randC() const
 }
 
 /******************************************************************************/
-

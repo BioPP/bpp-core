@@ -112,9 +112,9 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
           if (++nbtry == 10) // no possibility to compute derivatives
             break;
           else if (h < 0)
-            h = -h;  // try on the right
+            h = -h;                       // try on the right
           else
-            h /= -2;  // try again on the left with smaller interval
+            h /= -2;                        // try again on the left with smaller interval
         }
       }
 
@@ -122,9 +122,9 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
       {
         // Compute f3_
         if (h < 0)
-          h = -h;  // on the right
+          h = -h;                     // on the right
         else
-          h /= 2;  //  on the left with smaller interval
+          h /= 2;                     //  on the left with smaller interval
 
         nbtry = 0;
         while (hf3 == 0)
@@ -146,9 +146,9 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
             if (++nbtry == 10) // no possibility to compute derivatives
               break;
             else if (h < 0)
-              h = -h;  // try on the right
+              h = -h;                         // try on the right
             else
-              h /= -2;  // try again on the left with smaller interval
+              h /= -2;                          // try again on the left with smaller interval
           }
         }
       }
@@ -259,4 +259,3 @@ void ThreePointsNumericalDerivative::updateDerivatives(const ParameterList param
     f2_ = function_->getValue();
   }
 }
-

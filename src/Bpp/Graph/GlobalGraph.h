@@ -550,7 +550,7 @@ public:
    * @return a pair of the IDs of the Nodes at each extremity of the edge
    *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
    */
-  
+
   std::pair<Graph::NodeId, Graph::NodeId> getNodes(Graph::EdgeId edge) const;
 
   /**
@@ -756,12 +756,12 @@ private:
 
 public:
   template<bool B = is_const>
-  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph &gg, typename std::enable_if<B>::type * = 0) : it_(gg.nodeStructure_.begin()),
+  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph& gg, typename std::enable_if<B>::type* = 0) : it_(gg.nodeStructure_.begin()),
     begin_(gg.nodeStructure_.begin()),
     end_(gg.nodeStructure_.end()) {}
 
   template<bool B = is_const>
-  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph & gg, typename std::enable_if<!B>::type * = 0) : it_(gg.nodeStructure_.begin()),
+  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph& gg, typename std::enable_if<!B>::type* = 0) : it_(gg.nodeStructure_.begin()),
     begin_(gg.nodeStructure_.begin()),
     end_(gg.nodeStructure_.end()) {}
 
@@ -800,14 +800,14 @@ public:
   virtual ~NeighborIteratorClass<is_const>(){}
 
   template<bool B = is_const>
-  NeighborIteratorClass<is_const>(const std::map<GlobalGraph::Node, GlobalGraph::Edge> &map, typename std::enable_if<B>::type * = 0) :
+  NeighborIteratorClass<is_const>(const std::map<GlobalGraph::Node, GlobalGraph::Edge>& map, typename std::enable_if<B>::type* = 0) :
     map_(map),
     it_(map_.begin()),
     begin_(map_.begin()),
     end_(map_.end()) {}
 
   template<bool B = is_const>
-  NeighborIteratorClass<is_const>(std::map<GlobalGraph::Node, GlobalGraph::Edge> &map, typename std::enable_if<!B>::type * = 0) :
+  NeighborIteratorClass<is_const>(std::map<GlobalGraph::Node, GlobalGraph::Edge>& map, typename std::enable_if<!B>::type* = 0) :
     map_(map),
     it_(map_.begin()),
     begin_(map_.begin()),
@@ -830,9 +830,9 @@ class NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const> :
   virtual public Graph::NodeIterator
 {
 public:
-  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
-  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
   ~NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(){}
 
@@ -850,9 +850,9 @@ class NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const> :
   virtual public Graph::NodeIterator
 {
 public:
-  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
-  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
   ~NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(){}
 
@@ -886,12 +886,12 @@ private:
 
 public:
   template<bool B = is_const>
-  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph &gg, typename std::enable_if<B>::type * = 0) : it_(gg.edgeStructure_.begin()),
+  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph& gg, typename std::enable_if<B>::type* = 0) : it_(gg.edgeStructure_.begin()),
     begin_(gg.edgeStructure_.begin()),
     end_(gg.edgeStructure_.end()) {}
 
   template<bool B = is_const>
-  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph & gg, typename std::enable_if<!B>::type * = 0) : it_(gg.edgeStructure_.begin()),
+  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph& gg, typename std::enable_if<!B>::type* = 0) : it_(gg.edgeStructure_.begin()),
     begin_(gg.edgeStructure_.begin()),
     end_(gg.edgeStructure_.end()) {}
 
@@ -911,9 +911,9 @@ class EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const> :
   public Graph::EdgeIterator
 {
 public:
-  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
-  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
   ~EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(){}
 
@@ -930,9 +930,9 @@ class EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const> :
   public Graph::EdgeIterator
 {
 public:
-  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
-  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
   ~EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(){}
 

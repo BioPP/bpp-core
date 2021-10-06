@@ -5,37 +5,37 @@
 //
 
 /*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
+   This software is a computer program whose purpose is to provide classes
+   for numerical calculus.
 
-  This software is governed by the CeCILL  license under French law and
-  abiding by the rules of distribution of free software.  You can  use, 
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-  As a counterpart to the access to the source code and  rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty  and the software's author,  the holder of the
-  economic rights,  and the successive licensors  have only  limited
-  liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-  In this respect, the user's attention is drawn to the risks associated
-  with loading,  using,  modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean  that it is complicated to manipulate,  and  that  also
-  therefore means  that it is reserved for developers  and  experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or 
-  data to be ensured and,  more generally, to use and operate it in the 
-  same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #include "AbstractOptimizer.h"
 #include "../AutoParameter.h"
@@ -51,7 +51,7 @@ using namespace bpp;
 
 /******************************************************************************/
 
-AbstractOptimizer::AbstractOptimizer(Function* function):
+AbstractOptimizer::AbstractOptimizer(Function* function) :
   function_(function),
   parameters_(),
   messageHandler_(ApplicationTools::message.get()),
@@ -62,12 +62,11 @@ AbstractOptimizer::AbstractOptimizer(Function* function):
   updateParameters_(false), stepChar_("*"),
   nbEvalMax_(1000000), nbEval_(0),
   currentValue_(0), tolIsReached_(false)
-{
-}
+{}
 
 /******************************************************************************/
 
-AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer& opt):
+AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer& opt) :
   function_(opt.function_),
   parameters_(opt.parameters_),
   messageHandler_(opt.messageHandler_),
@@ -77,7 +76,7 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer& opt):
   verbose_(opt.verbose_),
   isInitialized_(opt.isInitialized_),
   startTime_(opt.startTime_),
-  listeners_(), //We do not copy listeners!
+  listeners_(), // We do not copy listeners!
   updateParameters_(opt.updateParameters_),
   stepChar_(opt.stepChar_),
   nbEvalMax_(opt.nbEvalMax_),
@@ -86,25 +85,27 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer& opt):
   tolIsReached_(opt.tolIsReached_)
 {
   if (opt.stopCondition_)
-    {
-      stopCondition_        = dynamic_cast<OptimizationStopCondition *>(opt.stopCondition_->clone());
-      stopCondition_->setOptimizer(this);
-    }
+  {
+    stopCondition_        = dynamic_cast<OptimizationStopCondition*>(opt.stopCondition_->clone());
+    stopCondition_->setOptimizer(this);
+  }
   else
     stopCondition_        = 0;
   if (opt.defaultStopCondition_)
-    {
-      defaultStopCondition_ = dynamic_cast<OptimizationStopCondition *>(opt.defaultStopCondition_->clone());
-      defaultStopCondition_->setOptimizer(this);
-    }
+  {
+    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition*>(opt.defaultStopCondition_->clone());
+    defaultStopCondition_->setOptimizer(this);
+  }
   else
     defaultStopCondition_ = 0;
-  //In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
+  // In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
   if (isInitialized_)
-    {
-      if(constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
-      else if(constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
-    }
+  {
+    if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)
+      autoParameter();
+    else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE)
+      ignoreConstraints();
+  }
 }
 
 /******************************************************************************/
@@ -119,14 +120,14 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
   tolIsReached_           = opt.tolIsReached_;
   if (opt.stopCondition_)
   {
-    stopCondition_        = dynamic_cast<OptimizationStopCondition *>(opt.stopCondition_->clone());
+    stopCondition_        = dynamic_cast<OptimizationStopCondition*>(opt.stopCondition_->clone());
     stopCondition_->setOptimizer(this);
   }
   else
     stopCondition_        = 0;
   if (opt.defaultStopCondition_)
   {
-    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition *>(opt.defaultStopCondition_->clone());
+    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition*>(opt.defaultStopCondition_->clone());
     defaultStopCondition_->setOptimizer(this);
   }
   else
@@ -135,31 +136,36 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
   nbEval_                 = opt.nbEval_;
   verbose_                = opt.verbose_;
   isInitialized_          = opt.isInitialized_;
-  //In case of AutoParameter instances, we must actualize the pointers toward messageHandler_:
+  // In case of AutoParameter instances, we must actualize the pointers toward messageHandler_:
   if (isInitialized_)
   {
-    if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)   autoParameter();
-    else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+    if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)
+      autoParameter();
+    else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE)
+      ignoreConstraints();
   }
   startTime_              = opt.startTime_;
-  listeners_.resize(0); //Reset listener list, do not copy it!
+  listeners_.resize(0); // Reset listener list, do not copy it!
   updateParameters_       = opt.updateParameters_;
   stepChar_               = opt.stepChar_;
   return *this;
 }
 
 /******************************************************************************/
-	
+
 void AbstractOptimizer::init(const ParameterList& params)
 {
-  if (!function_) throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
-  //We do this in order to keep original constraints:
+  if (!function_)
+    throw Exception("AbstractOptimizer::init. Optimizer currently has no function.");
+  // We do this in order to keep original constraints:
   parameters_ = params;
-  //More secure, but too slow:
-  //parameters_ = function_->getParameters().createSubList(params.getParameterNames());
-  //parameters_.matchParametersValues(params);
-  if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO) autoParameter();
-  else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE) ignoreConstraints();
+  // More secure, but too slow:
+  // parameters_ = function_->getParameters().createSubList(params.getParameterNames());
+  // parameters_.matchParametersValues(params);
+  if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)
+    autoParameter();
+  else if (constraintPolicy_ == AutoParameter::CONSTRAINTS_IGNORE)
+    ignoreConstraints();
   doInit(params);
   nbEval_ = 0;
   tolIsReached_ = false;
@@ -170,14 +176,14 @@ void AbstractOptimizer::init(const ParameterList& params)
   profile("Step\t");
   for (unsigned int i = 0; i < parameters_.size(); i++)
   {
-    profile(parameters_[i].getName() + "\t"); 
+    profile(parameters_[i].getName() + "\t");
   }
   profileln("Function\tTime");
 
-  //Parameters must be assigned by doInit:
+  // Parameters must be assigned by doInit:
 
   printPoint(parameters_, currentValue_);
-  
+
   // Initialize the StopCondition:
   stopCondition_->init();
   fireOptimizationInitializationPerformed(OptimizationEvent(this));
@@ -194,9 +200,9 @@ double AbstractOptimizer::step()
   {
     if (!updateParameters_)
       parameters_.matchParametersValues(function_->getParameters());
-    //else already done!
-     //_currentValue = function_->getValue();
-    //Often useless, but avoid some bizare behaviour in particular cases:
+    // else already done!
+    // _currentValue = function_->getValue();
+    // Often useless, but avoid some bizare behaviour in particular cases:
     currentValue_ = function_->f(parameters_);
   }
   tolIsReached_ = tolIsReached_ || stopCondition_->isToleranceReached();
@@ -210,7 +216,7 @@ double AbstractOptimizer::optimize()
   if (!isInitialized_)
     throw Exception("AbstractOptimizer::optimize. Optimizer not initialized: call the 'init' method first!");
   tolIsReached_ = false;
-  for (nbEval_ = 1; nbEval_ < nbEvalMax_ && ! tolIsReached_; nbEval_++)
+  for (nbEval_ = 1; nbEval_ < nbEvalMax_ && !tolIsReached_; nbEval_++)
   {
     if (verbose_)
       ApplicationTools::displayUnlimitedGauge(nbEval_, "Optimizing... ");
@@ -223,43 +229,49 @@ double AbstractOptimizer::optimize()
 
 void AbstractOptimizer::profile(double v)
 {
-  if (profiler_) *profiler_ << v;
-}	
+  if (profiler_)
+    *profiler_ << v;
+}
 
 /******************************************************************************/
 
 void AbstractOptimizer::profileln(double v)
 {
-  if (profiler_) (*profiler_ << v).endLine();
+  if (profiler_)
+    (*profiler_ << v).endLine();
 }
-	
+
 /******************************************************************************/
 
 void AbstractOptimizer::profile(unsigned int v)
 {
-  if (profiler_) *profiler_ << v;
+  if (profiler_)
+    *profiler_ << v;
 }
 /******************************************************************************/
 
 void AbstractOptimizer::profileln(unsigned int v)
 {
-  if (profiler_) (*profiler_ << v).endLine();
+  if (profiler_)
+    (*profiler_ << v).endLine();
 }
-	
+
 /******************************************************************************/
 
 void AbstractOptimizer::profile(const std::string& s)
 {
-  if (profiler_) *profiler_ << s;
-}	
+  if (profiler_)
+    *profiler_ << s;
+}
 
 /******************************************************************************/
 
 void AbstractOptimizer::profileln(const std::string& s)
 {
-  if (profiler_) (*profiler_ << s).endLine();
+  if (profiler_)
+    (*profiler_ << s).endLine();
 }
-	
+
 /******************************************************************************/
 
 void AbstractOptimizer::printPoint(const ParameterList& params, double value)
@@ -270,7 +282,7 @@ void AbstractOptimizer::printPoint(const ParameterList& params, double value)
   for (size_t j = 0; j < ndim; j++)
   {
     profile(TextTools::toString(params[j].getValue()));
-    profile("\t"); 
+    profile("\t");
   }
   profile(value);
   profile("\t");
@@ -283,7 +295,8 @@ void AbstractOptimizer::printPoint(const ParameterList& params, double value)
 
 void AbstractOptimizer::printMessage(const std::string& message)
 {
-  if (messageHandler_) (*messageHandler_ << message).endLine();
+  if (messageHandler_)
+    (*messageHandler_ << message).endLine();
 }
 
 /******************************************************************************/
@@ -341,4 +354,3 @@ bool AbstractOptimizer::listenerModifiesParameters() const
 }
 
 /******************************************************************************/
-

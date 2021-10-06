@@ -54,7 +54,7 @@ TruncatedExponentialDiscreteDistribution::TruncatedExponentialDiscreteDistributi
   AbstractDiscreteDistribution(n, "TruncExponential."),
   lambda_(lambda),
   tp_(truncationPoint),
-  cond_(1-exp(-lambda_*tp_))
+  cond_(1 - exp(-lambda_ * tp_))
 {
   addParameter_(new Parameter("TruncExponential.tp", truncationPoint, Parameter::R_PLUS));
   addParameter_(new Parameter("TruncExponential.lambda", lambda,  Parameter::R_PLUS));
@@ -74,8 +74,8 @@ void TruncatedExponentialDiscreteDistribution::fireParameterChanged(const Parame
   tp_ = getParameterValue("tp");
 
   intMinMax_->setUpperBound(tp_, false);
-  cond_=1-exp(-lambda_*tp_);
-  
+  cond_ = 1 - exp(-lambda_ * tp_);
+
   discretize();
 }
 

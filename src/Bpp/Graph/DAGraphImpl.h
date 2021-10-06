@@ -467,10 +467,14 @@ void DAGraphImpl<GraphImpl>::propagateDirection_(Graph::NodeId node)
 {
   std::vector<Graph::NodeId> vFat = getFathers(node);
   for (auto fat:vFat)
+  {
     propagateDirection_(fat);
+  }
 
   for (auto fat:vFat)
+  {
     GraphImpl::switchNodes(fat, node);
+  }
 }
 
 

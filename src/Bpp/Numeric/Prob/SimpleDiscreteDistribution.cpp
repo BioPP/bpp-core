@@ -233,7 +233,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
         // approximation to avoid useless computings:
         // setParameterValue("V"+TextTools::toString(i+1),v);
       }
-      if (i<size-1)
+      if (i < size - 1)
       {
         distribution_[v2] = getParameterValue("theta" + TextTools::toString(i + 1)) * x;
         x *= 1 - getParameterValue("theta" + TextTools::toString(i + 1));
@@ -242,7 +242,7 @@ void SimpleDiscreteDistribution::fireParameterChanged(const ParameterList& param
         distribution_[v2] = x;
     }
   }
-  
+
   discretize();
 }
 
@@ -336,4 +336,3 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
     }
   }
 }
-

@@ -110,5 +110,3 @@ CorrespondenceAnalysis::CorrespondenceAnalysis(
 
   setData(weightedData, rowWeights, colWeights, nbAxes, tol, verbose);
 }
-
-

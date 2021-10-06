@@ -106,7 +106,6 @@ public:
    * = Operator
    * @param dAGraphObserver the DAGraphObserver we want to copy the values
    */
-
   AssociationDAGraphImplObserver<N, E, DAGraphImpl>& operator=(bpp::AssociationDAGraphImplObserver<N, E, DAGraphImpl> const& dAGraphObserver)
   {
     AssociationGraphImplObserver<N, E, DAGraphImpl>::operator=(dAGraphObserver);
@@ -116,14 +115,12 @@ public:
   /**
    * Destructor
    */
-
   ~AssociationDAGraphImplObserver()
   {}
 
   /**
    * clone function
    */
-
   AssociationDAGraphImplObserver<N, E, DAGraphImpl>* clone() const
   {
     return new AssociationDAGraphImplObserver<N, E, DAGraphImpl>(*this);
@@ -154,7 +151,6 @@ public:
    * @param node the concerned node
    * @return a vector of son Nodes
    */
-
   std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(node)));
@@ -192,7 +188,6 @@ public:
    * Return the sons of a node
    * @return a vector of son Nodes
    */
-
   std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N> node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(node)));
@@ -209,7 +204,6 @@ public:
    * @param edge the concerned edge
    * @return the son Node
    */
-
   std::shared_ptr<N> getSon(const std::shared_ptr<E>  edge) const
   {
     return this->getNodeFromGraphid(this->getGraph()->getBottom(this->getEdgeGraphid(edge)));
@@ -226,7 +220,6 @@ public:
    * @param edge the concerned edge
    * @return the father Node
    */
-
   std::shared_ptr<N> getFatherOfEdge(const std::shared_ptr<E>  edge) const
   {
     return this->getNodeFromGraphid(this->getGraph()->getTop(this->getEdgeGraphid(edge)));
@@ -263,7 +256,6 @@ public:
    * @param node the starting node
    * @return a vector containing the leaves
    */
-
   std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
@@ -273,7 +265,6 @@ public:
    * Remove the fathers of a node
    * @return a vector containing the removed fathers
    */
-
   std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeFathers(this->getNodeGraphid(node)));
@@ -292,7 +283,6 @@ public:
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
-
   std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
@@ -359,7 +349,6 @@ public:
    * @brief builds iterator on the fathers of a Node
    *
    */
-
   std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> fathersIterator(std::shared_ptr<N> node)
   {
     return this->incomingNeighborNodesIterator(node);
@@ -374,7 +363,6 @@ public:
    * @brief builds iterator on the sons of a Node
    *
    */
-
   std::unique_ptr<typename AssociationDAGraphObserver<N, E>::NodeIterator> sonsIterator(std::shared_ptr<N> node)
   {
     return this->outgoingNeighborNodesIterator(node);
@@ -392,7 +380,6 @@ public:
    * @return A vector of ancestor nodes ids.
    *
    */
-
   std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot)
   {
     return this->getNodesFromGraphid(this->getGraph()->getBelowNodes(this->getNodeGraphid(localRoot)));

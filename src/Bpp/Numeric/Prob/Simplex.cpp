@@ -51,7 +51,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool 
   vProb_(),
   valpha_()
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double sum = VectorTools::sum(probas);
@@ -124,9 +124,9 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
   vProb_(),
   valpha_()
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
-  
+
   for (size_t i = 0; i < dim_; i++)
   {
     vProb_.push_back(1. / static_cast<double>(dim_));
@@ -160,14 +160,14 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), 0.5, pc));
     }
     setFrequencies(vProb_);
-    
+
     break;
   }
 }
 
 void Simplex::fireParameterChanged(const ParameterList& parameters)
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double x = 1.0;
@@ -199,12 +199,16 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
       x += vProb_[i + 1];
     }
 
-    if (x>NumConstants::TINY()) // avoid rounding pb
+    if (x > NumConstants::TINY()) // avoid rounding pb
       for (auto& vp : vProb_)
+      {
         vp /= x;
+      }
     else
       for (auto& vp : vProb_)
-        vp = 1.0/double(dim_);
+      {
+        vp = 1.0 / double(dim_);
+      }
 
     break;
   case 3:
@@ -240,7 +244,7 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
 
 void Simplex::setFrequencies(const std::vector<double>& probas)
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double sum = VectorTools::sum(probas);
@@ -299,4 +303,3 @@ void Simplex::setFrequencies(const std::vector<double>& probas)
 
   matchParametersValues(pl);
 }
-

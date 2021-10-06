@@ -461,5 +461,4 @@ public:
 }; /* class LU */
 } // end of namespace bpp.
 
-#endif // _LU_H_
-
+#endif// _LU_H_

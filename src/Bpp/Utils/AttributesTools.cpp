@@ -104,7 +104,7 @@ void AttributesTools::getAttributesMap(
   {
     string arg = argv2[i];
     if (arg == "")
-      continue;  // Skipping void line.
+      continue;                   // Skipping void line.
     while (arg[arg.size() - 1] == '\\')
     {
       // Splitted line
@@ -126,13 +126,13 @@ void AttributesTools::getAttributesMap(
       // {
       //   if (std::find(vParam_.begin(),vParam_.end(),value)!=vParam_.end())
       //     throw Exception("Param name " + value + " already seen.");
-        
+
       //   //Recursive inclusion:
       //   getAttributesMapFromFile(value, am, delimiter);
       //   vParam_.push_back(value);
       // }
       // else
-        am[name] = value;
+      am[name] = value;
     }
   }
 }
@@ -228,7 +228,7 @@ std::string AttributesTools::removeComments(
   {
     string::size_type first = r.find(begin, last);
     if (first == string::npos)
-      return r;  // No shell comment.
+      return r;                   // No shell comment.
     // else:
     last = r.find(end, first);
     if (last == string::npos)
@@ -252,16 +252,16 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
     AttributesTools::getVector(args, argv), "=");
 
-  
+
   // Look for a specified file with parameters:
   resolveVariables(cmdParams);
   map<string, string> params;
 
   while (cmdParams.find("param") != cmdParams.end() || cmdParams.find("params") != cmdParams.end())
   {
-    string file=(cmdParams.find("param") != cmdParams.end())?cmdParams["param"]:cmdParams["params"];
-    
-    if (std::find(vParam_.begin(),vParam_.end(),file)!=vParam_.end())
+    string file = (cmdParams.find("param") != cmdParams.end()) ? cmdParams["param"] : cmdParams["params"];
+
+    if (std::find(vParam_.begin(), vParam_.end(), file) != vParam_.end())
       throw Exception("Param name " + file + " already seen.");
 
     if (!FileTools::fileExists(file))
@@ -273,12 +273,12 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
       cmdParams.erase("param");
     else
       cmdParams.erase("params");
-    
+
     actualizeAttributesMap(params, cmdParams);
-    
-    cmdParams=params;
+
+    cmdParams = params;
     resolveVariables(cmdParams);
-      
+
     vParam_.push_back(file);
   }
 

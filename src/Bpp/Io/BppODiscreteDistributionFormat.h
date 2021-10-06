@@ -74,10 +74,10 @@ public:
   const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
   void writeDiscreteDistribution(
-       const DiscreteDistribution& dist,
-       OutputStream& out,
-       std::map<std::string, std::string>& globalAliases,
-       std::vector<std::string>& writtenNames) const;
+    const DiscreteDistribution& dist,
+    OutputStream& out,
+    std::map<std::string, std::string>& globalAliases,
+    std::vector<std::string>& writtenNames) const;
 
 protected:
   /**
@@ -90,8 +90,6 @@ protected:
    */
   void initialize_(DiscreteDistribution& rDist);
 };
-
 } // end of namespace bpp.
 
-#endif // _BPPODISCRETEDISTRIBUTIONFORMAT_H_
-
+#endif// _BPPODISCRETEDISTRIBUTIONFORMAT_H_

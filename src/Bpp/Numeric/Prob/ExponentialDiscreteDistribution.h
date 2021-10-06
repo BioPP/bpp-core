@@ -81,13 +81,13 @@ public:
     return *this;
   }
 
-  ~ExponentialDiscreteDistribution(){};
+  ~ExponentialDiscreteDistribution(){}
 
   ExponentialDiscreteDistribution* clone() const { return new ExponentialDiscreteDistribution(*this); }
 
 public:
-  std::string getName() const {return("Exponential");}
-  
+  std::string getName() const {return "Exponential";}
+
   void fireParameterChanged(const ParameterList& parameters);
 
   double randC() const
@@ -114,7 +114,6 @@ public:
     return 1. / lambda_ - exp(-a * lambda_) * (a + 1. / lambda_);
   }
 };
-} //end of namespace bpp.
+} // end of namespace bpp.
 
-#endif  //_EXPONENTIALDISCRETEDISTRIBUTION_H_
-
+#endif//_EXPONENTIALDISCRETEDISTRIBUTION_H_

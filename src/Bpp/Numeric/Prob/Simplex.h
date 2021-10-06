@@ -102,7 +102,6 @@ class Simplex :
   public AbstractParameterAliasable
 {
 private:
-
   /**
    * @brief The dimension+1 of the space simplex (ie the number of probabilities).
    *
@@ -179,5 +178,4 @@ public:
 };
 } // end of namespace bpp.
 
-#endif  // _SIMPLEDISCRETEDISTRIBUTION_H_
-
+#endif// _SIMPLEDISCRETEDISTRIBUTION_H_

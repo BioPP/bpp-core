@@ -5,37 +5,37 @@
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
 
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
+   This software is a computer program whose purpose is to provide classes
+   for numerical calculus.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+   This software is governed by the CeCILL  license under French law and
+   abiding by the rules of distribution of free software.  You can  use,
+   modify and/ or redistribute the software under the terms of the CeCILL
+   license as circulated by CEA, CNRS and INRIA at the following URL
+   "http://www.cecill.info".
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+   As a counterpart to the access to the source code and  rights to copy,
+   modify and redistribute granted by the license, users are provided only
+   with a limited warranty  and the software's author,  the holder of the
+   economic rights,  and the successive licensors  have only  limited
+   liability.
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+   In this respect, the user's attention is drawn to the risks associated
+   with loading,  using,  modifying and/or developing or reproducing the
+   software by the user in light of its specific status of free software,
+   that may mean  that it is complicated to manipulate,  and  that  also
+   therefore means  that it is reserved for developers  and  experienced
+   professionals having in-depth computer knowledge. Users are therefore
+   encouraged to load and test the software's suitability as regards their
+   requirements in conditions enabling the security of their systems and/or
+   data to be ensured and,  more generally, to use and operate it in the
+   same conditions as regards security.
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
-*/
+   The fact that you are presently reading this means that you have had
+   knowledge of the CeCILL license and that you accept its terms.
+ */
 
 #ifndef _FUNCTIONS_H_
 #define _FUNCTIONS_H_
@@ -54,7 +54,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 namespace bpp
 {
-
 /**
  * @brief This is the function abstract class.
  *
@@ -66,7 +65,7 @@ namespace bpp
  *
  * However for complexe function like likelihood for instance,
  * computing the function value takes some time, and one do not want
- * to perform several times the computation for an identical set of 
+ * to perform several times the computation for an identical set of
  * parameters.
  * The setParameters() method hence allows to set the parameter value
  * for which the function is to be computed, perform the computation
@@ -83,45 +82,43 @@ namespace bpp
  *
  * @see Parameter, ParameterList
  */
-class Function:
+class Function :
   public virtual Parametrizable
-{    
-  public:
-    Function() {}
-    virtual ~Function() {}
+{
+public:
+  Function() {}
+  virtual ~Function() {}
 
-  public:
+public:
+  /**
+   * @brief Set the point where the function must be computed.
+   *
+   * @param parameters The parameter set to pass to the function.
+   */
+  virtual void setParameters(const ParameterList& parameters) = 0;
 
-    /**
-     * @brief Set the point where the function must be computed.
-     *
-     * @param parameters The parameter set to pass to the function.
-     */
-    virtual void setParameters(const ParameterList& parameters) = 0;
+  /**
+   * @brief Get the value of the function at the current point.
+   *
+   * @return The value of the function.
+   * @throw Exception If no point is specified or if an error occured.
+   */
+  virtual double getValue() const = 0;
 
-    /**
-     * @brief Get the value of the function at the current point.
-     *
-     * @return The value of the function.
-     * @throw Exception If no point is specified or if an error occured.
-     */
-    virtual double getValue() const = 0;
-    
-    /**
-     * @brief Get the value of the function according to a given set of parameters.
-     * 
-     * @param parameters The parameter set to pass to the function.
-     * @return The value of the function with the given parameter set.
-     * @throw Exception If an error occured.
-     */
-    virtual double f(const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getValue();
-    }
+  /**
+   * @brief Get the value of the function according to a given set of parameters.
+   *
+   * @param parameters The parameter set to pass to the function.
+   * @return The value of the function with the given parameter set.
+   * @throw Exception If an error occured.
+   */
+  virtual double f(const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getValue();
+  }
 
   friend class FunctionWrapper;
-
 };
 
 /**
@@ -129,303 +126,301 @@ class Function:
  *
  * This class adds the getFirstOrderDerivative() and df() shortcut functions.
  */
-class DerivableFirstOrder:
+class DerivableFirstOrder :
   public virtual Function
 {
- public:
-    DerivableFirstOrder() {}
-    virtual ~DerivableFirstOrder() {}
+public:
+  DerivableFirstOrder() {}
+  virtual ~DerivableFirstOrder() {}
 
-    DerivableFirstOrder* clone() const = 0;
+  DerivableFirstOrder* clone() const = 0;
 
-  public:
+public:
+  /**
+   * @brief Tell if derivatives must be computed.
+   *
+   * @param yn yes/no
+   */
+  virtual void enableFirstOrderDerivatives(bool yn) = 0;
 
-    /**
-     * @brief Tell if derivatives must be computed.
-     *
-     * @param yn yes/no
-     */
-    virtual void enableFirstOrderDerivatives(bool yn) = 0;
-    
-    /**
-     * @brief Tell if derivatives must be computed.
-     *
-     * @return yes/no
-     */
-    virtual bool enableFirstOrderDerivatives() const = 0;
+  /**
+   * @brief Tell if derivatives must be computed.
+   *
+   * @return yes/no
+   */
+  virtual bool enableFirstOrderDerivatives() const = 0;
 
-    /**
-     * @brief Get the derivative of the function at the current point.
-     *
-     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
-     * @return The value of the function.
-     * @throw Exception If no point is specified or if an error occured.
-     */
-    virtual double getFirstOrderDerivative(const std::string& variable) const = 0;
-    
-    /**
-     * @brief Get the value of the first derivative of the function
-     * according to a given set of parameters.
-     *
-     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
-     * @param parameters The parameter set to pass to the function.
-     * @return The value of the function with the given parameter set.
-     * @throw Exception If an error occured.
-     */
-    virtual double df(const std::string& variable, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getFirstOrderDerivative(variable);
-    }
+  /**
+   * @brief Get the derivative of the function at the current point.
+   *
+   * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
+   * @return The value of the function.
+   * @throw Exception If no point is specified or if an error occured.
+   */
+  virtual double getFirstOrderDerivative(const std::string& variable) const = 0;
+
+  /**
+   * @brief Get the value of the first derivative of the function
+   * according to a given set of parameters.
+   *
+   * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{df}{dx} @f$.
+   * @param parameters The parameter set to pass to the function.
+   * @return The value of the function with the given parameter set.
+   * @throw Exception If an error occured.
+   */
+  virtual double df(const std::string& variable, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getFirstOrderDerivative(variable);
+  }
 };
 
 /**
  * @brief This is the abstract class for second order derivable functions.
- * 
+ *
  * This class adds the getSecondOrderDerivative() and d2f() shortcut functions.
  * Cross derivative functions are also provided.
  */
-class DerivableSecondOrder:
+class DerivableSecondOrder :
   public virtual DerivableFirstOrder
 {
-  public:
-    DerivableSecondOrder() {}
-    virtual ~DerivableSecondOrder() {}
+public:
+  DerivableSecondOrder() {}
+  virtual ~DerivableSecondOrder() {}
 
-    DerivableSecondOrder* clone() const = 0;
+  DerivableSecondOrder* clone() const = 0;
 
-  public:
+public:
+  /**
+   * @brief Tell if derivatives must be computed.
+   *
+   * @param yn yes/no
+   */
+  virtual void enableSecondOrderDerivatives(bool yn) = 0;
 
-    /**
-     * @brief Tell if derivatives must be computed.
-     *
-     * @param yn yes/no
-     */
-    virtual void enableSecondOrderDerivatives(bool yn) = 0;
-    
-    /**
-     * @brief Tell if derivatives must be computed.
-     *
-     * @return yes/no
-     */
-    virtual bool enableSecondOrderDerivatives() const = 0;
+  /**
+   * @brief Tell if derivatives must be computed.
+   *
+   * @return yes/no
+   */
+  virtual bool enableSecondOrderDerivatives() const = 0;
 
-    /**
-     * @brief Get the second order derivative of the function at the current point.
-     *
-     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
-     * @return The value of the function.
-     * @throw Exception If no point is specified or if an error occured.
-     */
-    virtual double getSecondOrderDerivative(const std::string& variable) const = 0;
-  
-    /**
-     * @brief Get the value of the second order derivative of the function
-     * according to a given set of parameters.
-     *
-     * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
-     * @param parameters The parameter set to pass to the function.
-     * @return The value of the function with the given parameter set.
-     * @throw Exception If an error occured.
-     */
-    virtual double d2f(const std::string& variable, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getSecondOrderDerivative(variable);
-    }    
+  /**
+   * @brief Get the second order derivative of the function at the current point.
+   *
+   * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
+   * @return The value of the function.
+   * @throw Exception If no point is specified or if an error occured.
+   */
+  virtual double getSecondOrderDerivative(const std::string& variable) const = 0;
 
-    /**
-     * @brief Get the value of the cross derivative of the function
-     * according to a given set of parameters.
-     *
-     * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-     * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-     * @return The value of the function with the given parameter set.
-     * @throw Exception If an error occured.
-     */
-    virtual double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const = 0;  
-    
-    /**
-     * @brief Get the value of the cross derivative of the function
-     * according to a given set of parameters.
-     *
-     * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-     * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
-     * @param parameters The parameter set to pass to the function.
-     * @return The value of the function with the given parameter set.
-     * @throw Exception If an error occured.
-     */
-    virtual double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getSecondOrderDerivative(variable1, variable2);
-    }
+  /**
+   * @brief Get the value of the second order derivative of the function
+   * according to a given set of parameters.
+   *
+   * @param variable   The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x^2} @f$.
+   * @param parameters The parameter set to pass to the function.
+   * @return The value of the function with the given parameter set.
+   * @throw Exception If an error occured.
+   */
+  virtual double d2f(const std::string& variable, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getSecondOrderDerivative(variable);
+  }
+
+  /**
+   * @brief Get the value of the cross derivative of the function
+   * according to a given set of parameters.
+   *
+   * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+   * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+   * @return The value of the function with the given parameter set.
+   * @throw Exception If an error occured.
+   */
+  virtual double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const = 0;
+
+  /**
+   * @brief Get the value of the cross derivative of the function
+   * according to a given set of parameters.
+   *
+   * @param variable1  The name of the @f$ x @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+   * @param variable2  The name of the @f$ y @f$ variable in @f$ \frac{\partial^2 f}{\partial x \partial y} @f$.
+   * @param parameters The parameter set to pass to the function.
+   * @return The value of the function with the given parameter set.
+   * @throw Exception If an error occured.
+   */
+  virtual double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getSecondOrderDerivative(variable1, variable2);
+  }
 };
 
 /**
  * @brief General class that wraps a function into another one.
  * This class is meant to be derivated and just provides a general framework.
  */
-class FunctionWrapper:
+class FunctionWrapper :
   public virtual Function
 {
-  protected:
-    Function* function_;
+protected:
+  Function* function_;
 
-  public:
-    FunctionWrapper(Function* function) : function_(function) {}
-    FunctionWrapper(const FunctionWrapper& fw) : function_(fw.function_) {}
-    FunctionWrapper& operator=(const FunctionWrapper& fw)
-    {
-      function_ = fw.function_;
-      return *this;
-    }
+public:
+  FunctionWrapper(Function* function) : function_(function) {}
+  FunctionWrapper(const FunctionWrapper& fw) : function_(fw.function_) {}
+  FunctionWrapper& operator=(const FunctionWrapper& fw)
+  {
+    function_ = fw.function_;
+    return *this;
+  }
 
-  public:
-    bool hasParameter(const std::string& name) const
-    {
-      return function_->hasParameter(name);
-    }
+public:
+  bool hasParameter(const std::string& name) const
+  {
+    return function_->hasParameter(name);
+  }
 
-    void setParameters(const ParameterList & parameters)
-    {
-      function_->setParameters(parameters);
-    }
+  void setParameters(const ParameterList& parameters)
+  {
+    function_->setParameters(parameters);
+  }
 
-    const ParameterList& getParameters() const
-    {
-      return function_->getParameters();  
-    }
+  const ParameterList& getParameters() const
+  {
+    return function_->getParameters();
+  }
 
-    const Parameter& getParameter(const std::string & name) const
-    {
-      return function_->getParameter(name);
-    }
+  const Parameter& getParameter(const std::string& name) const
+  {
+    return function_->getParameter(name);
+  }
 
-    double getValue() const
-    {
-      return function_->getValue();
-    }
-    
-    double f(const ParameterList& parameters)
-    {
-      return function_->f(parameters);
-    }
-    
-    double getParameterValue(const std::string& name) const
-    {
-      return function_->getParameterValue(name);
-    }
-      
-    void setAllParametersValues(const ParameterList & parameters)
-    {
-      function_->setAllParametersValues(parameters);
-    }
-    
-    void setParameterValue(const std::string& name, double value)
-    {
-      function_->setParameterValue(name, value);
-    }
-    
-    void setParametersValues(const ParameterList& parameters)
-    {
-      function_->setParametersValues(parameters);
-    }
-    
-    bool matchParametersValues(const ParameterList& parameters)
-    {
-      return function_->matchParametersValues(parameters);
-    }
+  double getValue() const
+  {
+    return function_->getValue();
+  }
 
-    size_t getNumberOfParameters() const
-    {
-      return function_->getNumberOfParameters();
-    }
+  double f(const ParameterList& parameters)
+  {
+    return function_->f(parameters);
+  }
 
-    void setNamespace(const std::string& prefix)
-    {
-      function_->setNamespace(prefix);
-    }
+  double getParameterValue(const std::string& name) const
+  {
+    return function_->getParameterValue(name);
+  }
 
-    std::string getNamespace() const
-    {
-      return function_->getNamespace();
-    }
+  void setAllParametersValues(const ParameterList& parameters)
+  {
+    function_->setAllParametersValues(parameters);
+  }
 
-    std::string getParameterNameWithoutNamespace(const std::string& name) const
-    {
-      return function_->getParameterNameWithoutNamespace(name);
-    }
-  
+  void setParameterValue(const std::string& name, double value)
+  {
+    function_->setParameterValue(name, value);
+  }
+
+  void setParametersValues(const ParameterList& parameters)
+  {
+    function_->setParametersValues(parameters);
+  }
+
+  bool matchParametersValues(const ParameterList& parameters)
+  {
+    return function_->matchParametersValues(parameters);
+  }
+
+  size_t getNumberOfParameters() const
+  {
+    return function_->getNumberOfParameters();
+  }
+
+  void setNamespace(const std::string& prefix)
+  {
+    function_->setNamespace(prefix);
+  }
+
+  std::string getNamespace() const
+  {
+    return function_->getNamespace();
+  }
+
+  std::string getParameterNameWithoutNamespace(const std::string& name) const
+  {
+    return function_->getParameterNameWithoutNamespace(name);
+  }
+
 protected:
   ParameterList& getParameters_()
   {
-    return function_->getParameters_();  
+    return function_->getParameters_();
   }
-
-
 };
-
 
 
 /**
  * @brief General class that wraps a function into another one.
  * This class is meant to be derivated and just provides a general framework.
  */
-class DerivableFirstOrderWrapper:
+class DerivableFirstOrderWrapper :
   public FunctionWrapper,
   public virtual DerivableFirstOrder
 {
-  public:
-    DerivableFirstOrderWrapper(DerivableFirstOrder* function) : FunctionWrapper(function) {}
+public:
+  DerivableFirstOrderWrapper(DerivableFirstOrder* function) : FunctionWrapper(function) {}
 
-  public:
-    void enableFirstOrderDerivatives(bool yn) {
-      dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives(yn);
-    }
-    
-    bool enableFirstOrderDerivatives() const {
-      return dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives();
-    }
+public:
+  void enableFirstOrderDerivatives(bool yn)
+  {
+    dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives(yn);
+  }
 
-    double getFirstOrderDerivative(const std::string& variable) const {
-      return dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable);
-    }
+  bool enableFirstOrderDerivatives() const
+  {
+    return dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives();
+  }
 
+  double getFirstOrderDerivative(const std::string& variable) const
+  {
+    return dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable);
+  }
 };
-
 
 
 /**
  * @brief General class that wraps a function into another one.
  * This class is meant to be derivated and just provides a general framework.
  */
-class DerivableSecondOrderWrapper:
+class DerivableSecondOrderWrapper :
   public DerivableFirstOrderWrapper,
   public virtual DerivableSecondOrder
 {
-  public:
-    DerivableSecondOrderWrapper(DerivableSecondOrder* function) : DerivableFirstOrderWrapper(function) {}
+public:
+  DerivableSecondOrderWrapper(DerivableSecondOrder* function) : DerivableFirstOrderWrapper(function) {}
 
-  public:
-    void enableSecondOrderDerivatives(bool yn) {
-      dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives(yn);
-    }
-    
-    bool enableSecondOrderDerivatives() const {
-      return dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives();
-    }
+public:
+  void enableSecondOrderDerivatives(bool yn)
+  {
+    dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives(yn);
+  }
 
-    double getSecondOrderDerivative(const std::string& variable) const {
-      return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable);
-    }
+  bool enableSecondOrderDerivatives() const
+  {
+    return dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives();
+  }
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const {
-      return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2);
-    }
+  double getSecondOrderDerivative(const std::string& variable) const
+  {
+    return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable);
+  }
 
+  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
+  {
+    return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2);
+  }
 };
-
 
 
 /**
@@ -433,100 +428,98 @@ class DerivableSecondOrderWrapper:
  *
  * Catch any ConstraintException thrown and send +inf.
  */
-class InfinityFunctionWrapper:
+class InfinityFunctionWrapper :
   public FunctionWrapper
 {
-  protected:
-    mutable bool constraintMatch_;
-    
-  public:
-    InfinityFunctionWrapper(Function* function) :
-      FunctionWrapper(function),
-      constraintMatch_(false) {}
-    virtual ~InfinityFunctionWrapper() {}
+protected:
+  mutable bool constraintMatch_;
 
-    InfinityFunctionWrapper* clone() const { return new InfinityFunctionWrapper(*this); }
+public:
+  InfinityFunctionWrapper(Function* function) :
+    FunctionWrapper(function),
+    constraintMatch_(false) {}
+  virtual ~InfinityFunctionWrapper() {}
 
-  public:
+  InfinityFunctionWrapper* clone() const { return new InfinityFunctionWrapper(*this); }
 
-    void setParameters(const ParameterList& parameters)
+public:
+  void setParameters(const ParameterList& parameters)
+  {
+    try
     {
-      try
-      {
-        function_->setParameters(parameters);
-        constraintMatch_ = false;
-      }
-      catch(ConstraintException& ce)
-      {
-        constraintMatch_ = true;
-      }
+      function_->setParameters(parameters);
+      constraintMatch_ = false;
     }
+    catch (ConstraintException& ce)
+    {
+      constraintMatch_ = true;
+    }
+  }
 
-    double getValue() const
-    {
-      return constraintMatch_ ? -std::log(0.) :  function_->getValue();
-    }
-    
-    double f(const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getValue();
-    }
-          
-    void setAllParametersValues(const ParameterList & parameters)
-    {
-      try
-      {
-        function_->setAllParametersValues(parameters);
-        constraintMatch_ = false;
-      }
-      catch(ConstraintException& ce)
-      {
-        constraintMatch_ = true;
-      }
-    }
-    
-    void setParameterValue(const std::string& name, double value)
-    {
-      try
-      {
-        function_->setParameterValue(name, value);
-        constraintMatch_ = false;
-      }
-      catch(ConstraintException& ce)
-      {
-        constraintMatch_ = true;
-      }
-    }
-    
-    void setParametersValues(const ParameterList& parameters)
-    {
-      try
-      {
-        function_->setParametersValues(parameters);
-        constraintMatch_ = false;
-      }
-      catch(ConstraintException& ce)
-      {
-        constraintMatch_ = true;
-      }
-    }
-    
-    bool matchParametersValues(const ParameterList& parameters)
-    {
-      try
-      {
-        bool test = function_->matchParametersValues(parameters);
-        constraintMatch_ = false;
-        return test;
-      }
-      catch (ConstraintException& ce)
-      {
-        constraintMatch_ = true;
-        return false;
-      }
-    }
+  double getValue() const
+  {
+    return constraintMatch_ ? -std::log(0.) :  function_->getValue();
+  }
 
+  double f(const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getValue();
+  }
+
+  void setAllParametersValues(const ParameterList& parameters)
+  {
+    try
+    {
+      function_->setAllParametersValues(parameters);
+      constraintMatch_ = false;
+    }
+    catch (ConstraintException& ce)
+    {
+      constraintMatch_ = true;
+    }
+  }
+
+  void setParameterValue(const std::string& name, double value)
+  {
+    try
+    {
+      function_->setParameterValue(name, value);
+      constraintMatch_ = false;
+    }
+    catch (ConstraintException& ce)
+    {
+      constraintMatch_ = true;
+    }
+  }
+
+  void setParametersValues(const ParameterList& parameters)
+  {
+    try
+    {
+      function_->setParametersValues(parameters);
+      constraintMatch_ = false;
+    }
+    catch (ConstraintException& ce)
+    {
+      constraintMatch_ = true;
+    }
+  }
+
+  bool matchParametersValues(const ParameterList& parameters)
+  {
+    try
+    {
+      bool test = function_->matchParametersValues(parameters);
+      constraintMatch_ = false;
+      return test;
+    }
+    catch (ConstraintException& ce)
+    {
+      constraintMatch_ = true;
+      return false;
+    }
+  }
 };
 
 /**
@@ -537,24 +530,23 @@ class InfinityFunctionWrapper:
 class InfinityDerivableFirstOrderWrapper :
   public virtual InfinityFunctionWrapper
 {
-  public:
-    InfinityDerivableFirstOrderWrapper(DerivableFirstOrder* function) : InfinityFunctionWrapper(function) {}
-    virtual ~InfinityDerivableFirstOrderWrapper() {}
-    
-    InfinityDerivableFirstOrderWrapper* clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
+public:
+  InfinityDerivableFirstOrderWrapper(DerivableFirstOrder* function) : InfinityFunctionWrapper(function) {}
+  virtual ~InfinityDerivableFirstOrderWrapper() {}
 
-  public:
-    
-    double getFirstOrderDerivative(const std::string& variable) const
-    {
-      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableFirstOrder *>(function_)->getFirstOrderDerivative(variable));    
-    }
-    
-    double df(const std::string& variable, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getFirstOrderDerivative(variable);
-    }
+  InfinityDerivableFirstOrderWrapper* clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
+
+public:
+  double getFirstOrderDerivative(const std::string& variable) const
+  {
+    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable));
+  }
+
+  double df(const std::string& variable, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getFirstOrderDerivative(variable);
+  }
 };
 
 /**
@@ -565,37 +557,36 @@ class InfinityDerivableFirstOrderWrapper :
 class InfinityDerivableSecondOrderWrapper :
   public virtual InfinityDerivableFirstOrderWrapper
 {
-  public:
-    InfinityDerivableSecondOrderWrapper(DerivableFirstOrder* function):
-      InfinityFunctionWrapper(function),
-      InfinityDerivableFirstOrderWrapper(function) {}
-    virtual ~InfinityDerivableSecondOrderWrapper() {}
+public:
+  InfinityDerivableSecondOrderWrapper(DerivableFirstOrder* function) :
+    InfinityFunctionWrapper(function),
+    InfinityDerivableFirstOrderWrapper(function) {}
+  virtual ~InfinityDerivableSecondOrderWrapper() {}
 
-    InfinityDerivableSecondOrderWrapper* clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
+  InfinityDerivableSecondOrderWrapper* clone() const { return new InfinityDerivableSecondOrderWrapper(*this); }
 
-  public:
+public:
+  double getSecondOrderDerivative(const std::string& variable) const
+  {
+    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable));
+  }
 
-    double getSecondOrderDerivative(const std::string& variable) const
-    {
-      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable));          
-    }
-  
-    double d2f(const std::string & variable, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getSecondOrderDerivative(variable);
-    }    
+  double d2f(const std::string& variable, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getSecondOrderDerivative(variable);
+  }
 
-    double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
-    {
-      return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder *>(function_)->getSecondOrderDerivative(variable1, variable2));      
-    }
-    
-    double d2f(const std::string & variable1, const std::string& variable2, const ParameterList& parameters)
-    {
-      setParameters(parameters);
-      return getSecondOrderDerivative(variable1, variable2);
-    }
+  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
+  {
+    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2));
+  }
+
+  double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters)
+  {
+    setParameters(parameters);
+    return getSecondOrderDerivative(variable1, variable2);
+  }
 };
 
 
@@ -608,32 +599,30 @@ class TestFunction :
   public virtual Function,
   public AbstractParametrizable
 {
-  public:
-    TestFunction(double x = 0, double y = 0) :
-      AbstractParametrizable("")
-    {
-      addParameter_(new Parameter("x", x));
-      addParameter_(new Parameter("y", y));
-    }
+public:
+  TestFunction(double x = 0, double y = 0) :
+    AbstractParametrizable("")
+  {
+    addParameter_(new Parameter("x", x));
+    addParameter_(new Parameter("y", y));
+  }
 
-    Clonable* clone() const { return new TestFunction(*this); }
+  Clonable* clone() const { return new TestFunction(*this); }
 
-    void setParameters(const ParameterList& parameters) 
-    {
-      matchParametersValues(parameters);
-    }
+  void setParameters(const ParameterList& parameters)
+  {
+    matchParametersValues(parameters);
+  }
 
-    double getValue() const
-    {
-      double x = getParameter("x").getValue();
-      double y = getParameter("y").getValue();
-      return (x*x + y*y);
-    }
+  double getValue() const
+  {
+    double x = getParameter("x").getValue();
+    double y = getParameter("y").getValue();
+    return x * x + y * y;
+  }
 
-    void fireParameterChanged(const ParameterList& parameters) {}
+  void fireParameterChanged(const ParameterList& parameters) {}
 };
+} // end of namespace bpp.
 
-} //end of namespace bpp.
-
-#endif  //_FUNCTIONS_H_
-
+#endif//_FUNCTIONS_H_

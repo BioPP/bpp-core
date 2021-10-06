@@ -64,9 +64,12 @@ LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
   nbStates_(),
   nbSites_()
 {
-  if (!hiddenAlphabet) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
-  if (!transitionMatrix) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
-  if (!emissionProbabilities) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
+  if (!hiddenAlphabet)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
+  if (!transitionMatrix)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
+  if (!emissionProbabilities)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
   if (!hiddenAlphabet_->worksWith(transitionMatrix->getHmmStateAlphabet()))
     throw Exception("LowMemoryRescaledHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   if (!hiddenAlphabet_->worksWith(emissionProbabilities->getHmmStateAlphabet()))
@@ -98,14 +101,16 @@ void LowMemoryRescaledHmmLikelihood::setNamespace(const std::string& nameSpace)
 
 void LowMemoryRescaledHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
-   bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
-   bool transitionsChanged = transitionMatrix_->matchParametersValues(pl);
-   bool emissionChanged    = emissionProbabilities_->matchParametersValues(pl);
+  bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
+  bool transitionsChanged = transitionMatrix_->matchParametersValues(pl);
+  bool emissionChanged    = emissionProbabilities_->matchParametersValues(pl);
   // these lines are necessary because the transitions and emissions can depend on the alphabet.
   // we could use a StateChangeEvent, but this would result in computing some calculations twice in some cases
   // (when both the alphabet and other parameter changed).
-  if (alphabetChanged && !transitionsChanged) transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
-  if (alphabetChanged && !emissionChanged) emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
+  if (alphabetChanged && !transitionsChanged)
+    transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
+  if (alphabetChanged && !emissionChanged)
+    emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
 
   computeForward_();
 }
@@ -122,7 +127,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   // Transition probabilities:
   for (size_t i = 0; i < nbStates_; i++)
   {
-   size_t ii = i * nbStates_;
+    size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
     {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
@@ -154,7 +159,8 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   // Recursion:
   size_t nextBrkPt = nbSites_; // next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
-  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  if (bpIt != breakPoints_.end())
+    nextBrkPt = *bpIt;
 
   double a;
   logLik_ = 0;
@@ -162,7 +168,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   greater<double> cmp;
   for (size_t i = 1; i < nbSites_; i++)
   {
-    //Swap pointers:
+    // Swap pointers:
     tmpLikelihood = previousLikelihood;
     previousLikelihood = currentLikelihood;
     currentLikelihood = tmpLikelihood;
@@ -219,20 +225,24 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
         scale += tmp[j];
       }
       bpIt++;
-      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-      else nextBrkPt = nbSites_;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
     }
 
     for (size_t j = 0; j < nbStates_; j++)
     {
-      if (scale > 0) (*currentLikelihood)[j] = tmp[j] / scale;
-      else (*currentLikelihood)[j] = 0;
+      if (scale > 0)
+        (*currentLikelihood)[j] = tmp[j] / scale;
+      else
+        (*currentLikelihood)[j] = 0;
     }
     lScales[i - offset] = log(scale);
-  
+
     if (i - offset == maxSize_ - 1)
     {
-      //We make partial calculations and reset the arrays:
+      // We make partial calculations and reset the arrays:
       double partialLogLik = 0;
       sort(lScales.begin(), lScales.end(), cmp);
       for (size_t j = 0; j < maxSize_; ++j)
@@ -253,4 +263,3 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
 }
 
 /***************************************************************************************************************************/
-

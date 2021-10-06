@@ -62,7 +62,7 @@ namespace bpp
  * hence only be used to compute likelihoods.
  *
  */
-  
+
 class LowMemoryRescaledHmmLikelihood :
   public AbstractHmmLikelihood,
   public AbstractParametrizable
@@ -166,7 +166,8 @@ public:
   const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
   HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
 
-  void setBreakPoints(const std::vector<size_t>& breakPoints) {
+  void setBreakPoints(const std::vector<size_t>& breakPoints)
+  {
     breakPoints_ = breakPoints;
     computeForward_();
   }
@@ -188,23 +189,23 @@ public:
 
   double getLikelihoodForASite(size_t site) const
   {
-    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
 
   Vdouble getLikelihoodForEachSite() const
   {
-    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForEachSite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForEachSite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
   Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const
   {
-    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
   void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const
   {
-    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));    
+    throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
 protected:
@@ -231,10 +232,7 @@ protected:
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getD2LogLikelihoodForASite. Use RescaledHmmLikelihood instead."));
     return 0;
   }
-
 };
-
 }
 
-#endif // _LOWMEMORYRESCALEDHMMLIKELIHOOD_H_
-
+#endif// _LOWMEMORYRESCALEDHMMLIKELIHOOD_H_

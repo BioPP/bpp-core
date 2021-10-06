@@ -60,7 +60,8 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
     else
     {
       IntervalConstraint* interval = dynamic_cast<IntervalConstraint*>(constraint.get());
-      if (interval) {
+      if (interval)
+      {
         bool isInfinite = (!interval->finiteLowerBound()) || (!interval->finiteUpperBound());
         if (!isInfinite)
         {
@@ -191,4 +192,3 @@ void ReparametrizationFunctionWrapper::fireParameterChanged(const ParameterList&
     }
   }
 }
-

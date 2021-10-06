@@ -130,5 +130,4 @@ protected:
 };
 } // end of namespace bpp.
 
-#endif // _THREEPOINTSNUMERICALDERIVATIVE_H_
-
+#endif// _THREEPOINTSNUMERICALDERIVATIVE_H_

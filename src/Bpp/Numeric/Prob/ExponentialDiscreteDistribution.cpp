@@ -68,6 +68,3 @@ void ExponentialDiscreteDistribution::fireParameterChanged(const ParameterList& 
   lambda_ = getParameterValue("lambda");
   discretize();
 }
-
-
-

@@ -159,5 +159,4 @@ protected:
 };
 } // end of namespace bpp.
 
-#endif  // _MIXTUREOFDISCRETEDISTRIBUTIONS_H__
-
+#endif// _MIXTUREOFDISCRETEDISTRIBUTIONS_H__

@@ -313,4 +313,3 @@ void MixtureOfDiscreteDistributions::setNamespace(const string& prefix)
     vdd_[i]->setNamespace(prefix + vNestedPrefix_[i]);
   }
 }
-

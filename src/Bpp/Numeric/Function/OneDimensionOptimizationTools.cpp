@@ -73,12 +73,12 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
   bracket.b.x = b;
   parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
 
-  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
     parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
   }
-  
+
   if (bracket.b.f > bracket.a.f)
   {
     // Switch roles of first and second point so that we can go downhill
@@ -172,31 +172,31 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
   bracket.b.x = b;
   parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
 
-  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
     parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
   }
-  
+
   double bestMiddleX, bestMiddleF;
   double curr, fcurr, jump;
 
   // look for bracket.c.x by scanning n possible assignments and assigining c the best one over the examined values
   curr = bracket.a.x;
   fcurr = bracket.a.f;
-  bestMiddleX = (bracket.a.f < bracket.b.f ? bracket.a.x : bracket.b.x); // determine the currently optimal point with respect to f out of a and b 
-  bestMiddleF = (bracket.a.f < bracket.b.f ? bracket.a.f : bracket.b.f); // determine the currently optimal point with respect to f out of a and b 
+  bestMiddleX = (bracket.a.f < bracket.b.f ? bracket.a.x : bracket.b.x); // determine the currently optimal point with respect to f out of a and b
+  bestMiddleF = (bracket.a.f < bracket.b.f ? bracket.a.f : bracket.b.f); // determine the currently optimal point with respect to f out of a and b
   jump = (b - a) / static_cast<double>(intervalsNum); // Determine the spacing appropriate to the mesh.
-  for (size_t i=1; i<=intervalsNum; i++) 
+  for (size_t i = 1; i <= intervalsNum; i++)
   { // Loop over all intervals
     curr += jump;
-    parameters[0].setValue(curr); fcurr = function->f(parameters); 
+    parameters[0].setValue(curr); fcurr = function->f(parameters);
     // If c yields better likelihood than a and b
-    if (fcurr < bestMiddleF) 
+    if (fcurr < bestMiddleF)
     {
-        bestMiddleX = curr;
-        bestMiddleF = fcurr;
-    } 
+      bestMiddleX = curr;
+      bestMiddleF = fcurr;
+    }
   }
   bracket.c.x = bestMiddleX;
   parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);

@@ -143,4 +143,3 @@ void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parame
     f3_ = function_->getValue();
   }
 }
-

@@ -89,7 +89,8 @@ const Parameter& ParameterList::getParameter(const std::string& name) const
   for (size_t i = 0; i < size(); i++)
   {
     const Parameter* p = parameters_[i].get();
-    if (p->getName() == name) return *p;
+    if (p->getName() == name)
+      return *p;
   }
   throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
@@ -115,7 +116,8 @@ double ParameterList::getParameterValue(const std::string& name) const
   for (size_t i = 0; i < size(); i++)
   {
     const Parameter* p = parameters_[i].get();
-    if (p->getName() == name) return p->getValue();
+    if (p->getName() == name)
+      return p->getValue();
   }
   throw ParameterNotFoundException("ParameterList::getParameterValue('name').", name);
 }
@@ -127,7 +129,8 @@ Parameter& ParameterList::getParameter(const std::string& name)
   for (size_t i = 0; i < size(); i++)
   {
     Parameter* p = parameters_[i].get();
-    if (p->getName() == name) return *p;
+    if (p->getName() == name)
+      return *p;
   }
   throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
@@ -165,7 +168,9 @@ ParameterList ParameterList::shareSubList(const std::vector<std::string>& names)
 {
   ParameterList pl;
   for (const auto& name:names)
+  {
     pl.shareParameter(getSharedParameter(name));
+  }
 
   return pl;
 }
@@ -203,7 +208,7 @@ ParameterList ParameterList::shareSubList(const std::vector<size_t>& parameters)
     if (iparam < size())
       pl.shareParameter(parameters_[iparam]);
   }
-  
+
   return pl;
 }
 
@@ -251,30 +256,32 @@ vector<string> ParameterList::getMatchingParameterNames(const string& pattern) c
 {
   vector<string> pNames;
   for (size_t i = 0; i < size(); i++)
-    {
-      string name = parameters_[i]->getName();
+  {
+    string name = parameters_[i]->getName();
 
-      StringTokenizer stj(pattern, "*", true, false);
-      size_t pos1, pos2;
-      bool flag(true);
-      string g=stj.nextToken();
-      pos1=name.find(g);
-      if (pos1!=0)
-        flag=false;
-      pos1+=g.length();
-      while (flag && stj.hasMoreToken()){
-        g=stj.nextToken();
-        pos2=name.find(g,pos1);
-        if (pos2 == string::npos){
-          flag=false;
-          break;
-        }
-        pos1=pos2+g.length();
+    StringTokenizer stj(pattern, "*", true, false);
+    size_t pos1, pos2;
+    bool flag(true);
+    string g = stj.nextToken();
+    pos1 = name.find(g);
+    if (pos1 != 0)
+      flag = false;
+    pos1 += g.length();
+    while (flag && stj.hasMoreToken())
+    {
+      g = stj.nextToken();
+      pos2 = name.find(g, pos1);
+      if (pos2 == string::npos)
+      {
+        flag = false;
+        break;
       }
-      if (flag &&
-          ((g.length()==0) || (pos1==name.length()) || (name.rfind(g)==name.length()-g.length())))
-        pNames.push_back(name);
+      pos1 = pos2 + g.length();
     }
+    if (flag &&
+        ((g.length() == 0) || (pos1 == name.length()) || (name.rfind(g) == name.length() - g.length())))
+      pNames.push_back(name);
+  }
 
   return pNames;
 }
@@ -286,7 +293,6 @@ void ParameterList::addParameter(const Parameter& param)
   if (hasParameter(param.getName()))
     throw ParameterException("ParameterList::addParameter. Parameter with name '" + param.getName() + "' already exists.", &param);
   parameters_.push_back(shared_ptr<Parameter>(param.clone()));
-  
 }
 
 /******************************************************************************/
@@ -313,7 +319,8 @@ void ParameterList::shareParameter(const std::shared_ptr<Parameter>& param)
 
 void ParameterList::setParameter(size_t index, const Parameter& param)
 {
-  if (index >= size()) throw IndexOutOfBoundsException("ParameterList::setParameter.", index, 0, size());
+  if (index >= size())
+    throw IndexOutOfBoundsException("ParameterList::setParameter.", index, 0, size());
   parameters_[index] = shared_ptr<Parameter>(param.clone());
 }
 
@@ -461,7 +468,8 @@ bool ParameterList::matchParametersValues(const ParameterList& params, vector<si
     if (hasParameter((*it)->getName()))
     {
       Parameter* p = &getParameter((*it)->getName());
-      if (p->getValue() != (*it)->getValue()) {
+      if (p->getValue() != (*it)->getValue())
+      {
         ch |= 1;
         p->setValue((*it)->getValue());
         if (updatedParameters)
@@ -554,7 +562,8 @@ void ParameterList::deleteParameters(const std::vector<std::string>& names, bool
 /******************************************************************************/
 void ParameterList::deleteParameter(size_t index)
 {
-  if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
+  if (index >= size())
+    throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
   parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
 }
 
@@ -566,7 +575,8 @@ void ParameterList::deleteParameters(const std::vector<size_t>& indices)
   for (vector<size_t>::reverse_iterator i = tmp.rbegin(); i != tmp.rend(); i++)
   {
     size_t index = *i;
-    if (index >= size()) throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
+    if (index >= size())
+      throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
 //    Parameter* p = parameters_[index].get();
 //    delete p;
     parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
@@ -578,7 +588,8 @@ size_t ParameterList::whichParameterHasName(const std::string& name) const
 {
   for (size_t i = 0; i < size(); i++)
   {
-    if (parameters_[i]->getName() == name) return i;
+    if (parameters_[i]->getName() == name)
+      return i;
   }
   throw ParameterNotFoundException("ParameterList::whichParameterHasName.", name);
 }
@@ -604,4 +615,3 @@ void ParameterList::reset()
 }
 
 /******************************************************************************/
-

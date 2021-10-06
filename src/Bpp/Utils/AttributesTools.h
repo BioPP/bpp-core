@@ -131,9 +131,9 @@ private:
    * vector of param names already seen, to avoid infinite recursion
    *
    */
-  
+
   static std::vector<std::string> vParam_;
-  
+
 public:
   AttributesTools() {}
   virtual ~AttributesTools() {}
@@ -226,7 +226,7 @@ public:
                                char varCode = '$',
                                char varBeg = '(',
                                char varEnd = ')');
-   
+
   /**
    * @brief Global function that reads all parameters from command line and files,
    * and set the values in a map.
@@ -250,4 +250,4 @@ private:
 };
 } // end of namespace bpp.
 
-#endif // _ATTRIBUTES_TOOLS_H_
+#endif// _ATTRIBUTES_TOOLS_H_

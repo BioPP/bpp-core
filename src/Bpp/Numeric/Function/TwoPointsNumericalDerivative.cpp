@@ -123,4 +123,3 @@ void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList paramet
     f1_ = function_->getValue();
   }
 }
-
