@@ -10,6 +10,7 @@ import itertools
 import enum
 import datetime
 import dateutil.parser
+import shutil
 
 # Token classes have a match method.
 # This method returns unmatched text on match success.
@@ -119,7 +120,10 @@ class LineParser:
         return self.text.split ()
     def as_date (self):
         ''' Returns the text as a datetime obkect (not chainable, fails if badmatch) '''
-        return dateutil.parser.parse (self.text.strip ())
+        try:
+          return dateutil.parser.parse (self.text.strip ())
+        except:
+          return self.text.strip ()
 
 # Parse file line by line, store bounds and what has been parsed last
 class FileParser:
@@ -258,12 +262,15 @@ class BppFile:
                     if file_parser.last_parsed == Element.Author:
                         self.add_authors_from_elements (comment.as_tokens ())
                         continue
-            if line.match_tok ("/*").match_eol () or line.match_tok ("#include") or line.match_tok ("#ifndef") or line.match_tok ("namespace") or line.match_tok ("#define"):
+                    continue
+                else:
+                  if line.match_tok ("/*").match_eol () or line.match_tok ("#include") or line.match_tok ("#ifndef") or line.match_tok ("namespace") or line.match_tok ("#define"):
+                    file_parser.unparse_line ()
+                    break # Found stuff of next steps, get out
+                print ("Unexpected line (parsing file header): {}".format (line.text))
                 file_parser.unparse_line ()
-                break # Found stuff of next steps, get out
-            print ("Unexpected line (parsing file header): {}".format (line.text))
-            file_parser.unparse_line ()
-            break # Found unexpected line, let other pass try
+                break # Found unexpected line, let other pass try
+          
     def parse_file_license (self, file_parser):
         while True: # Parsing license
             line = file_parser.parse_line ()
@@ -282,6 +289,7 @@ class BppFile:
                     file_parser.last_parsed = Element.Space
                     break # End of license
                 self.add_license_line_from_elements (line.as_tokens ())
+                
     def parse_include_line (self, line):
         # Match a single include line ; returns LineParser with given state
         with line.match_tok ("#include") as include:
@@ -318,12 +326,14 @@ class BppFile:
             f.write ("// Last modified: {}\n".format (self.last_modification_date))
         f.write ("//\n")
         f.write ("\n")
+        
     def write_file_license (self, f):
         if self.license_lines:
             f.write ("/*\n")
             f.writelines ("  {}\n".format (l) for l in self.license_lines)
             f.write ("*/\n")
             f.write ("\n")
+
     def write_file_includes (self, f):
         # Sorted include files
         self.rel_includes.sort ()
@@ -463,6 +473,7 @@ if __name__ == "__main__":
     # Parse command line
     authors_to_add = []
     overwrite = False
+    backup = False
     overwrite_checked = False
     update_modif_date = True
     create_from = None
@@ -483,6 +494,10 @@ if __name__ == "__main__":
                 overwrite_checked = False
                 args = args[1:]
                 continue
+            if args[0] in ("backup", "b"):
+                backup = True
+                args = args[1:]
+                continue
             if args[0] in ("overwrite_checked", "o"):
                 overwrite = False
                 overwrite_checked = True
@@ -497,6 +512,7 @@ if __name__ == "__main__":
         print ("bpp_format.py [args] <file>")
         print ("\t<file> : file to reformat")
         print ("\tauthor [name] : adds [name] as recent author of the file")
+        print ("\tbackup : copy <file> to <file>.bup.<file suffix>")
         print ("\toverwrite : write directly to <file> (default is writing in <file>.new.<file suffix>)")
         print ("\toverwrite_checked : same as overwrite, but shows a diff and ask for confirmation")
         print ("\tkeep_date : do not update the last modification date")
@@ -506,25 +522,48 @@ if __name__ == "__main__":
     # Create file object.
     # In create_from mode, do not parse underlying file, just create an empty file.
     file_path = pathlib.Path (args[0])
-    bpp_file = create_bpp_file_object (file_path, parse_it = create_from is None)
+    
+    lbpp_file=[]  
+    if os.path.isdir(file_path):
+      all_file = [f for f in pathlib.Path(args[0]).rglob("*.h")] + [f for f in pathlib.Path(args[0]).rglob("*.cpp")] 
+    else:
+      all_file=[file_path]
+
+
+    lbpp_file=[]
+    for f in all_file:
+        lbpp_file.append(create_bpp_file_object (f, parse_it = create_from is None))
+
     # Update last modification date
     if update_modif_date:
+      for bpp_file in lbpp_file:
         bpp_file.last_modification_date = datetime.date.today ()
     # Add authors
     for a in authors_to_add:
+      for bpp_file in lbpp_file:
         bpp_file.add_author (a)
     # Fill info in create mode, by taking an example file
     if create_from is not None:
+      for bpp_file in lbpp_file:
         example_file = create_bpp_file_object (pathlib.Path (create_from), True)
         bpp_file.license_lines = example_file.license_lines
         bpp_file.creation_date = datetime.date.today ()
         bpp_file.has_doctest = example_file.has_doctest
     # Write back
-    out_file_path = file_path if overwrite else file_path.with_suffix (".new" + file_path.suffix)
-    print ("Writing to {}".format (out_file_path))
-    bpp_file.write_file (out_file_path)
-    # If overwrite_checked, show diff, ask before overwriting
-    if overwrite_checked:
+
+    for i in range(len(all_file)):
+      file_path=all_file[i]
+      bpp_file=lbpp_file[i]
+      
+      out_file_path = file_path if overwrite else file_path.with_suffix (".new" + file_path.suffix)
+      if backup:
+        print ("Writing backup to {}".format (file_path.with_suffix(".bup" + file_path.suffix)))
+        shutil.copyfile(file_path, file_path.with_suffix(".bup" + file_path.suffix))
+        
+      print ("Writing to {}".format (out_file_path))
+      bpp_file.write_file (out_file_path)
+      # If overwrite_checked, show diff, ask before overwriting
+      if overwrite_checked:
         import subprocess
         diff_cmd = subprocess.Popen (
                 ["diff", "--color=always", "-U3", file_path.as_posix (), out_file_path.as_posix ()],
