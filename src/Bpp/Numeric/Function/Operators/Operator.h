@@ -41,9 +41,9 @@
 #ifndef BPP_NUMERIC_FUNCTION_OPERATORS_OPERATOR_H
 #define BPP_NUMERIC_FUNCTION_OPERATORS_OPERATOR_H
 
+#include <string>
 
 #include "../../../Clonable.h"
-#include <string>
 
 namespace bpp
 {

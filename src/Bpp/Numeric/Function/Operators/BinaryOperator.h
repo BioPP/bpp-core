@@ -42,6 +42,7 @@
 #define BPP_NUMERIC_FUNCTION_OPERATORS_BINARYOPERATOR_H
 
 #include <memory>
+
 #include "Operator.h"
 
 namespace bpp
