@@ -1,46 +1,47 @@
 //
 // File: Simplex.cpp
-// Created by: Laurent Guéguen
-// Created on: mardi 31 mai 2011, à 13h 16
+// Authors:
+//   Laurent Guéguen
+// Created: mardi 31 mai 2011, à 13h 16
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for numerical calculus.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "Simplex.h"
 #include "../NumConstants.h"
-
 #include "../VectorTools.h"
+#include "Simplex.h"
 
 using namespace bpp;
 using namespace std;
@@ -51,7 +52,7 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool 
   vProb_(),
   valpha_()
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double sum = VectorTools::sum(probas);
@@ -124,9 +125,9 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
   vProb_(),
   valpha_()
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
-  
+
   for (size_t i = 0; i < dim_; i++)
   {
     vProb_.push_back(1. / static_cast<double>(dim_));
@@ -160,14 +161,14 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), 0.5, pc));
     }
     setFrequencies(vProb_);
-    
+
     break;
   }
 }
 
 void Simplex::fireParameterChanged(const ParameterList& parameters)
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double x = 1.0;
@@ -199,12 +200,16 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
       x += vProb_[i + 1];
     }
 
-    if (x>NumConstants::TINY()) // avoid rounding pb
+    if (x > NumConstants::TINY()) // avoid rounding pb
       for (auto& vp : vProb_)
+      {
         vp /= x;
+      }
     else
       for (auto& vp : vProb_)
-        vp = 1.0/double(dim_);
+      {
+        vp = 1.0 / double(dim_);
+      }
 
     break;
   case 3:
@@ -240,7 +245,7 @@ void Simplex::fireParameterChanged(const ParameterList& parameters)
 
 void Simplex::setFrequencies(const std::vector<double>& probas)
 {
-  if  (dim_==0)
+  if  (dim_ == 0)
     return;
 
   double sum = VectorTools::sum(probas);
@@ -299,4 +304,3 @@ void Simplex::setFrequencies(const std::vector<double>& probas)
 
   matchParametersValues(pl);
 }
-

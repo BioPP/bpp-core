@@ -1,48 +1,49 @@
 //
 // File: DualityDiagram.cpp
-// Created by: Mathieu Groussin
+// Authors:
+//   Mathieu Groussin
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Tools, (November 16, 2004)
-
-   This software is a computer program whose purpose is to provide classes
-   for phylogenetic data analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "DualityDiagram.h"
-#include "../../Matrix/Matrix.h"
-#include "../../Matrix/MatrixTools.h"
-#include "../../Matrix/EigenValue.h"
-#include "../../../App/ApplicationTools.h"
+  Copyright or © or Copr. Bio++ Development Tools, (November 16, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for phylogenetic data analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
 #include <cmath>
+
+#include "../../../App/ApplicationTools.h"
+#include "../../Matrix/EigenValue.h"
+#include "../../Matrix/Matrix.h"
+#include "../../Matrix/MatrixTools.h"
+#include "DualityDiagram.h"
 
 using namespace bpp;
 using namespace std;
@@ -112,11 +113,11 @@ void DualityDiagram::setData(
 }
 
 void DualityDiagram::compute_(const Matrix<double>& matrix,
-    double tol, bool verbose)
+                              double tol, bool verbose)
 {
   size_t rowNb = matrix.getNumberOfRows();
   size_t colNb = matrix.getNumberOfColumns();
-  
+
   // If there are less rows than columns, the variance-covariance or correlation matrix is obtain differently (see below)
   bool transpose = (rowNb < colNb);
 
@@ -148,7 +149,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
     MatrixTools::mult(tM2, M2, M3);
   else
     MatrixTools::mult(M2, tM2, M3);
-	
+
   EigenValue<double> eigen(M3);
   if (!eigen.isSymmetric())
     throw Exception("DualityDiagram (constructor). The variance-covariance or correlation matrix should be symmetric...");
@@ -164,7 +165,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
       rank++;
   }
 
-  if (nbAxes_ <=0)
+  if (nbAxes_ <= 0)
   {
     throw Exception("DualityDiagram (constructor). The number of axes to keep must be positive.");
   }
@@ -181,7 +182,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
   size_t cpt = 0;
   for (size_t i = eigenValues_.size(); i > (eigenValues_.size() - nbAxes_); i--)
   {
-    tmpEigenValues[cpt] = eigenValues_[i-1];
+    tmpEigenValues[cpt] = eigenValues_[i - 1];
     cpt++;
   }
   eigenValues_ = tmpEigenValues;
@@ -227,11 +228,11 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
     {
       for (unsigned int j = 0; j < eigenVectors_.getNumberOfRows(); j++)
       {
-        tmpEigenVectors(j, cpt2) = eigenVectors_(j, i-1);
+        tmpEigenVectors(j, cpt2) = eigenVectors_(j, i - 1);
       }
       cpt2++;
     }
-	  
+
     // matrix of principal axes
     MatrixTools::hadamardMult(tmpEigenVectors, tmpColWeights, ppalAxes_, true);
     // matrix of row coordinates
@@ -261,7 +262,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
     {
       for (size_t j = 0; j < eigenVectors_.getNumberOfRows(); j++)
       {
-        tmpEigenVectors(j, cpt2) = eigenVectors_(j, i-1);
+        tmpEigenVectors(j, cpt2) = eigenVectors_(j, i - 1);
       }
       cpt2++;
     }
@@ -288,4 +289,3 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
 DualityDiagram::~DualityDiagram() {}
 
 /******************************************************************************/
-

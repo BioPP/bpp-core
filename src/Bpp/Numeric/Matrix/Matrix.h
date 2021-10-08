@@ -1,53 +1,54 @@
 //
 // File: Matrix.h
-// Authors: Julien Dutheil
-//          Sylvain Gaillard
-// Created on: Tue Apr 07 11:58 2004
+// Authors:
+//   Julien Dutheil
+//   Sylvain Gaillard
+// Created: 2004-04-07 11:58:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for numerical calculus.
+#ifndef BPP_NUMERIC_MATRIX_MATRIX_H
+#define BPP_NUMERIC_MATRIX_MATRIX_H
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-
-#ifndef _MATRIX_H_
-#define _MATRIX_H_
-
+#include <iostream>
 #include <vector>
+
 #include "../../Clonable.h"
 #include "../NumConstants.h"
 #include "../NumTools.h"
 #include "../VectorExceptions.h"
-#include <iostream>
 
 namespace bpp
 {
@@ -63,14 +64,13 @@ public:
   virtual ~Matrix() {}
 
 public:
-
   /**
    * @return \f$m_{i,j}\f$.
    * @param i row index.
    * @param j column index.
    */
   virtual const Scalar& operator()(size_t i, size_t j) const = 0;
-  
+
   /**
    * @return \f$m_{i,j}\f$.
    * @param i row index.
@@ -198,7 +198,7 @@ public:
     return m_[i];
   }
 
-  std::vector<Scalar>& getRow(size_t i) 
+  std::vector<Scalar>& getRow(size_t i)
   {
     return m_[i];
   }
@@ -221,7 +221,7 @@ public:
 
   void addRow(const std::vector<Scalar>& newRow)
   {
-    if (getNumberOfColumns()!=0 && newRow.size() != getNumberOfColumns())
+    if (getNumberOfColumns() != 0 && newRow.size() != getNumberOfColumns())
       throw DimensionException("RowMatrix::addRow: invalid row dimension", newRow.size(), getNumberOfColumns());
     m_.push_back(newRow);
   }
@@ -233,107 +233,107 @@ public:
  * This matrix is a vector of vector of Scalar.
  * Column access is in \f$O(1)\f$ while row access is in \f$O(nCol)\f$.
  */
-  template<class Scalar>
-  class ColMatrix :
-    public Matrix<Scalar>
+template<class Scalar>
+class ColMatrix :
+  public Matrix<Scalar>
+{
+private:
+  std::vector< std::vector<Scalar> > m_;
+
+public:
+  ColMatrix() : m_() {}
+
+  ColMatrix(size_t nRow, size_t nCol) : m_(nCol)
   {
-  private:
-    std::vector< std::vector<Scalar> > m_;
-
-  public:
-    ColMatrix() : m_() {}
-
-    ColMatrix(size_t nRow, size_t nCol) : m_(nCol)
+    for (size_t i = 0; i < nCol; i++)
     {
-      for (size_t i = 0; i < nCol; i++)
+      m_[i].resize(nRow);
+    }
+  }
+
+  ColMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfColumns())
+  {
+    size_t nr = m.getNumberOfRows();
+    size_t nc = m.getNumberOfColumns();
+    for (size_t i = 0; i < nc; i++)
+    {
+      m_[i].resize(nr);
+      for (size_t j = 0; j < nr; j++)
       {
-        m_[i].resize(nRow);
+        m_[i][j] = m(j, i);
       }
     }
+  }
 
-    ColMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfColumns())
+  ColMatrix& operator=(const Matrix<Scalar>& m)
+  {
+    size_t nc = m.getNumberOfColumns();
+    m_.resize(nc);
+    size_t nr = m.getNumberOfRows();
+    for (size_t i = 0; i < nc; i++)
     {
-      size_t nr = m.getNumberOfRows();
-      size_t nc = m.getNumberOfColumns();
-      for (size_t i = 0; i < nc; i++)
+      m_[i].resize(nr);
+      for (size_t j = 0; j < nr; j++)
       {
-        m_[i].resize(nr);
-        for (size_t j = 0; j < nr; j++)
-        {
-          m_[i][j] = m(j, i);
-        }
+        m_[i][j] = m(j, i);
       }
     }
+    return *this;
+  }
 
-    ColMatrix& operator=(const Matrix<Scalar>& m)
+  virtual ~ColMatrix() {}
+
+public:
+  ColMatrix* clone() const { return new ColMatrix(*this); }
+
+  const Scalar& operator()(size_t i, size_t j) const { return m_[j][i]; }
+
+  Scalar& operator()(size_t i, size_t j) { return m_[j][i]; }
+
+  size_t getNumberOfColumns() const { return m_.size(); }
+
+  size_t getNumberOfRows() const { return m_.size() == 0 ? 0 : m_[0].size(); }
+
+  std::vector<Scalar> row(size_t i) const
+  {
+    std::vector<Scalar> r(getNumberOfColumns());
+    for (size_t j = 0; j < getNumberOfColumns(); j++) { r[j] = operator()(i, j); }
+    return r;
+  }
+
+  const std::vector<Scalar>& getCol(size_t i) const
+  {
+    return m_[i];
+  }
+
+  std::vector<Scalar>& getCol(size_t i)
+  {
+    return m_[i];
+  }
+
+  std::vector<Scalar> col(size_t j) const
+  {
+    std::vector<Scalar> c(getNumberOfRows());
+    for (size_t i = 0; i < getNumberOfRows(); i++) { c[i] = operator()(i, j); }
+    return c;
+  }
+
+  void resize(size_t nRows, size_t nCols)
+  {
+    m_.resize(nCols);
+    for (size_t i = 0; i < nCols; i++)
     {
-      size_t nc = m.getNumberOfColumns();
-      m_.resize(nc);
-      size_t nr = m.getNumberOfRows();
-      for (size_t i = 0; i < nc; i++)
-      {
-        m_[i].resize(nr);
-        for (size_t j = 0; j < nr; j++)
-        {
-          m_[i][j] = m(j, i);
-        }
-      }
-      return *this;
+      m_[i].resize(nRows);
     }
+  }
 
-    virtual ~ColMatrix() {}
-
-  public:
-    ColMatrix* clone() const { return new ColMatrix(*this); }
-
-    const Scalar& operator()(size_t i, size_t j) const { return m_[j][i]; }
-
-    Scalar& operator()(size_t i, size_t j) { return m_[j][i]; }
-
-    size_t getNumberOfColumns() const { return m_.size(); }
-
-    size_t getNumberOfRows() const { return m_.size() == 0 ? 0 : m_[0].size(); }
-
-    std::vector<Scalar> row(size_t i) const
-    {
-      std::vector<Scalar> r(getNumberOfColumns());
-      for (size_t j = 0; j < getNumberOfColumns(); j++) { r[j] = operator()(i, j); }
-      return r;
-    }
-
-    const std::vector<Scalar>& getCol(size_t i) const
-    {
-      return m_[i];
-    }
-
-    std::vector<Scalar>& getCol(size_t i) 
-    {
-      return m_[i];
-    }
-
-    std::vector<Scalar> col(size_t j) const
-    {
-      std::vector<Scalar> c(getNumberOfRows());
-      for (size_t i = 0; i < getNumberOfRows(); i++) { c[i] = operator()(i, j); }
-      return c;
-    }
-
-    void resize(size_t nRows, size_t nCols)
-    {
-      m_.resize(nCols);
-      for (size_t i = 0; i < nCols; i++)
-      {
-        m_[i].resize(nRows);
-      }
-    }
-
-    void addCol(const std::vector<Scalar>& newCol)
-    {
-      if (getNumberOfRows()!=0 && newCol.size() != getNumberOfRows())
-        throw DimensionException("ColMatrix::addCol: invalid column dimension", newCol.size(), getNumberOfRows());
-      m_.push_back(newCol);
-    }
-  };
+  void addCol(const std::vector<Scalar>& newCol)
+  {
+    if (getNumberOfRows() != 0 && newCol.size() != getNumberOfRows())
+      throw DimensionException("ColMatrix::addCol: invalid column dimension", newCol.size(), getNumberOfRows());
+    m_.push_back(newCol);
+  }
+};
 
 /**
  * @brief Matrix storage in one vector.
@@ -375,11 +375,15 @@ public:
     rows_(nRow),
     cols_(nCol) { resize_(nRow, nCol); }
 
-  LinearMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfRows() * m.getNumberOfColumns()), rows_(m.getNumberOfRows()), cols_(m.getNumberOfColumns()) 
+  LinearMatrix(const Matrix<Scalar>& m) : m_(m.getNumberOfRows() * m.getNumberOfColumns()), rows_(m.getNumberOfRows()), cols_(m.getNumberOfColumns())
   {
     for (size_t i = 0; i < rows_; i++)
+    {
       for (size_t j = 0; j < cols_; j++)
+      {
         m_[i * cols_ + j] = m(i, j);
+      }
+    }
   }
 
   LinearMatrix& operator=(const Matrix<Scalar>& m)
@@ -388,9 +392,13 @@ public:
     cols_ = m.getNumberOfColumns();
     m_.resize(rows_ * cols_);
     for (size_t i = 0; i < rows_; i++)
+    {
       for (size_t j = 0; j < cols_; j++)
+      {
         m_[i * cols_ + j] = m(i, j);
-    
+      }
+    }
+
     return *this;
   }
 
@@ -537,6 +545,4 @@ bool operator==(const Matrix<Scalar>& m1, const Matrix<Scalar>& m2)
   return true;
 }
 } // end of namespace bpp.
-
-#endif // _MATRIX_H_
-
+#endif // BPP_NUMERIC_MATRIX_MATRIX_H

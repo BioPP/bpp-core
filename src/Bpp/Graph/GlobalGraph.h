@@ -1,51 +1,53 @@
 //
-// File GlobalGraph.h
-// Created by: Thomas Bigot
-//             Laurent Gueguen
-// Last modification : vendredi 4 novembre 2016, à 10h 19
+// File: GlobalGraph.h
+// Authors:
+//   Thomas Bigot
+//   Laurent Gueguen
+// Last modified: vendredi 4 novembre 2016, à 10h 19
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide utilitary
+  classes. This file belongs to the Bio++ Project.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide utilitary
-   classes. This file belongs to the Bio++ Project.
+#ifndef BPP_GRAPH_GLOBALGRAPH_H
+#define BPP_GRAPH_GLOBALGRAPH_H
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#ifndef _GLOBAL_GRAPH_H_
-#define _GLOBAL_GRAPH_H_
+#include <limits>
+#include <map>
+#include <set>
+#include <string>
 
 #include "../Clonable.h"
-
-#include <set>
-#include <map>
-#include <string>
 #include "Graph.h"
 
 namespace bpp
@@ -173,17 +175,6 @@ private:
   void unlinkInEdgeStructure_(const Edge& edge);
 
 protected:
-  /**
-   * get the Highest Node ID (for vector sizing)
-   */
-  Node getHighestNodeID() const;
-
-  /**
-   * get the Highest Node ID (for vector sizing)
-   */
-  Edge getHighestEdgeID() const;
-
-
   /**
    * Check that a node exists. If not, throw an exception.
    * @param node node that has to be checked
@@ -560,7 +551,7 @@ public:
    * @return a pair of the IDs of the Nodes at each extremity of the edge
    *        example : N1--E1-->N2; getNodes(E1) will return (N1,N2);
    */
-  
+
   std::pair<Graph::NodeId, Graph::NodeId> getNodes(Graph::EdgeId edge) const;
 
   /**
@@ -766,12 +757,12 @@ private:
 
 public:
   template<bool B = is_const>
-  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph &gg, typename std::enable_if<B>::type * = 0) : it_(gg.nodeStructure_.begin()),
+  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph& gg, typename std::enable_if<B>::type* = 0) : it_(gg.nodeStructure_.begin()),
     begin_(gg.nodeStructure_.begin()),
     end_(gg.nodeStructure_.end()) {}
 
   template<bool B = is_const>
-  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph & gg, typename std::enable_if<!B>::type * = 0) : it_(gg.nodeStructure_.begin()),
+  NodesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph& gg, typename std::enable_if<!B>::type* = 0) : it_(gg.nodeStructure_.begin()),
     begin_(gg.nodeStructure_.begin()),
     end_(gg.nodeStructure_.end()) {}
 
@@ -810,14 +801,14 @@ public:
   virtual ~NeighborIteratorClass<is_const>(){}
 
   template<bool B = is_const>
-  NeighborIteratorClass<is_const>(const std::map<GlobalGraph::Node, GlobalGraph::Edge> &map, typename std::enable_if<B>::type * = 0) :
+  NeighborIteratorClass<is_const>(const std::map<GlobalGraph::Node, GlobalGraph::Edge>& map, typename std::enable_if<B>::type* = 0) :
     map_(map),
     it_(map_.begin()),
     begin_(map_.begin()),
     end_(map_.end()) {}
 
   template<bool B = is_const>
-  NeighborIteratorClass<is_const>(std::map<GlobalGraph::Node, GlobalGraph::Edge> &map, typename std::enable_if<!B>::type * = 0) :
+  NeighborIteratorClass<is_const>(std::map<GlobalGraph::Node, GlobalGraph::Edge>& map, typename std::enable_if<!B>::type* = 0) :
     map_(map),
     it_(map_.begin()),
     begin_(map_.begin()),
@@ -840,9 +831,9 @@ class NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const> :
   virtual public Graph::NodeIterator
 {
 public:
-  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
-  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
   ~NodesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(){}
 
@@ -860,9 +851,9 @@ class NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const> :
   virtual public Graph::NodeIterator
 {
 public:
-  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
-  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
   ~NodesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(){}
 
@@ -896,12 +887,12 @@ private:
 
 public:
   template<bool B = is_const>
-  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph &gg, typename std::enable_if<B>::type * = 0) : it_(gg.edgeStructure_.begin()),
+  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(const GlobalGraph& gg, typename std::enable_if<B>::type* = 0) : it_(gg.edgeStructure_.begin()),
     begin_(gg.edgeStructure_.begin()),
     end_(gg.edgeStructure_.end()) {}
 
   template<bool B = is_const>
-  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph & gg, typename std::enable_if<!B>::type * = 0) : it_(gg.edgeStructure_.begin()),
+  EdgesIteratorClass<Graph::ALLGRAPHITER, is_const>(GlobalGraph& gg, typename std::enable_if<!B>::type* = 0) : it_(gg.edgeStructure_.begin()),
     begin_(gg.edgeStructure_.begin()),
     end_(gg.edgeStructure_.end()) {}
 
@@ -921,9 +912,9 @@ class EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const> :
   public Graph::EdgeIterator
 {
 public:
-  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
-  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
+  EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.first) {}
 
   ~EdgesIteratorClass<Graph::OUTGOINGNEIGHBORITER, is_const>(){}
 
@@ -940,9 +931,9 @@ class EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const> :
   public Graph::EdgeIterator
 {
 public:
-  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph &gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(const GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
-  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph & gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
+  EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(GlobalGraph& gg, GlobalGraph::NodeId node) : NeighborIteratorClass<is_const>(gg.nodeStructure_.find(node)->second.second) {}
 
   ~EdgesIteratorClass<Graph::INCOMINGNEIGHBORITER, is_const>(){}
 
@@ -953,5 +944,4 @@ public:
   Graph::EdgeId operator*() {return NeighborIteratorClass<is_const>::it_->second; }
 };
 }
-
-#endif
+#endif // BPP_GRAPH_GLOBALGRAPH_H

@@ -1,45 +1,46 @@
 //
 // File: RescaledHmmLikelihood.cpp
-// Created by: Julien Dutheil
-// Created on: Fri Oct 26 11:57 2007
+// Authors:
+//   Julien Dutheil
+// Created: 2007-10-26 11:57:00
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for phylogenetic data analysis.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for phylogenetic data analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
-#include "RescaledHmmLikelihood.h"
 
 #include "../../App/ApplicationTools.h"
+#include "RescaledHmmLikelihood.h"
 
 // from the STL:
 #include <iostream>
@@ -48,10 +49,10 @@ using namespace bpp;
 using namespace std;
 
 RescaledHmmLikelihood::RescaledHmmLikelihood(
-    HmmStateAlphabet* hiddenAlphabet,
-    HmmTransitionMatrix* transitionMatrix,
-    HmmEmissionProbabilities* emissionProbabilities,
-    const std::string& prefix):
+  HmmStateAlphabet* hiddenAlphabet,
+  HmmTransitionMatrix* transitionMatrix,
+  HmmEmissionProbabilities* emissionProbabilities,
+  const std::string& prefix) :
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
@@ -70,9 +71,12 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
   nbStates_(),
   nbSites_()
 {
-  if (!hiddenAlphabet)        throw Exception("RescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
-  if (!transitionMatrix)      throw Exception("RescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
-  if (!emissionProbabilities) throw Exception("RescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
+  if (!hiddenAlphabet)
+    throw Exception("RescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
+  if (!transitionMatrix)
+    throw Exception("RescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
+  if (!emissionProbabilities)
+    throw Exception("RescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
   if (!hiddenAlphabet_->worksWith(transitionMatrix->getHmmStateAlphabet()))
     throw Exception("RescaledHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   if (!hiddenAlphabet_->worksWith(emissionProbabilities->getHmmStateAlphabet()))
@@ -80,17 +84,17 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
   nbStates_ = hiddenAlphabet_->getNumberOfStates();
   nbSites_ = emissionProbabilities_->getNumberOfPositions();
 
-  //Manage parameters:
+  // Manage parameters:
   addParameters_(hiddenAlphabet_->getParameters());
   addParameters_(transitionMatrix_->getParameters());
   addParameters_(emissionProbabilities_->getParameters());
 
-  //Init arrays:
+  // Init arrays:
   likelihood_.resize(nbSites_ * nbStates_);
-  
+
   scales_.resize(nbSites_);
-  
-  //Compute:
+
+  // Compute:
   computeForward_();
 }
 
@@ -111,11 +115,13 @@ void RescaledHmmLikelihood::fireParameterChanged(const ParameterList& pl)
   // these lines are necessary because the transitions and emissions can depend on the alphabet.
   // we could use a StateChangeEvent, but this would result in computing some calculations twice in some cases
   // (when both the alphabet and other parameter changed).
-  if (alphabetChanged && !transitionsChanged) transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
-  if (alphabetChanged && !emissionChanged) emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
-  
+  if (alphabetChanged && !transitionsChanged)
+    transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
+  if (alphabetChanged && !emissionChanged)
+    emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
+
   computeForward_();
-  backLikelihoodUpToDate_=false;
+  backLikelihoodUpToDate_ = false;
 }
 
 /***************************************************************************************************************************/
@@ -127,11 +133,12 @@ void RescaledHmmLikelihood::computeForward_()
   vector<double> lScales(nbSites_);
   vector<double> trans(nbStates_ * nbStates_);
 
-  //Transition probabilities:
+  // Transition probabilities:
   for (size_t i = 0; i < nbStates_; i++)
   {
     size_t ii = i * nbStates_;
-    for (size_t j = 0; j < nbStates_; j++) {
+    for (size_t j = 0; j < nbStates_; j++)
+    {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
       if (std::isnan(trans[ii + j]))
         throw Exception("RescaledHmmLikelihood::computeForward_. NaN transition probability");
@@ -140,7 +147,7 @@ void RescaledHmmLikelihood::computeForward_()
     }
   }
 
-  //Initialisation:
+  // Initialisation:
   scales_[0] = 0;
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
   for (size_t j = 0; j < nbStates_; j++)
@@ -150,10 +157,10 @@ void RescaledHmmLikelihood::computeForward_()
     for (size_t k = 0; k < nbStates_; k++)
     {
       x += trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k];
-      //cerr << j << "\t" << k << "\t" << trans[k + jj] << "\t" << transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << x << endl;  
+      // cerr << j << "\t" << k << "\t" << trans[k + jj] << "\t" << transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << trans[k + jj] * transitionMatrix_->getEquilibriumFrequencies()[k] << "\t" << x << endl;
     }
     tmp[j] = (*emissions)[j] * x;
-    //cerr << "e[j]=" << (*emissions)[j] << "\t" << tmp[j] << endl;
+    // cerr << "e[j]=" << (*emissions)[j] << "\t" << tmp[j] << endl;
     scales_[0] += tmp[j];
   }
   for (size_t j = 0; j < nbStates_; j++)
@@ -161,18 +168,19 @@ void RescaledHmmLikelihood::computeForward_()
     likelihood_[j] = tmp[j] / scales_[0];
   }
   lScales[0] = log(scales_[0]);
- 
-  //Recursion:
-  size_t nextBrkPt = nbSites_; //next break point
+
+  // Recursion:
+  size_t nextBrkPt = nbSites_; // next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
-  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-  
+  if (bpIt != breakPoints_.end())
+    nextBrkPt = *bpIt;
+
   double a;
   for (size_t i = 1; i < nbSites_; i++)
   {
     size_t ii = i * nbStates_;
     size_t iip = (i - 1) * nbStates_;
-    scales_[i] = 0 ;
+    scales_[i] = 0;
     emissions = &(*emissionProbabilities_)(i);
     if (i < nextBrkPt)
     {
@@ -183,11 +191,11 @@ void RescaledHmmLikelihood::computeForward_()
         for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * likelihood_[iip + k];
-          //if (a < 0)
-          //{
+          // if (a < 0)
+          // {
           //  (*ApplicationTools::warning << "Negative value for likelihood at " << i << ", state " << j << ": " << likelihood_[iip + k] << ", Pij = " << trans[jj + k]).endLine();
           //  a = 0;
-          //}
+          // }
           x += a;
         }
         tmp[j] = (*emissions)[j] * x;
@@ -199,7 +207,7 @@ void RescaledHmmLikelihood::computeForward_()
         scales_[i] += tmp[j];
       }
     }
-    else //Reset markov chain:
+    else // Reset markov chain:
     {
       for (size_t j = 0; j < nbStates_; j++)
       {
@@ -208,30 +216,34 @@ void RescaledHmmLikelihood::computeForward_()
         for (size_t k = 0; k < nbStates_; k++)
         {
           a = trans[jj + k] * transitionMatrix_->getEquilibriumFrequencies()[k];
-          //if (a < 0)
-          //{
+          // if (a < 0)
+          // {
           //  (*ApplicationTools::warning << "Negative value for likelihood at " << i << ", state " << j << ": ,Pij = " << trans[jj + k]).endLine();
           //  a = 0;
-          //}
+          // }
           x += a;
         }
         tmp[j] = (*emissions)[j] * x;
-        //if (tmp[j] < 0)
-        //{
+        // if (tmp[j] < 0)
+        // {
         //  (*ApplicationTools::warning << "Negative emission probability at " << i << ", state " << j << ": " << (*emissions)[j]).endLine();
         //  tmp[j] = 0;
-        //}
+        // }
         scales_[i] += tmp[j];
       }
       bpIt++;
-      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-      else nextBrkPt = nbSites_;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
     }
 
     for (size_t j = 0; j < nbStates_; j++)
     {
-      if (scales_[i] > 0) likelihood_[ii + j] = tmp[j] / scales_[i];
-      else                likelihood_[ii + j] = 0;
+      if (scales_[i] > 0)
+        likelihood_[ii + j] = tmp[j] / scales_[i];
+      else
+        likelihood_[ii + j] = 0;
     }
     lScales[i] = log(scales_[i]);
   }
@@ -252,34 +264,39 @@ void RescaledHmmLikelihood::computeBackward_() const
   {
     backLikelihood_.resize(nbSites_);
     for (size_t i = 0; i < nbSites_; i++)
+    {
       backLikelihood_[i].resize(nbStates_);
+    }
   }
 
   double x;
 
-  //Transition probabilities:
+  // Transition probabilities:
   vector<double> trans(nbStates_ * nbStates_);
   for (size_t i = 0; i < nbStates_; i++)
   {
     size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
+    {
       trans[ii + j] = transitionMatrix_->Pij(i, j);
+    }
   }
 
 
-  //Initialisation:
+  // Initialisation:
   const vector<double>* emissions = 0;
-  size_t nextBrkPt = 0; //next break point
+  size_t nextBrkPt = 0; // next break point
   vector<size_t>::const_reverse_iterator bpIt = breakPoints_.rbegin();
-  if (bpIt != breakPoints_.rend()) nextBrkPt = *bpIt;
-  
+  if (bpIt != breakPoints_.rend())
+    nextBrkPt = *bpIt;
+
   for (size_t j = 0; j < nbStates_; j++)
   {
     x = 0;
     backLikelihood_[nbSites_ - 1][j] = 1.;
   }
 
-  //Recursion:
+  // Recursion:
   for (size_t i = nbSites_ - 1; i > 0; i--)
   {
     emissions = &(*emissionProbabilities_)(i);
@@ -293,18 +310,20 @@ void RescaledHmmLikelihood::computeBackward_() const
         {
           x += (*emissions)[k] * trans[jj + k] * backLikelihood_[i][k];
         }
-        backLikelihood_[i-1][j] = x / scales_[i];
-      }    
+        backLikelihood_[i - 1][j] = x / scales_[i];
+      }
     }
-    else //Reset markov chain
+    else // Reset markov chain
     {
       for (size_t j = 0; j < nbStates_; j++)
       {
-        backLikelihood_[i-1][j] = 1.;
-      }    
+        backLikelihood_[i - 1][j] = 1.;
+      }
       bpIt++;
-      if (bpIt != breakPoints_.rend()) nextBrkPt = *bpIt;
-      else nextBrkPt = 0;
+      if (bpIt != breakPoints_.rend())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = 0;
     }
   }
 
@@ -318,7 +337,9 @@ double RescaledHmmLikelihood::getLikelihoodForASite(size_t site) const
   Vdouble probs = getHiddenStatesPosteriorProbabilitiesForASite(site);
   double x = 0;
   for (size_t i = 0; i < nbStates_; i++)
-    x += probs[i] * (*emissionProbabilities_)(site,i);
+  {
+    x += probs[i] * (*emissionProbabilities_)(site, i);
+  }
 
   return x;
 }
@@ -330,11 +351,13 @@ Vdouble RescaledHmmLikelihood::getLikelihoodForEachSite() const
 
   Vdouble ret(nbSites_);
   for (size_t i = 0; i < nbSites_; i++)
+  {
+    ret[i] = 0;
+    for (size_t j = 0; j < nbStates_; j++)
     {
-      ret[i] = 0;
-      for (size_t j = 0; j < nbStates_; j++)
-        ret[i] += vv[i][j] * (*emissionProbabilities_)(i,j);
+      ret[i] += vv[i][j] * (*emissionProbabilities_)(i, j);
     }
+  }
 
   return ret;
 }
@@ -347,7 +370,7 @@ Vdouble RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(siz
     computeBackward_();
 
   Vdouble probs(nbStates_);
-  
+
   for (size_t j = 0; j < nbStates_; j++)
   {
     probs[j] = likelihood_[site * nbStates_ + j] * backLikelihood_[site][j];
@@ -368,7 +391,7 @@ void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< s
 
   if (!backLikelihoodUpToDate_)
     computeBackward_();
-  
+
   for (size_t i = 0; i < nbSites_; i++)
   {
     size_t ii = i * nbStates_;
@@ -383,23 +406,26 @@ void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< s
 
 void RescaledHmmLikelihood::computeDForward_() const
 {
-  //Init arrays:
-  if (dLikelihood_.size()==0){
+  // Init arrays:
+  if (dLikelihood_.size() == 0)
+  {
     dLikelihood_.resize(nbSites_);
-    for (size_t i=0;i<nbSites_;i++)
+    for (size_t i = 0; i < nbSites_; i++)
+    {
       dLikelihood_[i].resize(nbStates_);
+    }
   }
-  if (dScales_.size()==0)
+  if (dScales_.size() == 0)
     dScales_.resize(nbSites_);
-  
+
   double x;
   vector<double> tmp(nbStates_), dTmp(nbStates_);
   vector<double> dLScales(nbSites_);
-  
-  //Transition probabilities:
+
+  // Transition probabilities:
   const ColMatrix<double> trans(transitionMatrix_->getPij());
 
-  //Initialisation:
+  // Initialisation:
   dScales_[0] = 0;
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
   const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
@@ -412,62 +438,71 @@ void RescaledHmmLikelihood::computeDForward_() const
     dScales_[0] += dTmp[j];
   }
 
-  dLScales[0]=dScales_[0]/scales_[0];
+  dLScales[0] = dScales_[0] / scales_[0];
 
-  
+
   for (size_t j = 0; j < nbStates_; j++)
-    dLikelihood_[0][j] = (dTmp[j] * scales_[0] - tmp[j] * dScales_[0]) / pow(scales_[0],2);
- 
-  //Recursion:
+  {
+    dLikelihood_[0][j] = (dTmp[j] * scales_[0] - tmp[j] * dScales_[0]) / pow(scales_[0], 2);
+  }
 
-  size_t nextBrkPt = nbSites_; //next break point
+  // Recursion:
+
+  size_t nextBrkPt = nbSites_; // next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
-  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-  
+  if (bpIt != breakPoints_.end())
+    nextBrkPt = *bpIt;
+
   for (size_t i = 1; i < nbSites_; i++)
   {
     size_t iip = (i - 1) * nbStates_;
 
-    dScales_[i] = 0 ;
+    dScales_[i] = 0;
 
     emissions = &(*emissionProbabilities_)(i);
     dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
-    
+
     if (i < nextBrkPt)
     {
       for (size_t j = 0; j < nbStates_; j++)
       {
         x = 0;
         for (size_t k = 0; k < nbStates_; k++)
-          x += trans(k,j) * likelihood_[iip + k];
+        {
+          x += trans(k, j) * likelihood_[iip + k];
+        }
 
         tmp[j] = (*emissions)[j] * x;
-        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1]);
-          
+        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i - 1]);
+
         dScales_[i] += dTmp[j];
       }
     }
-    else //Reset markov chain:
+    else // Reset markov chain:
     {
       for (size_t j = 0; j < nbStates_; j++)
       {
         dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
         tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
-        
+
         dScales_[i] += dTmp[j];
       }
-      
+
       bpIt++;
-      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-      else nextBrkPt = nbSites_;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
     }
 
-    dLScales[i]=dScales_[i]/scales_[i];
+    dLScales[i] = dScales_[i] / scales_[i];
 
     for (size_t j = 0; j < nbStates_; j++)
-      dLikelihood_[i][j] = (dTmp[j] * scales_[i] - tmp[j] * dScales_[i]) / pow(scales_[i],2);
+    {
+      dLikelihood_[i][j] = (dTmp[j] * scales_[i] - tmp[j] * dScales_[i]) / pow(scales_[i], 2);
+    }
   }
-  
+
   greater<double> cmp;
   sort(dLScales.begin(), dLScales.end(), cmp);
   dLogLik_ = 0;
@@ -479,7 +514,7 @@ void RescaledHmmLikelihood::computeDForward_() const
 
 double RescaledHmmLikelihood::getDLogLikelihoodForASite(size_t site) const
 {
-  return dScales_[site]/scales_[site];
+  return dScales_[site] / scales_[site];
 }
 
 /***************************************************************************************************************************/
@@ -487,23 +522,26 @@ double RescaledHmmLikelihood::getDLogLikelihoodForASite(size_t site) const
 
 void RescaledHmmLikelihood::computeD2Forward_() const
 {
-  //Init arrays:
-  if (d2Likelihood_.size()==0){
+  // Init arrays:
+  if (d2Likelihood_.size() == 0)
+  {
     d2Likelihood_.resize(nbSites_);
-    for (size_t i=0;i<nbSites_;i++)
+    for (size_t i = 0; i < nbSites_; i++)
+    {
       d2Likelihood_[i].resize(nbStates_);
+    }
   }
-  if (d2Scales_.size()==0)
+  if (d2Scales_.size() == 0)
     d2Scales_.resize(nbSites_);
-  
+
   double x;
   vector<double> tmp(nbStates_), dTmp(nbStates_), d2Tmp(nbStates_);
   vector<double> d2LScales(nbSites_);
-  
-  //Transition probabilities:
+
+  // Transition probabilities:
   const ColMatrix<double> trans(transitionMatrix_->getPij());
 
-  //Initialisation:
+  // Initialisation:
   d2Scales_[0] = 0;
   const vector<double>* emissions = &(*emissionProbabilities_)(0);
   const vector<double>* dEmissions = &emissionProbabilities_->getDEmissionProbabilities(0);
@@ -518,26 +556,29 @@ void RescaledHmmLikelihood::computeD2Forward_() const
     d2Scales_[0] += d2Tmp[j];
   }
 
-  d2LScales[0]=d2Scales_[0]/scales_[0]-pow(dScales_[0]/scales_[0],2);
-  
-  for (size_t j = 0; j < nbStates_; j++)
-    d2Likelihood_[0][j] = d2Tmp[j] / scales_[0] - (d2Scales_[0] * tmp[j] + 2 * dScales_[0] * dTmp[j]) / pow(scales_[0],2)
-      +  2 * pow(dScales_[0],2) * tmp[j] / pow(scales_[0],3);
-   
-  //Recursion:
+  d2LScales[0] = d2Scales_[0] / scales_[0] - pow(dScales_[0] / scales_[0], 2);
 
-  size_t nextBrkPt = nbSites_; //next break point
+  for (size_t j = 0; j < nbStates_; j++)
+  {
+    d2Likelihood_[0][j] = d2Tmp[j] / scales_[0] - (d2Scales_[0] * tmp[j] + 2 * dScales_[0] * dTmp[j]) / pow(scales_[0], 2)
+                          +  2 * pow(dScales_[0], 2) * tmp[j] / pow(scales_[0], 3);
+  }
+
+  // Recursion:
+
+  size_t nextBrkPt = nbSites_; // next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
-  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-  
+  if (bpIt != breakPoints_.end())
+    nextBrkPt = *bpIt;
+
   for (size_t i = 1; i < nbSites_; i++)
   {
-    dScales_[i] = 0 ;
+    dScales_[i] = 0;
 
     emissions = &(*emissionProbabilities_)(i);
     dEmissions = &emissionProbabilities_->getDEmissionProbabilities(i);
     d2Emissions = &emissionProbabilities_->getD2EmissionProbabilities(i);
-    
+
     if (i < nextBrkPt)
     {
       size_t iip = (i - 1) * nbStates_;
@@ -546,39 +587,45 @@ void RescaledHmmLikelihood::computeD2Forward_() const
       {
         x = 0;
         for (size_t k = 0; k < nbStates_; k++)
-          x += trans(k,j) * likelihood_[iip + k];
+        {
+          x += trans(k, j) * likelihood_[iip + k];
+        }
 
         tmp[j] = (*emissions)[j] * x;
-        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1]);
-        d2Tmp[j] = (*d2Emissions)[j] * x + 2 * (*dEmissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i-1])
-          + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * d2Likelihood_[i-1]);
-          
+        dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i - 1]);
+        d2Tmp[j] = (*d2Emissions)[j] * x + 2 * (*dEmissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i - 1])
+                   + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * d2Likelihood_[i - 1]);
+
         d2Scales_[i] += d2Tmp[j];
       }
     }
-    else //Reset markov chain:
+    else // Reset markov chain:
     {
       for (size_t j = 0; j < nbStates_; j++)
       {
         tmp[j] = (*emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
         dTmp[j] = (*dEmissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
         d2Tmp[j] = (*d2Emissions)[j] * transitionMatrix_->getEquilibriumFrequencies()[j];
-        
+
         d2Scales_[i] += d2Tmp[j];
       }
-      
+
       bpIt++;
-      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-      else nextBrkPt = nbSites_;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
     }
 
-    d2LScales[i]=d2Scales_[i]/scales_[i]-pow(dScales_[i]/scales_[i],2);
-  
+    d2LScales[i] = d2Scales_[i] / scales_[i] - pow(dScales_[i] / scales_[i], 2);
+
     for (size_t j = 0; j < nbStates_; j++)
-      d2Likelihood_[i][j] = d2Tmp[j] / scales_[i] - (d2Scales_[i] * tmp[j] + 2 * dScales_[i] * dTmp[j]) / pow(scales_[i],2)
-        +  2 * pow(dScales_[i],2) * tmp[j] / pow(scales_[i],3);
+    {
+      d2Likelihood_[i][j] = d2Tmp[j] / scales_[i] - (d2Scales_[i] * tmp[j] + 2 * dScales_[i] * dTmp[j]) / pow(scales_[i], 2)
+                            +  2 * pow(dScales_[i], 2) * tmp[j] / pow(scales_[i], 3);
+    }
   }
-  
+
   greater<double> cmp;
   sort(d2LScales.begin(), d2LScales.end(), cmp);
   dLogLik_ = 0;
@@ -592,6 +639,5 @@ void RescaledHmmLikelihood::computeD2Forward_() const
 
 double RescaledHmmLikelihood::getD2LogLikelihoodForASite(size_t site) const
 {
-  return d2Scales_[site]/scales_[site]-pow(dScales_[site]/scales_[site],2);
+  return d2Scales_[site] / scales_[site] - pow(dScales_[site] / scales_[site], 2);
 }
-

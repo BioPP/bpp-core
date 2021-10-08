@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2006-05-04 10:21:00
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -46,33 +46,31 @@
 
 namespace bpp
 {
-  BppString::BppString() = default;
-  BppString::BppString(const char* value)
-    : text_(value)
-  {
-  }
-  BppString::BppString(const std::string& value)
-    : text_(value)
-  {
-  }
-  BppString& BppString::operator=(const char* value)
-  {
-    text_ = value;
-    return *this;
-  }
-  BppString& BppString::operator=(const std::string& value)
-  {
-    text_ = value;
-    return *this;
-  }
+BppString::BppString() = default;
+BppString::BppString(const char* value)
+  : text_(value)
+{}
+BppString::BppString(const std::string& value)
+  : text_(value)
+{}
+BppString& BppString::operator=(const char* value)
+{
+  text_ = value;
+  return *this;
+}
+BppString& BppString::operator=(const std::string& value)
+{
+  text_ = value;
+  return *this;
+}
 
-  BppString* BppString::clone() const { return new BppString(*this); }
+BppString* BppString::clone() const { return new BppString(*this); }
 
-  const std::string& BppString::toSTL() const { return text_; }
+const std::string& BppString::toSTL() const { return text_; }
 
-  std::ostream& operator<<(std::ostream& out, const BppString& s)
-  {
-    out << s.toSTL();
-    return out;
-  }
+std::ostream& operator<<(std::ostream& out, const BppString& s)
+{
+  out << s.toSTL();
+  return out;
+}
 } // namespace bpp

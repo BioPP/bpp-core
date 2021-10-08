@@ -1,47 +1,49 @@
 //
 // File: GoldenSectionSearch.cpp
-// Created by: Julien Dutheil 
-// Created on: Mon Nov 10 10:42:17 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-11-10 10:42:17
 //
 
 /*
-Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
+
+#include "../../Text/TextTools.h"
+#include "../NumConstants.h"
+#include "../NumTools.h"
 #include "GoldenSectionSearch.h"
 #include "OneDimensionOptimizationTools.h"
-#include "../NumTools.h"
-#include "../NumConstants.h"
-#include "../../Text/TextTools.h"
 
 using namespace bpp;
 
@@ -50,10 +52,11 @@ using namespace bpp;
 bool GoldenSectionSearch::GSSStopCondition::isToleranceReached() const
 {
   callCount_++;
-  if (callCount_ <= burnin_) return false;
+  if (callCount_ <= burnin_)
+    return false;
   return getTolerance() <= tolerance_;
 }
-    
+
 /******************************************************************************/
 
 double GoldenSectionSearch::GSSStopCondition::getCurrentTolerance() const
@@ -62,7 +65,7 @@ double GoldenSectionSearch::GSSStopCondition::getCurrentTolerance() const
   const GoldenSectionSearch* gss = dynamic_cast<const GoldenSectionSearch*>(optimizer_);
   return NumTools::abs(gss->x3 - gss->x0) / (NumTools::abs(gss->x1) + NumTools::abs(gss->x2));
 }
-  
+
 /******************************************************************************/
 
 GoldenSectionSearch::GoldenSectionSearch(Function* function) :
@@ -79,7 +82,8 @@ GoldenSectionSearch::GoldenSectionSearch(Function* function) :
 void GoldenSectionSearch::doInit(const ParameterList& params)
 {
   // Set the initial value (no use here! Use setInitialValues() instead).
-  if(params.size() != 1) throw Exception("GoldenSectionSearch::init(). This optimizer only deals with one parameter.");
+  if (params.size() != 1)
+    throw Exception("GoldenSectionSearch::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
   Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(xinf_, xsup_, getFunction(), getParameters());
@@ -90,7 +94,7 @@ void GoldenSectionSearch::doInit(const ParameterList& params)
     printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
     printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
   }
-  
+
   // At any given time we will keep track of four points, x0, x1, x2 and x3.
   x0 = bracket.a.x;
   x3 = bracket.c.x;
@@ -117,7 +121,7 @@ void GoldenSectionSearch::doInit(const ParameterList& params)
 
 void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 {
-  if(sup > inf)
+  if (sup > inf)
   {
     xinf_ = inf; xsup_ = sup;
   }
@@ -132,8 +136,9 @@ void GoldenSectionSearch::setInitialInterval(double inf, double sup)
 
 double GoldenSectionSearch::doStep()
 {
-  if (!isInitialIntervalSet_) throw Exception("GoldenSectionSearch::step. Initial interval not set: call the 'setInitialInterval' method first!");
-  
+  if (!isInitialIntervalSet_)
+    throw Exception("GoldenSectionSearch::step. Initial interval not set: call the 'setInitialInterval' method first!");
+
   nbEval_++;
 
   if (f2 < f1)
@@ -166,9 +171,8 @@ double GoldenSectionSearch::getFunctionValue() const
 {
   if (!hasFunction())
     throw NullPointerException("GoldenSectionSearch::getFunctionValue. No function associated to this optimizer.");
-  //return NumTools::min(f1, f2); 
-  return currentValue_; 
+  // return NumTools::min(f1, f2);
+  return currentValue_;
 }
 
 /******************************************************************************/
-

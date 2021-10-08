@@ -1,47 +1,49 @@
 //
 // File: BrentOneDimension.cpp
-// Created by: Julien Dutheil
-// Created on: Mon Nov 17 11:45:58 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-11-17 11:45:58
 //
 
 /*
-Copyright or © or Copr. CNRS, (November 17, 2004)
-
-This software is a computer program whose purpose is to provide classes
-for numerical calculus.
-
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
-
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
-
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
-
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+  Copyright or © or Copr. CNRS, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
 */
 
+
+#include "../../Text/TextTools.h"
+#include "../NumConstants.h"
+#include "../NumTools.h"
 #include "BrentOneDimension.h"
 #include "OneDimensionOptimizationTools.h"
-#include "../NumTools.h"
-#include "../NumConstants.h"
-#include "../../Text/TextTools.h"
 
 using namespace bpp;
 
@@ -50,20 +52,21 @@ using namespace bpp;
 bool BrentOneDimension::BODStopCondition::isToleranceReached() const
 {
   callCount_++;
-  if (callCount_ <= burnin_) return false;
-  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension *>(optimizer_);
+  if (callCount_ <= burnin_)
+    return false;
+  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension*>(optimizer_);
   return getCurrentTolerance() <= (bod->tol2 - 0.5 * (bod->b - bod->a));
 }
-    
+
 /******************************************************************************/
 
 double BrentOneDimension::BODStopCondition::getCurrentTolerance() const
 {
   // NRC Test for done:
-  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension *>(optimizer_);
+  const BrentOneDimension* bod = dynamic_cast<const BrentOneDimension*>(optimizer_);
   return NumTools::abs(bod->x - bod->xm);
 }
- 
+
 /******************************************************************************/
 
 BrentOneDimension::BrentOneDimension(Function* function) :
@@ -77,11 +80,11 @@ BrentOneDimension::BrentOneDimension(Function* function) :
 }
 
 /******************************************************************************/
-  
+
 double BrentOneDimension::ZEPS  = 1.0e-10;
-  
+
 /******************************************************************************/
-  
+
 void BrentOneDimension::doInit(const ParameterList& params)
 {
   if (params.size() != 1)
@@ -91,13 +94,13 @@ void BrentOneDimension::doInit(const ParameterList& params)
   Bracket bracket;
   if (bracketing_ == BrentOneDimension::BRACKET_OUTWARD)
   {
-    bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters()); 
+    bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters());
   }
   else
   {
     bracket = OneDimensionOptimizationTools::inwardBracketMinimum(_xinf, _xsup, getFunction(), getParameters());
   }
-  
+
   if (getVerbose() > 0)
   {
     printMessage("Initial bracketing:");
@@ -105,7 +108,7 @@ void BrentOneDimension::doInit(const ParameterList& params)
     printMessage("B: x = " + TextTools::toString(bracket.b.x) + ", f = " + TextTools::toString(bracket.b.f));
     printMessage("C: x = " + TextTools::toString(bracket.c.x) + ", f = " + TextTools::toString(bracket.c.f));
   }
-  
+
   // This will be the distance moved on the step before last.
   e = 0.0;
 
@@ -116,7 +119,7 @@ void BrentOneDimension::doInit(const ParameterList& params)
   fw = fv = fx = getFunction()->f(getParameters());
   if (fx < bracket.b.f)
   {
-    //We don't want to lose our initial guess!
+    // We don't want to lose our initial guess!
     x = w = v = bracket.b.x = getParameters()[0].getValue();
   }
   else
@@ -128,10 +131,10 @@ void BrentOneDimension::doInit(const ParameterList& params)
 }
 
 /******************************************************************************/
-  
+
 void BrentOneDimension::setInitialInterval(double inf, double sup)
 {
-  if(sup > inf)
+  if (sup > inf)
   {
     _xinf = inf; _xsup = sup;
   }
@@ -148,14 +151,15 @@ double BrentOneDimension::doStep()
 {
   xm   = 0.5 * (a + b);
   tol2 = 2.0 * (tol1 = getStopCondition()->getTolerance() * NumTools::abs(x) + ZEPS);
-  
-  if(NumTools::abs(e) > tol1)
+
+  if (NumTools::abs(e) > tol1)
   {
     r = (x - w) * (fx - fv);
     q = (x - v) * (fx - fw);
     p = (x - v) * q - (x - w) * r;
     q = 2.0 * (q - r);
-    if (q > 0.0) p = -p;
+    if (q > 0.0)
+      p = -p;
     q = NumTools::abs(q);
     etemp = e;
     e = d;
@@ -183,13 +187,19 @@ double BrentOneDimension::doStep()
 
   if (fu <= fx)
   {
-    if (u >= x) a = x; else b = x;
+    if (u >= x)
+      a = x;
+    else
+      b = x;
     NumTools::shift(v, w, x, u);
     NumTools::shift(fv, fw, fx, fu);
   }
   else
   {
-    if (u < x) a = u; else b = u;
+    if (u < x)
+      a = u;
+    else
+      b = u;
     if (fu <= fw || w == x)
     {
       v  = w;
@@ -210,7 +220,7 @@ double BrentOneDimension::doStep()
 }
 
 /******************************************************************************/
-  
+
 double BrentOneDimension::optimize()
 {
   if (!isInitialIntervalSet_)
@@ -222,4 +232,3 @@ double BrentOneDimension::optimize()
 }
 
 /******************************************************************************/
-

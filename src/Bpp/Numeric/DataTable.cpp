@@ -1,47 +1,49 @@
 //
 // File: DataTable.cpp
-// Created by: Julien Dutheil
-// Created on: Aug 2005
+// Authors:
+//   Julien Dutheil
+// Created: 2005-08-07 00:00:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for numerical calculus.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
+#include "../Io/FileTools.h"
+#include "../Text/StringTokenizer.h"
+#include "../Text/TextTools.h"
 #include "DataTable.h"
 #include "VectorTools.h"
-#include "../Io/FileTools.h"
-#include "../Text/TextTools.h"
-#include "../Text/StringTokenizer.h"
 
 using namespace bpp;
 using namespace std;
@@ -77,7 +79,9 @@ DataTable::DataTable(size_t nRow, const std::vector<std::string>& colNames) :
   colNames_(0)
 {
   for (size_t i = 0; i < nCol_; i++)
+  {
     data_[i].resize(nRow);
+  }
 
   setColumnNames(colNames); // May throw an exception.
 }
@@ -288,7 +292,7 @@ void DataTable::setRowNames(const vector<string>& rowNames)
 
 void DataTable::setRowName(size_t rowId, const string& rowName)
 {
-  if (VectorTools::contains(*rowNames_,rowName))
+  if (VectorTools::contains(*rowNames_, rowName))
   {
     throw DuplicatedTableRowNameException("DataTable::setRowName(...). New row name " + rowName + " already exists");
   }
@@ -296,7 +300,7 @@ void DataTable::setRowName(size_t rowId, const string& rowName)
     throw DimensionException("DataTable::setRowName.", rowId, nRow_);
   else
   {
-    (*rowNames_)[rowId]=rowName;
+    (*rowNames_)[rowId] = rowName;
   }
 }
 
@@ -565,9 +569,11 @@ void DataTable::setRow(size_t rowIndex, const vector<string>& newRow)
     throw DimensionException("DataTable::setRow.", rowIndex, nRow_);
   if (newRow.size() != nCol_)
     throw DimensionException("DataTable::setRow.", newRow.size(), nCol_);
-  
+
   for (size_t j = 0; j < nCol_; j++)
-    data_[j][rowIndex]=newRow[j];
+  {
+    data_[j][rowIndex] = newRow[j];
+  }
 }
 
 void DataTable::addRow(const string& rowName, const vector<string>& newRow)
@@ -728,4 +734,3 @@ void DataTable::write(const DataTable& data, bpp::OutputStream& out, const strin
 }
 
 /******************************************************************************/
-

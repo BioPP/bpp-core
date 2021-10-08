@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2006-05-04 10:21:00
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -50,25 +50,24 @@
 
 namespace bpp
 {
-  /** @brief The BppString object class.
-   * This class extends the stl::string class to support the Clonable interface.
-   */
-  class BppString : public Clonable
-  {
-  private:
-    std::string text_{};
+/** @brief The BppString object class.
+ * This class extends the stl::string class to support the Clonable interface.
+ */
+class BppString : public Clonable
+{
+private:
+  std::string text_{};
 
-  public:
-    BppString();
-    BppString(const char* value);
-    BppString(const std::string& value);
-    BppString& operator=(const char* value);
-    BppString& operator=(const std::string& value);
-    BppString* clone() const;
-    const std::string& toSTL() const;
-  };
+public:
+  BppString();
+  BppString(const char* value);
+  BppString(const std::string& value);
+  BppString& operator=(const char* value);
+  BppString& operator=(const std::string& value);
+  BppString* clone() const;
+  const std::string& toSTL() const;
+};
 
-  std::ostream& operator<<(std::ostream& out, const BppString& s);
-
+std::ostream& operator<<(std::ostream& out, const BppString& s);
 } // namespace bpp
 #endif // BPP_BPPSTRING_H

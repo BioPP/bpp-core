@@ -1,56 +1,56 @@
 //
-// File AssociationGraphObserver.h
-// Created by: Thomas Bigot
-// Last modification : vendredi 4 novembre 2016, à 10h 21
+// File: AssociationGraphObserver.h
+// Authors:
+//   Thomas Bigot
+// Last modified: vendredi 4 novembre 2016, à 10h 21
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide utilitary
+  classes. This file belongs to the Bio++ Project.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide utilitary
-   classes. This file belongs to the Bio++ Project.
+#ifndef BPP_GRAPH_ASSOCIATIONGRAPHOBSERVER_H
+#define BPP_GRAPH_ASSOCIATIONGRAPHOBSERVER_H
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#ifndef _ASSOCIATIONGRAPHOBSERVER_HPP_
-#define _ASSOCIATIONGRAPHOBSERVER_HPP_
-
-#include "GraphObserver.h"
-
-#include "../Exceptions.h"
-#include "../Clonable.h"
-
-#include <vector>
-#include <map>
 #include <iostream>
-#include <ostream>
+#include <map>
 #include <memory>
+#include <ostream>
 #include <type_traits>
+#include <vector>
+
+#include "../Clonable.h"
+#include "../Exceptions.h"
+#include "GraphObserver.h"
 
 namespace bpp
 {
@@ -79,32 +79,32 @@ public:
    */
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value&& !std::is_abstract<B>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && !std::is_abstract<B>::value, B*>::type* = 0)
   {
     return new B(a);
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value&& std::is_abstract<B>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && std::is_abstract<B>::value, B*>::type* = 0)
   {
     throw Exception("Unknow AssociationGraphObserver::copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value&& std::is_abstract<B>::value, B*>::type* = 0)");
     return 0;
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value&& !std::is_abstract<A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && !std::is_abstract<A>::value, B*>::type* = 0)
   {
     return dynamic_cast<B*>(new A(a));
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value&& std::is_abstract<A>::value&& std::is_base_of<Clonable, A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && std::is_abstract<A>::value && std::is_base_of<Clonable, A>::value, B*>::type* = 0)
   {
     return dynamic_cast<B*>(a.clone());
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value&& std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type* = 0)
   {
     throw Exception("Unknow AssociationGraphObserver::copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value&& std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type*= 0)");
     return 0;
@@ -435,6 +435,7 @@ public:
    * @return a vector containing the inner nodes.
    */
   virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const = 0;
+  virtual std::vector<NodeIndex> getAllInnerNodesIndexes() const = 0;
 
   /**
    * Get all the defined nodes of a graphO,
@@ -510,5 +511,4 @@ public:
   // /@}
 };
 }
-
-#endif
+#endif // BPP_GRAPH_ASSOCIATIONGRAPHOBSERVER_H
