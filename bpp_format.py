@@ -129,7 +129,7 @@ class LineParser:
 class FileParser:
     ''' Parse a file line by line (tracking our position), from both ends '''
     def __init__ (self, file_path):
-        self.lines = file_path.read_text ().splitlines ()
+        self.lines = file_path.read_text (encoding="latin-1").splitlines ()
         self.next_forward_line = 0 # next line to be read in fwd order
         self.next_backward_line_after = len (self.lines) # next line to be read (+1) in bwd order
         self.last_parsed = None
