@@ -50,7 +50,7 @@ namespace bpp
 class UnvalidFlagException : public virtual Exception
 {
 public:
-  UnvalidFlagException(const std::string& message) : Exception(message) {}
+  UnvalidFlagException(const std::string& text) : Exception(text) {}
 };
 
 
