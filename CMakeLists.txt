@@ -5,8 +5,8 @@
 #   Francois Gindraud (2017)
 # Created: 17/09/2010
 
-cmake_minimum_required (VERSION 2.8.11)
-project (bpp-core CXX)
+cmake_minimum_required (VERSION 2.8.12)
+project (bpp-core3 CXX)
 
 # Compile options
 set (CMAKE_CXX_FLAGS "-std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
@@ -25,9 +25,9 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-SET(${PROJECT_NAME}_VERSION_CURRENT "5")
+SET(${PROJECT_NAME}_VERSION_CURRENT "1")
 SET(${PROJECT_NAME}_VERSION_REVISION "0")
-SET(${PROJECT_NAME}_VERSION_AGE "1")
+SET(${PROJECT_NAME}_VERSION_AGE "0")
 
 #static linkage?
 IF(NOT BUILD_STATIC)
@@ -85,12 +85,12 @@ IF (DOXYGEN_FOUND)
 ENDIF (DOXYGEN_FOUND)
 
 # Packager
-SET(CPACK_PACKAGE_NAME "libbpp-core")
+SET(CPACK_PACKAGE_NAME "libbpp-core3")
 SET(CPACK_PACKAGE_VENDOR "Bio++ Development Team")
-SET(CPACK_PACKAGE_VERSION "2.4.1")
-SET(CPACK_PACKAGE_VERSION_MAJOR "2")
-SET(CPACK_PACKAGE_VERSION_MINOR "4")
-SET(CPACK_PACKAGE_VERSION_PATCH "1")
+SET(CPACK_PACKAGE_VERSION "3.0.0")
+SET(CPACK_PACKAGE_VERSION_MAJOR "3")
+SET(CPACK_PACKAGE_VERSION_MINOR "0")
+SET(CPACK_PACKAGE_VERSION_PATCH "0")
 SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "The Bio++ Core library")
 SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING.txt")
 SET(CPACK_RESOURCE_FILE_AUTHORS "${CMAKE_SOURCE_DIR}/AUTHORS.txt")

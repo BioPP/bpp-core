@@ -2,7 +2,7 @@
 // File: GlobalGraph.cpp
 // Authors:
 //   Thomas Bigot
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -102,7 +102,7 @@ void GlobalGraph::edgeMustExist_(const GlobalGraph::Edge& edge, string name) con
 GlobalGraph::Edge GlobalGraph::link(Graph::NodeId nodeA, Graph::NodeId nodeB)
 {
   // which ID is available?
-  GlobalGraph::Edge edgeID = ++highestEdgeID_;
+  GlobalGraph::Edge edgeID = highestEdgeID_++;
 
   // writing the new relation to the structure
   linkInNodeStructure_(nodeA, nodeB, edgeID);
@@ -135,7 +135,9 @@ vector<GlobalGraph::Edge> GlobalGraph::unlink(Graph::NodeId nodeA, Graph::NodeId
   deletedEdges.push_back(unlinkInNodeStructure_(nodeA, nodeB));
 
   for (auto& currEdgeToDelete : deletedEdges)
+  {
     unlinkInEdgeStructure_(currEdgeToDelete);
+  }
 
   // telling the observers
   notifyDeletedEdges(deletedEdges);
@@ -196,17 +198,6 @@ void GlobalGraph::switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB)
 }
 
 
-GlobalGraph::Node GlobalGraph::getHighestNodeID() const
-{
-  return highestNodeID_;
-}
-
-
-GlobalGraph::Edge GlobalGraph::getHighestEdgeID() const
-{
-  return highestEdgeID_;
-}
-
 void GlobalGraph::unlinkInEdgeStructure_(const GlobalGraph::Edge& edge)
 {
   edgeStructureType::iterator foundEdge = edgeStructure_.find(edge);
@@ -249,13 +240,11 @@ unsigned int GlobalGraph::unlinkInNodeStructure_(const GlobalGraph::Node& nodeA,
 
 void GlobalGraph::linkInNodeStructure_(const GlobalGraph::Node& nodeA, const GlobalGraph::Node& nodeB, const GlobalGraph::Edge& edge)
 {
-  std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
-
+  auto ita = nodeStructure_.find(nodeA);
   if (ita != nodeStructure_.end())
     ita->second.first.insert( pair<GlobalGraph::Node, GlobalGraph::Edge>(nodeB, edge));
 
-  std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator itb = nodeStructure_.find(nodeB);
-
+  auto itb = nodeStructure_.find(nodeB);
   if (itb != nodeStructure_.end())
     nodeStructure_.find(nodeB)->second.second.insert( pair<GlobalGraph::Node, GlobalGraph::Edge>(nodeA, edge));
 
@@ -338,7 +327,9 @@ std::vector< GlobalGraph::Node > GlobalGraph::getNeighbors_(const GlobalGraph::N
   const std::map<GlobalGraph::Node, GlobalGraph::Edge>& forOrBack = (outgoing ? foundNode->second.first : foundNode->second.second);
   vector<GlobalGraph::Node> result;
   for (auto& currNeighbor : forOrBack)
+  {
     result.push_back(currNeighbor.first);
+  }
 
   return result;
 }
@@ -352,7 +343,9 @@ std::vector< GlobalGraph::Edge > GlobalGraph::getEdges_(const GlobalGraph::Node&
 
   vector<GlobalGraph::Edge> result;
   for (const auto& currNeighbor : forOrBack)
+  {
     result.push_back(currNeighbor.second);
+  }
 
   return result;
 }
@@ -439,10 +432,12 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   if (foundNode == nodeStructure_.end())
     throw Exception("GlobalGraph::isLeaf : Node " + TextTools::toString(node) + " does not exist.");
 
-  return (!isDirected() && (foundNode->second.first.size() <= 1))
+  const auto& assoc = foundNode->second;
+  return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-               (foundNode->second.first.size() + foundNode->second.second.size() <= 1)
-               || (foundNode->second.first.size() == 1 &&  foundNode->second.second.size() == 1 && foundNode->second.first.begin()->first == foundNode->second.second.begin()->first)));
+               (assoc.first.size() + assoc.second.size() <= 1)
+               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+                   assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 
@@ -521,18 +516,24 @@ void GlobalGraph::isolate_(GlobalGraph::Node& node)
 {
   vector<Graph::NodeId> oneighbors = getOutgoingNeighbors(node);
   for (auto& currNeighbor : oneighbors)
+  {
     unlink(node, currNeighbor);
+  }
 
   vector<Graph::NodeId> ineighbors = getIncomingNeighbors(node);
   for (auto& currNeighbor : ineighbors)
+  {
     unlink(currNeighbor, node);
+  }
 }
 
 vector<Graph::EdgeId> GlobalGraph::getAllEdges() const
 {
   vector<Graph::EdgeId> listOfEdges;
   for (const auto& it : edgeStructure_)
+  {
     listOfEdges.push_back(it.first);
+  }
 
   return listOfEdges;
 }
@@ -555,8 +556,10 @@ vector<Graph::NodeId> GlobalGraph::getAllLeaves() const
 {
   vector<Graph::NodeId> listOfLeaves;
   for (const auto& it : nodeStructure_)
+  {
     if (this->isLeaf(it.first))
       listOfLeaves.push_back(it.first);
+  }
 
   return listOfLeaves;
 }
@@ -565,8 +568,10 @@ set<Graph::NodeId> GlobalGraph::getSetOfAllLeaves() const
 {
   set<Graph::NodeId> listOfLeaves;
   for (const auto& it : nodeStructure_)
+  {
     if (this->isLeaf(it.first))
       listOfLeaves.insert(it.first);
+  }
 
   return listOfLeaves;
 }
@@ -575,7 +580,9 @@ vector<Graph::NodeId> GlobalGraph::getAllNodes() const
 {
   vector<Graph::NodeId> listOfNodes;
   for (const auto& it : nodeStructure_)
+  {
     listOfNodes.push_back(it.first);
+  }
 
   return listOfNodes;
 }
@@ -584,9 +591,10 @@ vector<Graph::NodeId> GlobalGraph::getAllInnerNodes() const
 {
   vector<Graph::NodeId> listOfInNodes;
   for (const auto& it : nodeStructure_)
-    if (this->getDegree(it.first) >= 2)
+  {
+    if (this->getNumberOfOutgoingNeighbors(it.first) >= 1)
       listOfInNodes.push_back(it.first);
-
+  }
   return listOfInNodes;
 }
 
@@ -598,8 +606,10 @@ void GlobalGraph::fillListOfLeaves_(const GlobalGraph::Node& startingNode, vecto
   {
     if (maxRecursions > 0)
       for (const auto& currNeighbor : neighbors)
+      {
         if (currNeighbor != originNode)
           fillListOfLeaves_(currNeighbor, foundLeaves, startingNode, maxRecursions - 1);
+      }
   }
   else
     foundLeaves.push_back(startingNode);
@@ -627,7 +637,7 @@ void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::
       out << node;
     out << (directed_ ? " -> " : " -- ");
     nodeToDot_(currChild.first, out, alreadyFigured);
-    flag=true;
+    flag = true;
   }
   if (!flag)
     out << ";\n   ";
@@ -643,9 +653,11 @@ bool GlobalGraph::isTree() const
 
   // now they have only been met at most once, they have to be met at least once
   for (const auto& currNode:nodeStructure_)
+  {
     if (metNodes.find(currNode.first) == metNodes.end())
       return false;
-  
+  }
+
   return true;
 }
 
@@ -655,7 +667,7 @@ bool GlobalGraph::nodesAreMetOnlyOnce_(const GlobalGraph::Node& node, set< Globa
   // insert().second <=> not yet in the set
   if (!metNodes.insert(node).second)
     return false;
-  
+
   vector<Graph::NodeId> neighbors = getOutgoingNeighbors(node);
   for (auto currNeighbor:neighbors)
   {
@@ -686,7 +698,9 @@ bool GlobalGraph::isDA() const
   while (vL.size() != 0)
   {
     for (auto& it2 : vL)
+    {
       gg.deleteNode(it2);
+    }
 
     if (gg.getNumberOfNodes() == 0)
       return true;
@@ -712,7 +726,7 @@ void GlobalGraph::orientate()
 
   GlobalGraph gg(*this);
   gg.observers_.clear();
-  
+
   // Algo: remove recursively all nodes from graph, starting with
   // root_
 
@@ -771,7 +785,9 @@ void GlobalGraph::orientate()
 
     vL = gg.getOutgoingNeighbors(nbgg);
     for (auto&  it2:vL)
+    {
       nextNodes.insert(it2);
+    }
 
     gg.deleteNode(nbgg);
     nextNodes.erase(nbgg);
@@ -801,7 +817,9 @@ void GlobalGraph::makeDirected()
   // save and clean the undirectedStructure
   nodeStructureType undirectedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
+  {
     it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+  }
 
   // copy each relation once, without the reciprocal link
   // (first met, first kept)
@@ -833,7 +851,9 @@ void GlobalGraph::makeUndirected()
   // save and clean the undirectedStructure
   nodeStructureType directedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
+  {
     it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+  }
 
   // copy each relation twice, making the reciprocal link
   // eg: A - B in directed is represented as A->B
@@ -929,19 +949,25 @@ void GlobalGraph::outputToDot(ostream& out, const std::string& name) const
   set<pair<Node, Node> > alreadyFigured;
   nodeToDot_(root_, out, alreadyFigured);
   for (const auto& node: nodeStructure_)
-    if (node.first!=root_)
+  {
+    if (node.first != root_)
       nodeToDot_(node.first, out, alreadyFigured);
+  }
   out << "\r}" << endl;
 }
 
 void GlobalGraph::notifyDeletedEdges(const vector<Graph::EdgeId>& edgesToDelete) const
 {
   for (auto& currObserver : observers_)
+  {
     currObserver->deletedEdgesUpdate(edgesToDelete);
+  }
 }
 
 void GlobalGraph::notifyDeletedNodes(const vector<Graph::NodeId>& nodesToDelete) const
 {
   for (auto& currObserver : observers_)
+  {
     currObserver->deletedNodesUpdate(nodesToDelete);
+  }
 }

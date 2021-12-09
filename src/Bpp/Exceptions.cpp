@@ -6,7 +6,7 @@
 //   Sylvain Gaillard
 //   Francois Gindraud (2017)
 // Created: 2017-03-28 00:00:00
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -42,6 +42,10 @@
   knowledge of the CeCILL license and that you accept its terms.
 */
 
+#include <cxxabi.h> // for __cxa_demangle
+#include <dlfcn.h> // for dladdr
+#include <execinfo.h>
+#include <iostream>
 #include <string>
 #include <utility>
 
@@ -49,81 +53,130 @@
 
 namespace bpp
 {
-  Exception::Exception(std::string text)
-    : message_(std::move(text))
-  {
-  }
-  const char* Exception::what() const noexcept { return message_.c_str(); }
-  const std::string& Exception::message() const noexcept { return message_; }
+Exception::Exception(std::string text, int stack)
+  : message_(std::move(text))
+{
+  void* buffer[stack];
+  char** strings;
 
-  IOException::IOException(std::string text)
-    : Exception(std::move(text))
+  int nptrs = backtrace(buffer, stack);
+  /* The call backtrace_symbols_fd(buffer, nptrs, STDOUT_FILENO)
+     would produce similar output to the following: */
+
+  strings = backtrace_symbols(buffer, nptrs);
+
+  for (int j = 2; j < nptrs - 2; j++)
   {
+    message_ += "\n\tfrom  ";
+
+    std::string beginName = "";
+
+    // find parentheses of the function  surrounding the mangled name:
+    // ./module(function(...)+0x15c) [0x8048a6d]
+    bool dep = false;
+
+    for (char* p = strings[j]; *p; ++p)
+    {
+      if (*p == '+')
+        break;
+      if ((*p == '(') && !dep)
+        dep = true;
+      else if (dep)
+        beginName += *p;
+    }
+
+    // mangled name is now in [begin_name, end_name), now apaply
+    // __cxa_demangle():
+
+    int status;
+
+    char* ret = abi::__cxa_demangle(beginName.c_str(),
+                                    NULL, NULL, &status);
+    beginName = "";
+    if (status == 0)
+    {
+      for (char* p = ret; *p; ++p) // look for "("
+      {
+        if (*p == '(')
+          break;
+        else
+          beginName += *p;
+      }
+
+      message_ += beginName;
+    }
+    else
+    {
+      message_ += strings[j];
+    }
   }
 
-  NullPointerException::NullPointerException(std::string text)
-    : Exception(std::move(text))
-  {
-  }
+  free(strings);
+}
 
-  ZeroDivisionException::ZeroDivisionException(std::string text)
-    : Exception(std::move(text))
-  {
-  }
 
-  BadIntegerException::BadIntegerException(std::string text, int badInt)
-    : Exception(text + " (" + std::to_string(badInt) + ")")
-    , badInt_(badInt)
-  {
-  }
-  int BadIntegerException::getBadInteger() const { return badInt_; }
+const char* Exception::what() const noexcept { return message_.c_str(); }
+const std::string& Exception::message() const noexcept { return message_; }
 
-  BadNumberException::BadNumberException(std::string text, double badNumber)
-    : Exception(text + " (" + std::to_string(badNumber) + ")")
-    , badNumber_(badNumber)
-  {
-  }
-  double BadNumberException::getBadNumber() const { return badNumber_; }
+IOException::IOException(std::string text)
+  : Exception(std::move(text))
+{}
 
-  NumberFormatException::NumberFormatException(std::string text, std::string badNumber)
-    : Exception(text + " (" + badNumber + ")")
-    , badNumber_(badNumber)
-  {
-  }
-  const std::string& NumberFormatException::getBadNumber() const { return badNumber_; }
+NullPointerException::NullPointerException(std::string text)
+  : Exception(std::move(text))
+{}
 
-  IndexOutOfBoundsException::IndexOutOfBoundsException(std::string text, std::size_t badInt, std::size_t lowerBound,
-                                                       std::size_t upperBound)
-    : Exception(std::to_string(badInt) + " out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "]) " + text)
-    , badIndex_(badInt)
-    , bounds_{{lowerBound, upperBound}}
-  {
-  }
-  const std::array<std::size_t, 2>& IndexOutOfBoundsException::getBounds() const { return bounds_; }
-  std::size_t IndexOutOfBoundsException::getBadIndex() const { return badIndex_; }
+ZeroDivisionException::ZeroDivisionException(std::string text)
+  : Exception(std::move(text))
+{}
 
-  BadSizeException::BadSizeException(std::string text, std::size_t badSize, std::size_t correctSize)
-    : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " + text)
-    , badSize_(badSize)
-    , correctSize_(correctSize)
-  {
-  }
-  std::size_t BadSizeException::getBadSize() const { return badSize_; }
-  std::size_t BadSizeException::getCorrectSize() const { return correctSize_; }
+BadIntegerException::BadIntegerException(std::string text, int badInt)
+  : Exception(text + " (" + std::to_string(badInt) + ")")
+  , badInt_(badInt)
+{}
+int BadIntegerException::getBadInteger() const { return badInt_; }
 
-  OutOfRangeException::OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound)
-    : Exception(std::to_string(badValue) + " out of [" + std::to_string(lowerBound) + ", " +
-                std::to_string(upperBound) + "]) " + text)
-    , badValue_(badValue)
-    , bounds_{{lowerBound, upperBound}}
-  {
-  }
-  double OutOfRangeException::getBadValue() const { return badValue_; }
-  double OutOfRangeException::getLowerBound() const { return bounds_[0]; }
-  double OutOfRangeException::getUpperBound() const { return bounds_[1]; }
+BadNumberException::BadNumberException(std::string text, double badNumber)
+  : Exception(text + " (" + std::to_string(badNumber) + ")")
+  , badNumber_(badNumber)
+{}
+double BadNumberException::getBadNumber() const { return badNumber_; }
 
-  NotImplementedException::NotImplementedException(std::string text)
-    : Exception(std::move(text))
-  {
-  }
+NumberFormatException::NumberFormatException(std::string text, std::string badNumber)
+  : Exception(text + " (" + badNumber + ")")
+  , badNumber_(badNumber)
+{}
+const std::string& NumberFormatException::getBadNumber() const { return badNumber_; }
+
+IndexOutOfBoundsException::IndexOutOfBoundsException(std::string text, std::size_t badInt, std::size_t lowerBound,
+                                                     std::size_t upperBound)
+  : Exception(std::to_string(badInt) + " out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "] " + std::move(text))
+  , badIndex_(badInt)
+  , bounds_{{lowerBound, upperBound}}
+{}
+
+const std::array<std::size_t, 2>& IndexOutOfBoundsException::getBounds() const { return bounds_; }
+std::size_t IndexOutOfBoundsException::getBadIndex() const { return badIndex_; }
+
+BadSizeException::BadSizeException(std::string text, std::size_t badSize, std::size_t correctSize)
+  : Exception("Incorrect size " + std::to_string(badSize) + ", expected " + std::to_string(correctSize) + ". " + text)
+  , badSize_(badSize)
+  , correctSize_(correctSize)
+{}
+std::size_t BadSizeException::getBadSize() const { return badSize_; }
+std::size_t BadSizeException::getCorrectSize() const { return correctSize_; }
+
+OutOfRangeException::OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound)
+  : Exception(std::to_string(badValue) + " out of [" + std::to_string(lowerBound) + ", " +
+              std::to_string(upperBound) + "]" + std::move(text))
+  , badValue_(badValue)
+  , bounds_{{lowerBound, upperBound}}
+{}
+double OutOfRangeException::getBadValue() const { return badValue_; }
+double OutOfRangeException::getLowerBound() const { return bounds_[0]; }
+double OutOfRangeException::getUpperBound() const { return bounds_[1]; }
+
+NotImplementedException::NotImplementedException(std::string text)
+  : Exception(std::move(text))
+{}
 } // namespace bpp

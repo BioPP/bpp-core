@@ -1,41 +1,43 @@
 //
 // File: AbstractParameterAliasable.cpp
-// Created by: Julien Dutheil
-// Created on: Sun Mar 29 09:10 2009
+// Authors:
+//   Julien Dutheil
+// Created: 2009-03-29 09:10:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for numerical calculus.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
 
 #include "AbstractParameterAliasable.h"
 #include "VectorTools.h"
@@ -49,8 +51,10 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
   aliasListenersRegister_()
 {
   for (size_t i = 0; i < ap.independentParameters_.size(); i++)
+  {
     independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
-  
+  }
+
   // Actualize the register with adequate pointers:
   for (map<string, AliasParameterListener*>::const_iterator it = ap.aliasListenersRegister_.begin();
        it != ap.aliasListenersRegister_.end();
@@ -74,9 +78,11 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
 AbstractParameterAliasable& AbstractParameterAliasable::operator=(const AbstractParameterAliasable& ap)
 {
   AbstractParametrizable::operator=(ap);
-  
-  for (size_t i=0; i<ap.independentParameters_.size(); i++)
+
+  for (size_t i = 0; i < ap.independentParameters_.size(); i++)
+  {
     independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
+  }
 
   // Actualize the register with adequate pointers:
   for (map<string, AliasParameterListener*>::const_iterator it = ap.aliasListenersRegister_.begin();
@@ -121,7 +127,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
   if (!hasParameter(p2))
     throw ParameterNotFoundException("AbstractParameterAliasable::aliasParameters", p2);
   if (!independentParameters_.hasParameter(getNamespace() + p2))
-    throw Exception("AbstractParameterAliasable::aliasParameters. Parameter " + p2 + " is already aliased to a parameter and can't be aliased twice.");
+    throw Exception("AbstractParameterAliasable::aliasParameters. Parameter " + p2 + " does not exist in independent parameters. Perhaps it is already aliased to a parameter and can't be aliased twice.");
 
   string id = "__alias_" + p2 + "_to_" + p1;
   string idCheck = "__alias_" + p1 + "_to_" + p2;
@@ -136,20 +142,20 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
     if (param2->hasConstraint())
     {
       ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + ". " + p1 + " gets the constraints of " + p2 + ": " + param2->getConstraint()->getDescription());
-      param1->setConstraint(param2->getConstraint());    
+      param1->setConstraint(param2->getConstraint());
     }
   }
   else
-    // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
-    if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
-    {
-      std::shared_ptr<Constraint> nc(*param2->getConstraint() & *param1->getConstraint());
-      ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + " with different constraints. They get the intersection of both constraints : " + nc->getDescription());
-      
-      param2->setConstraint(nc);
-      param1->setConstraint(nc);
-    }
-  
+  // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
+  if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
+  {
+    std::shared_ptr<Constraint> nc(*param2->getConstraint() & *param1->getConstraint());
+    ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + " with different constraints. They get the intersection of both constraints : " + nc->getDescription());
+
+    param2->setConstraint(nc);
+    param1->setConstraint(nc);
+  }
+
   // Every thing seems ok, let's create the listener and register it:
 
   AliasParameterListener* aliasListener = new AliasParameterListener(id, getParameters().whichParameterHasName(getNamespace() + p2), &getParameters_(), p1);
@@ -159,7 +165,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
   // Now we add it to the appropriate parameter, that is p1.
   // The parameter will not own the listener, the bookkeeping being achieved by the register:
   param1->addParameterListener(aliasListener, false);
-  
+
   // Finally we remove p2 from the list of independent parameters:
   independentParameters_.deleteParameter(getNamespace() + p2);
 }

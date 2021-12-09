@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2003-11-12 15:55:03
-// Last modified: 2017-06-26
+// Last modified: 2017-06-26 00:00:00
 //
 
 /*
@@ -42,6 +42,7 @@
 
 #ifndef BPP_CLONABLE_H
 #define BPP_CLONABLE_H
+
 
 
 /**
@@ -83,30 +84,30 @@
  *     - Discrete probability distributions are implemented via the bpp::DiscreteDistribution interface
  *     - Several random numbers generators are available through the bpp::RandomNumberFactory interface, and the
  *       bpp::RandomTools static class provides useful methods to deal with random numbers.
- *     .
- *   .
- * .
+ *
+ *
+ *
  */
 
 namespace bpp
 {
-  /** @brief The Clonable interface (allow an object to be cloned).
-   *
-   * A clone is a deep (or hard) copy of an object.
-   * This interface provides a method that dynamically creates a copy of itself
-   * and send a pointer toward it.
-   *
-   * This method allows an object to be copied when you do not now its class.
-   */
-  class Clonable
-  {
-  public:
-    virtual ~Clonable() = default;
+/** @brief The Clonable interface (allow an object to be cloned).
+ *
+ * A clone is a deep (or hard) copy of an object.
+ * This interface provides a method that dynamically creates a copy of itself
+ * and send a pointer toward it.
+ *
+ * This method allows an object to be copied when you do not now its class.
+ */
+class Clonable
+{
+public:
+  virtual ~Clonable() = default;
 
-    /** @brief Create a copy of this object and send a pointer to it.
-     * @return A pointer toward the copy object.
-     */
-    virtual Clonable* clone() const = 0;
-  };
+  /** @brief Create a copy of this object and send a pointer to it.
+   * @return A pointer toward the copy object.
+   */
+  virtual Clonable* clone() const = 0;
+};
 } // namespace bpp
 #endif // BPP_CLONABLE_H

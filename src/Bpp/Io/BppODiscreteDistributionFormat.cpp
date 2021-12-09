@@ -1,61 +1,61 @@
 //
-// File: BppODiscreteDistributionFormatFormat.cpp
-// Created by: Laurent Guéguen
-// Created on: lundi 3 septembre 2012, à 14h 48
+// File: BppODiscreteDistributionFormat.cpp
+// Authors:
+//   Laurent Guéguen
+// Created: lundi 3 septembre 2012, à 14h 48
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for phylogenetic data analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for phylogenetic data analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "BppODiscreteDistributionFormat.h"
 
 #include "../Io/FileTools.h"
-#include "../Text/TextTools.h"
-#include "../Text/StringTokenizer.h"
-#include "../Text/KeyvalTools.h"
-
-#include "../Numeric/Prob/DiscreteDistribution.h"
-#include "../Numeric/Prob/InvariantMixedDiscreteDistribution.h"
+#include "../Numeric/AutoParameter.h"
+#include "../Numeric/Prob/BetaDiscreteDistribution.h"
 #include "../Numeric/Prob/ConstantDistribution.h"
-#include "../Numeric/Prob/SimpleDiscreteDistribution.h"
-#include "../Numeric/Prob/MixtureOfDiscreteDistributions.h"
+#include "../Numeric/Prob/DiscreteDistribution.h"
+#include "../Numeric/Prob/ExponentialDiscreteDistribution.h"
 #include "../Numeric/Prob/GammaDiscreteDistribution.h"
 #include "../Numeric/Prob/GaussianDiscreteDistribution.h"
-#include "../Numeric/Prob/BetaDiscreteDistribution.h"
-#include "../Numeric/Prob/ExponentialDiscreteDistribution.h"
+#include "../Numeric/Prob/InvariantMixedDiscreteDistribution.h"
+#include "../Numeric/Prob/MixtureOfDiscreteDistributions.h"
+#include "../Numeric/Prob/SimpleDiscreteDistribution.h"
 #include "../Numeric/Prob/TruncatedExponentialDiscreteDistribution.h"
 #include "../Numeric/Prob/UniformDiscreteDistribution.h"
-#include "../Numeric/AutoParameter.h"
+#include "../Text/KeyvalTools.h"
+#include "../Text/StringTokenizer.h"
+#include "../Text/TextTools.h"
+#include "BppODiscreteDistributionFormat.h"
 #include "BppOParametrizableFormat.h"
 
 using namespace bpp;
@@ -67,8 +67,8 @@ using namespace std;
 
 
 DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
-    const std::string& distDescription,
-    bool parseArguments)
+  const std::string& distDescription,
+  bool parseArguments)
 {
   unparsedArguments_.clear();
   string distName;
@@ -208,20 +208,21 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
 
     if (distName == "Gamma")
     {
-      double offset=0;
+      double offset = 0;
 
       if (args.find("offset") != args.end())
         try
         {
-          offset=TextTools::toDouble(args["offset"]);
+          offset = TextTools::toDouble(args["offset"]);
         }
-        catch (Exception& e) {}
-      
-      if (args.find("ParamOffset") != args.end())        
+        catch (Exception& e)
+        {}
+
+      if (args.find("ParamOffset") != args.end())
         rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, true, offset));
       else
         rDist.reset(new GammaDiscreteDistribution(nbClasses, 1, 1, false, offset));
-      
+
       if (args.find("alpha") != args.end())
         unparsedArguments_["Gamma.alpha"] = args["alpha"];
       if (args.find("beta") != args.end())
@@ -271,9 +272,9 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
       if (args.find("end") == args.end())
         throw Exception("Missing argument 'end' in Uniform distribution");
       rDist.reset(new UniformDiscreteDistribution(
-          nbClasses,
-          TextTools::to<double>(args["begin"]),
-          TextTools::to<double>(args["end"])));
+                    nbClasses,
+                    TextTools::to<double>(args["begin"]),
+                    TextTools::to<double>(args["end"])));
     }
     else
     {
@@ -294,10 +295,10 @@ DiscreteDistribution* BppODiscreteDistributionFormat::readDiscreteDistribution(
 
 
 void BppODiscreteDistributionFormat::writeDiscreteDistribution(
-		const DiscreteDistribution& dist,
-                OutputStream& out,
-                std::map<std::string, std::string>& globalAliases,
-                std::vector<std::string>& writtenNames) const
+  const DiscreteDistribution& dist,
+  OutputStream& out,
+  std::map<std::string, std::string>& globalAliases,
+  std::vector<std::string>& writtenNames) const
 {
   bool comma = false;
 
@@ -439,18 +440,15 @@ void BppODiscreteDistributionFormat::initialize_(
     if (verbose_)
       ApplicationTools::displayResult("Parameter found", pName + "=" + TextTools::toString(pl[i].getValue()));
   }
-  
+
   rDist.matchParametersValues(pl);
   if (verbose_)
   {
     for (size_t c = 0; c < rDist.getNumberOfCategories(); ++c)
     {
       ApplicationTools::displayResult("- Category " + TextTools::toString(c)
-        + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
-        TextTools::toString(rDist.getCategory(c)));
+                                      + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
+                                      TextTools::toString(rDist.getCategory(c)));
     }
   }
 }
-
-
-

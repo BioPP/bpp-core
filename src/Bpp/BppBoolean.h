@@ -3,7 +3,7 @@
 // Authors:
 //   Julien Dutheil
 //   Francois Gindraud (2017)
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -48,25 +48,24 @@
 
 namespace bpp
 {
-  /** @brief The BppBoolean object class.
+/** @brief The BppBoolean object class.
  * This class extends the bool type to support the Clonable interface.
  */
-  class BppBoolean : public virtual Clonable
-  {
-  private:
-    bool value_;
+class BppBoolean : public virtual Clonable
+{
+private:
+  bool value_;
 
-  public:
-    BppBoolean(bool value = false)
-      : value_(value)
-    {
-    }
+public:
+  BppBoolean(bool value = false)
+    : value_(value)
+  {}
 
-    BppBoolean* clone() const { return new BppBoolean(*this); }
+  BppBoolean* clone() const { return new BppBoolean(*this); }
 
-    const bool getValue() const { return value_; }
-  };
+  const bool getValue() const { return value_; }
+};
 
-  inline std::ostream& operator<<(std::ostream& out, const BppBoolean& s) { return out << s.getValue(); }
+inline std::ostream& operator<<(std::ostream& out, const BppBoolean& s) { return out << s.getValue(); }
 } // namespace bpp
 #endif // BPP_BPPBOOLEAN_H

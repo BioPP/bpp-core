@@ -1,41 +1,43 @@
 //
-// File: LowMemoryRescaledHmmLikelihood.h
-// Created by: Julien Dutheil
-// Created on: Wed Dec 16 10:47 2009
+// File: LowMemoryRescaledHmmLikelihood.cpp
+// Authors:
+//   Julien Dutheil
+// Created: 2009-12-16 10:47:00
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for phylogenetic data analysis.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for phylogenetic data analysis.
-
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
 
 #include "LowMemoryRescaledHmmLikelihood.h"
 
@@ -64,9 +66,12 @@ LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
   nbStates_(),
   nbSites_()
 {
-  if (!hiddenAlphabet) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
-  if (!transitionMatrix) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
-  if (!emissionProbabilities) throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
+  if (!hiddenAlphabet)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmStateAlphabet.");
+  if (!transitionMatrix)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
+  if (!emissionProbabilities)
+    throw Exception("LowMemoryRescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
   if (!hiddenAlphabet_->worksWith(transitionMatrix->getHmmStateAlphabet()))
     throw Exception("LowMemoryRescaledHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   if (!hiddenAlphabet_->worksWith(emissionProbabilities->getHmmStateAlphabet()))
@@ -98,14 +103,16 @@ void LowMemoryRescaledHmmLikelihood::setNamespace(const std::string& nameSpace)
 
 void LowMemoryRescaledHmmLikelihood::fireParameterChanged(const ParameterList& pl)
 {
-   bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
-   bool transitionsChanged = transitionMatrix_->matchParametersValues(pl);
-   bool emissionChanged    = emissionProbabilities_->matchParametersValues(pl);
+  bool alphabetChanged    = hiddenAlphabet_->matchParametersValues(pl);
+  bool transitionsChanged = transitionMatrix_->matchParametersValues(pl);
+  bool emissionChanged    = emissionProbabilities_->matchParametersValues(pl);
   // these lines are necessary because the transitions and emissions can depend on the alphabet.
   // we could use a StateChangeEvent, but this would result in computing some calculations twice in some cases
   // (when both the alphabet and other parameter changed).
-  if (alphabetChanged && !transitionsChanged) transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
-  if (alphabetChanged && !emissionChanged) emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
+  if (alphabetChanged && !transitionsChanged)
+    transitionMatrix_->setParametersValues(transitionMatrix_->getParameters());
+  if (alphabetChanged && !emissionChanged)
+    emissionProbabilities_->setParametersValues(emissionProbabilities_->getParameters());
 
   computeForward_();
 }
@@ -122,7 +129,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   // Transition probabilities:
   for (size_t i = 0; i < nbStates_; i++)
   {
-   size_t ii = i * nbStates_;
+    size_t ii = i * nbStates_;
     for (size_t j = 0; j < nbStates_; j++)
     {
       trans[ii + j] = transitionMatrix_->Pij(j, i);
@@ -154,7 +161,8 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   // Recursion:
   size_t nextBrkPt = nbSites_; // next break point
   vector<size_t>::const_iterator bpIt = breakPoints_.begin();
-  if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
+  if (bpIt != breakPoints_.end())
+    nextBrkPt = *bpIt;
 
   double a;
   logLik_ = 0;
@@ -162,7 +170,7 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
   greater<double> cmp;
   for (size_t i = 1; i < nbSites_; i++)
   {
-    //Swap pointers:
+    // Swap pointers:
     tmpLikelihood = previousLikelihood;
     previousLikelihood = currentLikelihood;
     currentLikelihood = tmpLikelihood;
@@ -219,20 +227,24 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
         scale += tmp[j];
       }
       bpIt++;
-      if (bpIt != breakPoints_.end()) nextBrkPt = *bpIt;
-      else nextBrkPt = nbSites_;
+      if (bpIt != breakPoints_.end())
+        nextBrkPt = *bpIt;
+      else
+        nextBrkPt = nbSites_;
     }
 
     for (size_t j = 0; j < nbStates_; j++)
     {
-      if (scale > 0) (*currentLikelihood)[j] = tmp[j] / scale;
-      else (*currentLikelihood)[j] = 0;
+      if (scale > 0)
+        (*currentLikelihood)[j] = tmp[j] / scale;
+      else
+        (*currentLikelihood)[j] = 0;
     }
     lScales[i - offset] = log(scale);
-  
+
     if (i - offset == maxSize_ - 1)
     {
-      //We make partial calculations and reset the arrays:
+      // We make partial calculations and reset the arrays:
       double partialLogLik = 0;
       sort(lScales.begin(), lScales.end(), cmp);
       for (size_t j = 0; j < maxSize_; ++j)
@@ -253,4 +265,3 @@ void LowMemoryRescaledHmmLikelihood::computeForward_()
 }
 
 /***************************************************************************************************************************/
-

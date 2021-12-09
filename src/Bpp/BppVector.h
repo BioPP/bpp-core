@@ -4,7 +4,7 @@
 //   Julien Dutheil
 //   Francois Gindraud (2017)
 // Created: 2008-04-07 15:14:00
-// Last modified: 2017-06-27
+// Last modified: 2017-06-27 00:00:00
 //
 
 /*
@@ -50,26 +50,25 @@
 
 namespace bpp
 {
-  /** @brief The BppVector object class.
-   * This class extends the std::vector class to support the Clonable interface.
-   * @deprecated Do not use in new code anymore.
-   */
-  template <typename T>
-  class BppVector : 
-     public Clonable,
-     public std::vector<T>
-  {
-  public:
-    template <typename... Args>
-    BppVector(Args&&... args):
-      std::vector<T>(std::forward<Args>(args)...)
-    {
-    }
+/** @brief The BppVector object class.
+ * This class extends the std::vector class to support the Clonable interface.
+ * @deprecated Do not use in new code anymore.
+ */
+template<typename T>
+class BppVector :
+  public Clonable,
+  public std::vector<T>
+{
+public:
+  template<typename ... Args>
+  BppVector(Args&&... args) :
+    std::vector<T>(std::forward<Args>(args)...)
+  {}
 
-    BppVector<T>* clone() const { return new BppVector<T>(*this); }
+  BppVector<T>* clone() const { return new BppVector<T>(*this); }
 
-    const std::vector<T>& toSTL() const { return *this; }
-    std::vector<T>& toSTL() { return *this; }
-  };
+  const std::vector<T>& toSTL() const { return *this; }
+  std::vector<T>& toSTL() { return *this; }
+};
 } // namespace bpp
 #endif // BPP_BPPVECTOR_H

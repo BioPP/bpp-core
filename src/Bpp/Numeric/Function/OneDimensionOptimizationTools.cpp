@@ -1,47 +1,49 @@
 //
 // File: OneDimensionOptimizationTools.cpp
-// Created by: Julien Dutheil
-// Created on: Mon Nov 17 11:15:22 2003
+// Authors:
+//   Julien Dutheil
+// Created: 2003-11-17 11:15:22
 //
 
 /*
-   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
+  
+  This software is a computer program whose purpose is to provide classes
+  for numerical calculus. This file is part of the Bio++ project.
+  
+  This software is governed by the CeCILL license under French law and
+  abiding by the rules of distribution of free software. You can use,
+  modify and/ or redistribute the software under the terms of the CeCILL
+  license as circulated by CEA, CNRS and INRIA at the following URL
+  "http://www.cecill.info".
+  
+  As a counterpart to the access to the source code and rights to copy,
+  modify and redistribute granted by the license, users are provided only
+  with a limited warranty and the software's author, the holder of the
+  economic rights, and the successive licensors have only limited
+  liability.
+  
+  In this respect, the user's attention is drawn to the risks associated
+  with loading, using, modifying and/or developing or reproducing the
+  software by the user in light of its specific status of free software,
+  that may mean that it is complicated to manipulate, and that also
+  therefore means that it is reserved for developers and experienced
+  professionals having in-depth computer knowledge. Users are therefore
+  encouraged to load and test the software's suitability as regards their
+  requirements in conditions enabling the security of their systems and/or
+  data to be ensured and, more generally, to use and operate it in the
+  same conditions as regards security.
+  
+  The fact that you are presently reading this means that you have had
+  knowledge of the CeCILL license and that you accept its terms.
+*/
 
-   This software is a computer program whose purpose is to provide classes
-   for numerical calculus. This file is part of the Bio++ project.
 
-   This software is governed by the CeCILL  license under French law and
-   abiding by the rules of distribution of free software.  You can  use,
-   modify and/ or redistribute the software under the terms of the CeCILL
-   license as circulated by CEA, CNRS and INRIA at the following URL
-   "http://www.cecill.info".
-
-   As a counterpart to the access to the source code and  rights to copy,
-   modify and redistribute granted by the license, users are provided only
-   with a limited warranty  and the software's author,  the holder of the
-   economic rights,  and the successive licensors  have only  limited
-   liability.
-
-   In this respect, the user's attention is drawn to the risks associated
-   with loading,  using,  modifying and/or developing or reproducing the
-   software by the user in light of its specific status of free software,
-   that may mean  that it is complicated to manipulate,  and  that  also
-   therefore means  that it is reserved for developers  and  experienced
-   professionals having in-depth computer knowledge. Users are therefore
-   encouraged to load and test the software's suitability as regards their
-   requirements in conditions enabling the security of their systems and/or
-   data to be ensured and,  more generally, to use and operate it in the
-   same conditions as regards security.
-
-   The fact that you are presently reading this means that you have had
-   knowledge of the CeCILL license and that you accept its terms.
- */
-
-#include "NewtonBacktrackOneDimension.h"
-#include "BrentOneDimension.h"
-#include "OneDimensionOptimizationTools.h"
-#include "../NumTools.h"
 #include "../NumConstants.h"
+#include "../NumTools.h"
+#include "BrentOneDimension.h"
+#include "NewtonBacktrackOneDimension.h"
+#include "OneDimensionOptimizationTools.h"
 
 using namespace bpp;
 using namespace std;
@@ -73,12 +75,12 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
   bracket.b.x = b;
   parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
 
-  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
     parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
   }
-  
+
   if (bracket.b.f > bracket.a.f)
   {
     // Switch roles of first and second point so that we can go downhill
@@ -172,31 +174,31 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
   bracket.b.x = b;
   parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
 
-  while (std::isnan(bracket.b.f)|| std::isinf(bracket.b.f))
+  while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
     parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
   }
-  
+
   double bestMiddleX, bestMiddleF;
   double curr, fcurr, jump;
 
   // look for bracket.c.x by scanning n possible assignments and assigining c the best one over the examined values
   curr = bracket.a.x;
   fcurr = bracket.a.f;
-  bestMiddleX = (bracket.a.f < bracket.b.f ? bracket.a.x : bracket.b.x); // determine the currently optimal point with respect to f out of a and b 
-  bestMiddleF = (bracket.a.f < bracket.b.f ? bracket.a.f : bracket.b.f); // determine the currently optimal point with respect to f out of a and b 
+  bestMiddleX = (bracket.a.f < bracket.b.f ? bracket.a.x : bracket.b.x); // determine the currently optimal point with respect to f out of a and b
+  bestMiddleF = (bracket.a.f < bracket.b.f ? bracket.a.f : bracket.b.f); // determine the currently optimal point with respect to f out of a and b
   jump = (b - a) / static_cast<double>(intervalsNum); // Determine the spacing appropriate to the mesh.
-  for (size_t i=1; i<=intervalsNum; i++) 
+  for (size_t i = 1; i <= intervalsNum; i++)
   { // Loop over all intervals
     curr += jump;
-    parameters[0].setValue(curr); fcurr = function->f(parameters); 
+    parameters[0].setValue(curr); fcurr = function->f(parameters);
     // If c yields better likelihood than a and b
-    if (fcurr < bestMiddleF) 
+    if (fcurr < bestMiddleF)
     {
-        bestMiddleX = curr;
-        bestMiddleF = fcurr;
-    } 
+      bestMiddleX = curr;
+      bestMiddleF = fcurr;
+    }
   }
   bracket.c.x = bestMiddleX;
   parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
