@@ -388,15 +388,15 @@ public:
 
   std::vector<EdgeIndex> getEdgePathBetweenTwoNodes(const NodeIndex nodeA, const NodeIndex nodeB, bool includeAncestor = true) const
   {
-    return getEdgeIndexes(getEdgePathBetweenTwoNodes(this->getNode(nodeA), this->getNode(nodeB), includeAncestor));
+    return this->getEdgeIndexes(getEdgePathBetweenTwoNodes(this->getNode(nodeA), this->getNode(nodeB), includeAncestor));
   }
 
-  std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSubtreeNodes(this->getNodeGraphid(localRoot)));
   }
 
-  std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot) const
   {
     return AssociationGraphImplObserver<N, E, TreeGraphImpl>::getEdgesFromGraphid(this->getGraph()->getSubtreeEdges(this->getNodeGraphid(localRoot)));
   }
@@ -406,9 +406,9 @@ public:
     return getNodeIndexes(getSubtreeNodes(this->getNode(localRoot)));
   }
 
-  std::vector<EdgeIndex> getSubtreeEdges(const EdgeIndex localRoot) const
+  std::vector<EdgeIndex> getSubtreeEdges(const NodeIndex localRoot) const
   {
-    return getEdgeIndexes(getSubtreeEdges(this->getEdge(localRoot)));
+    return this->getEdgeIndexes(getSubtreeEdges(this->getNode(localRoot)));
   }
 
   /**

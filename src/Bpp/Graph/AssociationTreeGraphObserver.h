@@ -251,9 +251,9 @@ public:
 
   virtual std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const = 0;
 
-  virtual std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) = 0;
+  virtual std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) const = 0;
 
-  virtual std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot) = 0;
+  virtual std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot) const = 0;
 };
 }
 #endif // BPP_GRAPH_ASSOCIATIONTREEGRAPHOBSERVER_H
