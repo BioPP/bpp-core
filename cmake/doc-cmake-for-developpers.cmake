@@ -128,7 +128,7 @@ add_library (${PROJECT_NAME}-static STATIC ${CPP_FILES})
 
 target_include_directories (${PROJECT_NAME}-static PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 # Annotates the static lib target with include paths.
 # These paths will be added as -I options:
@@ -147,7 +147,7 @@ target_link_libraries (${PROJECT_NAME}-static ${BPP_LIBS_STATIC})
 add_library (${PROJECT_NAME}-shared SHARED ${CPP_FILES})
 target_include_directories (${PROJECT_NAME}-shared PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 set_target_properties (${PROJECT_NAME}-shared
   PROPERTIES OUTPUT_NAME ${PROJECT_NAME}
