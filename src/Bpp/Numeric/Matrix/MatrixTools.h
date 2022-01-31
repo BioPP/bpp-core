@@ -250,7 +250,7 @@ public:
   /**
    * @param A [in] First matrix.
    * @param B [in] Second matrix.
-   * @param O [out] The dot product of two matrices.
+   * @param O [out] The product of two matrices.
    */
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& B, Matrix<Scalar>& O)
