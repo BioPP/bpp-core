@@ -289,35 +289,35 @@ public:
 };
 
 /**
- * @brief This class implements a data structure describing a set of intervales.
+ * @brief This class implements a data structure describing a set of intervals.
  *
- * Intervales can be overlapping, but empty intervales will be ignored/removed.
+ * Intervals can be overlapping, but empty intervals will be ignored/removed.
  */
 template<class T> class RangeSet :
-  public RangeCollection<T>
+  public virtual RangeCollection<T>
 {
 public:
 
 private:
-  std::set< Range<T>*, rangeComp_<T> > ranges_;
+  std::vector< Range<T>* > ranges_;
 
 public:
   RangeSet() : ranges_() {}
 
   RangeSet(const RangeSet<T>& set) : ranges_()
   {
-    for (typename std::set< Range<T>* >::iterator it = set.ranges_.begin(); it != set.ranges_.end(); ++it)
+    for (const auto& it : set.ranges_)
     {
-      ranges_.insert(ranges_.end(), (**it).clone());
+      ranges_.push_back(it->clone());
     }
   }
 
   RangeSet& operator=(const RangeSet<T>& set)
   {
     clear_();
-    for (typename std::set< Range<T>* >::iterator it = set.ranges_.begin(); it != set.ranges_.end(); ++it)
+    for (const auto& it : set.ranges_)
     {
-      ranges_.insert(ranges_.end(), (**it).clone());
+      ranges_.push_back(it->clone());
     }
     return *this;
   }
@@ -331,21 +331,19 @@ public:
   void addRange(const Range<T>& r)
   {
     if (!r.isEmpty())
-      ranges_.insert(r.clone());
+      ranges_.push_back(r.clone());
   }
 
   void restrictTo(const Range<T>& r)
   {
-    typename std::set< Range<T>* >::iterator it = ranges_.begin();
+    auto it = ranges_.begin();
     while (it != ranges_.end())
     {
       (**it).sliceWith(r);
       if ((**it).isEmpty())
       {
-        typename std::set< Range<T>* >::iterator it2 = it;
         delete *it;
-        ++it;
-        ranges_.erase(it2);
+        it = ranges_.erase(it);
       }
       else
       {
@@ -356,7 +354,7 @@ public:
 
   void filterWithin(const Range<T>& r)
   {
-    typename std::set< Range<T>* >::iterator it = ranges_.begin();
+    auto it = ranges_.begin();
     while (it != ranges_.end())
     {
       if (r.contains(**it))
@@ -365,10 +363,8 @@ public:
       }
       else
       {
-        typename std::set< Range<T>* >::iterator it2 = it;
         delete *it;
-        ++it;
-        ranges_.erase(it2);
+        it = ranges_.erase(it);
       }
     }
   }
@@ -376,9 +372,9 @@ public:
   std::string toString() const
   {
     std::string s = "{ ";
-    for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it)
+    for (const auto& it : ranges_)
     {
-      s += (**it).toString() + " ";
+      s += it->toString() + " ";
     }
     s += "}";
     return s;
@@ -394,27 +390,21 @@ public:
   size_t totalLength() const
   {
     size_t tot = 0;
-    for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it)
+    for (const auto& it : ranges_)
     {
-      tot += (**it).length();
+      tot += it->length();
     }
     return tot;
   }
 
   const Range<T>& getRange(size_t i) const
   {
-    typename std::set< Range<T>* >::const_iterator it = ranges_.begin();
-    for (size_t c = 0; c < i; ++c)
-    {
-      ++it;
-    }
-    // it = it++;
-    return **it;
+    return *ranges_[i];
   }
 
-  const std::set< Range<T>*, rangeComp_<T> >& getSet() const { return ranges_; }
+  const std::vector< Range<T>* >& getSet() const { return ranges_; }
 
-  std::set< Range<T>*, rangeComp_<T> >& getSet() { return ranges_; }
+  std::vector< Range<T>* >& getSet() { return ranges_; }
 
   void clear()
   {
@@ -424,7 +414,7 @@ public:
 private:
   void clear_()
   {
-    for (typename std::set< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it)
+    for (auto it = ranges_.begin(); it != ranges_.end(); ++it)
     {
       delete *it;
     }
@@ -433,10 +423,10 @@ private:
 };
 
 /**
- * @brief This class implements a data structure describing a set of non-overlapping intervales.
+ * @brief This class implements a data structure describing a set of non-overlapping intervals.
  */
 template<class T> class MultiRange :
-  public RangeCollection<T>
+  public virtual RangeCollection<T>
 {
 private:
   std::vector<Range<T>*> ranges_;
@@ -502,16 +492,16 @@ public:
 
   void restrictTo(const Range<T>& r)
   {
-    for (size_t i = 0; i < ranges_.size(); ++i)
+    for (auto& it : ranges_)
     {
-      ranges_[i]->sliceWith(r);
+      it->sliceWith(r);
     }
     clean_();
   }
 
   void filterWithin(const Range<T>& r)
   {
-    typename std::vector< Range<T>* >::iterator it = ranges_.begin();
+    auto it = ranges_.begin();
     while (it != ranges_.end())
     {
       if (r.contains(**it))
@@ -532,9 +522,9 @@ public:
   std::string toString() const
   {
     std::string s = "{ ";
-    for (size_t i = 0; i < ranges_.size(); ++i)
+    for (const auto& it : ranges_)
     {
-      s += ranges_[i]->toString() + " ";
+      s += it->toString() + " ";
     }
     s += "}";
     return s;
@@ -546,10 +536,10 @@ public:
   std::vector<T> getBounds() const
   {
     std::vector<T> bounds;
-    for (size_t i = 0; i < ranges_.size(); ++i)
+    for (const auto& it : ranges_)
     {
-      bounds.push_back(ranges_[i]->begin());
-      bounds.push_back(ranges_[i]->end());
+      bounds.push_back(it->begin());
+      bounds.push_back(it->end());
     }
     return bounds;
   }
@@ -564,9 +554,9 @@ public:
   size_t totalLength() const
   {
     size_t tot = 0;
-    for (typename std::vector< Range<T>* >::const_iterator it = ranges_.begin(); it != ranges_.end(); ++it)
+    for (const auto& it : ranges_)
     {
-      tot += (**it).length();
+      tot += it->length();
     }
     return tot;
   }
@@ -585,7 +575,7 @@ private:
     rangeComp_<T> comp;
     std::sort(ranges_.begin(), ranges_.end(), comp);
     // Remove empty intervals:
-    typename std::vector< Range<T>* >::iterator it = ranges_.begin();
+    auto it = ranges_.begin();
     while (it != ranges_.end())
     {
       if ((**it).isEmpty())
