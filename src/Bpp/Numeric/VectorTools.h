@@ -1881,7 +1881,7 @@ public:
   }
 
   /**
-   * @return A std::vector which is the intersection of two std::vectors passed as input.
+   * @return A std::vector which is the intersection of two std::vectors passed as input. The order of elements is the order of the first vector.
    * @param vec1 Vector 1.
    * @param vec2 Vector 2.
    */

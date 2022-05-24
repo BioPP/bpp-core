@@ -624,45 +624,27 @@ Graph::NodeId TreeGraphImpl<GraphImpl>::MRCA(const std::vector<Graph::NodeId>& n
   if (nbnodes == 1)
     return nodes[0];
 
-  // Total counts
-  std::map<Graph::NodeId, uint> counts;
-
   // Forward counts
   auto fathers = std::make_shared<std::map<Graph::NodeId, uint> >();
   auto sons = std::make_shared<std::map<Graph::NodeId, uint> >();
 
   for (auto nodeid:nodes)
-  {
-    counts[nodeid] = 1;
     (*sons)[nodeid] = 1;
-  }
 
   while (sons->size() > 1)
   {
-    // From sons to fqthers
+    // From sons to fathers
     for (auto son:(*sons))
     {
-      if (!hasFather(son.first))
-        continue;
-
-      auto here = getFatherOfNode(son.first);
+      Graph::NodeId here=(!hasFather(son.first))?son.first:getFatherOfNode(son.first);
 
       if (fathers->find(here) == fathers->end())
         (*fathers)[here] = son.second;
       else
         (*fathers)[here] += son.second;
-    }
 
-    // add fathers in counts
-    for (auto father:*(fathers))
-    {
-      if (counts.find(father.first) == counts.end())
-        counts[father.first] = father.second;
-      else
-        counts[father.first] += father.second;
-
-      if (counts[father.first] == nbnodes)
-        return father.first;
+      if ((*fathers)[here] == nbnodes)
+        return here;
     }
 
     auto temp = sons;
@@ -671,7 +653,7 @@ Graph::NodeId TreeGraphImpl<GraphImpl>::MRCA(const std::vector<Graph::NodeId>& n
     fathers->clear();
   }
 
-  return sons->begin()->first;
+  throw Exception("TreeGraphImpl::MRCA not found");
 }
 }
 #endif // BPP_GRAPH_TREEGRAPHIMPL_H

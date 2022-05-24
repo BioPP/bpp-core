@@ -58,7 +58,7 @@ class KeyvalException :
   public Exception
 {
 public:
-  KeyvalException(const std::string& message) : Exception(message) {}
+  KeyvalException(const std::string& text) : Exception(text) {}
 };
 
 /**
