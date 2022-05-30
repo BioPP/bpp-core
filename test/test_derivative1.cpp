@@ -58,7 +58,15 @@ int main() {
   
   for (unsigned int repeat = 0; repeat < 10000; ++repeat) {
     for (size_t i = 0; i < pl.size(); ++i) {
-      double val = RandomTools::giveRandomNumberBetweenZeroAndEntry(100) - 50;
+      double val;
+      if (!pl[i].hasConstraint())
+        val = RandomTools::giveRandomNumberBetweenZeroAndEntry(100) - 50;
+      else
+      {
+        const auto& parameterBounds = dynamic_pointer_cast<const IntervalConstraint>(pl[i].getConstraint());
+        val = RandomTools::giveRandomNumberBetweenZeroAndEntry(parameterBounds->getUpperBound() - parameterBounds->getLowerBound()) + parameterBounds->getLowerBound();
+      }
+
       pl[i].setValue(val);
     }
 
