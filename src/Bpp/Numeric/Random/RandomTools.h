@@ -53,6 +53,7 @@
 #include <cassert>
 #include <ctime>
 #include <vector>
+#include <algorithm>
 
 namespace bpp
 {
@@ -170,13 +171,15 @@ public:
   static double randExponential(double mean, const RandomFactory& generator = * DEFAULT_GENERATOR);
 
   /**
-   * @brief Pick one element in a vector
-   *
-   * Pick one element randomly in a vector and return it.
-   *
+   * @brief Pick (and extract) one element randomly in a vector and return it.
    * @param v The vector of elements.
-   * @param replace If set to yes, then elements are allowed to be picked more than once, and therefore can be re-"placed" in the final sample.(default: false)
-   * @return On element of the vector.
+   
+   * @param replace If set to yes, then elements are allowed to be
+   *             picked more than once, and therefore can be
+   *             re-"placed" in the final sample (default: false, in
+   *             which case the vector will lost one element).
+   *
+   * @return One element of the vector.
    * @throw EmptyVectorException if the vector is empty.
    *
    * @author Sylvain Gaillard
@@ -198,6 +201,15 @@ public:
     }
   }
 
+  /**
+   * @brief Pick one element randomly in a vector and return it.
+   * @param v The vector of elements.
+   *
+   * @return One element of the vector.
+   * @throw EmptyVectorException if the vector is empty.
+   *
+   * @author Sylvain Gaillard
+   */
   template<class T>
   static T pickOne(const std::vector<T>& v)
   {
@@ -229,28 +241,32 @@ public:
   {
     if (vout.size() > vin.size() && !replace)
       throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", vout.size(), 0, vin.size());
-    std::vector<size_t> hat(vin.size());
-    for (size_t i = 0; i < vin.size(); i++)
+    if (replace)
     {
-      hat[i] = i;
+      for (size_t i = 0; i < vout.size(); i++)
+        vout[i] = pickOne(vin);
     }
-    for (size_t i = 0; i < vout.size(); i++)
+    else
     {
-      vout[i] = vin[pickOne(hat, replace)];
+      std::vector<size_t> hat(vin.size());
+      std::iota(hat.begin(), hat.end(), 0);
+      std::random_shuffle(hat.begin(), hat.end());
+      for (size_t i = 0; i < vout.size(); i++)
+        vout[i] = vin[hat[i]];
     }
   }
 
   /**
-   * @brief Pick one element in a vector, with associated probability weights
+   * @brief Pick one element in a vector, with associated probability weights.
    *
    * Pick one element randomly in a vector and return it.
    * If you choose to make the picking without replacement the element is
-   * removed from the vector, and so is the corresponding weight
+   * removed from the vector, and so is the corresponding weight.
    *
    * @param v The vector of elements.
    * @param w The vector of weight associated to the v elements.
    * @param replace Should pick with replacement? (default: false)
-   * @return On element of the vector.
+   * @return One element of the vector.
    * @throw EmptyVectorException if the vector is empty.
    *
    * @author Julien Dutheil
@@ -289,6 +305,42 @@ public:
   }
 
   /**
+   * @brief Pick one element in a vector, with associated probability weights
+   *
+   * Pick one element randomly in a vector and return it, with no
+   * change in the original vector.
+   *
+   * @param v The vector of elements.
+   * @param w The vector of weight associated to the v elements.
+   * @return One element of the vector.
+   * @throw EmptyVectorException if the vector is empty.
+   *
+   * @author Julien Dutheil
+   */
+  template<class T>
+  static T pickOne(const std::vector<T>& v, const std::vector<double>& w)
+  {
+    if (v.empty())
+      throw EmptyVectorException<T>("RandomTools::pickOne (with weight): input vector is empty", &v);
+    // Compute cumulative sum of weights:
+    std::vector<double> sumw = VectorTools::cumSum(w);
+    // Convert to cumulative distribution:
+    sumw /= sumw.back();
+    // Get random positions:
+    double prob = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+    size_t pos = v.size() - 1;
+    for (size_t i = 0; i < v.size(); ++i)
+    {
+      if (prob < sumw[i])
+      {
+        pos = i;
+        break;
+      }
+    }
+    return v[pos];
+  }
+
+  /**
    * @brief Pick one index from a cumsum vector of probabilities.
    *
    * Last probability of the vector is assumed to be one.
@@ -324,9 +376,9 @@ public:
    * close to the population size. In case the two are equal (pure permutations),
    * the weigths have no effect at all.
    *
-   * @param vin The vector to sample.
-   * @param w The vector of weights.
-   * @param vout [out] The output vector to fill, with the appropriate size.
+   * @param vin [in] The vector to sample.
+   * @param w [in] The vector of weights.
+   * @param vout [out] The output vector to fill, with the appropriate size already set.
    * @param replace Should sampling be with replacement?
    * @return A vector which is a sample of v.
    * @throw IndexOutOfBoundException if the sample size exceeds the original
@@ -336,20 +388,26 @@ public:
    * as it recomputes the some of weights for each element picked.
    * @author Julien Dutheil
    */
+  
   template<class T>
   static void getSample(const std::vector<T>& vin, const std::vector<double>& w, std::vector<T>& vout, bool replace = false)
   {
     if (vout.size() > vin.size() && !replace)
       throw IndexOutOfBoundsException("RandomTools::getSample (with weights): size exceeded v.size.", vout.size(), 0, vin.size());
     std::vector<size_t> hat(vin.size());
-    for (size_t i = 0; i < vin.size(); i++)
+    std::iota(hat.begin(), hat.end(), 0);
+    if (replace)
     {
-      hat[i] = i;
+      for (size_t i = 0; i < vout.size(); i++)
+        vout[i] = vin[pickOne(hat, w)];
     }
-    std::vector<double> w2(w); // non const copy
-    for (size_t i = 0; i < vout.size(); i++)
+    else
     {
-      vout[i] = vin[pickOne(hat, w2, replace)];
+      std::vector<double> w2(w); // non const copy
+      for (size_t i = 0; i < vout.size(); i++)
+      {
+        vout[i] = vin[pickOne(hat, w2, false)];
+      }
     }
   }
 
