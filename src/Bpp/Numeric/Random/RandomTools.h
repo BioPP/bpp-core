@@ -46,7 +46,6 @@
 #include "../../Exceptions.h"
 #include "../VectorExceptions.h"
 #include "../VectorTools.h"
-#include "RandomFactory.h"
 
 // From the STL:
 #include <cmath>
@@ -54,19 +53,17 @@
 #include <ctime>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 namespace bpp
 {
 /**
  * @brief Utilitary function dealing with random numbers.
  *
- * This class uses Uniform01K generator by default.
- * It is possible to change this by setting the DEFAULT_GENERATOR variable.
- *
  * This class is adapted from Pupko's SEMPHY library.
  * It also borrow some code from Yang's PAML package.
  *
- * @see RandomFactory
+ * Most of these function are provided for convenience, directly using the <random> library might prove more efficient.
  */
 class RandomTools
 {
@@ -94,23 +91,40 @@ private:
                                  double maxgam);
 
 public:
-  static RandomFactory* DEFAULT_GENERATOR;
+  static std::random_device RANDOM_DEVICE;
+  static std::mt19937 DEFAULT_GENERATOR;
+
+  /**
+   * @brief Set the default generator seed.
+   *
+   * @param seed New seed.
+   */
+  static void setSeed(std::mt19937::result_type seed)
+  {
+    DEFAULT_GENERATOR.seed(seed);
+  }
 
   /**
    * @brief Get a double random value (between 0 and specified range).
    *
-   * Note : the number you get is between 0 and entry not including entry !
    * @param entry Max number to reach.
-   * @param generator Random number generator to use.
    */
-  static double giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double giveRandomNumberBetweenZeroAndEntry(double entry)
+  {
+    std::uniform_real_distribution<double> dis(0, entry);
+    return dis(DEFAULT_GENERATOR);
+  }
 
   /**
    * @brief Get a boolean random value.
    *
-   * @param generator Random number generator to use.
+   * @param prob Probability of getting 'true'.
    */
-  static bool flipCoin(const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static bool flipCoin(double prob = 0.5) 
+  {
+    std::bernoulli_distribution d(prob);
+    return d(DEFAULT_GENERATOR);
+  }
 
   /**
    * @brief Get an integer random value (between 0 and specified range).
@@ -120,55 +134,63 @@ public:
    * @param generator Random number generator to use.
    */
   template<class intType>
-  static intType giveIntRandomNumberBetweenZeroAndEntry(intType entry, const RandomFactory& generator = * DEFAULT_GENERATOR)
+  static intType giveIntRandomNumberBetweenZeroAndEntry(intType entry)
   {
-    return static_cast<intType>(giveRandomNumberBetweenZeroAndEntry(static_cast<double>(entry), generator));
+    if (entry == 0)
+      throw Exception("RandomTools::giveIntRandomNumberBetweenZeroAndEntry. Entry must be at least 1.");
+    std::uniform_int_distribution<intType> dis(0, entry - 1);
+    return dis(DEFAULT_GENERATOR);
   }
-
-  /**
-   * @brief Set the default generator seed.
-   *
-   * @param seed New seed.
-   */
-  static void setSeed(long seed);
 
   /**
    * @return A random number drawn from a normal distribution.
    * @param mean The mean of the law.
    * @param variance The variance of the law.
-   * @param generator The uniform generator to use.
    */
-  static double randGaussian(double mean, double variance, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double randGaussian(double mean, double variance)
+  {
+    std::normal_distribution<double> dis(mean, sqrt(variance));
+    return dis(DEFAULT_GENERATOR);
+  }
 
   /**
    * @return A random number drawn from a gamma distribution with unit scale (beta=1).
-   * @param dblAlpha The alpha parameter.
-   * @param generator The uniform generator to use.
+   * @param alpha The alpha parameter.
    */
-  static double randGamma(double dblAlpha, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double randGamma(double alpha)
+  {
+    std::gamma_distribution<double> dis(alpha, 1.);
+    return dis(DEFAULT_GENERATOR);
+  }
 
   /**
    * @return A random number drawn from a gamma distribution.
    * @param alpha The alpha parameter.
    * @param beta The beta parameter.
-   * @param generator The uniform generator to use.
    */
-  static double randGamma(double alpha, double beta, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double randGamma(double alpha, double beta)
+  {
+    std::gamma_distribution<double> dis(alpha, beta);
+    return dis(DEFAULT_GENERATOR);
+  }
 
   /**
    * @return A random number drawn from a beta distribution.
    * @param alpha The alpha parameter.
    * @param beta The beta parameter.
-   * @param generator The uniform generator to use.
    */
-  static double randBeta(double alpha, double beta, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double randBeta(double alpha, double beta);
 
   /**
    * @return A random number drawn from an exponential distribution.
    * @param mean The mean of the distribution.
    * @param generator The uniform generator to use.
    */
-  static double randExponential(double mean, const RandomFactory& generator = * DEFAULT_GENERATOR);
+  static double randExponential(double mean)
+  {
+    std::exponential_distribution<double> dis(mean);
+    return dis(DEFAULT_GENERATOR);
+  }
 
   /**
    * @brief Pick (and extract) one element randomly in a vector and return it.
@@ -243,14 +265,14 @@ public:
       throw IndexOutOfBoundsException("RandomTools::getSample: size exceeded v.size.", vout.size(), 0, vin.size());
     if (replace)
     {
-      for (size_t i = 0; i < vout.size(); i++)
+      for (size_t i = 0; i < vout.size(); ++i)
         vout[i] = pickOne(vin);
     }
     else
     {
       std::vector<size_t> hat(vin.size());
       std::iota(hat.begin(), hat.end(), 0);
-      std::random_shuffle(hat.begin(), hat.end());
+      std::shuffle(hat.begin(), hat.end(), DEFAULT_GENERATOR);
       for (size_t i = 0; i < vout.size(); i++)
         vout[i] = vin[hat[i]];
     }
@@ -643,8 +665,8 @@ public:
   /** @} */
 
 private:
-  static double DblGammaGreaterThanOne(double dblAlpha, const RandomFactory& generator);
-  static double DblGammaLessThanOne(double dblAlpha, const RandomFactory& generator);
+  static double DblGammaGreaterThanOne(double dblAlpha);
+  static double DblGammaLessThanOne(double dblAlpha);
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_RANDOM_RANDOMTOOLS_H

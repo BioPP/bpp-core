@@ -43,7 +43,6 @@
 
 
 #include "../Matrix/Matrix.h"
-#include "RandomFactory.h"
 #include "RandomTools.h"
 
 // From the STL:
@@ -85,7 +84,7 @@ public:
   ContingencyTableGenerator(const std::vector<size_t>& nrowt, const std::vector<size_t>& ncolt);
 
 public:
-  RowMatrix<size_t> rcont2(const RandomFactory& generator = * RandomTools::DEFAULT_GENERATOR);
+  RowMatrix<size_t> rcont2();
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_RANDOM_CONTINGENCYTABLEGENERATOR_H

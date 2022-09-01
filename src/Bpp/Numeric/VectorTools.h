@@ -527,10 +527,10 @@ public:
    *  required positions
    */
   template<class T>
-  static std::vector<T> extract(const std::vector<T>& v1, const std::vector<int>& v2)
+  static std::vector<T> extract(const std::vector<T>& v1, const std::vector<size_t>& v2)
   {
     std::vector<T> v(v2.size());
-    for (size_t i = 0; i < v2.size(); i++)
+    for (size_t i = 0; i < v2.size(); ++i)
     {
       v[i] = v1[v2[i]];
     }
