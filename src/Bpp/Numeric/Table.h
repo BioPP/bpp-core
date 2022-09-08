@@ -1074,7 +1074,7 @@ public:
       }
       else
       {
-        dt = std::make_uique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
+        dt = std::make_unique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
         dt->addColumn(firstLine, sep, names);
       }
     }
