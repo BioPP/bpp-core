@@ -87,7 +87,7 @@ public:
     rowNames_(),
     colNames_()
   {
-    for (size_t i = 0; i < nCol; i++)
+    for (size_t i = 0; i < nCol; ++i)
     {
       data_[i].resize(nRow);
     }
@@ -1040,28 +1040,28 @@ public:
    * @param sep      The line delimiter.
    * @param header   Tell if the first line must be used for names,
    * otherwise use default.
-   * @param names     Use a column as rowNames (or a row as columnNames). If positive, use the specified column to compute rownames, otherwise use default;
+   * @param names    Use a column as rowNames (or a row as columnNames). If positive, use the specified column to compute rownames, otherwise use default;
    * @return         A pointer toward a new Table object.
    */
-  static Table<T>* read(std::istream& in, bool byRow, const std::string& sep = "\t", bool header = true, int names = -1)
+  static std::unique_ptr< Table<T> > read(std::istream& in, bool byRow, const std::string& sep = "\t", bool header = true, int names = -1)
   {
     std::string firstLine  = FileTools::getNextLine(in);
     StringTokenizer st1(firstLine, sep, false, true);
     std::vector<std::string> row1(st1.getTokens().begin(), st1.getTokens().end());
     size_t nCol = row1.size();
-    Table<T>* dt;
+    unique_ptr< Table<T> > dt;
 
     if (header)
     {
       // Use first line as header.
       if (byRow)
       {
-        dt = new Table<T>(0, nCol);
+        dt = make_unique< Table<T> >(0, nCol);
         dt->setColumnNames(row1);
       }
       else
       {
-        dt = new Table<T>(nCol, 0);
+        dt = make_unique< Table<T> >(nCol, 0);
         dt->setRowNames(row1);
       }
     }
@@ -1069,12 +1069,12 @@ public:
     {
       if (byRow)
       {
-        dt = new Table<T>(0, nCol - (names >= 0 ? 1 : 0));
+        dt = make_unique< Table<T> >(0, nCol - (names >= 0 ? 1 : 0));
         dt->addRow(firstLine, sep, names);
       }
       else
       {
-        dt = new Table<T>(nCol - (names >= 0 ? 1 : 0), 0);
+        dt = make_uique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
         dt->addColumn(firstLine, sep, names);
       }
     }
@@ -1120,7 +1120,7 @@ public:
       if (alignHeaders && frontNames)
         out << sep;
       out << names[0];
-      for (size_t i = 1; i < n; i++)
+      for (size_t i = 1; i < n; ++i)
       {
         out << sep << names[i];
       }
@@ -1129,7 +1129,7 @@ public:
 
     // now write each row (or column):
 
-    for (size_t i = 0; i < m; i++)
+    for (size_t i = 0; i < m; ++i)
     {
       if (frontNames)
       {
@@ -1137,7 +1137,7 @@ public:
       }
 
       out << (byRow ? data(i, 0) : data(0, i));
-      for (size_t j = 1; j < n; j++)
+      for (size_t j = 1; j < n; ++j)
       {
         out << sep << (byRow ? data(i, j) : data(j, i));
       }
@@ -1161,7 +1161,7 @@ public:
       if (alignHeaders && frontNames)
         out << sep;
       out << names[0];
-      for (size_t i = 1; i < n; i++)
+      for (size_t i = 1; i < n; ++i)
       {
         out << sep << names[i];
       }
@@ -1170,13 +1170,13 @@ public:
 
     // now write each row (or column):
 
-    for (size_t i = 0; i < m; i++)
+    for (size_t i = 0; i < m; ++i)
     {
       if (frontNames)
         out << (byRow ? data.getRowName(i) : data.getColumnName(i)) << sep;
 
       out << (byRow ? data(i, 0) : data(0, i));
-      for (size_t j = 1; j < n; j++)
+      for (size_t j = 1; j < n; ++j)
       {
         out << sep << (byRow ? data(i, j) : data(j, i));
       }
