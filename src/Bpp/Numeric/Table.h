@@ -1056,12 +1056,12 @@ public:
       // Use first line as header.
       if (byRow)
       {
-        dt = make_unique< Table<T> >(0, nCol);
+        dt = std::make_unique< Table<T> >(0, nCol);
         dt->setColumnNames(row1);
       }
       else
       {
-        dt = make_unique< Table<T> >(nCol, 0);
+        dt = std::make_unique< Table<T> >(nCol, 0);
         dt->setRowNames(row1);
       }
     }
@@ -1069,12 +1069,12 @@ public:
     {
       if (byRow)
       {
-        dt = make_unique< Table<T> >(0, nCol - (names >= 0 ? 1 : 0));
+        dt = std::make_unique< Table<T> >(0, nCol - (names >= 0 ? 1 : 0));
         dt->addRow(firstLine, sep, names);
       }
       else
       {
-        dt = make_uique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
+        dt = std::make_uique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
         dt->addColumn(firstLine, sep, names);
       }
     }
