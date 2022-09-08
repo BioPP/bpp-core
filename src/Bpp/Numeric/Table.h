@@ -1049,7 +1049,7 @@ public:
     StringTokenizer st1(firstLine, sep, false, true);
     std::vector<std::string> row1(st1.getTokens().begin(), st1.getTokens().end());
     size_t nCol = row1.size();
-    unique_ptr< Table<T> > dt;
+    std::unique_ptr< Table<T> > dt;
 
     if (header)
     {
