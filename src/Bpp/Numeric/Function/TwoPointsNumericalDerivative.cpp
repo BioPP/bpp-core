@@ -44,7 +44,7 @@
 using namespace bpp;
 using namespace std;
 
-void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList parameters)
+void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList& parameters)
 {
   if (computeD1_ && variables_.size() > 0)
   {
@@ -54,57 +54,72 @@ void TwoPointsNumericalDerivative::updateDerivatives(const ParameterList paramet
       function2_->enableSecondOrderDerivatives(false);
     function_->setParameters(parameters);
     f1_ = function_->getValue();
+    if ((abs(f1_) >= NumConstants::VERY_BIG()) || std::isnan(f1_))
+    {
+      for (size_t i = 0; i < variables_.size(); ++i)
+      {
+        der1_[i] = log(-1);
+        der2_[i] = log(-1);
+      }
+      return;
+    }
+
     string lastVar;
     bool functionChanged = false;
+    ParameterList p;
     bool start = true;
-    for (unsigned int i = 0; i < variables_.size(); i++)
+    for (size_t i = 0; i < variables_.size(); ++i)
     {
       string var = variables_[i];
       if (!parameters.hasParameter(var))
         continue;
-      ParameterList p;
       if (!start)
       {
         vector<string> vars(2);
         vars[0] = var;
         vars[1] = lastVar;
-        lastVar = var;
-        functionChanged = true;
         p = parameters.createSubList(vars);
       }
       else
       {
         p = parameters.createSubList(var);
-        lastVar = var;
-        functionChanged = true;
         start = false;
       }
+      lastVar = var;
+      functionChanged = true;
       double value = function_->getParameterValue(var);
-      double h = (1 + std::abs(value)) * h_;
+      double h = -(1. + std::abs(value)) * h_;
+      if (abs(h) < p[0].getPrecision())
+        h = h < 0 ? -p[0].getPrecision() : p[0].getPrecision();
+      double hf2(0);
+      unsigned int nbtry = 0;
+
       // Compute one other point:
-      try
+      while (hf2 == 0)
       {
-        p[0].setValue(value + h);
-        function_->setParameters(p);
-        f2_ = function_->getValue();
-      }
-      catch (ConstraintException& ce1)
-      {
-        // Right limit raised, use backward approximation:
         try
         {
-          p[0].setValue(value - h);
-          function_->setParameters(p);
+          p[0].setValue(value + h);
+          function_->setParameters(p); // also reset previous parameter...
+
+          p = p.createSubList(0);
           f2_ = function_->getValue();
-          der1_[i] = (f1_ - f2_) / h;
+          if ((abs(f2_) >= NumConstants::VERY_BIG()) || std::isnan(f2_))
+            throw ConstraintException("f2_ too large", &p[0], f2_);
+          else
+            hf2 = h;
         }
-        catch (ConstraintException& ce2)
+        catch (ConstraintException& ce)
         {
-          // PB: can't compute derivative, because of a two narrow interval (lower than h)
-          throw ce2;
+          if (++nbtry == 10) // no possibility to compute derivatives
+            break;
+          else if (h < 0)
+            h = -h;                       // try on the right
+          else
+            h /= -2;                        // try again on the left with smaller interval
         }
       }
-      // No limit raised, use forward approximation:
+
       der1_[i] = (f2_ - f1_) / h;
     }
     // Reset last parameter and compute analytical derivatives if any:

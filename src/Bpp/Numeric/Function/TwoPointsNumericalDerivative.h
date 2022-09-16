@@ -90,29 +90,32 @@ public:
     f2_() {}
   virtual ~TwoPointsNumericalDerivative() {}
 
-  TwoPointsNumericalDerivative* clone() const { return new TwoPointsNumericalDerivative(*this); }
+  TwoPointsNumericalDerivative* clone() const override
+  {
+    return new TwoPointsNumericalDerivative(*this);
+  }
 
 public:
-  double getValue() const { return f1_; }
+  double getValue() const override { return f1_; }
 
   /**
    * @name The DerivableSecondOrder interface
    *
    * @{
    */
-  double getSecondOrderDerivative(const std::string& variable) const
+  double getSecondOrderDerivative(const std::string& variable) const override
   {
     throw Exception("Second order derivative not avalaible with two points method.");
   }
 
-  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
+  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const override
   {
     throw Exception("Unimplemented cross derivative.");
   }
   /** @} */
 
 protected:
-  void updateDerivatives(const ParameterList parameters);
+  void updateDerivatives(const ParameterList& parameters) override;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_TWOPOINTSNUMERICALDERIVATIVE_H

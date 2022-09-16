@@ -43,61 +43,12 @@
 #include "../NumConstants.h"
 #include "../VectorTools.h"
 #include "RandomTools.h"
-#include "Uniform01K.h"
 
 using namespace bpp;
 using namespace std;
 
-RandomFactory* RandomTools::DEFAULT_GENERATOR = new Uniform01K(time(NULL));
-
-// Initiate random seed :
-// RandomTools::RandInt RandomTools::r = time(NULL) ;
-
-void RandomTools::setSeed(long seed)
-{
-  DEFAULT_GENERATOR->setSeed(seed);
-}
-
-// Method to get a double random value (between 0 and specified range)
-// Note : the number you get is between 0 and entry not including entry !
-double RandomTools::giveRandomNumberBetweenZeroAndEntry(double entry, const RandomFactory& generator)
-{
-  // double tm = r.drawFloatNumber();
-  double tm = generator.drawNumber();
-  return tm * entry;
-}
-
-// Method to get a boolean random value
-bool RandomTools::flipCoin(const RandomFactory& generator)
-{
-  return (RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator) - 0.5) > 0;
-}
-
-double RandomTools::randGaussian(double mean, double variance, const RandomFactory& generator)
-{
-  return RandomTools::qNorm(generator.drawNumber(), mean, sqrt(variance));
-}
-
-double RandomTools::randGamma(double dblAlpha, const RandomFactory& generator)
-{
-  assert(dblAlpha > 0.0);
-  if (dblAlpha < 1.0)
-    return RandomTools::DblGammaLessThanOne(dblAlpha, generator);
-  else if (dblAlpha > 1.0)
-    return RandomTools::DblGammaGreaterThanOne(dblAlpha, generator);
-  return -log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator));
-}
-
-double RandomTools::randGamma(double alpha, double beta, const RandomFactory& generator)
-{
-  double x = RandomTools::randGamma(alpha, generator) / beta;
-  return x;
-}
-
-double RandomTools::randExponential(double mean, const RandomFactory& generator)
-{
-  return -mean* log(RandomTools::giveRandomNumberBetweenZeroAndEntry(1, generator));
-}
+std::random_device RandomTools::RANDOM_DEVICE;
+std::mt19937 RandomTools::DEFAULT_GENERATOR(RandomTools::RANDOM_DEVICE());
 
 std::vector<size_t> RandomTools::randMultinomial(size_t n, const std::vector<double>& probs)
 {
@@ -105,12 +56,12 @@ std::vector<size_t> RandomTools::randMultinomial(size_t n, const std::vector<dou
   double r;
   double cumprob;
   vector<size_t> sample(n);
-  for (unsigned int i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
     cumprob = 0;
     bool test = true;
-    for (unsigned int j = 0; test& (j < probs.size()); j++)
+    for (size_t j = 0; test& (j < probs.size()); ++j)
     {
       cumprob += probs[j] / s;
       if (r <= cumprob)
@@ -129,7 +80,7 @@ std::vector<size_t> RandomTools::randMultinomial(size_t n, const std::vector<dou
 // ------------------------------------------------------------------------------
 
 
-double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory& generator)
+double RandomTools::DblGammaGreaterThanOne(double dblAlpha)
 {
   // Code adopted from David Heckerman
   // -----------------------------------------------------------
@@ -154,8 +105,8 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory&
     double dblRand2;
     do
     {
-      dblRand1 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator);
-      dblRand2 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0, generator);
+      dblRand1 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
+      dblRand2 = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
       if (dblAlpha > 2.5)
         dblRand1 = dblRand2 + rgdbl[5] * (1.0 - 1.86 * dblRand1);
     }
@@ -173,7 +124,7 @@ double RandomTools::DblGammaGreaterThanOne(double dblAlpha, const RandomFactory&
   return 0.0;
 }
 
-double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory& generator)
+double RandomTools::DblGammaLessThanOne(double dblAlpha)
 {
   // routine to generate a gamma random variable with
   // unit scale and alpha < 1
@@ -182,8 +133,8 @@ double RandomTools::DblGammaLessThanOne(double dblAlpha, const RandomFactory& ge
   const double dblexp = exp(1.0);
   for ( ; ;)
   {
-    double dblRand0 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
-    double dblRand1 = giveRandomNumberBetweenZeroAndEntry(1.0, generator);
+    double dblRand0 = giveRandomNumberBetweenZeroAndEntry(1.0);
+    double dblRand1 = giveRandomNumberBetweenZeroAndEntry(1.0);
     if (dblRand0 <= (dblexp / (dblAlpha + dblexp)))
     {
       dblTemp = pow(((dblAlpha + dblexp) * dblRand0) /
@@ -496,9 +447,9 @@ double RandomTools::lnBeta(double alpha, double beta)
   return lnGamma(alpha) + lnGamma(beta) - lnGamma(alpha + beta);
 }
 
-double RandomTools::randBeta(double alpha, double beta, const RandomFactory& generator)
+double RandomTools::randBeta(double alpha, double beta)
 {
-  return RandomTools::qBeta(generator.drawNumber(), alpha, beta);
+  return RandomTools::qBeta(giveRandomNumberBetweenZeroAndEntry(1.0), alpha, beta);
 }
 
 

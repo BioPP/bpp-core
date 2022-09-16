@@ -114,21 +114,21 @@ public:
     f5_() {}
   virtual ~FivePointsNumericalDerivative() {}
 
-  FivePointsNumericalDerivative* clone() const { return new FivePointsNumericalDerivative(*this); }
+  FivePointsNumericalDerivative* clone() const override { return new FivePointsNumericalDerivative(*this); }
 
 public:
-  double getValue() const
+  double getValue() const override
   {
     return f3_;
   }
 
-  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
+  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const override
   {
     throw Exception("Unimplemented cross derivative.");
   }
 
 protected:
-  void updateDerivatives(const ParameterList parameters);
+  void updateDerivatives(const ParameterList& parameters) override;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_FIVEPOINTSNUMERICALDERIVATIVE_H

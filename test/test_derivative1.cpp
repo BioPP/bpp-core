@@ -94,8 +94,8 @@ int main() {
     for (size_t i = 0; i < pl.size(); ++i) {
       derivativesAna[i] = f1.getFirstOrderDerivative(pl.getParameterNames()[i]);
       if (abs(derivativesAna[i] - derivativesNum2pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
-      if (abs(derivativesAna[i] - derivativesNum3pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
-      if (abs(derivativesAna[i] - derivativesNum5pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
+      if (abs(derivativesAna[i] - derivativesNum3pt[i]) > std::sqrt(nd3pt.getInterval())) test = false;
+      if (abs(derivativesAna[i] - derivativesNum5pt[i]) > std::sqrt(nd5pt.getInterval())) test = false;
     }
 
     //Test:
@@ -104,9 +104,9 @@ int main() {
       for (size_t i = 0; i < pl.size(); ++i) {
         cout << setprecision(20) << pl[i].getName() << "=" << pl[i].getValue() << endl;
         cout << setprecision(20) << "Ana. Der.     =" << derivativesAna[i]    << endl;
-        cout << setprecision(20) << "Num. Der. 2pts=" << derivativesNum2pt[i] << endl;
-        cout << setprecision(20) << "Num. Der. 3pts=" << derivativesNum3pt[i] << endl;
-        cout << setprecision(20) << "Num. Der. 5pts=" << derivativesNum5pt[i] << endl;
+        cout << setprecision(20) << "Num. Der. 2pts=" << derivativesNum2pt[i] << " " << std::sqrt(nd2pt.getInterval()) << endl;
+        cout << setprecision(20) << "Num. Der. 3pts=" << derivativesNum3pt[i] << " " << std::sqrt(nd3pt.getInterval()) << endl;
+        cout << setprecision(20) << "Num. Der. 5pts=" << derivativesNum5pt[i] << " " << std::sqrt(nd5pt.getInterval()) <<endl;
       }
       return 1;
     } else {

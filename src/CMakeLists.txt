@@ -80,9 +80,6 @@ set (CPP_FILES
   Bpp/Numeric/Prob/UniformDiscreteDistribution.cpp
   Bpp/Numeric/Random/ContingencyTableGenerator.cpp
   Bpp/Numeric/Random/RandomTools.cpp
-  Bpp/Numeric/Random/Uniform01K.cpp
-  Bpp/Numeric/Random/Uniform01QD.cpp
-  Bpp/Numeric/Random/Uniform01WH.cpp
   Bpp/Numeric/Stat/ContingencyTableTest.cpp
   Bpp/Numeric/Stat/Mva/CorrespondenceAnalysis.cpp 
   Bpp/Numeric/Stat/Mva/DualityDiagram.cpp 
