@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -71,7 +71,7 @@ ContingencyTableGenerator::ContingencyTableGenerator(
   fact_.resize(ntot_ + 1);
   double x = 0.;
   fact_[0] = 0.;
-  for (unsigned int i = 1; i <= ntot_; i++)
+  for (size_t i = 1; i <= ntot_; ++i)
   {
     x = x + log(static_cast<double>(i));
     fact_[i] = x;
@@ -88,7 +88,7 @@ ContingencyTableGenerator::ContingencyTableGenerator(
 
    Taken from R source file rcont.c and adapted by Julien Dutheil, Dec 2010
  */
-RowMatrix<size_t> ContingencyTableGenerator::rcont2(const RandomFactory& generator)
+RowMatrix<size_t> ContingencyTableGenerator::rcont2()
 {
   RowMatrix<size_t> table(nrow_, ncol_); // Result
   size_t j, l, m, ia, ib, ic, jc, id, ie, ii, nll, nlm, nr_1, nc_1;
@@ -133,7 +133,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2(const RandomFactory& generat
       }
 
       /* Generate pseudo-random number */
-      dummy = generator.drawNumber();
+      dummy = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
 
       do/* Outer Loop */
 
@@ -189,7 +189,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2(const RandomFactory& generat
         }
         while (!lsp);
 
-        dummy = sumprb * generator.drawNumber();
+        dummy = sumprb * RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
       }
       while (true);
 

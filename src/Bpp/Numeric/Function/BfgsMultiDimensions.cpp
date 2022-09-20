@@ -116,11 +116,12 @@ void BfgsMultiDimensions::doInit(const ParameterList& params)
   }
 
 
-  double sum = 0;
-  for (size_t i = 0; i < nbParams; i++)
-  {
-    sum += p_[i] * p_[i];
-  }
+  //jdutheil 01/09/22: what is this for? 
+  //double sum = 0;
+  //for (size_t i = 0; i < nbParams; i++)
+  //{
+  //  sum += p_[i] * p_[i];
+  //}
 }
 
 /******************************************************************************/

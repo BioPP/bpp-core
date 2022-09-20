@@ -45,6 +45,8 @@
 #include "DataTable.h"
 #include "VectorTools.h"
 
+#include <memory>
+
 using namespace bpp;
 using namespace std;
 
@@ -601,7 +603,7 @@ void DataTable::addRow(const string& rowName, const vector<string>& newRow)
 /*                               Read from a CSV file                         */
 /******************************************************************************/
 
-DataTable* DataTable::read(istream& in, const string& sep, bool header, int rowNames)
+unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool header, int rowNames)
 {
   string firstLine  = FileTools::getNextLine(in);
   StringTokenizer st1(firstLine, sep, false, true);
@@ -611,10 +613,10 @@ DataTable* DataTable::read(istream& in, const string& sep, bool header, int rowN
   vector<string> row2(st2.getTokens().begin(), st2.getTokens().end());
   size_t nCol = row1.size();
   bool hasRowNames;
-  DataTable* dt;
+  unique_ptr<DataTable> dt;
   if (row1.size() == row2.size())
   {
-    dt = new DataTable(nCol);
+    dt = make_unique<DataTable>(nCol);
     if (header)
     { // Use first line as header.
       dt->setColumnNames(row1);
@@ -628,7 +630,7 @@ DataTable* DataTable::read(istream& in, const string& sep, bool header, int rowN
   }
   else if (row1.size() == row2.size() - 1)
   {
-    dt = new DataTable(nCol);
+    dt = make_unique<DataTable>(nCol);
     dt->setColumnNames(row1);
     string rowName = *row2.begin();
     dt->addRow(rowName, vector<string>(row2.begin() + 1, row2.end()));

@@ -119,16 +119,19 @@ public:
     f21_() {}
   virtual ~ThreePointsNumericalDerivative() {}
 
-  ThreePointsNumericalDerivative* clone() const { return new ThreePointsNumericalDerivative(*this); }
+  ThreePointsNumericalDerivative* clone() const override
+  {
+    return new ThreePointsNumericalDerivative(*this);
+  }
 
 public:
-  double getValue() const
+  double getValue() const override
   {
     return f2_;
   }
 
 protected:
-  void updateDerivatives(const ParameterList parameters);
+  void updateDerivatives(const ParameterList& parameters) override;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_THREEPOINTSNUMERICALDERIVATIVE_H

@@ -119,7 +119,7 @@ public:
 
   virtual ~AbstractNumericalDerivative() {}
 
-  AbstractNumericalDerivative* clone() const = 0;
+  AbstractNumericalDerivative* clone() const override= 0;
 
 public:
   /**
@@ -159,10 +159,10 @@ public:
    *
    * @{
    */
-  void enableFirstOrderDerivatives(bool yn) { computeD1_ = yn; }
-  bool enableFirstOrderDerivatives() const { return computeD1_; }
+  void enableFirstOrderDerivatives(bool yn) override { computeD1_ = yn; }
+  bool enableFirstOrderDerivatives() const override { return computeD1_; }
 
-  double getFirstOrderDerivative(const std::string& variable) const
+  double getFirstOrderDerivative(const std::string& variable) const override
   {
     std::map<std::string, size_t>::iterator it = index_.find(variable);
     if (computeD1_ && it != index_.end())
@@ -180,10 +180,10 @@ public:
    *
    * @{
    */
-  void enableSecondOrderDerivatives(bool yn) { computeD2_ = yn; }
-  bool enableSecondOrderDerivatives() const { return computeD2_; }
+  void enableSecondOrderDerivatives(bool yn) override { computeD2_ = yn; }
+  bool enableSecondOrderDerivatives() const override { return computeD2_; }
 
-  double getSecondOrderDerivative(const std::string& variable) const
+  double getSecondOrderDerivative(const std::string& variable) const override
   {
     std::map<std::string, size_t>::iterator it = index_.find(variable);
     if (computeD2_ && it != index_.end())
@@ -195,7 +195,7 @@ public:
     throw Exception("Second order derivative not computed for variable " + variable + ".");
   }
 
-  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
+  double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const override
   {
     std::map<std::string, size_t>::iterator it1 = index_.find(variable1);
     std::map<std::string, size_t>::iterator it2 = index_.find(variable2);
@@ -214,35 +214,35 @@ public:
    *
    * @{
    */
-  double f(const ParameterList& parameters)
+  double f(const ParameterList& parameters) override
   {
     setParameters(parameters);
     return getValue();
   }
-  void setParameters(const ParameterList& parameters)
+  void setParameters(const ParameterList& parameters) override
   {
     function_->setParameters(parameters);
     updateDerivatives(parameters);
   }
-  void setAllParametersValues(const ParameterList& parameters)
+  void setAllParametersValues(const ParameterList& parameters) override
   {
     function_->setAllParametersValues(parameters);
     updateDerivatives(parameters);
   }
 
-  void setParameterValue(const std::string& name, double value)
+  void setParameterValue(const std::string& name, double value) override
   {
     function_->setParameterValue(name, value);
     updateDerivatives(function_->getParameters().createSubList(name));
   }
 
-  void setParametersValues(const ParameterList& parameters)
+  void setParametersValues(const ParameterList& parameters) override
   {
     function_->setParametersValues(parameters);
     updateDerivatives(parameters);
   }
 
-  bool matchParametersValues(const ParameterList& parameters)
+  bool matchParametersValues(const ParameterList& parameters) override
   {
     bool test = function_->matchParametersValues(parameters);
     updateDerivatives(parameters);
@@ -260,7 +260,7 @@ protected:
    * @param parameters The point where to compute derivatives. It is NOT passed as references,
    * as the inner parameters of the function will be changed when computing the numerical derivatives.
    */
-  virtual void updateDerivatives(const ParameterList parameters) = 0;
+  virtual void updateDerivatives(const ParameterList& parameters) = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_ABSTRACTNUMERICALDERIVATIVE_H

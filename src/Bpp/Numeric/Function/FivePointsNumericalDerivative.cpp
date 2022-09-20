@@ -44,7 +44,7 @@
 using namespace bpp;
 using namespace std;
 
-void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parameters)
+void FivePointsNumericalDerivative::updateDerivatives(const ParameterList& parameters)
 {
   if (computeD1_ && variables_.size() > 0)
   {
@@ -58,7 +58,7 @@ void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parame
     bool functionChanged = false;
     ParameterList p;
     bool start = true;
-    for (unsigned int i = 0; i < variables_.size(); i++)
+    for (size_t i = 0; i < variables_.size(); ++i)
     {
       string var = variables_[i];
       if (!parameters.hasParameter(var))
@@ -73,7 +73,7 @@ void FivePointsNumericalDerivative::updateDerivatives(const ParameterList parame
       else
       {
         p = parameters.createSubList(var);
-        start = true;
+        start = false;
       }
       lastVar = var;
       functionChanged = true;

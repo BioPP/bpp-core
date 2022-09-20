@@ -63,7 +63,7 @@ namespace bpp
  * (NB: actually, ColMatrix does not exist yet...)
  */
 class DataTable :
-  public Clonable
+  public virtual Clonable
 {
 protected:
   size_t nRow_, nCol_;
@@ -415,7 +415,6 @@ public:
    * @throw NoTableRowNamesException If the table does not have column names.
    * @throw DuplicatedTableRowNameException If rowName is already used.
    */
-
   void addRow(const std::string& rowName, const std::vector<std::string>& newRow);
 
   /**
@@ -424,7 +423,6 @@ public:
    * @param rowIndex  The index of the row.
    * @param newRow    The new row values.
    */
-
   void setRow(const size_t rowIndex, const std::vector<std::string>& newRow);
 
 
@@ -446,7 +444,7 @@ public:
    * @param rowNames Use a column as rowNames. If positive, use the specified column to compute rownames, otherwise use default;
    * @return         A pointer toward a new DataTable object.
    */
-  static DataTable* read(std::istream& in, const std::string& sep = "\t", bool header = true, int rowNames = -1);
+  static std::unique_ptr<DataTable> read(std::istream& in, const std::string& sep = "\t", bool header = true, int rowNames = -1);
 
   /**
    * @brief Write a DataTable object to stream in CVS-like format.
