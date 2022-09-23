@@ -53,6 +53,7 @@
 
 // From the STL:
 #include <cmath>
+#include <memory>
 
 namespace bpp
 {
@@ -84,12 +85,12 @@ namespace bpp
  *
  * @see Parameter, ParameterList
  */
-class Function :
+class FunctionInterface :
   public virtual Parametrizable
 {
 public:
-  Function() {}
-  virtual ~Function() {}
+  FunctionInterface() {}
+  virtual ~FunctionInterface() {}
 
 public:
   /**
@@ -128,14 +129,14 @@ public:
  *
  * This class adds the getFirstOrderDerivative() and df() shortcut functions.
  */
-class DerivableFirstOrder :
-  public virtual Function
+class FirstOrderDerivable :
+  public virtual FunctionInterface
 {
 public:
-  DerivableFirstOrder() {}
-  virtual ~DerivableFirstOrder() {}
+  FirstOrderDerivable() {}
+  virtual ~FirstOrderDerivable() {}
 
-  DerivableFirstOrder* clone() const = 0;
+  FirstOrderDerivable* clone() const = 0;
 
 public:
   /**
@@ -183,14 +184,14 @@ public:
  * This class adds the getSecondOrderDerivative() and d2f() shortcut functions.
  * Cross derivative functions are also provided.
  */
-class DerivableSecondOrder :
-  public virtual DerivableFirstOrder
+class SecondOrderDerivable :
+  public virtual FirstOrderDerivable
 {
 public:
-  DerivableSecondOrder() {}
-  virtual ~DerivableSecondOrder() {}
+  SecondOrderDerivable() {}
+  virtual ~SecondOrderDerivable() {}
 
-  DerivableSecondOrder* clone() const = 0;
+  SecondOrderDerivable* clone() const = 0;
 
 public:
   /**
@@ -264,13 +265,13 @@ public:
  * This class is meant to be derivated and just provides a general framework.
  */
 class FunctionWrapper :
-  public virtual Function
+  public virtual FunctionInterface
 {
 protected:
-  Function* function_;
+  std::shared_ptr<FunctionInterface> function_;
 
 public:
-  FunctionWrapper(Function* function) : function_(function) {}
+  FunctionWrapper(std::shared_ptr<FunctionInterface> function) : function_(function) {}
   FunctionWrapper(const FunctionWrapper& fw) : function_(fw.function_) {}
   FunctionWrapper& operator=(const FunctionWrapper& fw)
   {
@@ -366,27 +367,28 @@ protected:
  * @brief General class that wraps a function into another one.
  * This class is meant to be derivated and just provides a general framework.
  */
-class DerivableFirstOrderWrapper :
+class FirstOrderDerivableWrapper :
   public FunctionWrapper,
-  public virtual DerivableFirstOrder
+  public virtual FirstOrderDerivable
 {
 public:
-  DerivableFirstOrderWrapper(DerivableFirstOrder* function) : FunctionWrapper(function) {}
+  FirstOrderDerivableWrapper(std::shared_ptr<FirstOrderDerivable> function) :
+    FunctionWrapper(function) {}
 
 public:
   void enableFirstOrderDerivatives(bool yn)
   {
-    dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives(yn);
+    std::dynamic_pointer_cast<FirstOrderDerivable>(function_)->enableFirstOrderDerivatives(yn);
   }
 
   bool enableFirstOrderDerivatives() const
   {
-    return dynamic_cast<DerivableFirstOrder*>(function_)->enableFirstOrderDerivatives();
+    return std::dynamic_pointer_cast<FirstOrderDerivable>(function_)->enableFirstOrderDerivatives();
   }
 
   double getFirstOrderDerivative(const std::string& variable) const
   {
-    return dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable);
+    return std::dynamic_pointer_cast<FirstOrderDerivable>(function_)->getFirstOrderDerivative(variable);
   }
 };
 
@@ -395,32 +397,33 @@ public:
  * @brief General class that wraps a function into another one.
  * This class is meant to be derivated and just provides a general framework.
  */
-class DerivableSecondOrderWrapper :
-  public DerivableFirstOrderWrapper,
-  public virtual DerivableSecondOrder
+class SecondOrderDerivableWrapper :
+  public FirstOrderDerivableWrapper,
+  public virtual SecondOrderDerivable
 {
 public:
-  DerivableSecondOrderWrapper(DerivableSecondOrder* function) : DerivableFirstOrderWrapper(function) {}
+  SecondOrderDerivableWrapper(std::shared_ptr<SecondOrderDerivable> function) :
+    FirstOrderDerivableWrapper(function) {}
 
 public:
   void enableSecondOrderDerivatives(bool yn)
   {
-    dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives(yn);
+    std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->enableSecondOrderDerivatives(yn);
   }
 
   bool enableSecondOrderDerivatives() const
   {
-    return dynamic_cast<DerivableSecondOrder*>(function_)->enableSecondOrderDerivatives();
+    return std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->enableSecondOrderDerivatives();
   }
 
   double getSecondOrderDerivative(const std::string& variable) const
   {
-    return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable);
+    return std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable);
   }
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
   {
-    return dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2);
+    return std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable1, variable2);
   }
 };
 
@@ -437,7 +440,7 @@ protected:
   mutable bool constraintMatch_;
 
 public:
-  InfinityFunctionWrapper(Function* function) :
+  InfinityFunctionWrapper(std::shared_ptr<FunctionInterface> function) :
     FunctionWrapper(function),
     constraintMatch_(false) {}
   virtual ~InfinityFunctionWrapper() {}
@@ -533,7 +536,8 @@ class InfinityDerivableFirstOrderWrapper :
   public virtual InfinityFunctionWrapper
 {
 public:
-  InfinityDerivableFirstOrderWrapper(DerivableFirstOrder* function) : InfinityFunctionWrapper(function) {}
+  InfinityDerivableFirstOrderWrapper(std::shared_ptr<FirstOrderDerivable> function) :
+    InfinityFunctionWrapper(function) {}
   virtual ~InfinityDerivableFirstOrderWrapper() {}
 
   InfinityDerivableFirstOrderWrapper* clone() const { return new InfinityDerivableFirstOrderWrapper(*this); }
@@ -541,7 +545,7 @@ public:
 public:
   double getFirstOrderDerivative(const std::string& variable) const
   {
-    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableFirstOrder*>(function_)->getFirstOrderDerivative(variable));
+    return constraintMatch_ ? -std::log(0.) : (std::dynamic_pointer_cast<FirstOrderDerivable>(function_)->getFirstOrderDerivative(variable));
   }
 
   double df(const std::string& variable, const ParameterList& parameters)
@@ -560,7 +564,7 @@ class InfinityDerivableSecondOrderWrapper :
   public virtual InfinityDerivableFirstOrderWrapper
 {
 public:
-  InfinityDerivableSecondOrderWrapper(DerivableFirstOrder* function) :
+  InfinityDerivableSecondOrderWrapper(std::shared_ptr<FirstOrderDerivable> function) :
     InfinityFunctionWrapper(function),
     InfinityDerivableFirstOrderWrapper(function) {}
   virtual ~InfinityDerivableSecondOrderWrapper() {}
@@ -570,7 +574,7 @@ public:
 public:
   double getSecondOrderDerivative(const std::string& variable) const
   {
-    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable));
+    return constraintMatch_ ? -std::log(0.) : (std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable));
   }
 
   double d2f(const std::string& variable, const ParameterList& parameters)
@@ -581,7 +585,7 @@ public:
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
   {
-    return constraintMatch_ ? -std::log(0.) :  (dynamic_cast<DerivableSecondOrder*>(function_)->getSecondOrderDerivative(variable1, variable2));
+    return constraintMatch_ ? -std::log(0.) : (std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable1, variable2));
   }
 
   double d2f(const std::string& variable1, const std::string& variable2, const ParameterList& parameters)
@@ -598,7 +602,7 @@ public:
  * @author Julien Dutheil.
  */
 class TestFunction :
-  public virtual Function,
+  public virtual FunctionInterface,
   public AbstractParametrizable
 {
 public:

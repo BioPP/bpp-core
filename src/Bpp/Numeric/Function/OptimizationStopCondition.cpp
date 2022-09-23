@@ -50,7 +50,7 @@ using namespace std;
 /******************************************************************************/
 
 ParametersStopCondition::ParametersStopCondition(
-  const Optimizer* optimizer) :
+  const OptimizerInterface* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
   lastParametersEstimates_(),
   newParametersEstimates_()
@@ -64,7 +64,7 @@ ParametersStopCondition::ParametersStopCondition(
 }
 
 ParametersStopCondition::ParametersStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
   lastParametersEstimates_(),
@@ -79,7 +79,7 @@ ParametersStopCondition::ParametersStopCondition(
 }
 
 ParametersStopCondition::ParametersStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
   lastParametersEstimates_(),
@@ -94,7 +94,7 @@ ParametersStopCondition::ParametersStopCondition(
 }
 
 ParametersStopCondition::ParametersStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),
@@ -168,7 +168,7 @@ double ParametersStopCondition::getCurrentTolerance() const
 /******************************************************************************/
 
 FunctionStopCondition::FunctionStopCondition(
-  const Optimizer* optimizer) :
+  const OptimizerInterface* optimizer) :
   AbstractOptimizationStopCondition(optimizer),
   lastFunctionValue_(-log(0.)),
   newFunctionValue_(-log(0.))
@@ -177,7 +177,7 @@ FunctionStopCondition::FunctionStopCondition(
 }
 
 FunctionStopCondition::FunctionStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   double tolerance) :
   AbstractOptimizationStopCondition(optimizer, tolerance),
   lastFunctionValue_(-log(0.)),
@@ -187,7 +187,7 @@ FunctionStopCondition::FunctionStopCondition(
 }
 
 FunctionStopCondition::FunctionStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, burnin),
   lastFunctionValue_(-log(0.)),
@@ -197,7 +197,7 @@ FunctionStopCondition::FunctionStopCondition(
 }
 
 FunctionStopCondition::FunctionStopCondition(
-  const Optimizer* optimizer,
+  const OptimizerInterface* optimizer,
   double tolerance,
   int burnin) :
   AbstractOptimizationStopCondition(optimizer, tolerance, burnin),

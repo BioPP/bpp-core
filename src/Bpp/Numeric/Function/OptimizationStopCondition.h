@@ -48,7 +48,7 @@ using namespace std;
 
 namespace bpp
 {
-class Optimizer;
+class OptimizerInterface;
 
 /******************************************************************************/
 
@@ -78,13 +78,13 @@ public:
   /**
    * @return The optimizer to which this instance belongs to.
    */
-  virtual const Optimizer* getOptimizer() const = 0;
+  virtual const OptimizerInterface* getOptimizer() const = 0;
   /**
    * @brief Set the optimizer attached to this instance.
    *
    * @param optimizer The optimizer to which this instance belongs to.
    */
-  virtual void setOptimizer(const Optimizer* optimizer) = 0;
+  virtual void setOptimizer(const OptimizerInterface* optimizer) = 0;
 
   /**
    * @brief Initialize the condition.
@@ -142,7 +142,7 @@ class AbstractOptimizationStopCondition :
   public virtual OptimizationStopCondition
 {
 protected:
-  const Optimizer* optimizer_;
+  const OptimizerInterface* optimizer_;
   double tolerance_;
 
   /**
@@ -154,25 +154,25 @@ protected:
   int burnin_;
 
 public:
-  AbstractOptimizationStopCondition(const Optimizer* optimizer) :
+  AbstractOptimizationStopCondition(const OptimizerInterface* optimizer) :
     optimizer_(optimizer),
     tolerance_(0.000001),
     callCount_(0),
     burnin_(0) {}
 
-  AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance) :
+  AbstractOptimizationStopCondition(const OptimizerInterface* optimizer, double tolerance) :
     optimizer_(optimizer),
     tolerance_(tolerance),
     callCount_(0),
     burnin_(0) {}
 
-  AbstractOptimizationStopCondition(const Optimizer* optimizer, int burnin) :
+  AbstractOptimizationStopCondition(const OptimizerInterface* optimizer, int burnin) :
     optimizer_(optimizer),
     tolerance_(0.000001),
     callCount_(0),
     burnin_(burnin) {}
 
-  AbstractOptimizationStopCondition(const Optimizer* optimizer, double tolerance, int burnin) :
+  AbstractOptimizationStopCondition(const OptimizerInterface* optimizer, double tolerance, int burnin) :
     optimizer_(optimizer),
     tolerance_(tolerance),
     callCount_(0),
@@ -196,13 +196,20 @@ public:
   virtual ~AbstractOptimizationStopCondition() {}
 
 public:
-  const Optimizer* getOptimizer() const { return optimizer_; }
-  void setOptimizer(const Optimizer* optimizer) { optimizer_ = optimizer; }
+  const OptimizerInterface* getOptimizer() const { return optimizer_; }
+
+  void setOptimizer(const OptimizerInterface* optimizer) { optimizer_ = optimizer; }
+
   void setTolerance(double tolerance) { tolerance_ = tolerance; }
+
   double getTolerance() const { return tolerance_; }
+
   void init() { resetCounter(); }
+
   virtual void resetCounter() { callCount_ = 0; }
+
   virtual void setBurnin(int burnin) { burnin_ = burnin; }
+  
   virtual int getBurnin() const { return burnin_; }
 };
 
@@ -234,10 +241,10 @@ private:
   mutable ParameterList newParametersEstimates_;
 
 public:
-  ParametersStopCondition(const Optimizer* optimizer);
-  ParametersStopCondition(const Optimizer* optimizer, double tolerance);
-  ParametersStopCondition(const Optimizer* optimizer, int burnin);
-  ParametersStopCondition(const Optimizer* optimizer, double tolerance, int burnin);
+  ParametersStopCondition(const OptimizerInterface* optimizer);
+  ParametersStopCondition(const OptimizerInterface* optimizer, double tolerance);
+  ParametersStopCondition(const OptimizerInterface* optimizer, int burnin);
+  ParametersStopCondition(const OptimizerInterface* optimizer, double tolerance, int burnin);
 
   virtual ~ParametersStopCondition() {}
 
@@ -279,10 +286,10 @@ private:
   mutable double newFunctionValue_;
 
 public:
-  FunctionStopCondition(const Optimizer* optimizer);
-  FunctionStopCondition(const Optimizer* optimizer, double tolerance);
-  FunctionStopCondition(const Optimizer* optimizer, int burnin);
-  FunctionStopCondition(const Optimizer* optimizer, double tolerance, int burnin);
+  FunctionStopCondition(const OptimizerInterface* optimizer);
+  FunctionStopCondition(const OptimizerInterface* optimizer, double tolerance);
+  FunctionStopCondition(const OptimizerInterface* optimizer, int burnin);
+  FunctionStopCondition(const OptimizerInterface* optimizer, double tolerance, int burnin);
 
   virtual ~FunctionStopCondition();
 

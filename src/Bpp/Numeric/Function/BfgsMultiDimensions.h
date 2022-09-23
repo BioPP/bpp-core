@@ -70,14 +70,14 @@ protected:
   mutable Vdouble p_, gradient_, xi_, dg_, hdg_;
   mutable VVdouble hessian_;
 
-  mutable DirectionFunction f1dim_;
+  mutable std::shared_ptr<DirectionFunction> f1dim_;
 
 public:
-  BfgsMultiDimensions(DerivableFirstOrder* function);
+  BfgsMultiDimensions(std::shared_ptr<FirstOrderDerivable> function);
 
   virtual ~BfgsMultiDimensions() {}
 
-  BfgsMultiDimensions* clone() const { return new BfgsMultiDimensions(*this); }
+  BfgsMultiDimensions* clone() const override { return new BfgsMultiDimensions(*this); }
 
 public:
   /**
@@ -85,26 +85,40 @@ public:
    *
    * @{
    */
-  const DerivableFirstOrder* getFunction() const
-  {
-    return dynamic_cast<const DerivableFirstOrder*>(AbstractOptimizer::getFunction());
-  }
-  DerivableFirstOrder* getFunction()
-  {
-    return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction());
-  }
-  void doInit(const ParameterList& params);
+  void doInit(const ParameterList& params) override;
 
-  double doStep();
+  double doStep() override;
   /** @} */
 
-  void getGradient(std::vector<double>& gradient) const;
-
-protected:
-  DerivableFirstOrder* getFunction_()
+  const FirstOrderDerivable& firstOrderDerivableFunction() const
   {
-    return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction_());
+    if (function_) { 
+      return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("BfgsMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
   }
+
+  FirstOrderDerivable& firstOrderDerivableFunction()
+  {
+    if (function_) { 
+      return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("BfgsMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
+  }
+  
+  std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
+  {
+    return dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+  }
+
+  std::shared_ptr<FirstOrderDerivable> getFirstOrderDerivableFunction()
+  {
+    return dynamic_pointer_cast<FirstOrderDerivable>(function_);
+  }
+
+  void getGradient(std::vector<double>& gradient) const;
 
 private:
   /**

@@ -46,25 +46,25 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  PolynomialFunction1 f;
-  double initFValue = f.getValue();
+  auto f = make_shared<PolynomialFunction1>();
+  double initFValue = f->getValue();
   cout << initFValue << endl;
-  BrentOneDimension optimizer(&f);
+  BrentOneDimension optimizer(f);
   optimizer.setBracketing(BrentOneDimension::BRACKET_INWARD);
   ParameterList parameter;
-  parameter.addParameter(f.getParameter("z"));
+  parameter.addParameter(f->getParameter("z"));
   const auto& parameterBounds = dynamic_pointer_cast<const IntervalConstraint>((parameter[0]).getConstraint());
   optimizer.setInitialInterval(parameterBounds->getLowerBound(), parameterBounds->getUpperBound()); // search within stricter bounds that the actual ones of pi0 to avoid failute of stochasitc mapping
   optimizer.init(parameter);
   optimizer.optimize();
-  double minf = f.getValue();
-  double x = f.getParameterValue("x");
-  double y = f.getParameterValue("y");
-  double z = f.getParameterValue("z");
+  double minf = f->getValue();
+  double x = f->getParameterValue("x");
+  double y = f->getParameterValue("y");
+  double z = f->getParameterValue("z");
   cout << "x=" << x << endl;
   cout << "y=" << y << endl;
   cout << "z=" << z << endl;
   cout << "f=" << minf << endl;
-  bool test = f.getValue() < initFValue;
+  bool test = f->getValue() < initFValue;
   return (test ? 0 : 1);
 }

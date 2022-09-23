@@ -94,7 +94,7 @@ protected:
   Bracketing bracketing_;
 
 public:
-  BrentOneDimension(Function* function = 0);
+  BrentOneDimension(std::shared_ptr<FunctionInterface> function = nullptr);
   virtual ~BrentOneDimension() {}
 
   BrentOneDimension* clone() const { return new BrentOneDimension(*this); }

@@ -80,11 +80,11 @@ private:
   double f1_, f2_;
 
 public:
-  TwoPointsNumericalDerivative(Function* function) :
+  TwoPointsNumericalDerivative(std::shared_ptr<FunctionInterface> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_() {}
-  TwoPointsNumericalDerivative(DerivableFirstOrder* function) :
+  TwoPointsNumericalDerivative(std::shared_ptr<FirstOrderDerivable> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_() {}

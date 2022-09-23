@@ -50,7 +50,7 @@
 using namespace std;
 using namespace bpp;
 
-ComputationTree::ComputationTree(const std::string& formula, const std::map<std::string, Function*>& functionNames) :
+ComputationTree::ComputationTree(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames) :
   AssociationTreeGlobalGraphObserver<Operator, short>(true)
 {
   getGraph();
@@ -68,7 +68,7 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
   setRoot(readFormula_(str2, functionNames));
 }
 
-std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, Function*>& functionNames)
+std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames)
 {
   unsigned int level = 0;
   // inside parentheses check
@@ -170,16 +170,16 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       }
       else
       {
-        std::map<std::string, Function*>::const_iterator it(functionNames.find(formula));
+        auto it = functionNames.find(formula);
 
         if (it != functionNames.end())
         {
-          if (dynamic_cast<const DerivableSecondOrder*>(it->second))
-            here = shared_ptr<Operator>(new FunctionOperator<DerivableSecondOrder>(*dynamic_cast<DerivableSecondOrder*>(it->second), formula));
-          else if (dynamic_cast<const DerivableFirstOrder*>(it->second))
-            here = shared_ptr<Operator>(new FunctionOperator<DerivableFirstOrder>(*dynamic_cast<DerivableFirstOrder*>(it->second), formula));
+          if (dynamic_pointer_cast<const SecondOrderDerivable>(it->second))
+            here = shared_ptr<Operator>(new FunctionOperator<SecondOrderDerivable>(*dynamic_pointer_cast<SecondOrderDerivable>(it->second), formula));
+          else if (dynamic_pointer_cast<const FirstOrderDerivable>(it->second))
+            here = shared_ptr<Operator>(new FunctionOperator<FirstOrderDerivable>(*dynamic_pointer_cast<FirstOrderDerivable>(it->second), formula));
           else
-            here = shared_ptr<Operator>(new FunctionOperator<Function>(*it->second, formula));
+            here = shared_ptr<Operator>(new FunctionOperator<FunctionInterface>(*it->second, formula));
         }
         else
         {

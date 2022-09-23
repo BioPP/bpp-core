@@ -47,7 +47,7 @@ using namespace std;
 
 /******************************************************************************/
 
-double NumTools::uniRoot(Function& f, const std::string& param, double a, double b, double tolerance)
+double NumTools::uniRoot(FunctionInterface& f, const std::string& param, double a, double b, double tolerance)
 {
   ParameterList pl;
   pl.addParameter(Parameter(param, a));
@@ -80,7 +80,7 @@ double NumTools::uniRoot(Function& f, const std::string& param, double a, double
 
 /******************************************************************************/
 
-RowMatrix<double>* NumTools::computeHessianMatrix(DerivableSecondOrder& function, const ParameterList& parameters)
+RowMatrix<double>* NumTools::computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters)
 {
   size_t n = parameters.size();
   vector<string> variables = parameters.getParameterNames();

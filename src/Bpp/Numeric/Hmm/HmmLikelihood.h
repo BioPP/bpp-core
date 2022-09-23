@@ -76,7 +76,7 @@ namespace bpp
  */
 
 class HmmLikelihood :
-  public virtual DerivableSecondOrder
+  public virtual SecondOrderDerivable
 {
 public:
   virtual HmmLikelihood* clone() const = 0;

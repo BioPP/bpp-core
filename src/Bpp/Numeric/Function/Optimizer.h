@@ -50,19 +50,27 @@
 
 namespace bpp
 {
+
+class OptimizerInterface;
+
 /**
  * @brief An event object which indicates that an optimization event occured.
  */
 class OptimizationEvent
 {
 private:
-  Optimizer* optimizer_;
+  /**
+   * @brief Stores a pointer toward the optimizer that cast the event.
+   *
+   * A regular pointer is used, as the Optimizer itself may not be managed by a smart pointer.
+   */
+  OptimizerInterface* optimizer_;
 
 public:
   /**
    * @param optimizer A pointer toward the optimizer that launched the event.
    */
-  OptimizationEvent(Optimizer* optimizer) : optimizer_(optimizer) {}
+  OptimizationEvent(OptimizerInterface* optimizer) : optimizer_(optimizer) {}
   OptimizationEvent(const OptimizationEvent& oe) : optimizer_(oe.optimizer_) {}
   OptimizationEvent& operator=(const OptimizationEvent& oe)
   {
@@ -75,12 +83,12 @@ public:
   /**
    * @return A pointer toward the optimizer that launched the event.
    */
-  Optimizer* getOptimizer() { return optimizer_; }
+  OptimizerInterface* getOptimizer() { return optimizer_; }
 
   /**
    * @return A pointer toward the optimizer that launched the event.
    */
-  const Optimizer* getOptimizer() const { return optimizer_; }
+  const OptimizerInterface* getOptimizer() const { return optimizer_; }
 };
 
 
@@ -114,14 +122,14 @@ public:
  * An optimizer deals with Function objects.
  * Optimizer objects are event-driven: they notify listeners when a step is performed.
  */
-class Optimizer :
+class OptimizerInterface :
   public virtual Clonable
 {
 public:
-  Optimizer() {}
-  virtual ~Optimizer() {}
+  OptimizerInterface() {}
+  virtual ~OptimizerInterface() {}
 
-  Optimizer* clone() const = 0;
+  OptimizerInterface* clone() const = 0;
 
 public:
   /**
@@ -176,21 +184,37 @@ public:
    *
    * @param function The function to optimize.
    */
-  virtual void setFunction(Function* function) = 0;
+  virtual void setFunction(std::shared_ptr<FunctionInterface> function) = 0;
+
+  /**
+   * @brief Get the current function being optimized.
+   *
+   * @return A const reference toward the function being optimized.
+   * @throw NullPointerException if no function is associated with the optimizer.
+   */
+  virtual const FunctionInterface& function() const = 0;
+
+  /**
+   * @brief Get the current function being optimized.
+   *
+   * @return A const reference toward the function being optimized.
+   * @throw NullPointerException if no function is associated with the optimizer.
+   */
+  virtual FunctionInterface& function() = 0;
 
   /**
    * @brief Get the current function being optimized.
    *
    * @return A const pointer toward the function being optimized.
    */
-  virtual const Function* getFunction() const = 0;
+  virtual std::shared_ptr<const FunctionInterface> getFunction() const = 0;
 
   /**
    * @brief Get the current function being optimized.
    *
    * @return A const pointer toward the function being optimized.
    */
-  virtual Function* getFunction() = 0;
+  virtual std::shared_ptr<FunctionInterface> getFunction() = 0;
 
   /**
    * @brief Tell if a funciton is associatied to this optimizer.
@@ -206,16 +230,16 @@ public:
    * The default handler is set to standard output, but you can pass any
    * ostream object (cerr, ofstream, etc.).
    *
-   * A NULL pointer disables message output.
+   * A null pointer disables message output.
    *
    * @param mh The message handler to use.
    */
-  virtual void setMessageHandler(OutputStream* mh) = 0;
+  virtual void setMessageHandler(std::shared_ptr<OutputStream> mh) = 0;
 
   /**
    * @return The stream used for handling messages, if any.
    */
-  virtual OutputStream* getMessageHandler() const = 0;
+  virtual std::shared_ptr<OutputStream> getMessageHandler() const = 0;
 
   /**
    * @brief Set the profiler for this optimizer.
@@ -228,12 +252,12 @@ public:
    *
    * @param profiler The profiler to use.
    */
-  virtual void setProfiler(OutputStream* profiler) = 0;
+  virtual void setProfiler(std::shared_ptr<OutputStream> profiler) = 0;
 
   /**
    * @return The stream used for profiling, if any.
    */
-  virtual OutputStream* getProfiler() const = 0;
+  virtual std::shared_ptr<OutputStream> getProfiler() const = 0;
 
   /**
    * @brief Get the number of function evaluations performed since the
@@ -249,35 +273,35 @@ public:
    * @param stopCondition The stop condition to use while optimizing.
    * @see OptimizationStopCondition.
    */
-  virtual void setStopCondition(const OptimizationStopCondition& stopCondition) = 0;
+  virtual void setStopCondition(std::shared_ptr<OptimizationStopCondition> stopCondition) = 0;
 
   /**
    * @brief Get the stop condition of the optimization algorithm.
    *
    * @return The stop condition used while optimizing.
    */
-  virtual OptimizationStopCondition* getStopCondition() = 0;
+  virtual std::shared_ptr<OptimizationStopCondition> getStopCondition() = 0;
 
   /**
    * @brief Get the stop condition of the optimization algorithm.
    *
    * @return The stop condition used while optimizing.
    */
-  virtual const OptimizationStopCondition* getStopCondition() const = 0;
+  virtual std::shared_ptr<const OptimizationStopCondition> getStopCondition() const = 0;
 
   /**
    * @brief Get the default stop condition of the optimization algorithm.
    *
    * @return The default stop condition used while optimizing.
    */
-  virtual OptimizationStopCondition* getDefaultStopCondition() = 0;
+  virtual std::shared_ptr<OptimizationStopCondition> getDefaultStopCondition() = 0;
 
   /**
    * @brief Get the default stop condition of the optimization algorithm.
    *
    * @return The default stop condition used while optimizing.
    */
-  virtual const OptimizationStopCondition* getDefaultStopCondition() const = 0;
+  virtual std::shared_ptr<const OptimizationStopCondition> getDefaultStopCondition() const = 0;
 
   /**
    * @brief Tell if the tolerance level is reached.
@@ -344,7 +368,30 @@ public:
    *
    * @param listener A listener to be registered with.
    */
-  virtual void addOptimizationListener(OptimizationListener* listener) = 0;
+  virtual void addOptimizationListener(std::shared_ptr<OptimizationListener> listener) = 0;
+
+  /**
+   * @brief Tell if we shall update all parameters after one optimization step.
+   *
+   * This is required only for functions that have non-independent parameters,
+   * which means that setting one parameter value may modify one or several other parameters.
+   * Depending on the optimizer, this may have no effect.
+   *
+   * @param yn true/false
+   */
+  virtual void updateParameters(bool yn) = 0;
+
+  /**
+   * @brief Tell if we shall update all parameters after one optimization step.
+   *
+   * This is required only for functions that have non-independent parameters,
+   * which means that setting one parameter value may modify one or several other parameters.
+   * Depending on the optimizer, this may have no effect.
+   *
+   * @return yn true/false
+   */
+  virtual bool updateParameters() const = 0;
+  
 };
 
 

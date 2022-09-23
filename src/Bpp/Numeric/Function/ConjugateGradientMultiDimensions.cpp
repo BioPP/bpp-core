@@ -47,12 +47,12 @@ using namespace bpp;
 
 /******************************************************************************/
 
-ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(DerivableFirstOrder* function) :
+ConjugateGradientMultiDimensions::ConjugateGradientMultiDimensions(std::shared_ptr<FirstOrderDerivable> function) :
   AbstractOptimizer(function), optimizer_(function),
-  xi_(), h_(), g_(), f1dim_(function)
+  xi_(), h_(), g_(), f1dim_(new DirectionFunction(function))
 {
-  setDefaultStopCondition_(new FunctionStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
 }
 
 /******************************************************************************/
@@ -63,11 +63,11 @@ void ConjugateGradientMultiDimensions::doInit(const ParameterList& params)
   g_.resize(nbParams);
   h_.resize(nbParams);
   xi_.resize(nbParams);
-  getFunction_()->enableFirstOrderDerivatives(true);
-  getFunction_()->setParameters(params);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(true);
+  function().setParameters(params);
   getGradient(xi_);
 
-  for (size_t i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; ++i)
   {
     g_[i]  = -xi_[i];
     xi_[i] = h_[i] = g_[i];
@@ -81,12 +81,12 @@ double ConjugateGradientMultiDimensions::doStep()
   double gg, gam, f, dgg;
   size_t n = getParameters().size();
   // Loop over iterations.
-  getFunction_()->enableFirstOrderDerivatives(false);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(false);
   nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
                                                              getParameters_(), xi_, getStopCondition()->getTolerance(),
                                                              0, 0, getVerbose() > 0 ? getVerbose() - 1 : 0);
 
-  getFunction_()->enableFirstOrderDerivatives(true);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(true);
   f = getFunction()->f(getParameters());
 
   if (tolIsReached_)
@@ -128,7 +128,7 @@ void ConjugateGradientMultiDimensions::getGradient(std::vector<double>& gradient
 {
   for (size_t i = 0; i < gradient.size(); ++i)
   {
-    gradient[i] = getFunction()->getFirstOrderDerivative(getParameters()[i].getName());
+    gradient[i] = firstOrderDerivableFunction().getFirstOrderDerivative(getParameters()[i].getName());
   }
 }
 

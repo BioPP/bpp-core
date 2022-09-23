@@ -65,10 +65,10 @@ class ConjugateGradientMultiDimensions :
 protected:
   BrentOneDimension optimizer_; // One dimensional optimizer.
   std::vector<double> xi_, h_, g_;
-  DirectionFunction f1dim_;
+  std::shared_ptr<DirectionFunction> f1dim_;
 
 public:
-  ConjugateGradientMultiDimensions(DerivableFirstOrder* function);
+  ConjugateGradientMultiDimensions(std::shared_ptr<FirstOrderDerivable> function);
 
   virtual ~ConjugateGradientMultiDimensions() {}
 
@@ -80,26 +80,41 @@ public:
    *
    * @{
    */
-  const DerivableFirstOrder* getFunction() const
-  {
-    return dynamic_cast<const DerivableFirstOrder*>(AbstractOptimizer::getFunction());
-  }
-  DerivableFirstOrder* getFunction()
-  {
-    return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction());
-  }
   void doInit(const ParameterList& params);
 
   double doStep();
   /** @} */
 
+  const FirstOrderDerivable& firstOrderDerivableFunction() const
+  {
+    if (function_) { 
+      return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("ConjugateGradientMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
+  }
+
+  FirstOrderDerivable& firstOrderDerivableFunction()
+  {
+    if (function_) { 
+      return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("ConjugateGradientMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
+  }
+  
+  std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
+  {
+    return dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+  }
+
+  std::shared_ptr<FirstOrderDerivable> getFirstOrderDerivableFunction()
+  {
+    return dynamic_pointer_cast<FirstOrderDerivable>(function_);
+  }
+
   void getGradient(std::vector<double>& gradient) const;
 
-protected:
-  DerivableFirstOrder* getFunction_()
-  {
-    return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction_());
-  }
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_CONJUGATEGRADIENTMULTIDIMENSIONS_H

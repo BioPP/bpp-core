@@ -90,7 +90,7 @@ private:
   double f1_, f2_, f3_, f11_, f22_, f12_, f21_;
 
 public:
-  ThreePointsNumericalDerivative (Function* function) :
+  ThreePointsNumericalDerivative (std::shared_ptr<FunctionInterface> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),
@@ -99,7 +99,7 @@ public:
     f22_(),
     f12_(),
     f21_() {}
-  ThreePointsNumericalDerivative (DerivableFirstOrder* function) :
+  ThreePointsNumericalDerivative(std::shared_ptr<FirstOrderDerivable> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),
@@ -108,7 +108,7 @@ public:
     f22_(),
     f12_(),
     f21_() {}
-  ThreePointsNumericalDerivative (DerivableSecondOrder* function) :
+  ThreePointsNumericalDerivative(std::shared_ptr<SecondOrderDerivable> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),

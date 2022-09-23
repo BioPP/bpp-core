@@ -68,13 +68,13 @@ double GoldenSectionSearch::GSSStopCondition::getCurrentTolerance() const
 
 /******************************************************************************/
 
-GoldenSectionSearch::GoldenSectionSearch(Function* function) :
+GoldenSectionSearch::GoldenSectionSearch(std::shared_ptr<FunctionInterface> function) :
   AbstractOptimizer(function),
   f1(0), f2(0), x0(0), x1(0), x2(0), x3(0), xinf_(0), xsup_(0), isInitialIntervalSet_(false)
 {
   nbEvalMax_ = 10000;
-  setDefaultStopCondition_(new GSSStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<GSSStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
 }
 
 /******************************************************************************/
@@ -86,7 +86,7 @@ void GoldenSectionSearch::doInit(const ParameterList& params)
     throw Exception("GoldenSectionSearch::init(). This optimizer only deals with one parameter.");
 
   // Bracket the minimum.
-  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(xinf_, xsup_, getFunction(), getParameters());
+  Bracket bracket = OneDimensionOptimizationTools::bracketMinimum(xinf_, xsup_, function(), getParameters());
   if (getVerbose() > 0)
   {
     printMessage("Initial bracketing:");

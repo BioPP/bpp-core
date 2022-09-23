@@ -46,7 +46,7 @@ using namespace bpp;
 
 /******************************************************************************/
 
-BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function) :
+BfgsMultiDimensions::BfgsMultiDimensions(std::shared_ptr<FirstOrderDerivable> function) :
   AbstractOptimizer(function),
   // gtol_(gtol),
   slope_(0),
@@ -58,10 +58,10 @@ BfgsMultiDimensions::BfgsMultiDimensions(DerivableFirstOrder* function) :
   dg_(),
   hdg_(),
   hessian_(),
-  f1dim_(function)
+  f1dim_(new DirectionFunction(function))
 {
-  setDefaultStopCondition_(new FunctionStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   setOptimizationProgressCharacter(".");
 }
 
@@ -99,16 +99,16 @@ void BfgsMultiDimensions::doInit(const ParameterList& params)
     }
   }
 
-  getFunction_()->enableFirstOrderDerivatives(true);
-  getFunction_()->setParameters(params);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(true);
+  function().setParameters(params);
 
   getGradient(gradient_);
 
-  for (size_t i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; ++i)
   {
     p_[i] = getParameters()[i].getValue();
 
-    for (unsigned int j = 0; j < nbParams; j++)
+    for (size_t j = 0; j < nbParams; ++j)
     {
       hessian_[i][j] = 0.0;
     }
@@ -134,23 +134,23 @@ double BfgsMultiDimensions::doStep()
 
   unsigned int i;
 
-  for (i = 0; i < n; i++)
+  for (i = 0; i < n; ++i)
   {
     p_[i] = getParameters()[i].getValue();
   }
 
   setDirection();
 
-  getFunction()->enableFirstOrderDerivatives(false);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(false);
   nbEval_ += OneDimensionOptimizationTools::lineSearch(f1dim_,
                                                        getParameters_(), xi_,
                                                        gradient_,
                                                        // getStopCondition()->getTolerance(),
                                                        0, 0,
                                                        getVerbose() > 0 ? getVerbose() - 1 : 0);
-  getFunction()->enableFirstOrderDerivatives(true);
+  firstOrderDerivableFunction().enableFirstOrderDerivatives(true);
 
-  for (i = 0; i < n; i++)
+  for (i = 0; i < n; ++i)
   {
     xi_[i] = getParameters_()[i].getValue() - p_[i];
   }
@@ -262,7 +262,7 @@ void BfgsMultiDimensions::getGradient(std::vector<double>& gradient) const
 {
   for (unsigned int i = 0; i < gradient.size(); i++)
   {
-    gradient[i] = getFunction()->getFirstOrderDerivative(getParameters()[i].getName());
+    gradient[i] = firstOrderDerivableFunction().getFirstOrderDerivative(getParameters()[i].getName());
   }
 }
 
@@ -272,17 +272,17 @@ void BfgsMultiDimensions::setDirection()
 {
   size_t nbParams = getParameters().size();
 
-  for (size_t i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; ++i)
   {
     xi_[i] = 0;
-    for (unsigned int j = 0; j < nbParams; j++)
+    for (size_t j = 0; j < nbParams; ++j)
     {
       xi_[i] -= hessian_[i][j] * gradient_[j];
     }
   }
 
   double v = 1, alpmax = 1;
-  for (size_t i = 0; i < nbParams; i++)
+  for (size_t i = 0; i < nbParams; ++i)
   {
     if ((xi_[i] > 0) && (p_[i] + NumConstants::TINY() * xi_[i] < Up_[i]))
       v = (Up_[i] - p_[i]) / xi_[i];

@@ -49,12 +49,12 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  PolynomialFunction1 f;
-  PolynomialFunction1Der1 f1;
-  ParameterList pl = f.getParameters();
-  TwoPointsNumericalDerivative nd2pt(&f)  ; nd2pt.setParametersToDerivate(pl.getParameterNames());
-  ThreePointsNumericalDerivative nd3pt(&f); nd3pt.setParametersToDerivate(pl.getParameterNames());
-  FivePointsNumericalDerivative nd5pt(&f) ; nd5pt.setParametersToDerivate(pl.getParameterNames());
+  auto f = make_shared<PolynomialFunction1>();
+  auto f1 = make_shared<PolynomialFunction1Der1>();
+  ParameterList pl = f->getParameters();
+  TwoPointsNumericalDerivative nd2pt(f)  ; nd2pt.setParametersToDerivate(pl.getParameterNames());
+  ThreePointsNumericalDerivative nd3pt(f); nd3pt.setParametersToDerivate(pl.getParameterNames());
+  FivePointsNumericalDerivative nd5pt(f) ; nd5pt.setParametersToDerivate(pl.getParameterNames());
   
   for (unsigned int repeat = 0; repeat < 10000; ++repeat) {
     for (size_t i = 0; i < pl.size(); ++i) {
@@ -89,10 +89,10 @@ int main() {
     }
 
     vector<double> derivativesAna(pl.size());
-    f1.setParameters(pl);
+    f1->setParameters(pl);
     bool test = true;
     for (size_t i = 0; i < pl.size(); ++i) {
-      derivativesAna[i] = f1.getFirstOrderDerivative(pl.getParameterNames()[i]);
+      derivativesAna[i] = f1->getFirstOrderDerivative(pl.getParameterNames()[i]);
       if (abs(derivativesAna[i] - derivativesNum2pt[i]) > std::sqrt(nd2pt.getInterval())) test = false;
       if (abs(derivativesAna[i] - derivativesNum3pt[i]) > std::sqrt(nd3pt.getInterval())) test = false;
       if (abs(derivativesAna[i] - derivativesNum5pt[i]) > std::sqrt(nd5pt.getInterval())) test = false;

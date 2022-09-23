@@ -47,7 +47,7 @@ using namespace bpp;
 using namespace std;
 
 class PolynomialFunction1:
-  public virtual Function,
+  public virtual FunctionInterface,
   public AbstractParametrizable
 {
   private:
@@ -81,7 +81,7 @@ class PolynomialFunction1:
 
 class PolynomialFunction1Der1:
   public PolynomialFunction1,
-  public virtual DerivableFirstOrder
+  public virtual FirstOrderDerivable
 {
   protected:
     bool compFirstDer_;

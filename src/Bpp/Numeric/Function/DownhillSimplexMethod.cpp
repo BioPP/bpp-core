@@ -57,13 +57,13 @@ double DownhillSimplexMethod::DSMStopCondition::getCurrentTolerance() const
 
 /******************************************************************************/
 
-DownhillSimplexMethod::DownhillSimplexMethod(Function* function) :
+DownhillSimplexMethod::DownhillSimplexMethod(std::shared_ptr<FunctionInterface> function) :
   AbstractOptimizer(function), simplex_(), y_(), pSum_(), iHighest_(0), iNextHighest_(0), iLowest_(0)
 {
   // Default values:
   nbEvalMax_ = 5000;
-  setDefaultStopCondition_(new DSMStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<DSMStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
 }
 
 /******************************************************************************/

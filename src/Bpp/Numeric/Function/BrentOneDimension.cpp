@@ -69,13 +69,13 @@ double BrentOneDimension::BODStopCondition::getCurrentTolerance() const
 
 /******************************************************************************/
 
-BrentOneDimension::BrentOneDimension(Function* function) :
+BrentOneDimension::BrentOneDimension(std::shared_ptr<FunctionInterface> function) :
   AbstractOptimizer(function),
   a(0), b(0), d(0), e(0), etemp(0), fu(0), fv(0), fw(0), fx(0), p(0), q(0), r(0), tol1(0), tol2(0),
   u(0), v(0), w(0), x(0), xm(0), _xinf(0), _xsup(0), isInitialIntervalSet_(false), bracketing_(BrentOneDimension::BRACKET_OUTWARD)
 {
-  setDefaultStopCondition_(new BODStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<BODStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   setMaximumNumberOfEvaluations(10000);
 }
 
@@ -94,11 +94,11 @@ void BrentOneDimension::doInit(const ParameterList& params)
   Bracket bracket;
   if (bracketing_ == BrentOneDimension::BRACKET_OUTWARD)
   {
-    bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, getFunction(), getParameters());
+    bracket = OneDimensionOptimizationTools::bracketMinimum(_xinf, _xsup, function(), getParameters());
   }
   else
   {
-    bracket = OneDimensionOptimizationTools::inwardBracketMinimum(_xinf, _xsup, getFunction(), getParameters());
+    bracket = OneDimensionOptimizationTools::inwardBracketMinimum(_xinf, _xsup, function(), getParameters());
   }
 
   if (getVerbose() > 0)

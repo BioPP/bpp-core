@@ -49,17 +49,17 @@ using namespace std;
 
 /******************************************************************************/
 
-SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(DerivableSecondOrder* function) :
+SimpleNewtonMultiDimensions::SimpleNewtonMultiDimensions(std::shared_ptr<SecondOrderDerivable> function) :
   AbstractOptimizer(function), nbParams_(0), optimizer_(function)
 {
-  setDefaultStopCondition_(new FunctionStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   setOptimizationProgressCharacter("");
 }
 
 /******************************************************************************/
 
-void SimpleNewtonMultiDimensions::setFunction(Function* function)
+void SimpleNewtonMultiDimensions::setFunction(std::shared_ptr<FunctionInterface> function)
 {
   AbstractOptimizer::setFunction(function);
   optimizer_.setFunction(function);

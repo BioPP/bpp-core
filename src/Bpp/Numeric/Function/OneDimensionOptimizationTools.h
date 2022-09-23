@@ -111,7 +111,7 @@ public:
    * @param parameters The parameter to use as a variable.
    * @return           A bracket object.
    */
-  static Bracket bracketMinimum(double a, double b, Function* function, ParameterList parameters);
+  static Bracket bracketMinimum(double a, double b, FunctionInterface& function, ParameterList parameters);
 
   /**
    * @brief Bracket a minimum by a search within thw parameter's bounds.
@@ -125,10 +125,17 @@ public:
    *
    * @return           A bracket object.
    */
-  static Bracket inwardBracketMinimum(double a, double b, Function* function, ParameterList parameters, uint intervalsNum = 10);
+  static Bracket inwardBracketMinimum(double a, double b, FunctionInterface& function, ParameterList parameters, uint intervalsNum = 10);
 
 
-  static unsigned int lineMinimization(DirectionFunction& f1dim, ParameterList& parameters, std::vector<double>& xi, double tolerance, OutputStream* profiler = 0, OutputStream* messenger = 0, unsigned int verbose = 2);
+  static unsigned int lineMinimization(
+      std::shared_ptr<DirectionFunction> f1dim,
+      ParameterList& parameters,
+      std::vector<double>& xi,
+      double tolerance,
+      std::shared_ptr<OutputStream> profiler = nullptr,
+      std::shared_ptr<OutputStream> messenger = nullptr,
+      unsigned int verbose = 2);
 
   /**
    * @brief Search a 'sufficiently low' value for a function in a given direction.
@@ -142,7 +149,14 @@ public:
    *
    * without the stpmax argument, since the steps are bounded in another way.
    */
-  static unsigned int lineSearch(DirectionFunction& f1dim, ParameterList& parameters, std::vector<double>& xi, std::vector<double>& gradient, OutputStream* profiler = 0, OutputStream* messenger = 0, unsigned int verbose = 2);
+  static unsigned int lineSearch(
+      std::shared_ptr<DirectionFunction> f1dim,
+      ParameterList& parameters,
+      std::vector<double>& xi,
+      std::vector<double>& gradient,
+      std::shared_ptr<OutputStream> profiler = nullptr,
+      std::shared_ptr<OutputStream> messenger = nullptr,
+      unsigned int verbose = 2);
 
 public:
   /**

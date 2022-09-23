@@ -47,7 +47,7 @@ using namespace bpp;
 using namespace std;
 
 class MyFunction:
-  public virtual Function,
+  public virtual FunctionInterface,
   public AbstractParametrizable
 {
   private:
@@ -78,15 +78,15 @@ class MyFunction:
 };
 
 int main() {
-  MyFunction f;
-  ReparametrizationFunctionWrapper fw(&f);
-  ParameterList pl = fw.getParameters();
-  PowellMultiDimensions optimizer(&fw);
+  auto f = make_shared<MyFunction>();
+  auto fw = make_shared<ReparametrizationFunctionWrapper> (f);
+  ParameterList pl = fw->getParameters();
+  PowellMultiDimensions optimizer(fw);
   optimizer.init(pl);
   optimizer.optimize();
-  double minf = f.getValue();
-  double x = f.getParameterValue("x");
-  double y = f.getParameterValue("y");
+  double minf = f->getValue();
+  double x = f->getParameterValue("x");
+  double y = f->getParameterValue("y");
   cout << "x=" << x << endl;
   cout << "y=" << y << endl;
   cout << "f=" << minf << endl;

@@ -61,7 +61,7 @@ public:
 
 private:
   std::vector<std::string> names_;
-  std::vector<Optimizer*> optimizers_;
+  std::vector< std::shared_ptr<OptimizerInterface> > optimizers_;
   std::vector< std::vector<std::string> > parameterNames_;
   std::vector<unsigned short> derivatives_;
   std::vector<std::string> itTypes_;
@@ -75,9 +75,9 @@ public:
     derivatives_(infos.derivatives_),
     itTypes_(infos.itTypes_)
   {
-    for (unsigned int i = 0; i < optimizers_.size(); i++)
+    for (size_t i = 0; i < optimizers_.size(); ++i)
     {
-      optimizers_[i] = dynamic_cast<Optimizer*>(infos.optimizers_[i]->clone());
+      optimizers_[i] = std::shared_ptr<OptimizerInterface>(infos.optimizers_[i]->clone());
     }
   }
 
@@ -88,23 +88,17 @@ public:
     parameterNames_ = infos.parameterNames_;
     derivatives_    = infos.derivatives_;
     itTypes_        = infos.itTypes_;
-    for (unsigned int i = 0; i < optimizers_.size(); i++)
+    for (size_t i = 0; i < optimizers_.size(); ++i)
     {
-      optimizers_[i] = dynamic_cast<Optimizer*>(infos.optimizers_[i]->clone());
+      optimizers_[i] = std::shared_ptr<OptimizerInterface>(infos.optimizers_[i]->clone());
     }
     return *this;
   }
 
-  virtual ~MetaOptimizerInfos()
-  {
-    for (unsigned int i = 0; i < optimizers_.size(); i++)
-    {
-      delete optimizers_[i];
-    }
-  }
+  virtual ~MetaOptimizerInfos() {}
 
 public:
-  MetaOptimizerInfos* clone() const { return new MetaOptimizerInfos(*this); }
+  MetaOptimizerInfos* clone() const override { return new MetaOptimizerInfos(*this); }
 
 public:
   /**
@@ -116,7 +110,7 @@ public:
    * @param derivatives 0, 1 or 2: does this parameter use no, first order or second order derivatives?
    * @param type For each optimization step, shall we perform a full optimization with this optimizer or only one step?
    */
-  virtual void addOptimizer(const std::string& name, Optimizer* optimizer, const std::vector<std::string>& params, unsigned short derivatives = 0, const std::string& type = IT_TYPE_STEP)
+  virtual void addOptimizer(const std::string& name, std::shared_ptr<OptimizerInterface> optimizer, const std::vector<std::string>& params, unsigned short derivatives = 0, const std::string& type = IT_TYPE_STEP)
   {
     names_.push_back(name);
     optimizers_.push_back(optimizer);
@@ -133,11 +127,22 @@ public:
   /**
    * @return The ith optimizer in the set.
    */
-  virtual Optimizer* getOptimizer(size_t i) { return optimizers_[i]; }
+  virtual OptimizerInterface& optimizer(size_t i) { return *optimizers_[i]; }
+
   /**
    * @return The ith optimizer in the set.
    */
-  virtual const Optimizer* getOptimizer(size_t i) const { return optimizers_[i]; }
+  virtual const OptimizerInterface& optimizer(size_t i) const { return *optimizers_[i]; }
+
+  /**
+   * @return A shared pointer toward the ith optimizer in the set.
+   */
+  virtual std::shared_ptr<OptimizerInterface> getOptimizer(size_t i) { return optimizers_[i]; }
+  
+  /**
+   * @return A shared pointer toward the ith optimizer in the set.
+   */
+  virtual std::shared_ptr<const OptimizerInterface> getOptimizer(size_t i) const { return optimizers_[i]; }
 
   /**
    * @return The parameter names associated to the ith optimizer in the set.
@@ -192,7 +197,7 @@ class MetaOptimizer :
   public AbstractOptimizer
 {
 private:
-  MetaOptimizerInfos* optDesc_;
+  std::shared_ptr<MetaOptimizerInfos> optDesc_;
   std::vector<ParameterList> optParameters_;
   std::vector<size_t> nbParameters_;
   unsigned int n_;
@@ -209,7 +214,7 @@ public:
    *                 The optimizer will own the instance of the MetaOptimizerInfos object.
    * @param n        The number of progressive steps to use in optimization).
    */
-  MetaOptimizer(Function* function, MetaOptimizerInfos* desc, unsigned int n = 1);
+  MetaOptimizer(std::shared_ptr<FunctionInterface> function, std::shared_ptr<MetaOptimizerInfos> desc, unsigned int n = 1);
 
   virtual ~MetaOptimizer();
 
@@ -217,31 +222,42 @@ public:
 
   MetaOptimizer& operator=(const MetaOptimizer& opt);
 
-  MetaOptimizer* clone() const { return new MetaOptimizer(*this); }
+  MetaOptimizer* clone() const override { return new MetaOptimizer(*this); }
 
 public:
-  void setFunction(Function* function)
+  void setFunction(std::shared_ptr<FunctionInterface> function) override
   {
     AbstractOptimizer::setFunction(function);
-    for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
+    for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); ++i)
     {
       optDesc_->getOptimizer(i)->setFunction(function);
     }
   }
 
-  void doInit(const ParameterList& parameters);
+  void doInit(const ParameterList& parameters) override;
 
-  double doStep();
-
-  /**
-   * @return The MetaOptimizerInfos object associated to this optimizer.
-   */
-  MetaOptimizerInfos* getOptimizers() { return optDesc_; }
+  double doStep() override;
 
   /**
    * @return The MetaOptimizerInfos object associated to this optimizer.
    */
-  const MetaOptimizerInfos* getOptimizers() const { return optDesc_; }
+  MetaOptimizerInfos& optimizers() { return *optDesc_; }
+
+  /**
+   * @return The MetaOptimizerInfos object associated to this optimizer.
+   */
+  const MetaOptimizerInfos optimizers() const { return *optDesc_; }
+  
+  /**
+   * @return A shared pointer toward the MetaOptimizerInfos object associated to this optimizer.
+   */
+  std::shared_ptr<MetaOptimizerInfos> getOptimizers() { return optDesc_; }
+
+  /**
+   * @return A shared pointer toward the MetaOptimizerInfos object associated to this optimizer.
+   */
+  std::shared_ptr<const MetaOptimizerInfos> getOptimizers() const { return optDesc_; }
+  
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_METAOPTIMIZER_H

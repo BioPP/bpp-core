@@ -148,7 +148,7 @@ private:
    * Contains all parameter listeners for maintening alias relationships.
    * The registry will be updated appropriately upon cloning and deleting.
    */
-  std::map<std::string, AliasParameterListener*> aliasListenersRegister_;
+  std::map<std::string, std::shared_ptr<AliasParameterListener> > aliasListenersRegister_;
 
 public:
   AbstractParameterAliasable(const std::string& prefix) :
@@ -161,7 +161,7 @@ public:
 
   AbstractParameterAliasable& operator=(const AbstractParameterAliasable& ap);
 
-  virtual ~AbstractParameterAliasable();
+  virtual ~AbstractParameterAliasable() {}
 
 public:
   void setNamespace(const std::string& prefix);
@@ -177,9 +177,7 @@ public:
    *
    * @param p1 name of the parameter to which the other parameter is aliased
    * @param p2 name of the aliased parameter, which will be deleted from independent parameters list
-   *
-   **/
-
+   */
   void aliasParameters(const std::string& p1, const std::string& p2);
 
   void unaliasParameters(const std::string& p1, const std::string& p2);
@@ -191,25 +189,19 @@ public:
    *
    * @param unparsedParams the map of the links : <A,B> matches for A->B aliasing.
    * @param verbose verbosity
-   *
-   **/
-
+   */
   void aliasParameters(std::map<std::string, std::string>& unparsedParams, bool verbose);
 
   /**
    * @brief Return the list of the names of the parameters that are
    * aliased (directly or not) to one of the parameters of the list.
-   *
    */
-
   ParameterList getAliasedParameters(const ParameterList& pl) const;
 
   /**
    * @brief Return the list of the names of the parameters from which
    * the parameters of the list are aliased  (directly or not).
-   *
    */
-
   ParameterList getFromParameters(const ParameterList& pl) const;
 
 
@@ -218,21 +210,17 @@ public:
    * The implementation is recursive, which means that in the case of A->B->C, getalias(C) will return both A and B.
    * @param name The name of the parameter to look for.
    */
-
   virtual std::vector<std::string> getAlias(const std::string& name) const;
 
   /**
    * @return the map of the aliases.
-   *
-   **/
-
+   */
   virtual std::map<std::string, std::string> getAliases() const;
 
   /**
    * @return The name of the parameter from which a given parameter is aliased.
    * @param name The name of the parameter to look for.
    */
-
   std::string getFrom(const std::string& name) const;
 
   // void fireParameterChanged(const ParameterList& parameters)
@@ -251,7 +239,7 @@ protected:
   {
     AbstractParametrizable::addParameters_(parameters);
 
-    for (size_t i = 0; i < parameters.size(); i++)
+    for (size_t i = 0; i < parameters.size(); ++i)
     {
       independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
@@ -266,7 +254,7 @@ protected:
   void shareParameters_(const ParameterList& parameters)
   {
     AbstractParametrizable::shareParameters_(parameters);
-    for (size_t i = 0; i < parameters.size(); i++)
+    for (size_t i = 0; i < parameters.size(); ++i)
     {
       independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
@@ -275,7 +263,7 @@ protected:
   void includeParameters_(const ParameterList& parameters)
   {
     AbstractParametrizable::includeParameters_(parameters);
-    for (size_t i = 0; i < parameters.size(); i++)
+    for (size_t i = 0; i < parameters.size(); ++i)
     {
       independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
@@ -300,7 +288,7 @@ protected:
   void deleteParameters_(const std::vector<std::string>& names)
   {
     std::string x;
-    for (size_t i = 0; i < names.size(); i++)
+    for (size_t i = 0; i < names.size(); ++i)
     {
       x = names[i];
       deleteParameter_(x);

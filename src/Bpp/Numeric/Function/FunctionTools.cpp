@@ -88,7 +88,7 @@ size_t ParameterGrid::getTotalNumberOfPoints() const
 }
 
 VVdouble* FunctionTools::computeGrid(
-  Function& function,
+  FunctionInterface& function,
   const ParameterGrid& grid)
 {
   // Init stuff...
@@ -113,11 +113,11 @@ VVdouble* FunctionTools::computeGrid(
   vector<double> row(n + 1);
   size_t nbPoints = grid.getTotalNumberOfPoints();
   ApplicationTools::displayMessage("Computing likelihood profile...");
-  for (unsigned int i = 0; true; i++)
+  for (unsigned int i = 0; true; ++i)
   {
     ApplicationTools::displayGauge(i, nbPoints - 1, '=');
     // We start by adding the current point to the table:
-    for (unsigned int j = 0; j < n; j++)
+    for (unsigned int j = 0; j < n; ++j)
     {
       row[j] = pl[j].getValue();
     }

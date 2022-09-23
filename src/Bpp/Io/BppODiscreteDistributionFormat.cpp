@@ -428,7 +428,7 @@ void BppODiscreteDistributionFormat::initialize_(
   for (size_t i = 0; i < pl.size(); ++i)
   {
     AutoParameter ap(pl[i]);
-    ap.setMessageHandler(ApplicationTools::warning.get());
+    ap.setMessageHandler(ApplicationTools::warning);
     pl.setParameter(i, ap);
   }
 

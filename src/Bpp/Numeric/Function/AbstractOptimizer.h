@@ -58,13 +58,13 @@ namespace bpp
  *
  */
 class AbstractOptimizer :
-  public virtual Optimizer
+  public virtual OptimizerInterface
 {
-private:
+protected:
   /**
    * @brief The function to optimize.
    */
-  Function* function_;
+  std::shared_ptr<FunctionInterface> function_;
 
   /**
    * @brief The parameters that will be optimized.
@@ -74,12 +74,12 @@ private:
   /**
    * @brief The message handler.
    */
-  OutputStream* messageHandler_;
+  std::shared_ptr<OutputStream> messageHandler_;
 
   /**
    * @brief The profiler.
    */
-  OutputStream* profiler_;
+  std::shared_ptr<OutputStream> profiler_;
 
   /**
    * @brief The constraint policy.
@@ -96,12 +96,12 @@ private:
   /**
    * @brief The stoping condition to use while optimizing.
    */
-  OptimizationStopCondition* stopCondition_;
+  std::shared_ptr<OptimizationStopCondition> stopCondition_;
 
   /**
    * @brief The default stoping condition to use while optimizing.
    */
-  OptimizationStopCondition* defaultStopCondition_;
+  std::shared_ptr<OptimizationStopCondition> defaultStopCondition_;
 
   /**
    * @brief State of the verbose mode: > 0 = enabled.
@@ -117,7 +117,7 @@ private:
 
   time_t startTime_;
 
-  std::vector<OptimizationListener*> listeners_;
+  std::vector< std::shared_ptr<OptimizationListener> > listeners_;
 
   bool updateParameters_;
 
@@ -148,17 +148,13 @@ protected:
   bool tolIsReached_;
 
 public:
-  AbstractOptimizer(Function* function = 0);
+  AbstractOptimizer(std::shared_ptr<FunctionInterface> function = 0);
 
   AbstractOptimizer(const AbstractOptimizer& opt);
 
   AbstractOptimizer& operator=(const AbstractOptimizer& opt);
 
-  virtual ~AbstractOptimizer()
-  {
-    delete stopCondition_;
-    delete defaultStopCondition_;
-  }
+  virtual ~AbstractOptimizer() {}
 
 public:
   /**
@@ -171,58 +167,104 @@ public:
    *
    * Store all parameters, call the doInit method, print to profiler, initialize timer and notify all listeners.
    */
-  void init(const ParameterList& params);
+  void init(const ParameterList& params) override ;
   /**
    * @brief Basic implementation.
    *
    * Check if the optimizer is initialized, check if parameters need update because of listeners, call the doStep method, print the current point to the profiler, notify all listeners and return the current value of the function.
    */
-  double step();
+  double step() override;
+
   /**
    * @brief Basic implementation.
    *
    * Call the step method untill tolerance is reached.
    */
-  double optimize();
-  bool isInitialized() const { return isInitialized_; }
-  const ParameterList& getParameters() const { return parameters_; }
-  double getParameterValue(const std::string& name) const { return parameters_.getParameterValue(name); }
-  void setFunction(Function* function)
+  double optimize() override;
+
+  bool isInitialized() const override { return isInitialized_; }
+
+  const ParameterList& getParameters() const override { return parameters_; }
+
+  double getParameterValue(const std::string& name) const override
+  { 
+    return parameters_.getParameterValue(name);
+  }
+  
+  void setFunction(std::shared_ptr<FunctionInterface> function) override
   {
     function_ = function;
     if (function) stopCondition_->init();
   }
-  const Function* getFunction() const { return function_; }
-  Function* getFunction() { return function_; }
-  bool hasFunction() const { return function_ != 0; }
-  double getFunctionValue() const
+  
+  const FunctionInterface& function() const override
+  {
+    if (function_) { 
+      return *function_;
+    } else {
+      throw NullPointerException("AbstractOptimizer::function() : no function associated to this optimizer.");
+    } 
+  }
+
+  FunctionInterface& function() override
+  {
+    if (function_) { 
+      return *function_;
+    } else {
+      throw NullPointerException("AbstractOptimizer::function() : no function associated to this optimizer.");
+    } 
+  }
+
+  std::shared_ptr<const FunctionInterface> getFunction() const override { return function_; }
+
+  std::shared_ptr<FunctionInterface> getFunction() override { return function_; }
+
+  bool hasFunction() const override { return function_ != 0; }
+  
+  double getFunctionValue() const override
   {
     if (!function_) throw NullPointerException("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
     return currentValue_;
   }
 
-  void setMessageHandler(OutputStream* mh) { messageHandler_ = mh; }
-  OutputStream* getMessageHandler() const { return messageHandler_; }
-  void setProfiler(OutputStream* profiler) { profiler_ = profiler; }
-  OutputStream* getProfiler() const { return profiler_; }
+  void setMessageHandler(std::shared_ptr<OutputStream> mh) override { messageHandler_ = mh; }
 
-  unsigned int getNumberOfEvaluations() const { return nbEval_; }
-  void setStopCondition(const OptimizationStopCondition& stopCondition)
+  std::shared_ptr<OutputStream> getMessageHandler() const override { return messageHandler_; }
+
+  void setProfiler(std::shared_ptr<OutputStream> profiler) override { profiler_ = profiler; }
+
+  std::shared_ptr<OutputStream> getProfiler() const override { return profiler_; }
+
+  unsigned int getNumberOfEvaluations() const override { return nbEval_; }
+  
+  void setStopCondition(std::shared_ptr<OptimizationStopCondition> stopCondition) override
   {
-    stopCondition_ = dynamic_cast<OptimizationStopCondition*>(stopCondition.clone());
+    stopCondition_ = stopCondition;
   }
-  OptimizationStopCondition* getStopCondition() { return stopCondition_; }
-  const OptimizationStopCondition* getStopCondition() const { return stopCondition_; }
-  OptimizationStopCondition* getDefaultStopCondition() { return defaultStopCondition_; }
-  const OptimizationStopCondition* getDefaultStopCondition() const { return defaultStopCondition_; }
-  bool isToleranceReached() const { return tolIsReached_; }
-  bool isMaximumNumberOfEvaluationsReached() const { return nbEval_ >= nbEvalMax_; }
-  void setMaximumNumberOfEvaluations(unsigned int max) { nbEvalMax_ = max; }
-  void setVerbose(unsigned int v) { verbose_ = v; }
-  unsigned int getVerbose() const { return verbose_; }
-  void setConstraintPolicy(const std::string& constraintPolicy) { constraintPolicy_ = constraintPolicy; }
-  std::string getConstraintPolicy() const { return constraintPolicy_; }
-  void addOptimizationListener(OptimizationListener* listener)
+  
+  std::shared_ptr<OptimizationStopCondition> getStopCondition() override { return stopCondition_; }
+
+  std::shared_ptr<const OptimizationStopCondition> getStopCondition() const override { return stopCondition_; }
+
+  std::shared_ptr<OptimizationStopCondition> getDefaultStopCondition() override { return defaultStopCondition_; }
+
+  std::shared_ptr<const OptimizationStopCondition> getDefaultStopCondition() const override { return defaultStopCondition_; }
+
+  bool isToleranceReached() const override { return tolIsReached_; }
+
+  bool isMaximumNumberOfEvaluationsReached() const override { return nbEval_ >= nbEvalMax_; }
+
+  void setMaximumNumberOfEvaluations(unsigned int max) override { nbEvalMax_ = max; }
+  
+  void setVerbose(unsigned int v) override { verbose_ = v; }
+  
+  unsigned int getVerbose() const override { return verbose_; }
+  
+  void setConstraintPolicy(const std::string& constraintPolicy) override { constraintPolicy_ = constraintPolicy; }
+  
+  std::string getConstraintPolicy() const override { return constraintPolicy_; }
+  
+  void addOptimizationListener(std::shared_ptr<OptimizationListener> listener) override
   {
     if (listener)
       listeners_.push_back(listener);
@@ -238,7 +280,7 @@ public:
    *
    * @param yn true/false
    */
-  void updateParameters(bool yn) { updateParameters_ = yn; }
+  void updateParameters(bool yn) override { updateParameters_ = yn; }
 
   /**
    * @brief Tell if we shall update all parameters after one optimization step.
@@ -249,7 +291,7 @@ public:
    *
    * @return yn true/false
    */
-  bool updateParameters() const { return updateParameters_; }
+  bool updateParameters() const override { return updateParameters_; }
 
   /**
    * @brief Set the character to be displayed during optimization.
@@ -373,9 +415,12 @@ protected:
 
 protected:
   ParameterList& getParameters_() { return parameters_; }
+  
   Parameter& getParameter_(size_t i) { return parameters_[i]; }
-  Function* getFunction_() { return function_; }
-  void setDefaultStopCondition_(OptimizationStopCondition* osc)
+  
+  std::shared_ptr<FunctionInterface> getFunction_() { return function_; }
+
+  void setDefaultStopCondition_(std::shared_ptr<OptimizationStopCondition> osc)
   {
     defaultStopCondition_ = osc;
   }

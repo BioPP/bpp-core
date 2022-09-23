@@ -67,11 +67,11 @@ double PowellMultiDimensions::PMDStopCondition::getCurrentTolerance() const
 
 /******************************************************************************/
 
-PowellMultiDimensions::PowellMultiDimensions(Function* function) :
-  AbstractOptimizer(function), fp_(0), fret_(0), pt_(), xi_(), ncom_(0), pcom_(), xicom_(), f1dim_(function)
+PowellMultiDimensions::PowellMultiDimensions(std::shared_ptr<FunctionInterface> function) :
+  AbstractOptimizer(function), fp_(0), fret_(0), pt_(), xi_(), ncom_(0), pcom_(), xicom_(), f1dim_(new DirectionFunction(function))
 {
-  setDefaultStopCondition_(new PMDStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<PMDStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
 }
 
 /******************************************************************************/
@@ -117,10 +117,11 @@ double PowellMultiDimensions::doStep()
       xit[j] = xi_[j][i];
     }
     fptt = fret_;
-    nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
-                                                               getParameters_(), xit, getStopCondition()->getTolerance(),
-                                                               0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
-    fret_ = getFunction()->f(getParameters());
+    nbEval_ += OneDimensionOptimizationTools::lineMinimization(
+		   f1dim_,
+                   getParameters_(), xit, getStopCondition()->getTolerance(),
+                   0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
+    fret_ = function().f(getParameters());
     if (getVerbose() > 2)
       printPoint(getParameters(), fret_);
     if (fret_ > fp_)

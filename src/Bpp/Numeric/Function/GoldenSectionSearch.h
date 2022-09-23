@@ -84,10 +84,10 @@ private:
   bool isInitialIntervalSet_;
 
 public:
-  GoldenSectionSearch(Function* function);
+  GoldenSectionSearch(std::shared_ptr<FunctionInterface> function);
   virtual ~GoldenSectionSearch() {}
 
-  GoldenSectionSearch* clone() const { return new GoldenSectionSearch(*this); }
+  GoldenSectionSearch* clone() const override { return new GoldenSectionSearch(*this); }
 
 public:
   /**
@@ -107,12 +107,12 @@ public:
    * <li>Function evaluation count reseting.</li>
    * </ul>
    */
-  double getFunctionValue() const;
+  double getFunctionValue() const override;
   /** @} */
 
-  void doInit(const ParameterList& params);
+  void doInit(const ParameterList& params) override;
 
-  double doStep();
+  double doStep() override;
 
   /**
    * @name Specific method
