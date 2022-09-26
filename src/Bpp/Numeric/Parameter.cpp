@@ -68,7 +68,7 @@ Parameter::Parameter(const Parameter& p) :
   name_(p.name_),
   value_(p.value_),
   precision_(p.precision_),
-  constraint_(p.constraint_ ? std::shared_ptr<Constraint>(p.constraint_->clone()) : 0),
+  constraint_(p.constraint_),
   listeners_(p.listeners_)
 {}
 
@@ -77,7 +77,7 @@ Parameter& Parameter::operator=(const Parameter& p)
   name_           = p.name_;
   value_          = p.value_;
   precision_      = p.precision_;
-  constraint_     = p.constraint_ ? std::shared_ptr<Constraint>(p.constraint_->clone()) : 0;
+  constraint_     = p.constraint_;
   listeners_      = p.listeners_;
   return *this;
 }
@@ -111,7 +111,7 @@ void Parameter::setPrecision(double precision)
 
 void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 {
-  if (constraint != 0 && !constraint->isCorrect(value_))
+  if (constraint != nullptr && !constraint->isCorrect(value_))
     throw ConstraintException("Parameter::setConstraint", this, value_);
 
   constraint_ = constraint;
@@ -121,7 +121,7 @@ void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 std::shared_ptr<Constraint> Parameter::removeConstraint()
 {
   auto c = constraint_;
-  constraint_ = 0;
+  constraint_ = nullptr;
   return c;
 }
 

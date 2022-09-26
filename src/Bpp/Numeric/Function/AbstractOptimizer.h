@@ -54,8 +54,6 @@ namespace bpp
  * It also enables the gestion of listeners by maintaining a vector of pointers toward the listener.
  * Important note: this list of listener is not duplicated in cas of copy of the Optimizer, as
  * listeners are expected to be bounded ot a particular instance.:if expand("%") == ""|browse confirm w|else|confirm w|endif
- *
- *
  */
 class AbstractOptimizer :
   public virtual OptimizerInterface
@@ -148,7 +146,7 @@ protected:
   bool tolIsReached_;
 
 public:
-  AbstractOptimizer(std::shared_ptr<FunctionInterface> function = 0);
+  AbstractOptimizer(std::shared_ptr<FunctionInterface> function = nullptr);
 
   AbstractOptimizer(const AbstractOptimizer& opt);
 

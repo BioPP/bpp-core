@@ -246,7 +246,7 @@ public:
    *
    * @return True if this parameter has a contraint.
    */
-  virtual bool hasConstraint() const { return constraint_ != 0; }
+  virtual bool hasConstraint() const { return constraint_ != nullptr; }
 
   /**
    * @brief Remove the constraint associated to this parameter.

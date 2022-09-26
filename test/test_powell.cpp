@@ -49,6 +49,7 @@ int main() {
   auto f = make_shared<PolynomialFunction1>();
   cout << f->getValue() << endl;
   PowellMultiDimensions optimizer(f);
+  optimizer.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
   optimizer.init(f->getParameters());
   optimizer.optimize();
   double minf = f->getValue();
