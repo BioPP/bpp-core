@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Function/DownhillSimplexMethod.h>
+#include <Bpp/Numeric/AutoParameter.h>
 #include <vector>
 #include <iostream>
 #include "PolynomialFunction.h"
@@ -49,6 +50,7 @@ int main() {
   auto f = make_shared<PolynomialFunction1>();
   cout << f->getValue() << endl;
   DownhillSimplexMethod optimizer(f);
+  optimizer.setConstraintPolicy(AutoParameter::CONSTRAINTS_IGNORE);
   optimizer.init(f->getParameters());
   optimizer.optimize();
   double minf = f->getValue();

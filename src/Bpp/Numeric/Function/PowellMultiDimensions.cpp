@@ -81,11 +81,11 @@ void PowellMultiDimensions::doInit(const ParameterList& params)
   // Build the initial matrix:
   size_t n = params.size();
   xi_.resize(n);
-  for (size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; ++i)
   {
     // Copy the parameter list:
     xi_[i].resize(n);
-    for (unsigned int j = 0; j < n; j++)
+    for (unsigned int j = 0; j < n; ++j)
     {
       // Set the directions to unit vectors:
       xi_[i][j] = (j == i) ? 1 : 0;
@@ -118,9 +118,8 @@ double PowellMultiDimensions::doStep()
     }
     fptt = fret_;
     nbEval_ += OneDimensionOptimizationTools::lineMinimization(
-		   f1dim_,
-                   getParameters_(), xit, getStopCondition()->getTolerance(),
-                   0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
+		   f1dim_, getParameters_(), xit, getStopCondition()->getTolerance(),
+       0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
     fret_ = function().f(getParameters());
     if (getVerbose() > 2)
       printPoint(getParameters(), fret_);
@@ -134,7 +133,7 @@ double PowellMultiDimensions::doStep()
   }
 
   ParameterList ptt = getParameters();
-  for (size_t j = 0; j < n; j++)
+  for (size_t j = 0; j < n; ++j)
   {
     ptt[j].setValue(2.0 * getParameters()[j].getValue() - pt_[j].getValue());
     xit[j] = getParameters()[j].getValue() - pt_[j].getValue();
@@ -153,7 +152,7 @@ double PowellMultiDimensions::doStep()
       fret_ = getFunction()->f(getParameters());
       if (fret_ > fp_)
         throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");
-      for (size_t j = 0; j < n; j++)
+      for (size_t j = 0; j < n; ++j)
       {
         xi_[j][ibig]  = xi_[j][n - 1];
         xi_[j][n - 1] = xit[j];

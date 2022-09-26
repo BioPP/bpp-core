@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Function/BfgsMultiDimensions.h>
+#include <Bpp/Numeric/AutoParameter.h>
 #include <vector>
 #include <iostream>
 #include "PolynomialFunction.h"
@@ -49,6 +50,7 @@ int main() {
   auto f = make_shared<PolynomialFunction1Der1>();
   cout << f->getValue() << endl;
   BfgsMultiDimensions optimizer(f);
+  optimizer.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
   optimizer.init(f->getParameters());
   optimizer.optimize();
   double minf = optimizer.getFunctionValue();
