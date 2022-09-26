@@ -6,7 +6,7 @@
 //
 
 /*
-  * Copyright or © or Copr. CNRS, (November 17, 2004)
+  * Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
   *
   * This software is a computer program whose purpose is to provide classes
   * for numerical calculus.
@@ -60,9 +60,9 @@ string AutoParameter::CONSTRAINTS_KEEP   = "keep";
 /** Constructors: *************************************************************/
 
 AutoParameter::AutoParameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint) :
-  Parameter(name, value, constraint), messageHandler_(ApplicationTools::message.get()) {}
+  Parameter(name, value, constraint), messageHandler_(ApplicationTools::message) {}
 
-AutoParameter::AutoParameter(const Parameter& p) : Parameter(p), messageHandler_(ApplicationTools::message.get()) {}
+AutoParameter::AutoParameter(const Parameter& p) : Parameter(p), messageHandler_(ApplicationTools::message) {}
 
 AutoParameter::AutoParameter(const AutoParameter& p) : Parameter(p), messageHandler_(p.messageHandler_) {}
 

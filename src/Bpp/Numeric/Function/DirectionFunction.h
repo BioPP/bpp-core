@@ -65,7 +65,7 @@ public:
   DirectionFunction(std::shared_ptr<FunctionInterface> function = nullptr) :
     params_(), p_(), xt_(), xi_(),
     function_(function), constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
-    messenger_(ApplicationTools::message.get()) {}
+    messenger_(ApplicationTools::message) {}
 
   DirectionFunction(const DirectionFunction& df) :
     ParametrizableAdapter(df), params_(df.params_), p_(df.p_), xt_(df.p_), xi_(df.xi_),

@@ -39,6 +39,7 @@
 */
 
 #include <cmath>
+#include <algorithm>
 
 #include "Parameter.h"
 
