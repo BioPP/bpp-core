@@ -54,11 +54,14 @@ class PolynomialFunction1:
     double fval_;
  
   public:
-    PolynomialFunction1() : AbstractParametrizable(""), fval_(0) {
+    PolynomialFunction1(bool withConstraint = true) : AbstractParametrizable(""), fval_(0) {
       //We declare parameters here:
       addParameter_(new Parameter("x", 0));
       addParameter_(new Parameter("y", 0));
-      addParameter_(new Parameter("z", 0.5, std::make_shared<IntervalConstraint>(0.01, 5, true, true)));
+      if (withConstraint)
+        addParameter_(new Parameter("z", 0.5, std::make_shared<IntervalConstraint>(0.01, 5, true, true)));
+      else
+        addParameter_(new Parameter("z", 0));
       fireParameterChanged(getParameters());
     }
  
@@ -88,7 +91,11 @@ class PolynomialFunction1Der1:
     mutable map<string, double> firstDer_;
 
   public:
-    PolynomialFunction1Der1(): compFirstDer_(true), firstDer_() {
+    PolynomialFunction1Der1(bool withConstraint = true):
+      PolynomialFunction1(withConstraint),
+      compFirstDer_(true),
+      firstDer_()
+    {
       //Need to compute derivatives:
       fireParameterChanged(getParameters());
     }

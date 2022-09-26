@@ -47,7 +47,7 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  auto f = make_shared<PolynomialFunction1Der1>();
+  auto f = make_shared<PolynomialFunction1Der1>(false);
   cout << f->getValue() << endl;
   BfgsMultiDimensions optimizer(f);
   optimizer.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
