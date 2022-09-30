@@ -66,9 +66,9 @@ private:
   /**
    * @brief The alphabet describing the hidden states.
    */
-  std::unique_ptr<HmmStateAlphabet> hiddenAlphabet_;
-  std::unique_ptr<HmmTransitionMatrix> transitionMatrix_;
-  std::unique_ptr<HmmEmissionProbabilities> emissionProbabilities_;
+  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet_;
+  std::shared_ptr<HmmTransitionMatrix> transitionMatrix_;
+  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities_;
 
   /**
    * @brief The likelihood arrays.
@@ -131,9 +131,9 @@ public:
    * be destroyed with this object.
    */
   RescaledHmmLikelihood(
-    HmmStateAlphabet* hiddenAlphabet,
-    HmmTransitionMatrix* transitionMatrix,
-    HmmEmissionProbabilities* emissionProbabilities,
+    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
     const std::string& prefix);
 
   RescaledHmmLikelihood(const RescaledHmmLikelihood& lik) :
@@ -156,8 +156,8 @@ public:
     nbSites_(lik.nbSites_)
   {
     // Now adjust pointers:
-    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
   }
 
   RescaledHmmLikelihood& operator=(const RescaledHmmLikelihood& lik)
@@ -181,70 +181,79 @@ public:
     nbSites_               = lik.nbSites_;
 
     // Now adjust pointers:
-    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
     return *this;
   }
 
   virtual ~RescaledHmmLikelihood() {}
 
-  RescaledHmmLikelihood* clone() const { return new RescaledHmmLikelihood(*this); }
+  RescaledHmmLikelihood* clone() const override { return new RescaledHmmLikelihood(*this); }
 
 public:
-  const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }
-  HmmStateAlphabet& getHmmStateAlphabet() { return *hiddenAlphabet_; }
+  const HmmStateAlphabet& hmmStateAlphabet() const override { return *hiddenAlphabet_; }
+  std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const override { return hiddenAlphabet_; }
 
-  const HmmTransitionMatrix& getHmmTransitionMatrix() const { return *transitionMatrix_; }
-  HmmTransitionMatrix& getHmmTransitionMatrix() { return *transitionMatrix_; }
+  HmmStateAlphabet& hmmStateAlphabet() override { return *hiddenAlphabet_; }
+  std::shared_ptr<HmmStateAlphabet> getHmmStateAlphabet() override { return hiddenAlphabet_; }
 
-  const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
-  HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
+  const HmmTransitionMatrix& hmmTransitionMatrix() const override { return *transitionMatrix_; }
+  std::shared_ptr<const HmmTransitionMatrix> getHmmTransitionMatrix() const override { return transitionMatrix_; }
 
-  void setBreakPoints(const std::vector<size_t>& breakPoints)
+  HmmTransitionMatrix& hmmTransitionMatrix() override { return *transitionMatrix_; }
+  std::shared_ptr<HmmTransitionMatrix> getHmmTransitionMatrix() override { return transitionMatrix_; }
+
+  const HmmEmissionProbabilities& hmmEmissionProbabilities() const override { return *emissionProbabilities_; }
+  std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const override { return emissionProbabilities_; }
+  
+  HmmEmissionProbabilities& hmmEmissionProbabilities() override { return *emissionProbabilities_; }
+  std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() override { return emissionProbabilities_; }
+
+  void setBreakPoints(const std::vector<size_t>& breakPoints) override
   {
     breakPoints_ = breakPoints;
     computeForward_();
     backLikelihoodUpToDate_ = false;
   }
 
-  const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
+  const std::vector<size_t>& getBreakPoints() const override { return breakPoints_; }
 
-  void setParameters(const ParameterList& pl)
+  void setParameters(const ParameterList& pl) override
   {
     setParametersValues(pl);
   }
 
-  double getValue() const { return -logLik_; }
+  double getValue() const override { return -logLik_; }
 
-  double getLogLikelihood() const { return logLik_; }
+  double getLogLikelihood() const override { return logLik_; }
 
-  double getLikelihoodForASite(size_t site) const;
+  double getLikelihoodForASite(size_t site) const override;
 
-  double getDLogLikelihoodForASite(size_t site) const;
+  double getDLogLikelihoodForASite(size_t site) const override;
 
-  double getD2LogLikelihoodForASite(size_t site) const;
+  double getD2LogLikelihoodForASite(size_t site) const override;
 
-  Vdouble getLikelihoodForEachSite() const;
+  Vdouble getLikelihoodForEachSite() const override;
 
-  void setNamespace(const std::string& nameSpace);
+  void setNamespace(const std::string& nameSpace) override;
 
-  void fireParameterChanged(const ParameterList& pl);
+  void fireParameterChanged(const ParameterList& pl) override;
 
-  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const;
+  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override;
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const;
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const override;
 
 protected:
   void computeForward_();
   void computeBackward_() const;
 
 
-  void computeDLikelihood_() const
+  void computeDLikelihood_() const override
   {
     computeDForward_();
   }
 
-  void computeD2Likelihood_() const
+  void computeD2Likelihood_() const override
   {
     computeD2Forward_();
   }

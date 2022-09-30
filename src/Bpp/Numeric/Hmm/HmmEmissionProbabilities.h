@@ -66,16 +66,24 @@ class HmmEmissionProbabilities :
   public virtual Parametrizable
 {
 public:
-  virtual HmmEmissionProbabilities* clone() const = 0;
+  virtual HmmEmissionProbabilities* clone() const override = 0;
 
-  virtual const HmmStateAlphabet* getHmmStateAlphabet() const = 0;
+  /**
+   * @return The hidden alphabet associated to this model.
+   */
+  virtual const HmmStateAlphabet& hmmStateAlphabet() const = 0;
+  
+  /**
+   * @return A shared pointer toward the hidden alphabet associated to this model.
+   */
+  virtual std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const = 0;
 
   /**
    * @brief Set the new hidden state alphabet.
    * @param stateAlphabet The new state alphabet.
    * @throw UnvalidStateAlphabetException if the new alphabet is uncorrect (for instance is NULL pointer).
    */
-  virtual void setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet) = 0;
+  virtual void setHmmStateAlphabet(std::shared_ptr<const HmmStateAlphabet> stateAlphabet) = 0;
 
   /**
    * @brief Operator access to the emission probabilities.
@@ -86,7 +94,6 @@ public:
    * @param pos The position of the sequential data to consider.
    * @param state The index of the hidden state to consider, as defined by the HmmStateAlphabet object associated to this class.
    */
-
   virtual double operator()(size_t pos, size_t state) const = 0;
 
   virtual void computeDEmissionProbabilities(std::string& variable) const

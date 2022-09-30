@@ -47,22 +47,23 @@
 using namespace bpp;
 using namespace std;
 
-AutoCorrelationTransitionMatrix::AutoCorrelationTransitionMatrix(const HmmStateAlphabet* alph, const string& prefix) :
+AutoCorrelationTransitionMatrix::AutoCorrelationTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const string& prefix) :
   AbstractHmmTransitionMatrix(alph),
   AbstractParametrizable(prefix),
   vAutocorrel_()
 {
-  size_t size = (size_t)getNumberOfStates();
+  size_t size = static_cast<size_t>(getNumberOfStates());
+  double p = 1. / static_cast<double>(size);
 
-  for (size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < size; ++i)
   {
-    vAutocorrel_.push_back(1. / (double)size);
-    addParameter_(new Parameter(prefix + "lambda" + TextTools::toString(i + 1), 1. / (double)size, Parameter::PROP_CONSTRAINT_EX));
+    vAutocorrel_.push_back(1. / static_cast<double>(size));
+    addParameter_(new Parameter(prefix + "lambda" + TextTools::toString(i + 1), p, Parameter::PROP_CONSTRAINT_EX));
   }
 
-  for (size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < size; ++i)
   {
-    eqFreq_[i] = 1. / (double)size;
+    eqFreq_[i] = p;
   }
 }
 

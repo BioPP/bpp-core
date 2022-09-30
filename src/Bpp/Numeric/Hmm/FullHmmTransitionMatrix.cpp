@@ -47,14 +47,14 @@
 using namespace bpp;
 using namespace std;
 
-FullHmmTransitionMatrix::FullHmmTransitionMatrix(const HmmStateAlphabet* alph, const string& prefix) :
+FullHmmTransitionMatrix::FullHmmTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const string& prefix) :
   AbstractHmmTransitionMatrix(alph),
   AbstractParametrizable(prefix),
   vSimplex_()
 {
-  size_t size = (size_t)getNumberOfStates();
+  size_t size = static_cast<size_t>(getNumberOfStates());
 
-  for (size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < size; ++i)
   {
     vSimplex_.push_back(Simplex(size, 1, false, prefix + TextTools::toString(i + 1) + "."));
     addParameters_(vSimplex_[i].getParameters());
@@ -82,11 +82,11 @@ void FullHmmTransitionMatrix::setTransitionProbabilities(const Matrix<double>& m
 
   ParameterList pl;
 
-  for (size_t i = 0; i < mat.getNumberOfRows(); i++)
+  for (size_t i = 0; i < mat.getNumberOfRows(); ++i)
   {
     vSimplex_[i].setFrequencies(mat.row(i));
     ParameterList pls = vSimplex_[i].getParameters();
-    for (size_t j = 0; j < pls.size(); j++)
+    for (size_t j = 0; j < pls.size(); ++j)
     {
       Parameter* p = pls[j].clone();
       p->setName(TextTools::toString(i + 1) + "." + p->getName());
@@ -102,9 +102,9 @@ const Matrix<double>& FullHmmTransitionMatrix::getPij() const
 {
   if (!upToDate_)
   {
-    for (size_t i = 0; i < vSimplex_.size(); i++)
+    for (size_t i = 0; i < vSimplex_.size(); ++i)
     {
-      for (size_t j = 0; j < vSimplex_[i].dimension(); j++)
+      for (size_t j = 0; j < vSimplex_[i].dimension(); ++j)
       {
         pij_(i, j) = vSimplex_[i].prob(j);
       }
@@ -125,7 +125,7 @@ const std::vector<double>& FullHmmTransitionMatrix::getEquilibriumFrequencies() 
 
     MatrixTools::pow(pij_, 256, tmpmat_);
 
-    for (size_t i = 0; i < salph; i++)
+    for (size_t i = 0; i < salph; ++i)
     {
       eqFreq_[i] = tmpmat_(0, i);
     }
@@ -140,7 +140,7 @@ void FullHmmTransitionMatrix::fireParameterChanged(const ParameterList& paramete
 {
   size_t salph = getNumberOfStates();
 
-  for (size_t i = 0; i < salph; i++)
+  for (size_t i = 0; i < salph; ++i)
   {
     vSimplex_[i].matchParametersValues(parameters);
   }

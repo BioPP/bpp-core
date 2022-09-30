@@ -48,17 +48,15 @@ using namespace bpp;
 using namespace std;
 
 LogsumHmmLikelihood::LogsumHmmLikelihood(
-  HmmStateAlphabet* hiddenAlphabet,
-  HmmTransitionMatrix* transitionMatrix,
-  HmmEmissionProbabilities* emissionProbabilities,
-  bool ownsPointers,
+  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+  std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
   const std::string& prefix) :
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
   transitionMatrix_(transitionMatrix),
   emissionProbabilities_(emissionProbabilities),
-  ownsPointers_(ownsPointers),
   logLikelihood_(),
   partialLogLikelihoods_(),
   logLik_(),
@@ -79,9 +77,9 @@ LogsumHmmLikelihood::LogsumHmmLikelihood(
   if (!emissionProbabilities)
     throw Exception("LogsumHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
 
-  if (!hiddenAlphabet_->worksWith(transitionMatrix_->getHmmStateAlphabet()))
+  if (!hiddenAlphabet_->worksWith(transitionMatrix_->hmmStateAlphabet()))
     throw Exception("LogsumHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
-  if (!hiddenAlphabet_->worksWith(emissionProbabilities_->getHmmStateAlphabet()))
+  if (!hiddenAlphabet_->worksWith(emissionProbabilities_->hmmStateAlphabet()))
     throw Exception("LogsumHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   nbStates_ = hiddenAlphabet_->getNumberOfStates();
   nbSites_ = emissionProbabilities_->getNumberOfPositions();

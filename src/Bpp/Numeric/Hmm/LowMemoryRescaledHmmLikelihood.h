@@ -73,9 +73,9 @@ private:
   /**
    * @brief The alphabet describing the hidden states.
    */
-  std::unique_ptr<HmmStateAlphabet> hiddenAlphabet_;
-  std::unique_ptr<HmmTransitionMatrix> transitionMatrix_;
-  std::unique_ptr<HmmEmissionProbabilities> emissionProbabilities_;
+  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet_;
+  std::shared_ptr<HmmTransitionMatrix> transitionMatrix_;
+  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities_;
 
   /**
    * @brief The likelihood array.
@@ -108,9 +108,9 @@ public:
    * the size of the vector specify the memory usage of the class. A two low value can lead to numerical precision errors.
    */
   LowMemoryRescaledHmmLikelihood(
-    HmmStateAlphabet* hiddenAlphabet,
-    HmmTransitionMatrix* transitionMatrix,
-    HmmEmissionProbabilities* emissionProbabilities,
+    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
     const std::string& prefix,
     size_t maxSize = 1000000);
 
@@ -129,8 +129,8 @@ public:
     nbSites_(lik.nbSites_)
   {
     // Now adjust pointers:
-    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
   }
 
   LowMemoryRescaledHmmLikelihood& operator=(const LowMemoryRescaledHmmLikelihood& lik)
@@ -149,63 +149,72 @@ public:
     nbSites_               = lik.nbSites_;
 
     // Now adjust pointers:
-    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_.get());
-    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_.get());
+    transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
+    emissionProbabilities_->setHmmStateAlphabet(hiddenAlphabet_);
     return *this;
   }
 
   virtual ~LowMemoryRescaledHmmLikelihood() {}
 
-  LowMemoryRescaledHmmLikelihood* clone() const { return new LowMemoryRescaledHmmLikelihood(*this); }
+  LowMemoryRescaledHmmLikelihood* clone() const override { return new LowMemoryRescaledHmmLikelihood(*this); }
 
 public:
-  const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }
-  HmmStateAlphabet& getHmmStateAlphabet() { return *hiddenAlphabet_; }
+  const HmmStateAlphabet& hmmStateAlphabet() const override { return *hiddenAlphabet_; }
+  std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const override { return hiddenAlphabet_; }
 
-  const HmmTransitionMatrix& getHmmTransitionMatrix() const { return *transitionMatrix_; }
-  HmmTransitionMatrix& getHmmTransitionMatrix() { return *transitionMatrix_; }
+  HmmStateAlphabet& hmmStateAlphabet() override { return *hiddenAlphabet_; }
+  std::shared_ptr<HmmStateAlphabet> getHmmStateAlphabet() override { return hiddenAlphabet_; }
 
-  const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
-  HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
+  const HmmTransitionMatrix& hmmTransitionMatrix() const override { return *transitionMatrix_; }
+  std::shared_ptr<const HmmTransitionMatrix> getHmmTransitionMatrix() const override { return transitionMatrix_; }
 
-  void setBreakPoints(const std::vector<size_t>& breakPoints)
+  HmmTransitionMatrix& hmmTransitionMatrix() override { return *transitionMatrix_; }
+  std::shared_ptr<HmmTransitionMatrix> getHmmTransitionMatrix() override { return transitionMatrix_; }
+
+  const HmmEmissionProbabilities& hmmEmissionProbabilities() const override { return *emissionProbabilities_; }
+  std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const override { return emissionProbabilities_; }
+  
+  HmmEmissionProbabilities& hmmEmissionProbabilities() override { return *emissionProbabilities_; }
+  std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() override { return emissionProbabilities_; }
+
+  void setBreakPoints(const std::vector<size_t>& breakPoints) override
   {
     breakPoints_ = breakPoints;
     computeForward_();
   }
 
-  const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
+  const std::vector<size_t>& getBreakPoints() const override { return breakPoints_; }
 
-  void setParameters(const ParameterList& pl)
+  void setParameters(const ParameterList& pl) override
   {
     setParametersValues(pl);
   }
 
-  double getValue() const { return -logLik_; }
+  double getValue() const override { return -logLik_; }
 
-  double getLogLikelihood() const { return logLik_; }
+  double getLogLikelihood() const override { return logLik_; }
 
-  void setNamespace(const std::string& nameSpace);
+  void setNamespace(const std::string& nameSpace) override;
 
-  void fireParameterChanged(const ParameterList& pl);
+  void fireParameterChanged(const ParameterList& pl) override;
 
-  double getLikelihoodForASite(size_t site) const
+  double getLikelihoodForASite(size_t site) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
 
-  Vdouble getLikelihoodForEachSite() const
+  Vdouble getLikelihoodForEachSite() const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getLikelihoodForEachSite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
-  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const
+  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
@@ -213,23 +222,23 @@ public:
 protected:
   void computeForward_();
 
-  void computeDLikelihood_() const
+  void computeDLikelihood_() const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::computeDLikelihood_. Use RescaledHmmLikelihood instead."));
   }
 
-  void computeD2Likelihood_() const
+  void computeD2Likelihood_() const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::computeD2Likelihood_. Use RescaledHmmLikelihood instead."));
   }
 
-  double getDLogLikelihoodForASite(size_t site) const
+  double getDLogLikelihoodForASite(size_t site) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getDLogLikelihoodForASite. Use RescaledHmmLikelihood instead."));
     return 0;
   }
 
-  double getD2LogLikelihoodForASite(size_t site) const
+  double getD2LogLikelihoodForASite(size_t site) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getD2LogLikelihoodForASite. Use RescaledHmmLikelihood instead."));
     return 0;

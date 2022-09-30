@@ -50,14 +50,13 @@ namespace bpp
 {
 /**
  * @brief Partial implementation of HmmTransitionMatrix.
- *
  */
 
 class AbstractHmmTransitionMatrix :
   public virtual HmmTransitionMatrix
 {
 private:
-  const HmmStateAlphabet* alph_;
+  std::shared_ptr<const HmmStateAlphabet> alph_;
 
 protected:
   mutable RowMatrix<double> pij_, tmpmat_;
@@ -67,18 +66,26 @@ protected:
   mutable bool upToDate_;
 
 public:
-  AbstractHmmTransitionMatrix(const HmmStateAlphabet* alph, const std::string& prefix = "");
+  AbstractHmmTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const std::string& prefix = "");
 
   AbstractHmmTransitionMatrix(const AbstractHmmTransitionMatrix& hptm);
 
   AbstractHmmTransitionMatrix& operator=(const AbstractHmmTransitionMatrix& hptm);
 
   /**
-   * @return The hidden alphabet associated to this model.
+   * @return A pointer toward the hidden alphabet associated to this model.
    */
-  const HmmStateAlphabet* getHmmStateAlphabet() const
+  std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const
   {
     return alph_;
+  }
+
+  /**
+   * @return The hidden alphabet associated to this model.
+   */
+  const HmmStateAlphabet& hmmStateAlphabet() const
+  {
+    return *alph_;
   }
 
   /**
@@ -86,8 +93,7 @@ public:
    * @param stateAlphabet The new state alphabet
    * @throw UnvalidStateAlphabetException if the new alphabet is uncorrect (for instance is NULL pointer).
    */
-
-  void setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet);
+  void setHmmStateAlphabet(std::shared_ptr<const HmmStateAlphabet> stateAlphabet);
 
   /**
    * @return The number of states in the model.
@@ -104,9 +110,7 @@ public:
    * @param size the length of the sequence
    * @return a vector of states index sampled from the Transition
    * probabilities
-   *
    */
-
   std::vector<size_t> sample(size_t size) const;
 };
 } // end of namespace bpp

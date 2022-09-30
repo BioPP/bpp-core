@@ -49,9 +49,9 @@ using namespace bpp;
 using namespace std;
 
 RescaledHmmLikelihood::RescaledHmmLikelihood(
-  HmmStateAlphabet* hiddenAlphabet,
-  HmmTransitionMatrix* transitionMatrix,
-  HmmEmissionProbabilities* emissionProbabilities,
+  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+  std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
   const std::string& prefix) :
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
@@ -77,9 +77,9 @@ RescaledHmmLikelihood::RescaledHmmLikelihood(
     throw Exception("RescaledHmmLikelihood: null pointer passed for HmmTransitionMatrix.");
   if (!emissionProbabilities)
     throw Exception("RescaledHmmLikelihood: null pointer passed for HmmEmissionProbabilities.");
-  if (!hiddenAlphabet_->worksWith(transitionMatrix->getHmmStateAlphabet()))
+  if (!hiddenAlphabet_->worksWith(transitionMatrix->hmmStateAlphabet()))
     throw Exception("RescaledHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
-  if (!hiddenAlphabet_->worksWith(emissionProbabilities->getHmmStateAlphabet()))
+  if (!hiddenAlphabet_->worksWith(emissionProbabilities->hmmStateAlphabet()))
     throw Exception("RescaledHmmLikelihood: HmmTransitionMatrix and HmmEmissionProbabilities should point toward the same HmmStateAlphabet object.");
   nbStates_ = hiddenAlphabet_->getNumberOfStates();
   nbSites_ = emissionProbabilities_->getNumberOfPositions();
