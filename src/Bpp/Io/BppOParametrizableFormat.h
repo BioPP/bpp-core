@@ -55,54 +55,29 @@ namespace bpp
  *
  */
 class BppOParametrizableFormat :
-  public OParametrizable
+  public virtual OParametrizable
 {
 public:
   BppOParametrizableFormat() {}
   virtual ~BppOParametrizableFormat() {}
 
 public:
-  const std::string getFormatName() const { return "BppO"; }
+  const std::string getFormatName() const override { return "BppO"; }
 
-  const std::string getFormatDescription() const { return "Bpp Options format."; }
+  const std::string getFormatDescription() const override { return "Bpp Options format."; }
 
-  /**
-   * @brief Write a Parametrizable to a stream.
-   *
-   * @param parametrizable A pointer to a Parametrizable object;
-   * @param out The output stream;
-   * @param writtenNames is the vector of the written
-   *        parameters so far [in, out];
-   * @param printComma boolean if a comma should be written at the
-   *        beginning of the description.
-   */
-
-  void write(const Parametrizable* parametrizable,
+  void write(const Parametrizable& parametrizable,
              OutputStream& out,
              std::vector<std::string>& writtenNames,
-             bool printComma = false) const;
+             bool printComma = false) const override;
 
-  /**
-   * @brief Write a ParameterAliasable to a stream.
-   *
-   * @param parametrizable A pointer to a Parametrizable object;
-   * @param out The output stream;
-   * @param globalAliases parameters linked to global alias;
-   * @param names the names of the parameters to be written;
-   * @param writtenNames is the vector of the written
-   *        parameters so far [in, out];
-   * @param printLocalAliases boolean if local aliases should be written;
-   * @param printComma boolean if a comma should be written at the
-   *        beginning of the description.
-   */
-
-  void write(const ParameterAliasable* parametrizable,
+  void write(const ParameterAliasable& parametrizable,
              OutputStream& out,
              std::map<std::string, std::string>& globalAliases,
              const std::vector<std::string>& names,
              std::vector<std::string>& writtenNames,
              bool printLocalAliases = true,
-             bool printComma = false) const;
+             bool printComma = false) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_IO_BPPOPARAMETRIZABLEFORMAT_H

@@ -416,7 +416,7 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
 
   // Writing the parameters
   BppOParametrizableFormat bOP;
-  bOP.write(dynamic_cast<const ParameterAliasable*>(&dist), out, globalAliases, dist.getIndependentParameters().getParameterNames(), writtenNames, true, comma);
+  bOP.write(dynamic_cast<const ParameterAliasable&>(dist), out, globalAliases, dist.getIndependentParameters().getParameterNames(), writtenNames, true, comma);
   out << ")";
 }
 

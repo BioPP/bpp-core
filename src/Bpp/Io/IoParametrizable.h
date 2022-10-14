@@ -77,14 +77,14 @@ public:
   /**
    * @brief Write a Parametrizable to a stream.
    *
-   * @param parametrizable A pointer to a Parametrizable object;
+   * @param parametrizable A Parametrizable object;
    * @param out The output stream;
    * @param writtenNames is the vector of the written
    *        parameters so far [in, out];
    * @param printComma boolean if a comma should be written at the
    *        beginning of the description.
    */
-  virtual void write(const Parametrizable* parametrizable,
+  virtual void write(const Parametrizable& parametrizable,
                      OutputStream& out,
                      std::vector<std::string>& writtenNames,
                      bool printComma = false) const = 0;
@@ -92,7 +92,7 @@ public:
   /**
    * @brief Write a ParameterAliasable to a stream.
    *
-   * @param parametrizable A pointer to a Parametrizable object;
+   * @param parametrizable A ParameterAliasable object;
    * @param out The output stream;
    * @param globalAliases parameters linked to global alias;
    * @param names the names of the parameters to be written;
@@ -102,7 +102,7 @@ public:
    * @param printComma boolean if a comma should be written at the
    *        beginning of the description.
    */
-  virtual void write(const ParameterAliasable* parametrizable,
+  virtual void write(const ParameterAliasable& parametrizable,
                      OutputStream& out,
                      std::map<std::string, std::string>& globalAliases,
                      const std::vector<std::string>& names,

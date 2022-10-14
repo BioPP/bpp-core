@@ -50,12 +50,12 @@ using namespace bpp;
 
 using namespace std;
 
-void BppOParametrizableFormat::write(const Parametrizable* parametrizable,
+void BppOParametrizableFormat::write(const Parametrizable& parametrizable,
                                      OutputStream& out,
                                      std::vector<std::string>& writtenNames,
                                      bool printComma) const
 {
-  ParameterList pl = parametrizable->getParameters();
+  ParameterList pl = parametrizable.getParameters();
   int p = out.getPrecision();
   out.setPrecision(12);
   bool flag = printComma;
@@ -67,7 +67,7 @@ void BppOParametrizableFormat::write(const Parametrizable* parametrizable,
         out << ",";
       else
         flag = true;
-      string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
+      string pname = parametrizable.getParameterNameWithoutNamespace(pl[i].getName());
 
       (out << pname << "=").enableScientificNotation(false) << pl[i].getValue();
     }
@@ -75,7 +75,7 @@ void BppOParametrizableFormat::write(const Parametrizable* parametrizable,
   out.setPrecision(p);
 }
 
-void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
+void BppOParametrizableFormat::write(const ParameterAliasable& parametrizable,
                                      OutputStream& out,
                                      std::map<std::string, std::string>& globalAliases,
                                      const std::vector<std::string>& names,
@@ -83,7 +83,7 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
                                      bool printLocalAliases,
                                      bool printComma) const
 {
-  ParameterList pl = parametrizable->getIndependentParameters().createSubList(names);
+  ParameterList pl = parametrizable.getIndependentParameters().createSubList(names);
   int p = out.getPrecision();
   out.setPrecision(12);
   bool flag = printComma;
@@ -95,7 +95,7 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
         out << ",";
       else
         flag = true;
-      string pname = parametrizable->getParameterNameWithoutNamespace(pl[i].getName());
+      string pname = parametrizable.getParameterNameWithoutNamespace(pl[i].getName());
 
       // Check for global aliases:
       if (globalAliases.find(pl[i].getName()) == globalAliases.end())
@@ -108,7 +108,7 @@ void BppOParametrizableFormat::write(const ParameterAliasable* parametrizable,
       // Now check for local aliases:
       if (printLocalAliases)
       {
-        vector<string> aliases = parametrizable->getAlias(pname);
+        vector<string> aliases = parametrizable.getAlias(pname);
         for (size_t j = 0; j < aliases.size(); ++j)
         {
           out << ", " << aliases[j] << "=" << pname;
