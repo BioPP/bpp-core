@@ -56,7 +56,7 @@ class InvariantMixedDiscreteDistribution :
   public AbstractDiscreteDistribution
 {
 private:
-  DiscreteDistribution* dist_;
+  std::unique_ptr<DiscreteDistribution> dist_;
   double invariant_, p_;
   std::string nestedPrefix_;
 
@@ -70,16 +70,13 @@ public:
    * @param p               The probability of being in the invariant category.
    * @param invariant       The value of the invariant category (typically 0, but other values may be specified).
    */
-  InvariantMixedDiscreteDistribution(DiscreteDistribution* dist, double p, double invariant = 0.);
+  InvariantMixedDiscreteDistribution(std::unique_ptr<DiscreteDistribution> dist, double p, double invariant = 0.);
 
-  virtual ~InvariantMixedDiscreteDistribution()
-  {
-    delete dist_;
-  }
+  virtual ~InvariantMixedDiscreteDistribution() {}
 
   InvariantMixedDiscreteDistribution(const InvariantMixedDiscreteDistribution& imdd) :
     AbstractDiscreteDistribution(imdd),
-    dist_(dynamic_cast<DiscreteDistribution*>(imdd.dist_->clone())),
+    dist_(imdd.dist_->clone()),
     invariant_(imdd.invariant_),
     p_(imdd.p_),
     nestedPrefix_(imdd.nestedPrefix_)
@@ -88,7 +85,7 @@ public:
   InvariantMixedDiscreteDistribution& operator=(const InvariantMixedDiscreteDistribution& imdd)
   {
     AbstractDiscreteDistribution::operator=(imdd);
-    dist_         = dynamic_cast<DiscreteDistribution*>(imdd.dist_->clone());
+    dist_.reset(imdd.dist_->clone());
     invariant_    = imdd.invariant_;
     p_            = imdd.p_;
     nestedPrefix_ = imdd.nestedPrefix_;
@@ -98,7 +95,7 @@ public:
   InvariantMixedDiscreteDistribution* clone() const { return new InvariantMixedDiscreteDistribution(*this); }
 
 public:
-  std::string getName() const {return "Invariant"; }
+  std::string getName() const { return "Invariant"; }
 
   void fireParameterChanged(const ParameterList& parameters);
 
@@ -119,7 +116,7 @@ public:
   /**
    * @return The nested, conditional, sub-distribution.
    */
-  const DiscreteDistribution* getVariableSubDistribution() const { return dist_; }
+  const DiscreteDistribution& variableSubDistribution() const { return *dist_; }
 
   double qProb(double x) const
   {

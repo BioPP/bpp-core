@@ -48,9 +48,9 @@ using namespace std;
 /******************************************************************************/
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
-  DiscreteDistribution* dist, double p, double invariant) :
+  unique_ptr<DiscreteDistribution> dist, double p, double invariant) :
   AbstractDiscreteDistribution(1, "Invariant."),
-  dist_(dist),
+  dist_(move(dist)),
   invariant_(invariant),
   p_(p),
   nestedPrefix_(dist->getNamespace())

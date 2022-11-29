@@ -82,18 +82,15 @@ public:
   /**
    * @brief Builds a new MixtureOfDiscreteDistributions object from a
    * vector of Discrete Distributions and a vector of probabilities.
-   * The Discrete Distributions are cloned in the constructor to
-   * become attributes.
    *
    * @param distributions The vector of pointers to Discrete
    * Distributions.
    * @param probas The vector of probabilities.
-   *
    */
 
-  MixtureOfDiscreteDistributions(const std::vector<DiscreteDistribution*>& distributions, const std::vector<double>& probas);
+  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistribution> >& distributions, const std::vector<double>& probas);
 
-  ~MixtureOfDiscreteDistributions();
+  virtual ~MixtureOfDiscreteDistributions();
 
   MixtureOfDiscreteDistributions(const MixtureOfDiscreteDistributions& mdd);
 
@@ -107,7 +104,6 @@ public:
   /**
    * @brief Returns the number of discrete distributions in the
    * mixture.
-   *
    */
   size_t getNumberOfDistributions() const {return vdd_.size(); }
 
@@ -116,9 +112,9 @@ public:
    *
    * @param n tne number of the distribution in the mixture;
    */
-  const DiscreteDistribution* getNDistribution(size_t n) const
+  const DiscreteDistribution& nDistribution(size_t n) const
   {
-    return vdd_[n];
+    return *vdd_[n];
   }
 
   /**

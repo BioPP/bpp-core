@@ -82,7 +82,7 @@ public:
    * @return A new DiscreteDistribution object according to options specified.
    * @throw Exception if an error occured.
    */
-  virtual DiscreteDistribution* readDiscreteDistribution(
+  virtual std::unique_ptr<DiscreteDistribution> readDiscreteDistribution(
     const std::string& distrDescription,
     bool parseArguments = true) = 0;
 
