@@ -197,7 +197,7 @@ class MetaOptimizer :
   public AbstractOptimizer
 {
 private:
-  std::shared_ptr<MetaOptimizerInfos> optDesc_;
+  std::unique_ptr<MetaOptimizerInfos> optDesc_;
   std::vector<ParameterList> optParameters_;
   std::vector<size_t> nbParameters_;
   unsigned int n_;
@@ -214,7 +214,7 @@ public:
    *                 The optimizer will own the instance of the MetaOptimizerInfos object.
    * @param n        The number of progressive steps to use in optimization).
    */
-  MetaOptimizer(std::shared_ptr<FunctionInterface> function, std::shared_ptr<MetaOptimizerInfos> desc, unsigned int n = 1);
+  MetaOptimizer(std::shared_ptr<FunctionInterface> function, std::unique_ptr<MetaOptimizerInfos> desc, unsigned int n = 1);
 
   virtual ~MetaOptimizer();
 
@@ -247,17 +247,7 @@ public:
    * @return The MetaOptimizerInfos object associated to this optimizer.
    */
   const MetaOptimizerInfos optimizers() const { return *optDesc_; }
-  
-  /**
-   * @return A shared pointer toward the MetaOptimizerInfos object associated to this optimizer.
-   */
-  std::shared_ptr<MetaOptimizerInfos> getOptimizers() { return optDesc_; }
-
-  /**
-   * @return A shared pointer toward the MetaOptimizerInfos object associated to this optimizer.
-   */
-  std::shared_ptr<const MetaOptimizerInfos> getOptimizers() const { return optDesc_; }
-  
+    
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_METAOPTIMIZER_H

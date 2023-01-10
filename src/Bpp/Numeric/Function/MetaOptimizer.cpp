@@ -56,11 +56,11 @@ string MetaOptimizerInfos::IT_TYPE_FULL = "full";
 /**************************************************************************/
 
 MetaOptimizer::MetaOptimizer(
-  std::shared_ptr<FunctionInterface> function,
-  std::shared_ptr<MetaOptimizerInfos> desc,
+  shared_ptr<FunctionInterface> function,
+  unique_ptr<MetaOptimizerInfos> desc,
   unsigned int n) :
   AbstractOptimizer(function),
-  optDesc_(desc), optParameters_(desc->getNumberOfOptimizers()),
+  optDesc_(move(desc)), optParameters_(desc->getNumberOfOptimizers()),
   nbParameters_(desc->getNumberOfOptimizers()), n_(n),
   precisionStep_(-1.), stepCount_(0), initialValue_(-1.)
 {
