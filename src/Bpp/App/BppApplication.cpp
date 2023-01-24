@@ -60,7 +60,7 @@ BppApplication::BppApplication(int argc, char* argv[], const std::string& name, 
   bool noint = ApplicationTools::getBooleanParameter("--noninteractive", params_, false, "", true, 3);
   ApplicationTools::interactive = !noint;
   std::mt19937::result_type seed = ApplicationTools::getParameter<std::mt19937::result_type>("--seed", params_, 5489u, "", true, 3);
-  if (seed >= 0)
+  if (seed != 5489u)
   {
     RandomTools::setSeed(seed);
     if (verbose_)
