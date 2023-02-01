@@ -60,8 +60,8 @@ MetaOptimizer::MetaOptimizer(
   unique_ptr<MetaOptimizerInfos> desc,
   unsigned int n) :
   AbstractOptimizer(function),
-  optDesc_(move(desc)), optParameters_(desc->getNumberOfOptimizers()),
-  nbParameters_(desc->getNumberOfOptimizers()), n_(n),
+  optDesc_(move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
+  nbParameters_(optDesc_->getNumberOfOptimizers()), n_(n),
   precisionStep_(-1.), stepCount_(0), initialValue_(-1.)
 {
   setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
