@@ -54,6 +54,7 @@
 
 namespace bpp
 {
+
 class Parameter;
 
 class ParameterEvent :
@@ -138,16 +139,15 @@ protected:
   double value_;            // Parameter value
   double precision_;  // Precision needed for Parameter value
   std::shared_ptr<Constraint> constraint_;
-  std::vector<ParameterListener*> listeners_;
-  std::vector<bool> listenerAttach_;
-
+  std::vector< std::shared_ptr<ParameterListener> > listeners_;
+  
 public:
   // Class constructors and destructors:
 
   /**
    * @brief Default contructor. Creates a parameter with no name, no constraint, and a value of 0.
    */
-  Parameter() : name_(""), value_(0), precision_(0), constraint_(0), listeners_(), listenerAttach_() {}
+  Parameter() : name_(""), value_(0), precision_(0), constraint_(0), listeners_() {}
 
   /**
    * @brief Build a new parameter.
@@ -246,7 +246,7 @@ public:
    *
    * @return True if this parameter has a contraint.
    */
-  virtual bool hasConstraint() const { return constraint_ != 0; }
+  virtual bool hasConstraint() const { return constraint_ != nullptr; }
 
   /**
    * @brief Remove the constraint associated to this parameter.
@@ -270,15 +270,10 @@ public:
    * @brief Add a new listener to this parameter.
    *
    * @param listener The listener to add.
-   * @param attachListener Tell if the parameter will own this listener.
-   * If so, deep copies will be made when cloning the parameter, and the listener will be destroyed upon
-   * destruction of the parameter or upon removal. Alternatively, only superficial copies will be made,
-   * and the listener will persist if the parameter is destroyed.
    */
-  virtual void addParameterListener(ParameterListener* listener, bool attachListener = true)
+  virtual void addParameterListener(std::shared_ptr<ParameterListener> listener)
   {
     listeners_.push_back(listener);
-    listenerAttach_.push_back(attachListener);
   }
 
   /**
@@ -299,25 +294,25 @@ public:
 protected:
   void fireParameterNameChanged(ParameterEvent& event)
   {
-    for (std::vector<ParameterListener*>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
+    for (auto listener : listeners_)
     {
-      (*it)->parameterNameChanged(event);
+      listener->parameterNameChanged(event);
     }
   }
 
   void fireParameterValueChanged(ParameterEvent& event)
   {
-    for (std::vector<ParameterListener*>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
+    for (auto listener : listeners_)
     {
-      (*it)->parameterValueChanged(event);
+      listener->parameterValueChanged(event);
     }
   }
 
   void fireParameterConstraintChanged(ParameterEvent& event)
   {
-    for (std::vector<ParameterListener*>::iterator it = listeners_.begin(); it != listeners_.end(); it++)
+    for (auto listener : listeners_)
     {
-      (*it)->parameterConstraintChanged(event);
+      listener->parameterConstraintChanged(event);
     }
   }
 

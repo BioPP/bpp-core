@@ -76,19 +76,28 @@ namespace bpp
  */
 
 class HmmLikelihood :
-  public virtual DerivableSecondOrder
+  public virtual SecondOrderDerivable
 {
 public:
   virtual HmmLikelihood* clone() const = 0;
 
-  virtual const HmmStateAlphabet& getHmmStateAlphabet() const = 0;
-  virtual HmmStateAlphabet& getHmmStateAlphabet() = 0;
+  virtual const HmmStateAlphabet& hmmStateAlphabet() const = 0;
+  virtual HmmStateAlphabet& hmmStateAlphabet() = 0;
 
-  virtual const HmmTransitionMatrix& getHmmTransitionMatrix() const = 0;
-  virtual HmmTransitionMatrix& getHmmTransitionMatrix() = 0;
+  virtual std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const = 0;
+  virtual std::shared_ptr<HmmStateAlphabet> getHmmStateAlphabet() = 0;
 
-  virtual const HmmEmissionProbabilities& getHmmEmissionProbabilities() const = 0;
-  virtual HmmEmissionProbabilities& getHmmEmissionProbabilities() = 0;
+  virtual const HmmTransitionMatrix& hmmTransitionMatrix() const = 0;
+  virtual HmmTransitionMatrix& hmmTransitionMatrix() = 0;
+
+  virtual std::shared_ptr<const HmmTransitionMatrix> getHmmTransitionMatrix() const = 0;
+  virtual std::shared_ptr<HmmTransitionMatrix> getHmmTransitionMatrix() = 0;
+
+  virtual const HmmEmissionProbabilities& hmmEmissionProbabilities() const = 0;
+  virtual HmmEmissionProbabilities& hmmEmissionProbabilities() = 0;
+
+  virtual std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const = 0;
+  virtual std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() = 0;
 
   virtual void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const = 0;
 
@@ -106,12 +115,12 @@ public:
    * @param site The site index to analyse.
    * @return The likelihood for site <i>site</i>.
    */
-
   virtual double getLikelihoodForASite(size_t site) const = 0;
 
   virtual double getDLogLikelihoodForASite(size_t site) const = 0;
 
   virtual double getD2LogLikelihoodForASite(size_t site) const = 0;
+
   /**
    * @brief Get the likelihood for each site.
    *
@@ -130,9 +139,8 @@ protected:
 };
 
 
-/*
+/**
  * @brief partial impmementation of Hmm Likelihoods.
- *
  */
 
 class AbstractHmmLikelihood :
@@ -168,15 +176,14 @@ public:
     return dLogLik_;
   }
 
-  /*
+  /**
    * @}
-   *
    */
 
-  /* @{
+  /**
+   * @{
    *
    * @brief From SecondOrder:
-   *
    */
   void enableSecondOrderDerivatives(bool yn) {}
 
@@ -194,9 +201,8 @@ public:
     throw (NotImplementedException("AbstractHmmLikelihood::getSecondOrderDerivative is not defined for 2 variables."));
   }
 
-  /*
+  /**
    * @}
-   *
    */
 };
 } // end of namespace bpp.

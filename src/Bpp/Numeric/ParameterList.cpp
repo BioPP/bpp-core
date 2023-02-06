@@ -54,7 +54,7 @@ ParameterList::ParameterList(const ParameterList& pl) :
   parameters_(pl.size())
 {
   // Now copy all parameters:
-  for (size_t i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); ++i)
   {
     parameters_[i] = shared_ptr<Parameter>(pl.parameters_[i]->clone());
   }
@@ -68,7 +68,7 @@ ParameterList& ParameterList::operator=(const ParameterList& pl)
   parameters_.resize(pl.size());
 
   // Now copy all parameters:
-  for (size_t i = 0; i < pl.size(); i++)
+  for (size_t i = 0; i < pl.size(); ++i)
   {
     parameters_[i] = shared_ptr<Parameter>(pl.parameters_[i]->clone());
   }
@@ -588,7 +588,7 @@ void ParameterList::deleteParameters(const std::vector<size_t>& indices)
 /******************************************************************************/
 size_t ParameterList::whichParameterHasName(const std::string& name) const
 {
-  for (size_t i = 0; i < size(); i++)
+  for (size_t i = 0; i < size(); ++i)
   {
     if (parameters_[i]->getName() == name)
       return i;
@@ -601,7 +601,7 @@ void ParameterList::printParameters(OutputStream& out) const
 {
   (out << "Name:\tValue:\tConstraint:").endLine();
   (out << "_________________________________________________").endLine();
-  for (unsigned int i = 0; i < size(); i++)
+  for (unsigned int i = 0; i < size(); ++i)
   {
     out << parameters_[i]->getName();
     out << "\t" << parameters_[i]->getValue();

@@ -47,13 +47,13 @@ using namespace bpp;
 
 /******************************************************************************/
 
-NewtonBacktrackOneDimension::NewtonBacktrackOneDimension(Function* function, double slope, double test) :
+NewtonBacktrackOneDimension::NewtonBacktrackOneDimension(std::shared_ptr<FunctionInterface> function, double slope, double test) :
   AbstractOptimizer(function),
   fold_(0), f_(0), a_(0), alam_(0), alamin_(0), alam2_(0), b_(0), disc_(0), f2_(0), rhs1_(0), rhs2_(0), slope_(slope), test_(test), tmplam_(0)
 
 {
-  setDefaultStopCondition_(new NBODStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<NBODStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   setMaximumNumberOfEvaluations(10000);
 }
 

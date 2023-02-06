@@ -65,12 +65,12 @@ namespace bpp
  * In the last case, first and second order derivative will be computed numerically only if no appropriate analytical derivative is available.
  */
 class AbstractNumericalDerivative :
-  public DerivableSecondOrder,
+  public virtual SecondOrderDerivable,
   public FunctionWrapper
 {
 protected:
-  DerivableFirstOrder* function1_;
-  DerivableSecondOrder* function2_;
+  std::shared_ptr<FirstOrderDerivable> function1_;
+  std::shared_ptr<SecondOrderDerivable> function2_;
   double h_;
   std::vector<std::string> variables_;
   mutable std::map<std::string, size_t> index_; // Store positions in array corresponding to variable names.
@@ -80,17 +80,17 @@ protected:
   bool computeD1_, computeD2_, computeCrossD2_;
 
 public:
-  AbstractNumericalDerivative(Function* function) :
+  AbstractNumericalDerivative(std::shared_ptr<FunctionInterface> function) :
     FunctionWrapper(function), function1_(0), function2_(0),
     h_(0.0001), variables_(), index_(), der1_(), der2_(), crossDer2_(),
     computeD1_(true), computeD2_(true), computeCrossD2_(false) {}
 
-  AbstractNumericalDerivative(DerivableFirstOrder* function) :
+  AbstractNumericalDerivative(std::shared_ptr<FirstOrderDerivable> function) :
     FunctionWrapper(function), function1_(function), function2_(0),
     h_(0.0001), variables_(), index_(), der1_(), der2_(), crossDer2_(),
     computeD1_(true), computeD2_(true), computeCrossD2_(false) {}
 
-  AbstractNumericalDerivative(DerivableSecondOrder* function) :
+  AbstractNumericalDerivative(std::shared_ptr<SecondOrderDerivable> function) :
     FunctionWrapper(function), function1_(function), function2_(function),
     h_(0.0001), variables_(), index_(), der1_(), der2_(), crossDer2_(),
     computeD1_(true), computeD2_(true), computeCrossD2_(false) {}

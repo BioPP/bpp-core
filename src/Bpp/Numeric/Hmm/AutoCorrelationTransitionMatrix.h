@@ -58,7 +58,6 @@ namespace bpp
  * denoted as \c "lambaN" with N the number of the state (1 is the
  * first).
  */
-
 class AutoCorrelationTransitionMatrix :
   public virtual AbstractHmmTransitionMatrix,
   public AbstractParametrizable
@@ -67,13 +66,13 @@ private:
   std::vector<double> vAutocorrel_;
 
 public:
-  AutoCorrelationTransitionMatrix(const HmmStateAlphabet* alph, const std::string& prefix = "");
+  AutoCorrelationTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const std::string& prefix = "");
 
   AutoCorrelationTransitionMatrix(const AutoCorrelationTransitionMatrix& hptm);
 
   AutoCorrelationTransitionMatrix& operator=(const AutoCorrelationTransitionMatrix& hptm);
 
-  AutoCorrelationTransitionMatrix* clone() const { return new AutoCorrelationTransitionMatrix(*this);}
+  AutoCorrelationTransitionMatrix* clone() const override { return new AutoCorrelationTransitionMatrix(*this);}
 
   /**
    * @brief Get the transition probability between two states.
@@ -82,7 +81,7 @@ public:
    * @param j final state.
    * @return the transition probability between the two states.
    */
-  double Pij(size_t i, size_t j) const
+  double Pij(size_t i, size_t j) const override
   {
     return (i == j) ? vAutocorrel_[i] : (1 - vAutocorrel_[i]) / static_cast<double>(getNumberOfStates() - 1);
   }
@@ -92,14 +91,12 @@ public:
    *
    * @return A n*n matrix will all transition probabilities (n being the number of hidden states).
    */
-
-  const Matrix<double>& getPij() const;
+  const Matrix<double>& getPij() const override;
 
   /**
    * @return The vector of equilibrium frequencies of the Markov chain described by the matrix.
    */
-
-  const std::vector<double>& getEquilibriumFrequencies() const;
+  const std::vector<double>& getEquilibriumFrequencies() const override;
 
 
   /*
@@ -107,7 +104,7 @@ public:
    *
    */
 
-  void fireParameterChanged(const ParameterList& parameters);
+  void fireParameterChanged(const ParameterList& parameters) override;
 };
 } // end of namespace bpp
 #endif // BPP_NUMERIC_HMM_AUTOCORRELATIONTRANSITIONMATRIX_H

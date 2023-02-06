@@ -104,17 +104,17 @@ public:
 
   double getValue() const
   {
-    return getValue_(std::integral_constant<bool, std::is_base_of<Function, F>::value>{});
+    return getValue_(std::integral_constant<bool, std::is_base_of<FunctionInterface, F>::value>{});
   }
 
   double getFirstOrderDerivative(const std::string& variable) const
   {
-    return getFirstOrderDerivative_(variable, std::integral_constant<bool, std::is_base_of<DerivableFirstOrder, F>::value>{});
+    return getFirstOrderDerivative_(variable, std::integral_constant<bool, std::is_base_of<FirstOrderDerivable, F>::value>{});
   }
 
   double getSecondOrderDerivative(const std::string& variable) const
   {
-    return getSecondOrderDerivative_(variable, std::integral_constant<bool, std::is_base_of<DerivableSecondOrder, F>::value>{});
+    return getSecondOrderDerivative_(variable, std::integral_constant<bool, std::is_base_of<SecondOrderDerivable, F>::value>{});
   }
 
   std::string getName() const

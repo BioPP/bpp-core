@@ -51,21 +51,21 @@
 namespace bpp
 {
 class DirectionFunction :
-  public Function,
+  public virtual FunctionInterface,
   public ParametrizableAdapter
 {
 private:
   mutable ParameterList params_, p_, xt_;
   std::vector<double> xi_;
-  Function* function_;
+  std::shared_ptr<FunctionInterface> function_;
   std::string constraintPolicy_;
-  OutputStream* messenger_;
+  std::shared_ptr<OutputStream> messenger_;
 
 public:
-  DirectionFunction(Function* function = 0) :
+  DirectionFunction(std::shared_ptr<FunctionInterface> function = nullptr) :
     params_(), p_(), xt_(), xi_(),
     function_(function), constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
-    messenger_(ApplicationTools::message.get()) {}
+    messenger_(ApplicationTools::message) {}
 
   DirectionFunction(const DirectionFunction& df) :
     ParametrizableAdapter(df), params_(df.params_), p_(df.p_), xt_(df.p_), xi_(df.xi_),
@@ -86,13 +86,13 @@ public:
 
   virtual ~DirectionFunction() {}
 
-  DirectionFunction* clone() const { return new DirectionFunction(*this); }
+  DirectionFunction* clone() const override { return new DirectionFunction(*this); }
 
 public:
   // Function interface implementation:
-  void setParameters(const ParameterList& parameters);
-  double getValue() const;
-  const ParameterList& getParameters() const;
+  void setParameters(const ParameterList& parameters) override;
+  double getValue() const override;
+  const ParameterList& getParameters() const override;
 
 public:
   // Specific methods:
@@ -100,17 +100,20 @@ public:
   void autoParameter();
   void ignoreConstraints();
   void setConstraintPolicy(const std::string& constraintPolicy) { constraintPolicy_ = constraintPolicy; }
+
   std::string getConstraintPolicy() const { return constraintPolicy_; }
-  void setMessageHandler(OutputStream* messenger) { messenger_ = messenger; }
-  Function* getFunction() const { return function_; }
+
+  void setMessageHandler(std::shared_ptr<OutputStream> messenger) { messenger_ = messenger; }
+  std::shared_ptr<FunctionInterface> getFunction() const { return function_; }
   /**
    * @return The set of parameters associated to the function, as specified by the init() method.
    */
   ParameterList getFunctionParameters() const { return p_; }
-  size_t getNumberOfParameters() const { return p_.size(); }
+  
+  size_t getNumberOfParameters() const override { return p_.size(); }
 
 protected:
-  ParameterList& getParameters_();
+  ParameterList& getParameters_() override;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_DIRECTIONFUNCTION_H

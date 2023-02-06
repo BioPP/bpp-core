@@ -176,7 +176,7 @@ public:
    * @return The value of the parameter for which the function is zero.
    * @throw Exception If something bad happened or if the initial interval do not contains a root.
    */
-  static double uniRoot(Function& f, const std::string& param, double a, double b, double tolerance);
+  static double uniRoot(FunctionInterface& f, const std::string& param, double a, double b, double tolerance);
 
   /**************************************************************************/
 
@@ -196,7 +196,7 @@ public:
    * @param parameters The set of parameters for which to compute the hessian matrix.
    * @return A matrix with size equal to the number of parameters.
    */
-  static RowMatrix<double>* computeHessianMatrix(DerivableSecondOrder& function, const ParameterList& parameters);
+  static RowMatrix<double>* computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters);
 
   /**************************************************************************/
 };

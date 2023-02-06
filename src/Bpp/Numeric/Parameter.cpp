@@ -39,6 +39,7 @@
 */
 
 #include <cmath>
+#include <algorithm>
 
 #include "Parameter.h"
 
@@ -57,7 +58,7 @@ ParameterEvent::ParameterEvent(Parameter* parameter) : parameter_(parameter) {}
 /** Constructors: *************************************************************/
 
 Parameter::Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint, double precision) :
-  name_(name), value_(0), precision_(0), constraint_(constraint), listeners_(), listenerAttach_()
+  name_(name), value_(0), precision_(0), constraint_(constraint), listeners_()
 {
   setValue(value);
   setPrecision(precision);
@@ -67,43 +68,23 @@ Parameter::Parameter(const Parameter& p) :
   name_(p.name_),
   value_(p.value_),
   precision_(p.precision_),
-  constraint_(p.constraint_ ? std::shared_ptr<Constraint>(p.constraint_->clone()) : 0),
-  listeners_(p.listeners_),
-  listenerAttach_(p.listenerAttach_)
-{
-  for (size_t i = 0; i < listeners_.size(); i++)
-  {
-    if (listenerAttach_[i])
-      listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
-  }
-}
+  constraint_(p.constraint_),
+  listeners_(p.listeners_)
+{}
 
 Parameter& Parameter::operator=(const Parameter& p)
 {
   name_           = p.name_;
   value_          = p.value_;
   precision_      = p.precision_;
-  constraint_     = p.constraint_ ? std::shared_ptr<Constraint>(p.constraint_->clone()) : 0;
+  constraint_     = p.constraint_;
   listeners_      = p.listeners_;
-  listenerAttach_ = p.listenerAttach_;
-  for (size_t i = 0; i < listeners_.size(); i++)
-  {
-    if (listenerAttach_[i])
-      listeners_[i] = dynamic_cast<ParameterListener*>(p.listeners_[i]->clone());
-  }
   return *this;
 }
 
 /** Destructor: ***************************************************************/
 
-Parameter::~Parameter()
-{
-  for (size_t i = 0; i < listeners_.size(); i++)
-  {
-    if (listenerAttach_[i])
-      delete listeners_[i];
-  }
-}
+Parameter::~Parameter() {}
 
 /** Value: ********************************************************************/
 
@@ -130,7 +111,7 @@ void Parameter::setPrecision(double precision)
 
 void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 {
-  if (constraint != 0 && !constraint->isCorrect(value_))
+  if (constraint != nullptr && !constraint->isCorrect(value_))
     throw ConstraintException("Parameter::setConstraint", this, value_);
 
   constraint_ = constraint;
@@ -140,7 +121,7 @@ void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 std::shared_ptr<Constraint> Parameter::removeConstraint()
 {
   auto c = constraint_;
-  constraint_ = 0;
+  constraint_ = nullptr;
   return c;
 }
 
@@ -148,25 +129,19 @@ std::shared_ptr<Constraint> Parameter::removeConstraint()
 
 void Parameter::removeParameterListener(const std::string& listenerId)
 {
-  for (unsigned int i = 0; i < listeners_.size(); i++)
-  {
-    if (listeners_[i]->getId() == listenerId)
-    {
-      if (listenerAttach_[i])
-        delete listeners_[i];
-      listeners_.erase(listeners_.begin() + i);
-      listenerAttach_.erase(listenerAttach_.begin() + i);
-    }
-  }
+  listeners_.erase(std::remove_if(listeners_.begin(), listeners_.end(),
+    [&listenerId](std::shared_ptr<ParameterListener>& pl) { 
+        return pl->getId() == listenerId; // put your condition here
+    }), listeners_.end());
 }
 
 /******************************************************************************/
 
 bool Parameter::hasParameterListener(const std::string& listenerId)
 {
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (auto& listener : listeners_)
   {
-    if (listeners_[i]->getId() == listenerId)
+    if (listener->getId() == listenerId)
       return true;
   }
   return false;

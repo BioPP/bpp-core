@@ -56,16 +56,16 @@ string MetaOptimizerInfos::IT_TYPE_FULL = "full";
 /**************************************************************************/
 
 MetaOptimizer::MetaOptimizer(
-  Function* function,
-  MetaOptimizerInfos* desc,
+  shared_ptr<FunctionInterface> function,
+  unique_ptr<MetaOptimizerInfos> desc,
   unsigned int n) :
   AbstractOptimizer(function),
-  optDesc_(desc), optParameters_(desc->getNumberOfOptimizers()),
-  nbParameters_(desc->getNumberOfOptimizers()), n_(n),
+  optDesc_(move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
+  nbParameters_(optDesc_->getNumberOfOptimizers()), n_(n),
   precisionStep_(-1.), stepCount_(0), initialValue_(-1.)
 {
-  setDefaultStopCondition_(new FunctionStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   precisionStep_ = log10(getStopCondition()->getTolerance()) / n_;
   setOptimizationProgressCharacter("");
 }
@@ -90,7 +90,7 @@ MetaOptimizer& MetaOptimizer::operator=(
   const MetaOptimizer& opt)
 {
   AbstractOptimizer::operator=(opt);
-  optDesc_       = dynamic_cast<MetaOptimizerInfos*>(opt.optDesc_->clone());
+  optDesc_.reset(dynamic_cast<MetaOptimizerInfos*>(opt.optDesc_->clone()));
   optParameters_ = opt.optParameters_;
   nbParameters_  = opt.nbParameters_;
   n_             = opt.n_;
@@ -102,21 +102,17 @@ MetaOptimizer& MetaOptimizer::operator=(
 
 /**************************************************************************/
 
-MetaOptimizer::~MetaOptimizer()
-{
-  // Delete all optimizers:
-  delete optDesc_;
-}
+MetaOptimizer::~MetaOptimizer() {}
 
 /**************************************************************************/
 
 void MetaOptimizer::doInit(const ParameterList& parameters)
 {
   optParameters_.resize(optDesc_->getNumberOfOptimizers());
-  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
+  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); ++i)
   {
     optParameters_[i].reset();
-    for (size_t j = 0; j < optDesc_->getParameterNames(i).size(); j++)
+    for (size_t j = 0; j < optDesc_->getParameterNames(i).size(); ++j)
     {
       string pname = optDesc_->getParameterNames(i)[j];
       if (parameters.hasParameter(pname))
@@ -128,16 +124,16 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
   }
 
   // Initialize optimizers:
-  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
+  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); ++i)
   {
     if (nbParameters_[i] > 0)
     {
-      Optimizer* opt = optDesc_->getOptimizer(i);
-      dynamic_cast<AbstractOptimizer*>(opt)->updateParameters(updateParameters());
-      opt->setProfiler(getProfiler());
-      opt->setMessageHandler(getMessageHandler());
-      opt->setConstraintPolicy(getConstraintPolicy());
-      opt->setVerbose(getVerbose() > 0 ? getVerbose() - 1 : 0);
+      OptimizerInterface& opt = optDesc_->optimizer(i);
+      opt.updateParameters(updateParameters());
+      opt.setProfiler(getProfiler());
+      opt.setMessageHandler(getMessageHandler());
+      opt.setConstraintPolicy(getConstraintPolicy());
+      opt.setVerbose(getVerbose() > 0 ? getVerbose() - 1 : 0);
     }
   }
 
@@ -165,7 +161,7 @@ double MetaOptimizer::doStep()
     tol = initialValue_ * pow(10, stepCount_ * precisionStep_);
   }
 
-  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); i++)
+  for (unsigned int i = 0; i < optDesc_->getNumberOfOptimizers(); ++i)
   {
     if (nbParameters_[i] > 0)
     {
@@ -175,28 +171,28 @@ double MetaOptimizer::doStep()
         ApplicationTools::message->flush();
       }
       if (optDesc_->requiresFirstOrderDerivatives(i))
-        dynamic_cast<DerivableFirstOrder*>(getFunction())->enableFirstOrderDerivatives(true);
+        dynamic_cast<FirstOrderDerivable&>(function()).enableFirstOrderDerivatives(true);
       if (optDesc_->requiresSecondOrderDerivatives(i))
-        dynamic_cast<DerivableSecondOrder*>(getFunction())->enableSecondOrderDerivatives(true);
+        dynamic_cast<SecondOrderDerivable&>(function()).enableSecondOrderDerivatives(true);
 
       optParameters_[i].matchParametersValues(getParameters());
-      Optimizer* opt = optDesc_->getOptimizer(i);
-      opt->getStopCondition()->setTolerance(tol);
-      opt->init(optParameters_[i]);
+      OptimizerInterface& opt = optDesc_->optimizer(i);
+      opt.getStopCondition()->setTolerance(tol);
+      opt.init(optParameters_[i]);
       if (optDesc_->getIterationType(i) == MetaOptimizerInfos::IT_TYPE_STEP)
-        opt->step();
+        opt.step();
       else if (optDesc_->getIterationType(i) == MetaOptimizerInfos::IT_TYPE_FULL)
-        opt->optimize();
+        opt.optimize();
       else
         throw Exception("MetaOptimizer::step. Unknown iteration type specified.");
-      nbEval_ += opt->getNumberOfEvaluations();
+      nbEval_ += opt.getNumberOfEvaluations();
       if (optDesc_->requiresFirstOrderDerivatives(i))
-        dynamic_cast<DerivableFirstOrder*>(getFunction())->enableFirstOrderDerivatives(false);
+        dynamic_cast<FirstOrderDerivable&>(function()).enableFirstOrderDerivatives(false);
       if (optDesc_->requiresSecondOrderDerivatives(i))
-        dynamic_cast<DerivableSecondOrder*>(getFunction())->enableSecondOrderDerivatives(false);
+        dynamic_cast<SecondOrderDerivable&>(function()).enableSecondOrderDerivatives(false);
       if (getVerbose() > 1)
         cout << endl;
-      getParameters_().matchParametersValues(opt->getParameters());
+      getParameters_().matchParametersValues(opt.getParameters());
     }
     tolTest += nbParameters_[i] > 0 ? 1 : 0;
   }

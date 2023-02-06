@@ -60,7 +60,7 @@ class AutoParameter :
   public Parameter
 {
 private:
-  OutputStream* messageHandler_;
+  std::shared_ptr<OutputStream> messageHandler_;
 
 public:
   /**
@@ -128,7 +128,7 @@ public:
    *
    * @param mh The message handler to use.
    */
-  virtual void setMessageHandler(OutputStream* mh) { messageHandler_ = mh; }
+  virtual void setMessageHandler(std::shared_ptr<OutputStream> mh) { messageHandler_ = mh; }
 
 public:
   static std::string CONSTRAINTS_AUTO;

@@ -62,6 +62,7 @@ protected:
   bool verbose_;
   std::map<std::string, std::string> unparsedArguments_;
 
+
 public:
   BppODiscreteDistributionFormat(bool verbose = true) : verbose_(verbose), unparsedArguments_() {}
   virtual ~BppODiscreteDistributionFormat() {}
@@ -71,7 +72,7 @@ public:
 
   const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-  DiscreteDistribution* readDiscreteDistribution(const std::string& distDescription, bool parseArguments = true);
+  std::unique_ptr<DiscreteDistribution> readDiscreteDistribution(const std::string& distDescription, bool parseArguments = true);
 
   const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 

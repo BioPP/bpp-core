@@ -68,6 +68,8 @@ public:
   HmmStateAlphabet() {}
   virtual ~HmmStateAlphabet() {}
 
+  virtual HmmStateAlphabet* clone() const override = 0;
+  
 public:
   /**
    * @param stateIndex The index of a hidden state.
@@ -87,7 +89,7 @@ public:
    * @param stateAlphabet The alphabet to check.
    * @return true if the matrix is compatible with the given alphabet.
    */
-  virtual bool worksWith(const HmmStateAlphabet* stateAlphabet) const = 0;
+  virtual bool worksWith(const HmmStateAlphabet& stateAlphabet) const = 0;
 };
 
 class StateListener

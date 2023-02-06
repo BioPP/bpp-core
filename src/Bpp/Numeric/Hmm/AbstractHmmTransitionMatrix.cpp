@@ -47,11 +47,11 @@
 using namespace bpp;
 using namespace std;
 
-AbstractHmmTransitionMatrix::AbstractHmmTransitionMatrix(const HmmStateAlphabet* alph, const string& prefix) :
+AbstractHmmTransitionMatrix::AbstractHmmTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const string& prefix) :
   alph_(alph),
-  pij_((size_t)alph->getNumberOfStates(), (size_t)alph->getNumberOfStates()),
-  tmpmat_((size_t)alph->getNumberOfStates(), (size_t)alph->getNumberOfStates()),
-  eqFreq_((size_t)alph->getNumberOfStates()),
+  pij_(static_cast<size_t>(alph->getNumberOfStates()), static_cast<size_t>(alph->getNumberOfStates())),
+  tmpmat_(static_cast<size_t>(alph->getNumberOfStates()), static_cast<size_t>(alph->getNumberOfStates())),
+  eqFreq_(static_cast<size_t>(alph->getNumberOfStates())),
   upToDate_(false)
 {}
 
@@ -74,9 +74,9 @@ AbstractHmmTransitionMatrix& AbstractHmmTransitionMatrix::operator=(const Abstra
   return *this;
 }
 
-void AbstractHmmTransitionMatrix::setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet)
+void AbstractHmmTransitionMatrix::setHmmStateAlphabet(std::shared_ptr<const HmmStateAlphabet> stateAlphabet)
 {
-  if (stateAlphabet == NULL)
+  if (stateAlphabet == nullptr)
     throw HmmUnvalidAlphabetException("Null alphabet in AbstractHmmTransitionMatrix::setHmmStateAlphabet");
 
   alph_ = stateAlphabet;
@@ -88,7 +88,7 @@ vector<size_t> AbstractHmmTransitionMatrix::sample(size_t size) const
   if (size == 0)
     return vres;
 
-  size_t nbStates = getHmmStateAlphabet()->getNumberOfStates();
+  size_t nbStates = hmmStateAlphabet().getNumberOfStates();
 
   // update pij_
   getPij();

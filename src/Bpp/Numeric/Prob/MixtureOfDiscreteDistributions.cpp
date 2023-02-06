@@ -47,8 +47,9 @@
 using namespace bpp;
 using namespace std;
 
-MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const vector<DiscreteDistribution*>& distributions,
-                                                               const vector<double>& probas ) :
+MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(
+    const vector< unique_ptr<DiscreteDistribution> >& distributions,
+    const vector<double>& probas ) :
   AbstractDiscreteDistribution(1, "Mixture."),
   vdd_(),
   probas_(),

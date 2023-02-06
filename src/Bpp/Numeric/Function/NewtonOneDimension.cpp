@@ -47,13 +47,13 @@ using namespace bpp;
 
 /******************************************************************************/
 
-NewtonOneDimension::NewtonOneDimension(DerivableSecondOrder* function) :
+NewtonOneDimension::NewtonOneDimension(std::shared_ptr<SecondOrderDerivable> function) :
   AbstractOptimizer(function),
   _param(),
   _maxCorrection(10)
 {
-  setDefaultStopCondition_(new FunctionStopCondition(this));
-  setStopCondition(*getDefaultStopCondition());
+  setDefaultStopCondition_(make_shared<FunctionStopCondition>(this));
+  setStopCondition(getDefaultStopCondition());
   nbEvalMax_ = 10000;
 }
 
@@ -77,8 +77,8 @@ double NewtonOneDimension::doStep()
   ParameterList newPoint = getParameters();
   ParameterList bckPoint = getFunction()->getParameters();
   double newValue;
-  double firstOrderDerivative = getFunction()->getFirstOrderDerivative(_param);
-  double secondOrderDerivative = getFunction()->getSecondOrderDerivative(_param);
+  double firstOrderDerivative = firstOrderDerivableFunction().getFirstOrderDerivative(_param);
+  double secondOrderDerivative = secondOrderDerivableFunction().getSecondOrderDerivative(_param);
   if (secondOrderDerivative <= 0)
   {
     printMessage("!!! Second order derivative is negative (" + TextTools::toString(getParameters()[0].getValue()) + "). No move performed.");

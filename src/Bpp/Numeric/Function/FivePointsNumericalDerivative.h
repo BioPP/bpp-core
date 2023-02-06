@@ -91,21 +91,21 @@ private:
   double f1_, f2_, f3_, f4_, f5_;
 
 public:
-  FivePointsNumericalDerivative(Function* function) :
+  FivePointsNumericalDerivative(std::shared_ptr<FunctionInterface> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),
     f3_(),
     f4_(),
     f5_() {}
-  FivePointsNumericalDerivative(DerivableFirstOrder* function) :
+  FivePointsNumericalDerivative(std::shared_ptr<FirstOrderDerivable> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),
     f3_(),
     f4_(),
     f5_() {}
-  FivePointsNumericalDerivative(DerivableSecondOrder* function) :
+  FivePointsNumericalDerivative(std::shared_ptr<SecondOrderDerivable> function) :
     AbstractNumericalDerivative(function),
     f1_(),
     f2_(),

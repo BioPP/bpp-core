@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for phylogenetic data analysis.
@@ -94,7 +94,7 @@ void DirectionFunction::init(const ParameterList& p, const vector<double>& xi)
 
 void DirectionFunction::autoParameter()
 {
-  for (unsigned int i = 0; i < p_.size(); i++)
+  for (unsigned int i = 0; i < p_.size(); ++i)
   {
     AutoParameter ap(p_[i]);
     ap.setMessageHandler(messenger_);

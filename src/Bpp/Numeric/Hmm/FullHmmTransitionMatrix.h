@@ -70,7 +70,7 @@ private:
   std::vector<Simplex> vSimplex_;
 
 public:
-  FullHmmTransitionMatrix(const HmmStateAlphabet* alph, const std::string& prefix = "");
+  FullHmmTransitionMatrix(std::shared_ptr<const HmmStateAlphabet> alph, const std::string& prefix = "");
 
   FullHmmTransitionMatrix(const FullHmmTransitionMatrix& hptm);
 
@@ -80,9 +80,7 @@ public:
 
   /**
    * @brief Set the matrix of the transition probabilities.
-   *
    */
-
   void setTransitionProbabilities(const Matrix<double>& mat);
 
   /**
@@ -108,15 +106,12 @@ public:
   /**
    * @return The vector of equilibrium frequencies of the Markov chain described by the matrix.
    */
-
   const std::vector<double>& getEquilibriumFrequencies() const;
 
 
-  /*
+  /**
    * @brief From AbstractParametrizable interface
-   *
    */
-
   void fireParameterChanged(const ParameterList& parameters);
 };
 } // end of namespace bpp

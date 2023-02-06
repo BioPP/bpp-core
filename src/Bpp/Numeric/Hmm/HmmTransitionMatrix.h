@@ -61,18 +61,24 @@ class HmmTransitionMatrix :
   public virtual Parametrizable
 {
 public:
+  virtual HmmTransitionMatrix* clone() const override = 0;
+
   /**
    * @return The hidden alphabet associated to this model.
    */
+  virtual const HmmStateAlphabet& hmmStateAlphabet() const = 0;
 
-  virtual const HmmStateAlphabet* getHmmStateAlphabet() const = 0;
+  /**
+   * @return A shared pointer toward the hidden alphabet associated to this model.
+   */
+  virtual std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const = 0;
 
   /**
    * @brief Set the new hidden state alphabet.
    * @param stateAlphabet The new state alphabet.
    * @throw UnvalidStateAlphabetException if the new alphabet is uncorrect (for instance is NULL pointer).
    */
-  virtual void setHmmStateAlphabet(const HmmStateAlphabet* stateAlphabet) = 0;
+  virtual void setHmmStateAlphabet(std::shared_ptr<const HmmStateAlphabet> stateAlphabet) = 0;
 
   /**
    * @return The number of states in the model.

@@ -88,15 +88,13 @@ public:
   friend class NBODStopCondition;
 
 public:
-  /*
-   *@brief Constructor
-     @param function  a pointer to the function
-     @param slope the slope of the backtrack
-     @param test the inverse factor on the stop tolerance
-   *
+  /**
+   * @brief Constructor
+   * @param function  a pointer to the function
+   * @param slope the slope of the backtrack
+   * @param test the inverse factor on the stop tolerance
    */
-
-  NewtonBacktrackOneDimension(Function* function, double slope, double test);
+  NewtonBacktrackOneDimension(std::shared_ptr<FunctionInterface> function, double slope, double test);
   virtual ~NewtonBacktrackOneDimension() {}
 
   NewtonBacktrackOneDimension* clone() const { return new NewtonBacktrackOneDimension(*this); }
@@ -109,11 +107,34 @@ public:
 
   double doStep();
 
-protected:
-  DerivableFirstOrder* getFunction_()
+  const FirstOrderDerivable& firstOrderDerivableFunction() const
   {
-    return dynamic_cast<DerivableFirstOrder*>(AbstractOptimizer::getFunction_());
+    if (function_) { 
+      return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("NewtonBacktrackOneDimension::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
   }
+
+  FirstOrderDerivable& firstOrderDerivableFunction()
+  {
+    if (function_) { 
+      return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
+    } else {
+      throw NullPointerException("NewtonBacktrackOneDimension::firstOrderDerivableFunction() : no function associated to this optimizer.");
+    } 
+  }
+  
+  std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
+  {
+    return dynamic_pointer_cast<const FirstOrderDerivable>(function_);
+  }
+
+  std::shared_ptr<FirstOrderDerivable> getFirstOrderDerivableFunction()
+  {
+    return dynamic_pointer_cast<FirstOrderDerivable>(function_);
+  }
+
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_NEWTONBACKTRACKONEDIMENSION_H

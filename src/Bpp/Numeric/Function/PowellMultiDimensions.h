@@ -86,10 +86,10 @@ protected:
 
   unsigned int ncom_;
   ParameterList pcom_, xicom_;
-  DirectionFunction f1dim_;
+  std::shared_ptr<DirectionFunction> f1dim_;
 
 public:
-  PowellMultiDimensions(Function* function);
+  PowellMultiDimensions(std::shared_ptr<FunctionInterface> function);
   virtual ~PowellMultiDimensions() {}
 
   PowellMultiDimensions* clone() const { return new PowellMultiDimensions(*this); }

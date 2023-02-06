@@ -62,11 +62,11 @@ private:
   NewtonOneDimension optimizer_; // One dimensional optimizer.
 
 public:
-  SimpleNewtonMultiDimensions(DerivableSecondOrder* function);
+  SimpleNewtonMultiDimensions(std::shared_ptr<SecondOrderDerivable> function);
 
   virtual ~SimpleNewtonMultiDimensions() {}
 
-  SimpleNewtonMultiDimensions* clone() const { return new SimpleNewtonMultiDimensions(*this); }
+  SimpleNewtonMultiDimensions* clone() const override { return new SimpleNewtonMultiDimensions(*this); }
 
 public:
   /**
@@ -74,21 +74,21 @@ public:
    *
    * @{
    */
-  void setFunction(Function* function);
+  void setFunction(std::shared_ptr<FunctionInterface> function) override;
   /** @} */
 
-  void doInit(const ParameterList& params);
+  void doInit(const ParameterList& params) override;
 
-  double doStep();
+  double doStep() override;
 
   /**
    * @return The optimizer used to optimize each parameter.
    */
-  Optimizer& getOneDimensionOptimizer() { return optimizer_; }
+  OptimizerInterface& oneDimensionOptimizer() { return optimizer_; }
   /**
    * @return The optimizer used to optimize each parameter.
    */
-  const Optimizer& getOneDimensionOptimizer() const { return optimizer_; }
+  const OptimizerInterface& oneDimensionOptimizer() const { return optimizer_; }
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_SIMPLENEWTONMULTIDIMENSIONS_H

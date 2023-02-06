@@ -55,11 +55,11 @@ namespace bpp
  * currently, only constraint of the type ]a, b[ where a and b can be +/- inf.
  */
 class ReparametrizationFunctionWrapper :
-  public virtual Function,
+  public virtual FunctionInterface,
   public AbstractParametrizable
 {
-private:
-  Function* function_;
+protected:
+  std::shared_ptr<FunctionInterface> function_;
   ParameterList functionParameters_;
 
 public:
@@ -69,7 +69,7 @@ public:
    * @param function The function to reparametrize.
    * @param verbose Print some information.
    */
-  ReparametrizationFunctionWrapper(Function* function, bool verbose = true) :
+  ReparametrizationFunctionWrapper(std::shared_ptr<FunctionInterface> function, bool verbose = true) :
     AbstractParametrizable(function->getNamespace()),
     function_(function),
     functionParameters_(function->getParameters())
@@ -86,7 +86,7 @@ public:
    * (in the given list or in the original function) will be ignored.
    * @param verbose Print some information.
    */
-  ReparametrizationFunctionWrapper(Function* function, const ParameterList& parameters, bool verbose = true) :
+  ReparametrizationFunctionWrapper(std::shared_ptr<FunctionInterface> function, const ParameterList& parameters, bool verbose = true) :
     AbstractParametrizable(function->getNamespace()),
     function_(function),
     functionParameters_(function->getParameters().getCommonParametersWith(parameters))
@@ -115,9 +115,13 @@ private:
   void init_(bool verbose);
 
 public:
-  virtual const Function& getFunction() const { return *function_; }
+  virtual const FunctionInterface& function() const { return *function_; }
 
-  virtual Function& getFunction() { return *function_; }
+  virtual FunctionInterface& function() { return *function_; }
+
+  virtual std::shared_ptr<const FunctionInterface> getFunction() const { return function_; }
+
+  virtual std::shared_ptr<FunctionInterface> getFunction() { return function_; }
 
   void setParameters(const ParameterList& parameters)
   {
@@ -143,7 +147,7 @@ public:
  * currently, only constraint of the type ]a, b[ where a and b can be +/- inf.
  */
 class ReparametrizationDerivableFirstOrderWrapper :
-  public virtual DerivableFirstOrder,
+  public virtual FirstOrderDerivable,
   public ReparametrizationFunctionWrapper
 {
 public:
@@ -153,7 +157,7 @@ public:
    * @param function The function to reparametrize.
    * @param verbose Print some information.
    */
-  ReparametrizationDerivableFirstOrderWrapper(DerivableFirstOrder* function, bool verbose = true) :
+  ReparametrizationDerivableFirstOrderWrapper(std::shared_ptr<FirstOrderDerivable> function, bool verbose = true) :
     ReparametrizationFunctionWrapper(function, verbose)
   {}
 
@@ -166,7 +170,7 @@ public:
    * (in the given list or in the original function) will be ignored.
    * @param verbose Print some information.
    */
-  ReparametrizationDerivableFirstOrderWrapper(DerivableFirstOrder* function, const ParameterList& parameters, bool verbose = true) :
+  ReparametrizationDerivableFirstOrderWrapper(std::shared_ptr<FirstOrderDerivable> function, const ParameterList& parameters, bool verbose = true) :
     ReparametrizationFunctionWrapper(function, parameters, verbose)
   {}
 
@@ -178,13 +182,13 @@ private:
   void init_(bool verbose);
 
 public:
-  void enableFirstOrderDerivatives(bool yn) { dynamic_cast<DerivableFirstOrder&>(getFunction()).enableFirstOrderDerivatives(yn); }
+  void enableFirstOrderDerivatives(bool yn) { std::dynamic_pointer_cast<FirstOrderDerivable>(function_)->enableFirstOrderDerivatives(yn); }
 
-  bool enableFirstOrderDerivatives() const { return dynamic_cast<const DerivableFirstOrder&>(getFunction()).enableFirstOrderDerivatives(); }
+  bool enableFirstOrderDerivatives() const { return std::dynamic_pointer_cast<const FirstOrderDerivable>(function_)->enableFirstOrderDerivatives(); }
 
   double getFirstOrderDerivative(const std::string& variable) const
   {
-    return dynamic_cast<const DerivableFirstOrder&>(getFunction()).getFirstOrderDerivative(variable)
+    return std::dynamic_pointer_cast<const FirstOrderDerivable>(function_)->getFirstOrderDerivative(variable)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative();
   }
 };
@@ -197,7 +201,7 @@ public:
  * currently, only constraint of the type ]a, b[ where a and b can be +/- inf.
  */
 class ReparametrizationDerivableSecondOrderWrapper :
-  public virtual DerivableSecondOrder,
+  public virtual SecondOrderDerivable,
   public ReparametrizationDerivableFirstOrderWrapper
 {
 public:
@@ -207,7 +211,7 @@ public:
    * @param function The function to reparametrize.
    * @param verbose Print some information.
    */
-  ReparametrizationDerivableSecondOrderWrapper(DerivableSecondOrder* function, bool verbose = true) :
+  ReparametrizationDerivableSecondOrderWrapper(std::shared_ptr<SecondOrderDerivable> function, bool verbose = true) :
     ReparametrizationDerivableFirstOrderWrapper(function, verbose)
   {}
 
@@ -220,7 +224,7 @@ public:
    * (in the given list or in the original function) will be ignored.
    * @param verbose Print some information.
    */
-  ReparametrizationDerivableSecondOrderWrapper(DerivableSecondOrder* function, const ParameterList& parameters, bool verbose = true) :
+  ReparametrizationDerivableSecondOrderWrapper(std::shared_ptr<SecondOrderDerivable> function, const ParameterList& parameters, bool verbose = true) :
     ReparametrizationDerivableFirstOrderWrapper(function, parameters, verbose)
   {}
 
@@ -232,21 +236,21 @@ private:
   void init_(bool verbose);
 
 public:
-  void enableSecondOrderDerivatives(bool yn) { dynamic_cast<DerivableSecondOrder&>(getFunction()).enableSecondOrderDerivatives(yn); }
+  void enableSecondOrderDerivatives(bool yn) { std::dynamic_pointer_cast<SecondOrderDerivable>(function_)->enableSecondOrderDerivatives(yn); }
 
-  bool enableSecondOrderDerivatives() const { return dynamic_cast<const DerivableSecondOrder&>(getFunction()).enableSecondOrderDerivatives(); }
+  bool enableSecondOrderDerivatives() const { return std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->enableSecondOrderDerivatives(); }
 
   double getSecondOrderDerivative(const std::string& variable) const
   {
-    return dynamic_cast<const DerivableSecondOrder&>(getFunction()).getSecondOrderDerivative(variable)
+    return std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable)
            * std::pow(dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative(), 2)
-           + dynamic_cast<const DerivableSecondOrder&>(getFunction()).getFirstOrderDerivative(variable)
+           + std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getFirstOrderDerivative(variable)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getSecondOrderDerivative();
   }
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
   {
-    return dynamic_cast<const DerivableSecondOrder&>(getFunction()).getSecondOrderDerivative(variable1, variable2)
+    return std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable1, variable2)
            * dynamic_cast<const TransformedParameter&>(getParameter(variable1)).getFirstOrderDerivative()
            * dynamic_cast<const TransformedParameter&>(getParameter(variable2)).getFirstOrderDerivative();
   }

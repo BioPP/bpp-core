@@ -73,7 +73,7 @@ double AbstractHmmLikelihood::getFirstOrderDerivative(const std::string& variabl
   {
     dVariable_ = variable;
 
-    getHmmEmissionProbabilities().computeDEmissionProbabilities(dVariable_);
+    hmmEmissionProbabilities().computeDEmissionProbabilities(dVariable_);
     computeDLikelihood_();
   }
   return -dLogLik_;
@@ -85,7 +85,7 @@ double AbstractHmmLikelihood::getSecondOrderDerivative(const std::string& variab
   {
     d2Variable_ = variable;
 
-    getHmmEmissionProbabilities().computeD2EmissionProbabilities(d2Variable_);
+    hmmEmissionProbabilities().computeD2EmissionProbabilities(d2Variable_);
     computeD2Likelihood_();
   }
   return -d2LogLik_;

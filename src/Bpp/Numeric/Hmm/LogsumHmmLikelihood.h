@@ -72,17 +72,9 @@ protected:
   /**
    * @brief The alphabet describing the hidden states.
    */
-
-  HmmStateAlphabet* hiddenAlphabet_;
-  HmmTransitionMatrix* transitionMatrix_;
-  HmmEmissionProbabilities* emissionProbabilities_;
-
-  /**
-   * @brief Owns previous objects
-   *
-   */
-
-  bool ownsPointers_;
+  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet_;
+  std::shared_ptr<HmmTransitionMatrix> transitionMatrix_;
+  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities_;
 
   /**
    * @brief The likelihood array.
@@ -104,7 +96,6 @@ protected:
    * where the x are the observed states, and y the hidden states.
    *
    */
-
   mutable std::vector< std::vector<double> > dLogLikelihood_;
   mutable std::vector<double> partialDLogLikelihoods_;
 
@@ -117,7 +108,6 @@ protected:
    * backLogLikelihood_[i][j] corresponds to log(Pr(x_i+1...x_n | yi=j)),
    * where the x are the observed states, and y the hidden states.
    */
-
   mutable std::vector<std::vector<double> > backLogLikelihood_;
   mutable bool backLogLikelihoodUpToDate_;
 
@@ -132,18 +122,11 @@ public:
    * @warning the HmmTransitionMatrix and HmmEmissionProbabilities
    * object passed as argument must be non-null and point toward the
    * same HmmStateAlphabet instance.
-   *
-   * @warning If ownsPointers_, The three object will be copied if
-   * needed, and deleted when the hmm likelihood objet is deleted.
-   * You should secure a copy before if you don't want them to be
-   * destroyed with this object.
    */
-
   LogsumHmmLikelihood(
-    HmmStateAlphabet* hiddenAlphabet,
-    HmmTransitionMatrix* transitionMatrix,
-    HmmEmissionProbabilities* emissionProbabilities,
-    bool ownsPointers_ = true,
+    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
     const std::string& prefix = "");
 
   LogsumHmmLikelihood(const LogsumHmmLikelihood& lik) :
@@ -152,7 +135,6 @@ public:
     hiddenAlphabet_(),
     transitionMatrix_(),
     emissionProbabilities_(),
-    ownsPointers_(lik.ownsPointers_),
     logLikelihood_(lik.logLikelihood_),
     partialLogLikelihoods_(lik.partialLogLikelihoods_),
     logLik_(lik.logLik_),
@@ -166,18 +148,9 @@ public:
     nbStates_(lik.nbStates_),
     nbSites_(lik.nbSites_)
   {
-    if (ownsPointers_)
-    {
-      hiddenAlphabet_ = dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone());
-      transitionMatrix_ = dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone());
-      emissionProbabilities_ = dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone());
-    }
-    else
-    {
-      hiddenAlphabet_ = lik.hiddenAlphabet_;
-      transitionMatrix_ = lik.transitionMatrix_;
-      emissionProbabilities_ = lik.emissionProbabilities_;
-    }
+    hiddenAlphabet_ = std::shared_ptr<HmmStateAlphabet>(lik.hiddenAlphabet_->clone());
+    transitionMatrix_ = std::shared_ptr<HmmTransitionMatrix>(lik.transitionMatrix_->clone());
+    emissionProbabilities_ = std::shared_ptr<HmmEmissionProbabilities>(lik.emissionProbabilities_->clone());
 
     // Now adjust pointers:
     transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
@@ -189,33 +162,22 @@ public:
     AbstractHmmLikelihood::operator=(lik);
     AbstractParametrizable::operator=(lik);
 
-    ownsPointers_ = lik.ownsPointers_;
+    hiddenAlphabet_            = std::shared_ptr<HmmStateAlphabet>(lik.hiddenAlphabet_->clone());
+    transitionMatrix_          = std::shared_ptr<HmmTransitionMatrix>(lik.transitionMatrix_->clone());
+    emissionProbabilities_     = std::shared_ptr<HmmEmissionProbabilities>(lik.emissionProbabilities_->clone());
 
-    if (ownsPointers_)
-    {
-      hiddenAlphabet_        = dynamic_cast<HmmStateAlphabet*>(lik.hiddenAlphabet_->clone());
-      transitionMatrix_      = dynamic_cast<HmmTransitionMatrix*>(lik.transitionMatrix_->clone());
-      emissionProbabilities_ = dynamic_cast<HmmEmissionProbabilities*>(lik.emissionProbabilities_->clone());
-    }
-    else
-    {
-      hiddenAlphabet_ = lik.hiddenAlphabet_;
-      transitionMatrix_ = lik.transitionMatrix_;
-      emissionProbabilities_ = lik.emissionProbabilities_;
-    }
-
-    logLikelihood_         = lik.logLikelihood_;
-    partialLogLikelihoods_ = lik.partialLogLikelihoods_;
-    dLogLikelihood_        = lik.dLogLikelihood_;
-    partialDLogLikelihoods_ = lik.partialDLogLikelihoods_;
-    d2LogLikelihood_       = lik.d2LogLikelihood_;
-    partialD2LogLikelihoods_  = lik.partialD2LogLikelihoods_;
-    backLogLikelihood_     = lik.backLogLikelihood_;
+    logLikelihood_             = lik.logLikelihood_;
+    partialLogLikelihoods_     = lik.partialLogLikelihoods_;
+    dLogLikelihood_            = lik.dLogLikelihood_;
+    partialDLogLikelihoods_    = lik.partialDLogLikelihoods_;
+    d2LogLikelihood_           = lik.d2LogLikelihood_;
+    partialD2LogLikelihoods_   = lik.partialD2LogLikelihoods_;
+    backLogLikelihood_         = lik.backLogLikelihood_;
     backLogLikelihoodUpToDate_ = lik.backLogLikelihoodUpToDate_;
-    logLik_                = lik.logLik_;
-    breakPoints_           = lik.breakPoints_;
-    nbStates_              = lik.nbStates_;
-    nbSites_               = lik.nbSites_;
+    logLik_                    = lik.logLik_;
+    breakPoints_               = lik.breakPoints_;
+    nbStates_                  = lik.nbStates_;
+    nbSites_                   = lik.nbSites_;
 
     // Now adjust pointers:
     transitionMatrix_->setHmmStateAlphabet(hiddenAlphabet_);
@@ -223,62 +185,63 @@ public:
     return *this;
   }
 
-  virtual ~LogsumHmmLikelihood()
-  {
-    if (ownsPointers_)
-    {
-      delete hiddenAlphabet_;
-      delete transitionMatrix_;
-      delete emissionProbabilities_;
-    }
-  }
+  virtual ~LogsumHmmLikelihood() {}
 
 
-  LogsumHmmLikelihood* clone() const { return new LogsumHmmLikelihood(*this); }
+  LogsumHmmLikelihood* clone() const override { return new LogsumHmmLikelihood(*this); }
 
 public:
-  const HmmStateAlphabet& getHmmStateAlphabet() const { return *hiddenAlphabet_; }
-  HmmStateAlphabet& getHmmStateAlphabet() { return *hiddenAlphabet_; }
+  const HmmStateAlphabet& hmmStateAlphabet() const override { return *hiddenAlphabet_; }
+  std::shared_ptr<const HmmStateAlphabet> getHmmStateAlphabet() const override { return hiddenAlphabet_; }
 
-  const HmmTransitionMatrix& getHmmTransitionMatrix() const { return *transitionMatrix_; }
-  HmmTransitionMatrix& getHmmTransitionMatrix() { return *transitionMatrix_; }
+  HmmStateAlphabet& hmmStateAlphabet() override { return *hiddenAlphabet_; }
+  std::shared_ptr<HmmStateAlphabet> getHmmStateAlphabet() override { return hiddenAlphabet_; }
 
-  const HmmEmissionProbabilities& getHmmEmissionProbabilities() const { return *emissionProbabilities_; }
-  HmmEmissionProbabilities& getHmmEmissionProbabilities() { return *emissionProbabilities_; }
+  const HmmTransitionMatrix& hmmTransitionMatrix() const override { return *transitionMatrix_; }
+  std::shared_ptr<const HmmTransitionMatrix> getHmmTransitionMatrix() const override { return transitionMatrix_; }
 
-  void setBreakPoints(const std::vector<size_t>& breakPoints)
+  HmmTransitionMatrix& hmmTransitionMatrix() override { return *transitionMatrix_; }
+  std::shared_ptr<HmmTransitionMatrix> getHmmTransitionMatrix() override { return transitionMatrix_; }
+
+  const HmmEmissionProbabilities& hmmEmissionProbabilities() const override { return *emissionProbabilities_; }
+  std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const override { return emissionProbabilities_; }
+
+  HmmEmissionProbabilities& hmmEmissionProbabilities() override { return *emissionProbabilities_; }
+  std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() override { return emissionProbabilities_; }
+
+  void setBreakPoints(const std::vector<size_t>& breakPoints) override
   {
     breakPoints_ = breakPoints;
     computeForward_();
     backLogLikelihoodUpToDate_ = false;
   }
 
-  const std::vector<size_t>& getBreakPoints() const { return breakPoints_; }
+  const std::vector<size_t>& getBreakPoints() const override { return breakPoints_; }
 
-  void setParameters(const ParameterList& pl)
+  void setParameters(const ParameterList& pl) override
   {
     setParametersValues(pl);
   }
 
-  double getValue() const { return -logLik_; }
+  double getValue() const override { return -logLik_; }
 
-  double getLogLikelihood() const { return logLik_; }
+  double getLogLikelihood() const override { return logLik_; }
 
-  double getLikelihoodForASite(size_t site) const;
+  double getLikelihoodForASite(size_t site) const override;
 
-  double getDLogLikelihoodForASite(size_t site) const;
+  double getDLogLikelihoodForASite(size_t site) const override ;
 
-  double getD2LogLikelihoodForASite(size_t site) const;
+  double getD2LogLikelihoodForASite(size_t site) const override;
 
-  Vdouble getLikelihoodForEachSite() const;
+  Vdouble getLikelihoodForEachSite() const override;
 
-  void setNamespace(const std::string& nameSpace);
+  void setNamespace(const std::string& nameSpace) override;
 
-  void fireParameterChanged(const ParameterList& pl);
+  void fireParameterChanged(const ParameterList& pl) override;
 
-  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const;
+  Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override;
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const;
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const override;
 
   void computeLikelihood();
 
@@ -287,12 +250,12 @@ protected:
 
   void computeBackward_() const;
 
-  void computeDLikelihood_() const
+  void computeDLikelihood_() const override
   {
     computeDForward_();
   }
 
-  void computeD2Likelihood_() const
+  void computeD2Likelihood_() const override
   {
     computeD2Forward_();
   }

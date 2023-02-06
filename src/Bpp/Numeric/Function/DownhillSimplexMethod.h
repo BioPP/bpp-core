@@ -113,7 +113,7 @@ public:
    *
    * @param function A pointer toward an object implementing the Optimizable interface.
    */
-  DownhillSimplexMethod(Function* function);
+  DownhillSimplexMethod(std::shared_ptr<FunctionInterface> function);
 
   virtual ~DownhillSimplexMethod() {}
 

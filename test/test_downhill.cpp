@@ -38,6 +38,7 @@ knowledge of the CeCILL license and that you accept its terms.
 */
 
 #include <Bpp/Numeric/Function/DownhillSimplexMethod.h>
+#include <Bpp/Numeric/AutoParameter.h>
 #include <vector>
 #include <iostream>
 #include "PolynomialFunction.h"
@@ -46,15 +47,16 @@ using namespace bpp;
 using namespace std;
 
 int main() {
-  PolynomialFunction1 f;
-  cout << f.getValue() << endl;
-  DownhillSimplexMethod optimizer(&f);
-  optimizer.init(f.getParameters());
+  auto f = make_shared<PolynomialFunction1>();
+  cout << f->getValue() << endl;
+  DownhillSimplexMethod optimizer(f);
+  optimizer.setConstraintPolicy(AutoParameter::CONSTRAINTS_IGNORE);
+  optimizer.init(f->getParameters());
   optimizer.optimize();
-  double minf = f.getValue();
-  double x = f.getParameterValue("x");
-  double y = f.getParameterValue("y");
-  double z = f.getParameterValue("z");
+  double minf = f->getValue();
+  double x = f->getParameterValue("x");
+  double y = f->getParameterValue("y");
+  double z = f->getParameterValue("z");
   cout << "x=" << x << endl;
   cout << "y=" << y << endl;
   cout << "z=" << z << endl;

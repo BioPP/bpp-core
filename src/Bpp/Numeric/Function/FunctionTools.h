@@ -113,7 +113,7 @@ public:
    * the ones in the function, or a constraint is matched, etc.
    */
   static VVdouble* computeGrid(
-    Function& function,
+    FunctionInterface& function,
     const ParameterGrid& grid);
 };
 } // end of namespace bpp

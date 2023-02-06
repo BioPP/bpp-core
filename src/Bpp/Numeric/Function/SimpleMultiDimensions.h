@@ -63,11 +63,11 @@ private:
   BrentOneDimension optimizer_; // One dimensional optimizer.
 
 public:
-  SimpleMultiDimensions(Function* function);
+  SimpleMultiDimensions(std::shared_ptr<FunctionInterface> function);
 
   virtual ~SimpleMultiDimensions() {}
 
-  SimpleMultiDimensions* clone() const { return new SimpleMultiDimensions(*this); }
+  SimpleMultiDimensions* clone() const override { return new SimpleMultiDimensions(*this); }
 
 public:
   /**
@@ -75,21 +75,21 @@ public:
    *
    * @{
    */
-  void setFunction(Function* function);
+  void setFunction(std::shared_ptr<FunctionInterface> function) override;
   /** @} */
 
-  void doInit(const ParameterList& params);
+  void doInit(const ParameterList& params) override;
 
-  double doStep();
+  double doStep() override;
 
   /**
    * @return The optimizer used to optimize each parameter.
    */
-  Optimizer& getOneDimensionOptimizer() { return optimizer_; }
+  OptimizerInterface& oneDimensionOptimizer() { return optimizer_; }
   /**
    * @return The optimizer used to optimize each parameter.
    */
-  const Optimizer& getOneDimensionOptimizer() const { return optimizer_; }
+  const OptimizerInterface& oneDimensionOptimizer() const { return optimizer_; }
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_SIMPLEMULTIDIMENSIONS_H

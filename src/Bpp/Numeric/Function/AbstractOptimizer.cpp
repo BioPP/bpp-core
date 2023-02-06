@@ -53,11 +53,11 @@ using namespace bpp;
 
 /******************************************************************************/
 
-AbstractOptimizer::AbstractOptimizer(Function* function) :
+AbstractOptimizer::AbstractOptimizer(std::shared_ptr<FunctionInterface> function) :
   function_(function),
   parameters_(),
-  messageHandler_(ApplicationTools::message.get()),
-  profiler_(ApplicationTools::message.get()),
+  messageHandler_(ApplicationTools::message),
+  profiler_(ApplicationTools::message),
   constraintPolicy_(AutoParameter::CONSTRAINTS_KEEP),
   stopCondition_(0), defaultStopCondition_(0),
   verbose_(true), isInitialized_(false), startTime_(), listeners_(),
@@ -88,19 +88,21 @@ AbstractOptimizer::AbstractOptimizer(const AbstractOptimizer& opt) :
 {
   if (opt.stopCondition_)
   {
-    stopCondition_        = dynamic_cast<OptimizationStopCondition*>(opt.stopCondition_->clone());
+    stopCondition_ = shared_ptr<OptimizationStopCondition>(opt.stopCondition_->clone());
     stopCondition_->setOptimizer(this);
   }
   else
-    stopCondition_        = 0;
+    stopCondition_        = nullptr;
+
   if (opt.defaultStopCondition_)
   {
-    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition*>(opt.defaultStopCondition_->clone());
+    defaultStopCondition_ = shared_ptr<OptimizationStopCondition>(opt.defaultStopCondition_->clone());
     defaultStopCondition_->setOptimizer(this);
   }
   else
-    defaultStopCondition_ = 0;
+    defaultStopCondition_ = nullptr;
   // In case of AutoParameter instances, we must actualize the pointers toward _messageHandler:
+  //
   if (isInitialized_)
   {
     if (constraintPolicy_ == AutoParameter::CONSTRAINTS_AUTO)
@@ -122,18 +124,20 @@ AbstractOptimizer& AbstractOptimizer::operator=(const AbstractOptimizer& opt)
   tolIsReached_           = opt.tolIsReached_;
   if (opt.stopCondition_)
   {
-    stopCondition_        = dynamic_cast<OptimizationStopCondition*>(opt.stopCondition_->clone());
+    stopCondition_        = shared_ptr<OptimizationStopCondition>(opt.stopCondition_->clone());
     stopCondition_->setOptimizer(this);
   }
   else
-    stopCondition_        = 0;
+    stopCondition_        = nullptr;
+
   if (opt.defaultStopCondition_)
   {
-    defaultStopCondition_ = dynamic_cast<OptimizationStopCondition*>(opt.defaultStopCondition_->clone());
+    defaultStopCondition_ = shared_ptr<OptimizationStopCondition>(opt.defaultStopCondition_->clone());
     defaultStopCondition_->setOptimizer(this);
   }
   else
-    defaultStopCondition_ = 0;
+    defaultStopCondition_ = nullptr;
+
   nbEvalMax_              = opt.nbEvalMax_;
   nbEval_                 = opt.nbEval_;
   verbose_                = opt.verbose_;
@@ -305,7 +309,7 @@ void AbstractOptimizer::printMessage(const std::string& message)
 
 void AbstractOptimizer::autoParameter()
 {
-  for (unsigned int i = 0; i < parameters_.size(); i++)
+  for (size_t i = 0; i < parameters_.size(); ++i)
   {
     AutoParameter ap(parameters_[i]);
     ap.setMessageHandler(messageHandler_);
@@ -317,7 +321,7 @@ void AbstractOptimizer::autoParameter()
 
 void AbstractOptimizer::ignoreConstraints()
 {
-  for (unsigned int i = 0; i < parameters_.size(); i++)
+  for (size_t i = 0; i < parameters_.size(); ++i)
   {
     parameters_[i].removeConstraint();
   }
@@ -327,9 +331,9 @@ void AbstractOptimizer::ignoreConstraints()
 
 void AbstractOptimizer::fireOptimizationInitializationPerformed(const OptimizationEvent& event)
 {
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (auto listener : listeners_)
   {
-    listeners_[i]->optimizationInitializationPerformed(event);
+    listener->optimizationInitializationPerformed(event);
   }
 }
 
@@ -337,9 +341,9 @@ void AbstractOptimizer::fireOptimizationInitializationPerformed(const Optimizati
 
 void AbstractOptimizer::fireOptimizationStepPerformed(const OptimizationEvent& event)
 {
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (auto listener : listeners_)
   {
-    listeners_[i]->optimizationStepPerformed(event);
+    listener->optimizationStepPerformed(event);
   }
 }
 
@@ -347,12 +351,13 @@ void AbstractOptimizer::fireOptimizationStepPerformed(const OptimizationEvent& e
 
 bool AbstractOptimizer::listenerModifiesParameters() const
 {
-  for (unsigned int i = 0; i < listeners_.size(); i++)
+  for (auto listener : listeners_)
   {
-    if (listeners_[i]->listenerModifiesParameters())
+    if (listener->listenerModifiesParameters())
       return true;
   }
   return false;
 }
 
 /******************************************************************************/
+

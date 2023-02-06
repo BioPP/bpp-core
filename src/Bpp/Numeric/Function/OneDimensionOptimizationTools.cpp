@@ -65,20 +65,20 @@ inline void Bracket::setC(double xc, double fc) { c.set(xc, fc); }
 Bracket OneDimensionOptimizationTools::bracketMinimum(
   double a,
   double b,
-  Function* function,
+  FunctionInterface& function,
   ParameterList parameters)
 {
   Bracket bracket;
   // Copy the parameter to use.
   bracket.a.x = a;
-  parameters[0].setValue(bracket.a.x); bracket.a.f = function->f(parameters);
+  parameters[0].setValue(bracket.a.x); bracket.a.f = function.f(parameters);
   bracket.b.x = b;
-  parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+  parameters[0].setValue(bracket.b.x); bracket.b.f = function.f(parameters);
 
   while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
-    parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+    parameters[0].setValue(bracket.b.x); bracket.b.f = function.f(parameters);
   }
 
   if (bracket.b.f > bracket.a.f)
@@ -91,7 +91,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
 
   // First guess for third point:
   bracket.c.x = bracket.b.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.b.x - bracket.a.x);
-  parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
+  parameters[0].setValue(bracket.c.x); bracket.c.f = function.f(parameters);
 
 
   // Keep returning here until we bracket:
@@ -111,7 +111,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
     // Test various possibilities:
     if ((bracket.b.x - xu) * (xu - bracket.c.x) > 0.0)
     {
-      parameters[0].setValue(xu); fu = function->f(parameters);
+      parameters[0].setValue(xu); fu = function.f(parameters);
       if (fu < bracket.c.f)
       {
         bracket.setA(bracket.b.x, bracket.b.f);
@@ -126,30 +126,30 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
       // Parabolic fit was no use.
       // Use default magnification.
       xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x);
-      parameters[0].setValue(xu); fu = function->f(parameters);
+      parameters[0].setValue(xu); fu = function.f(parameters);
     }
     else if ((bracket.c.x - xu) * (xu - xulim) > 0.0)
     {
       // Parabolic fit is between point 3 and its allowed limit.
-      parameters[0].setValue(xu); fu = function->f(parameters);
+      parameters[0].setValue(xu); fu = function.f(parameters);
       if (fu < bracket.c.f)
       {
         NumTools::shift<double>(bracket.b.x, bracket.c.x, xu, bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x));
         parameters[0].setValue(xu);
-        NumTools::shift<double>(bracket.b.f, bracket.c.f, fu, function->f(parameters));
+        NumTools::shift<double>(bracket.b.f, bracket.c.f, fu, function.f(parameters));
       }
     }
     else if ((xu - xulim) * (xulim - bracket.c.x) >= 0.0)
     {
       // Limit parabolic xu to maximum allowed value.
       xu = xulim;
-      parameters[0].setValue(xu); fu = function->f(parameters);
+      parameters[0].setValue(xu); fu = function.f(parameters);
     }
     else
     {
       // Reject parabolic xu, use default magnification.
       xu = bracket.c.x + NumConstants::GOLDEN_RATIO_PHI() * (bracket.c.x - bracket.b.x);
-      parameters[0].setValue(xu); fu = function->f(parameters);
+      parameters[0].setValue(xu); fu = function.f(parameters);
     }
     // Eliminate oldest point and continue.
     NumTools::shift<double>(bracket.a.x, bracket.b.x, bracket.c.x, xu);
@@ -163,21 +163,21 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
 Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
   double a,
   double b,
-  Function* function,
+  FunctionInterface& function,
   ParameterList parameters,
   uint intervalsNum)
 {
   Bracket bracket;
   // Copy the parameter to use.
   bracket.a.x = a;
-  parameters[0].setValue(bracket.a.x); bracket.a.f = function->f(parameters);
+  parameters[0].setValue(bracket.a.x); bracket.a.f = function.f(parameters);
   bracket.b.x = b;
-  parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+  parameters[0].setValue(bracket.b.x); bracket.b.f = function.f(parameters);
 
   while (std::isnan(bracket.b.f) || std::isinf(bracket.b.f))
   {
     bracket.b.x /= 1.1;
-    parameters[0].setValue(bracket.b.x); bracket.b.f = function->f(parameters);
+    parameters[0].setValue(bracket.b.x); bracket.b.f = function.f(parameters);
   }
 
   double bestMiddleX, bestMiddleF;
@@ -192,7 +192,7 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
   for (size_t i = 1; i <= intervalsNum; i++)
   { // Loop over all intervals
     curr += jump;
-    parameters[0].setValue(curr); fcurr = function->f(parameters);
+    parameters[0].setValue(curr); fcurr = function.f(parameters);
     // If c yields better likelihood than a and b
     if (fcurr < bestMiddleF)
     {
@@ -201,29 +201,29 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
     }
   }
   bracket.c.x = bestMiddleX;
-  parameters[0].setValue(bracket.c.x); bracket.c.f = function->f(parameters);
+  parameters[0].setValue(bracket.c.x); bracket.c.f = function.f(parameters);
   return bracket;
 }
 
 /******************************************************************************/
 
 unsigned int OneDimensionOptimizationTools::lineMinimization(
-  DirectionFunction& f1dim,
+  std::shared_ptr<DirectionFunction> f1dim,
   ParameterList& parameters,
   std::vector<double>& xi,
   double tolerance,
-  OutputStream* profiler,
-  OutputStream* messenger,
+  std::shared_ptr<OutputStream> profiler,
+  std::shared_ptr<OutputStream> messenger,
   unsigned int verbose)
 {
   // Initial guess for brackets:
   double ax = 0.;
   double xx = 0.01;
 
-  f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
-  f1dim.setMessageHandler(messenger);
-  f1dim.init(parameters, xi);
-  BrentOneDimension bod(&f1dim);
+  f1dim->setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
+  f1dim->setMessageHandler(messenger);
+  f1dim->init(parameters, xi);
+  BrentOneDimension bod(f1dim);
   bod.setMessageHandler(messenger);
   bod.setProfiler(profiler);
   bod.setVerbose(verbose >= 1 ? 1 : 0);
@@ -238,8 +238,8 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(
   // Update parameters:
   // parameters.matchParametersValues(f1dim.getFunction()->getParameters());
 
-  double xmin = f1dim.getParameters()[0].getValue();
-  for (size_t j = 0; j < parameters.size(); j++)
+  double xmin = f1dim->getParameters()[0].getValue();
+  for (size_t j = 0; j < parameters.size(); ++j)
   {
     xi[j] *= xmin;
     parameters[j].setValue(parameters[j].getValue() + xi[j]);
@@ -249,19 +249,20 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(
 
 /******************************************************************************/
 
-unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
-                                                       ParameterList& parameters,
-                                                       std::vector<double>& xi,
-                                                       std::vector<double>& gradient,
-                                                       OutputStream* profiler,
-                                                       OutputStream* messenger,
-                                                       unsigned int verbose)
+unsigned int OneDimensionOptimizationTools::lineSearch(
+    std::shared_ptr<DirectionFunction> f1dim,
+    ParameterList& parameters,
+    std::vector<double>& xi,
+    std::vector<double>& gradient,
+    std::shared_ptr<OutputStream> profiler,
+    std::shared_ptr<OutputStream> messenger,
+    unsigned int verbose)
 {
   size_t size = xi.size();
 
-  f1dim.setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
-  f1dim.setMessageHandler(messenger);
-  f1dim.init(parameters, xi);
+  f1dim->setConstraintPolicy(AutoParameter::CONSTRAINTS_AUTO);
+  f1dim->setMessageHandler(messenger);
+  f1dim->init(parameters, xi);
 
   double slope = 0;
   for (size_t i = 0; i < size; i++)
@@ -283,7 +284,7 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
       test = temp;
   }
 
-  NewtonBacktrackOneDimension nbod(&f1dim, slope, test);
+  NewtonBacktrackOneDimension nbod(f1dim, slope, test);
 
   nbod.setMessageHandler(messenger);
   nbod.setProfiler(profiler);
@@ -299,8 +300,8 @@ unsigned int OneDimensionOptimizationTools::lineSearch(DirectionFunction& f1dim,
   // Update parameters:
   // parameters.matchParametersValues(f1dim.getFunction()->getParameters());
 
-  double xmin = f1dim.getParameters()[0].getValue();
-  for (unsigned int j = 0; j < parameters.size(); j++)
+  double xmin = f1dim->getParameters()[0].getValue();
+  for (unsigned int j = 0; j < parameters.size(); ++j)
   {
     xi[j] *= xmin;
     parameters[j].setValue(parameters[j].getValue() + xi[j]);
