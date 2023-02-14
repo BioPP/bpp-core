@@ -1043,7 +1043,7 @@ public:
    * @param names    Use a column as rowNames (or a row as columnNames). If positive, use the specified column to compute rownames, otherwise use default;
    * @return         A pointer toward a new Table object.
    */
-  static std::unique_ptr< Table<T> > read(std::istream& in, bool byRow, const std::string& sep = "\t", bool header = true, int names = -1)
+  static std::unique_ptr<Table<T>> read(std::istream& in, bool byRow, const std::string& sep = "\t", bool header = true, int names = -1)
   {
     std::string firstLine  = FileTools::getNextLine(in);
     StringTokenizer st1(firstLine, sep, false, true);
@@ -1056,12 +1056,12 @@ public:
       // Use first line as header.
       if (byRow)
       {
-        dt = std::make_unique< Table<T> >(0, nCol);
+        dt = std::make_unique<Table<T>>(0, nCol);
         dt->setColumnNames(row1);
       }
       else
       {
-        dt = std::make_unique< Table<T> >(nCol, 0);
+        dt = std::make_unique<Table<T>>(nCol, 0);
         dt->setRowNames(row1);
       }
     }
@@ -1069,12 +1069,12 @@ public:
     {
       if (byRow)
       {
-        dt = std::make_unique< Table<T> >(0, nCol - (names >= 0 ? 1 : 0));
+        dt = std::make_unique<Table<T>>(0, nCol - (names >= 0 ? 1 : 0));
         dt->addRow(firstLine, sep, names);
       }
       else
       {
-        dt = std::make_unique< Table<T> >(nCol - (names >= 0 ? 1 : 0), 0);
+        dt = std::make_unique<Table<T>>(nCol - (names >= 0 ? 1 : 0), 0);
         dt->addColumn(firstLine, sep, names);
       }
     }
