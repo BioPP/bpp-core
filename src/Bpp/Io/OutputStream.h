@@ -159,7 +159,7 @@ private:
   mutable std::unique_ptr<std::ostream> stream_;
 
 public:
-  StlOutputStream(std::ostream* stream) : stream_(stream) {}
+  StlOutputStream(std::unique_ptr<std::ostream> stream) : stream_(std::move(stream)) {}
   StlOutputStream(const StlOutputStream& stlos) : stream_() { stream_ = std::move(stlos.stream_); }
   StlOutputStream& operator=(const StlOutputStream& stlos)
   {
@@ -320,7 +320,7 @@ public:
 
   std::string str() const { return dynamic_cast<const std::ostringstream*>(stream_)->str();}
 
-  ~StdStr() { delete stream_;}
+  virtual ~StdStr() { delete stream_;}
 };
 } // end of namespace bpp;
 #endif // BPP_IO_OUTPUTSTREAM_H
