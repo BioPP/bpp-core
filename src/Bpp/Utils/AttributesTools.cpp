@@ -204,7 +204,12 @@ void AttributesTools::resolveVariables(
         }
         else
         {
-          varValue = varIt->second;
+          if (varIt->second==value){
+            if (ApplicationTools::error)
+              (*ApplicationTools::error << "Variable '" << varName << "' definition is cyclic and was ignored.").endLine();
+          }
+          else
+            varValue = varIt->second;
         }
         // Modify original field:
         string newValue = value.substr(0, index1) + varValue + value.substr(index2 + 1);
