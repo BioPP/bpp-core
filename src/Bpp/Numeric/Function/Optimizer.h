@@ -166,7 +166,7 @@ public:
   /**
    * @brief Get the current function value.
    *
-   * @return The value of the function at the point specified by _parameters.
+   * @return The value of the function at the point specified by the current parameters.
    * @throw NullPointerException If no function is associated with this optimizer.
    */
   virtual double getFunctionValue() const = 0;
