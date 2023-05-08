@@ -93,12 +93,12 @@ void AttributesTools::getAttributesMap(
 {
   vector<string> argv2(argv.size());
   // First make a few cleaning:
-  for (size_t i = 0; i < argv.size(); i++)
+  for (size_t i = 0; i < argv.size(); ++i)
   {
     // Make a few corrections first:
-    string arg = removeComments(argv[i], string("#"), string("\n")); // remove shell comments.
-    arg = removeComments(arg, string("//"), string("\n")); // remove C simple comments.
-    arg = removeComments(arg, string("/*"), string("*/")); // remove C multiple comments.
+    string arg = removeComments(argv[i], "#", "\n"); // remove shell comments.
+    arg = removeComments(arg, "//", "\n"); // remove C simple comments.
+    arg = removeComments(arg, "/*", "*/"); // remove C multiple comments.
     arg = TextTools::removeWhiteSpaces(arg);
     argv2[i] = arg;
   }
@@ -234,7 +234,7 @@ std::string AttributesTools::removeComments(
   string::size_type last = 0;
   do
   {
-    string::size_type first = r.find(begin, last);
+    auto first = r.find(begin, last);
     if (first == string::npos)
       return r;                   // No shell comment.
     // else:
