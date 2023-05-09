@@ -114,7 +114,7 @@ public:
   static Bracket bracketMinimum(double a, double b, FunctionInterface& function, ParameterList parameters);
 
   /**
-   * @brief Bracket a minimum by a search within thw parameter's bounds.
+   * @brief Bracket a minimum by a search within the parameter's bounds.
    *
    * This implementation follows numerical recipes, page 352, inwards bracketing
    *
