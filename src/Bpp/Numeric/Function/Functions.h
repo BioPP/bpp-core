@@ -597,7 +597,7 @@ public:
 
 
 /**
- * @brief A simple funciton with two parameters, mostly for testing and debugging :)
+ * @brief A simple function with two parameters, mostly for testing and debugging :)
  *
  * @author Julien Dutheil.
  */
