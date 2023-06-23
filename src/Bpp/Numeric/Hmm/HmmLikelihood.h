@@ -160,7 +160,8 @@ public:
 
   AbstractHmmLikelihood& operator=(const AbstractHmmLikelihood& adhlik);
 
-  /* @{
+  /**
+   * @{
    *
    * @brief From FirstOrder:
    *

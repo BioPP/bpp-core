@@ -238,6 +238,9 @@ public:
   template<class Matrix, class Scalar>
   static void scale(Matrix& A, Scalar a, Scalar b = 0)
   {
+    if ((a==1) && (b==0))
+      return;
+    
     for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
       for (size_t j = 0; j < A.getNumberOfColumns(); j++)
@@ -523,7 +526,7 @@ public:
       break;
     default:
       Matrix tmp;
-      if (p % 2)
+      if (!(p % 2))
       {
         pow(A, p / 2, tmp);
         pow(tmp, 2, O);
@@ -531,7 +534,7 @@ public:
       else
       {
         pow(A, (p - 1) / 2, tmp);
-        pow(tmp, 2, O);
+        mult(tmp, tmp, O);
         mult(A, O, tmp);
         copy(tmp, O);
       }

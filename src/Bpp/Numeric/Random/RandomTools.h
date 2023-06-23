@@ -63,9 +63,12 @@ namespace bpp
  * This class is adapted from Pupko's SEMPHY library.
  * It also borrow some code from Yang's PAML package.
  *
- * Most of these function are provided for convenience, directly using the <random> library might prove more efficient.
- */
-class RandomTools
+ * Most of these function are provided for convenience, directly using
+ * the "random" library might prove more efficient.
+ *
+ **/
+
+  class RandomTools
 {
 public:
   RandomTools() {}
@@ -131,7 +134,7 @@ public:
    *
    * Note : the number you get is between 0 and entry not including entry !
    * @param entry Max number to reach.
-   * @param generator Random number generator to use.
+   *
    */
   template<class intType>
   static intType giveIntRandomNumberBetweenZeroAndEntry(intType entry)
@@ -184,7 +187,6 @@ public:
   /**
    * @return A random number drawn from an exponential distribution.
    * @param mean The mean of the distribution.
-   * @param generator The uniform generator to use.
    */
   static double randExponential(double mean)
   {
