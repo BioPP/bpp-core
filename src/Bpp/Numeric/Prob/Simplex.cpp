@@ -304,3 +304,44 @@ void Simplex::setFrequencies(const std::vector<double>& probas)
 
   matchParametersValues(pl);
 }
+
+
+/*****************************/
+
+OrderedSimplex::OrderedSimplex(const std::vector<double>& probas, unsigned short method, bool allowNull, const std::string& name) :
+  Simplex(probas.size(), method, allowNull, name),
+  vValues_(probas)
+{
+  OrderedSimplex::setFrequencies(probas);
+}
+
+void OrderedSimplex::fireParameterChanged(const ParameterList& pl)
+{
+  Simplex::fireParameterChanged(pl);
+  const auto& probs=Simplex::getFrequencies();
+
+  auto dim=probs.size();
+
+  double x = 0;
+  for (auto i=dim;i>0;i--)
+  {
+    x+= probs[i-1]/(int)i;
+    vValues_[i-1]=x;
+  }
+
+}
+
+void OrderedSimplex::setFrequencies(const std::vector<double>& vValues)
+{
+  vValues_=vValues;
+  
+  auto dim=vValues.size();
+  Vdouble vprob(dim);
+  
+  for (auto i=0;i<(int)dim-1;i++)
+    vprob[i]=(i+1) * (vValues[i] - vValues[i+1]);
+
+  vprob[dim-1]= (double)dim * vValues[dim-1];
+  Simplex::setFrequencies(vprob);
+}
+
