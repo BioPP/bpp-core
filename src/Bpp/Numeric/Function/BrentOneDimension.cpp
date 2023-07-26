@@ -184,7 +184,7 @@ double BrentOneDimension::doStep()
   pl[0].setValue(u);
 
   fu = getFunction()->f(pl);
-
+  
   if (fu <= fx)
   {
     if (u >= x)

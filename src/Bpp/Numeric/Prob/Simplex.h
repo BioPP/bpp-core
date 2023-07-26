@@ -178,5 +178,85 @@ public:
 
   unsigned short getMethod() const { return method_; }
 };
+
+  /**
+   * @brief Simplex where all values are in decreasing order.
+   *
+   * The parameters @f$\theta_i@f$ are similar to the parameters of
+   * Simplex, with same methods, but there is an additionnal step to
+   * compute the values from the parameters.
+   *
+   * From the probabilities @f$p_i@f$ for @f$i \in <1,n>@f$ computed
+   * from the parameters, the decreasing values @f$v_i@f$ for @f$i \in
+   * <1,n>@f$ are such that @f$p_i = i * (v_i - v_{i+1})@f$ if @f$ i<n
+   * @f$ and @f$ p_n = n * v_n @f$. @f$\sum_i v_i = \sum_i p_i = 1 @f$
+   * and @f$ v_i - v_{i+1} = \frac{p_i}{i} > 0@f$. On the reverse:
+   *
+   * @f$ v_i = \sum_{j=i}^n \frac{p_j}{j} @f$  
+   * 
+   *
+   **/
+  
+class OrderedSimplex :
+    public Simplex
+{
+private:
+  std::vector<double> vValues_;
+
+public:
+  /**
+   * @brief Builds a new Simplex object from a number of
+   * probabilities. They are initialized equal.
+   *
+   * @param dim The number of probabilities.
+   * @param method  tells the method of parametrization (default 0)
+   *    0: No parametrization
+   *    1: Global ratio
+   *    2: Local ratio
+   *    3: Binary
+   * @param allowNull if null probabilites are allowed (default: false)
+   * @param name The name passed to AbstractParameterAliasable constructor.
+   *
+   */
+  OrderedSimplex(size_t dim, unsigned short method = 0, bool allowNull = false, const std::string& name = "Simplex.") :
+    Simplex(dim, method, allowNull, name),
+    vValues_(dim)
+  {
+    const auto& probs=Simplex::getFrequencies();
+
+    double x = 0;
+    for (auto i=dim;i>0;i--)
+    {
+      x+= probs[i-1]/(int)i;
+      vValues_[i-1]=x;
+    }
+  }
+  
+
+  /**
+   * @brief Builds a new Simplex object from a vector of probabilities
+   *
+   * @param probas The vector of probabilities.
+   * @param method  tells the method of parametrization (default 0)
+   *    0: No parametrization
+   *    1: Global ratio
+   *    2: Local ratio
+   *    3: Binary
+   * @param allowNull if null probabilites are allowed (default: false)
+   * @param name The name passed to AbstractParameterAliasable constructor.
+   *
+   */
+  
+  OrderedSimplex(const std::vector<double>& probas, unsigned short method = 0, bool allowNull = false, const std::string& name = "Simplex.");
+
+  void fireParameterChanged(const ParameterList& parameters);
+
+  void setFrequencies(const std::vector<double>&);
+
+  const std::vector<double>& getFrequencies() const { return vValues_;}
+  
+};
+
 } // end of namespace bpp.
+
 #endif // BPP_NUMERIC_PROB_SIMPLEX_H
