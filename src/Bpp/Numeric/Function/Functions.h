@@ -280,57 +280,57 @@ public:
   }
 
 public:
-  bool hasParameter(const std::string& name) const
+  bool hasParameter(const std::string& name) const override
   {
     return function_->hasParameter(name);
   }
 
-  void setParameters(const ParameterList& parameters)
+  void setParameters(const ParameterList& parameters) override
   {
     function_->setParameters(parameters);
   }
 
-  const ParameterList& getParameters() const
+  const ParameterList& getParameters() const override
   {
     return function_->getParameters();
   }
 
-  const Parameter& getParameter(const std::string& name) const
+  const Parameter& getParameter(const std::string& name) const override
   {
     return function_->getParameter(name);
   }
 
-  double getValue() const
+  double getValue() const override
   {
     return function_->getValue();
   }
 
-  double f(const ParameterList& parameters)
+  double f(const ParameterList& parameters) override
   {
     return function_->f(parameters);
   }
 
-  double getParameterValue(const std::string& name) const
+  double getParameterValue(const std::string& name) const override
   {
     return function_->getParameterValue(name);
   }
 
-  void setAllParametersValues(const ParameterList& parameters)
+  void setAllParametersValues(const ParameterList& parameters) override
   {
     function_->setAllParametersValues(parameters);
   }
 
-  void setParameterValue(const std::string& name, double value)
+  void setParameterValue(const std::string& name, double value) override
   {
     function_->setParameterValue(name, value);
   }
 
-  void setParametersValues(const ParameterList& parameters)
+  void setParametersValues(const ParameterList& parameters) override
   {
     function_->setParametersValues(parameters);
   }
 
-  bool matchParametersValues(const ParameterList& parameters)
+  bool matchParametersValues(const ParameterList& parameters) override
   {
     return function_->matchParametersValues(parameters);
   }
@@ -345,28 +345,28 @@ public:
     return function_->setConstraint(name, constraint);
   }
 
-  size_t getNumberOfParameters() const
+  size_t getNumberOfParameters() const override
   {
     return function_->getNumberOfParameters();
   }
 
-  void setNamespace(const std::string& prefix)
+  void setNamespace(const std::string& prefix) override
   {
     function_->setNamespace(prefix);
   }
 
-  std::string getNamespace() const
+  std::string getNamespace() const override
   {
     return function_->getNamespace();
   }
 
-  std::string getParameterNameWithoutNamespace(const std::string& name) const
+  std::string getParameterNameWithoutNamespace(const std::string& name) const override
   {
     return function_->getParameterNameWithoutNamespace(name);
   }
 
 protected:
-  ParameterList& getParameters_()
+  ParameterList& getParameters_() override
   {
     return function_->getParameters_();
   }
@@ -455,7 +455,7 @@ public:
     constraintMatch_(false) {}
   virtual ~InfinityFunctionWrapper() {}
 
-  InfinityFunctionWrapper* clone() const { return new InfinityFunctionWrapper(*this); }
+  InfinityFunctionWrapper* clone() const override { return new InfinityFunctionWrapper(*this); }
 
 public:
   void setParameters(const ParameterList& parameters) override
@@ -471,18 +471,18 @@ public:
     }
   }
 
-  double getValue() const
+  double getValue() const override
   {
     return constraintMatch_ ? -std::log(0.) :  function_->getValue();
   }
 
-  double f(const ParameterList& parameters)
+  double f(const ParameterList& parameters) override
   {
     setParameters(parameters);
     return getValue();
   }
 
-  void setAllParametersValues(const ParameterList& parameters)
+  void setAllParametersValues(const ParameterList& parameters) override
   {
     try
     {
@@ -495,7 +495,7 @@ public:
     }
   }
 
-  void setParameterValue(const std::string& name, double value)
+  void setParameterValue(const std::string& name, double value) override
   {
     try
     {
@@ -508,7 +508,7 @@ public:
     }
   }
 
-  void setParametersValues(const ParameterList& parameters)
+  void setParametersValues(const ParameterList& parameters) override
   {
     try
     {
@@ -521,7 +521,7 @@ public:
     }
   }
 
-  bool matchParametersValues(const ParameterList& parameters)
+  bool matchParametersValues(const ParameterList& parameters) override
   {
     try
     {

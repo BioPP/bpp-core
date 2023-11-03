@@ -218,13 +218,13 @@ public:
   bool finiteLowerBound() const { return lowerBound_ > NumConstants::MINF(); }
   bool finiteUpperBound() const { return upperBound_ < NumConstants::PINF(); }
 
-  bool includes(double min, double max) const
+  bool includes(double min, double max) const override
   {
     return (inclLowerBound_ ? min >= getLowerBound() : min > getLowerBound()) &&
            (inclUpperBound_ ? max <= getUpperBound() : max < getUpperBound());
   }
 
-  virtual bool isCorrect(double value) const
+  virtual bool isCorrect(double value) const override
   {
     return (inclLowerBound_ ? value >= getLowerBound() : value > getLowerBound()) &&
            (inclUpperBound_ ? value <= getUpperBound() : value < getUpperBound());
@@ -250,13 +250,13 @@ public:
     return lowerBound_ >= value;
   }
 
-  double getLimit(double value) const
+  double getLimit(double value) const override
   {
     return isCorrect(value) ? value :
            (*this >= value ? lowerBound_ : upperBound_);
   }
 
-  double getAcceptedLimit(double value) const
+  double getAcceptedLimit(double value) const override
   {
     return isCorrect(value) ? value :
            (*this >= value ?
@@ -269,7 +269,7 @@ public:
     return precision_;
   }
 
-  std::string getDescription() const
+  std::string getDescription() const override
   {
     return (inclLowerBound_ ? "[ " : "]")
            + (finiteLowerBound() ? TextTools::toString(lowerBound_) : "-inf")
@@ -311,7 +311,7 @@ public:
    * @return the intersection, or NULL if c is not an IntervalConstraint. The
    * resulting precision is the maximum of both precisions.
    */
-  ConstraintInterface* operator&(const ConstraintInterface& c) const
+  ConstraintInterface* operator&(const ConstraintInterface& c) const override
   {
     double lowerBound, upperBound;
     bool inclLowerBound, inclUpperBound;
@@ -419,7 +419,7 @@ public:
   /**
    * @brief Tells if this interval is empty
    */
-  bool isEmpty() const
+  bool isEmpty() const override
   {
     return (lowerBound_ > upperBound_) ||
            ((lowerBound_ > upperBound_) &&
