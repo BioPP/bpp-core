@@ -56,8 +56,8 @@ class MyFunction:
   public:
     MyFunction() : AbstractParametrizable(""), fval_(0) {
       //We declare parameters here:
-      addParameter_(new Parameter("x", 0, std::shared_ptr<Constraint>(new IntervalConstraint(-1, 7, true, true))));
-      addParameter_(new Parameter("y", 0, std::shared_ptr<Constraint>(new IntervalConstraint(-4, 4, true, true))));
+      addParameter_(new Parameter("x", 0, std::make_shared<IntervalConstraint>(-1, 7, true, true)));
+      addParameter_(new Parameter("y", 0, std::make_shared<IntervalConstraint>(-4, 4, true, true)));
       fireParameterChanged(getParameters());
     }
  

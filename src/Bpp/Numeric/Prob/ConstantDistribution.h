@@ -96,7 +96,7 @@ public:
 
   double Expectation(double a) const { return a < value_ ? 0 : 1; }
 
-  void restrictToConstraint(const Constraint& c);
+  void restrictToConstraint(const ConstraintInterface& c);
 
   void discretize() {}
 };

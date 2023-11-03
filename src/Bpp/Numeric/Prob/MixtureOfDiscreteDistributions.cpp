@@ -295,7 +295,7 @@ double MixtureOfDiscreteDistributions::Expectation(double a) const
   return s;
 }
 
-void MixtureOfDiscreteDistributions::restrictToConstraint(const Constraint& c)
+void MixtureOfDiscreteDistributions::restrictToConstraint(const ConstraintInterface& c)
 {
   for (size_t i = 0; i < vdd_.size(); i++)
   {

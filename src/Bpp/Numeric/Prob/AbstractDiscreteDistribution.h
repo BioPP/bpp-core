@@ -61,6 +61,10 @@ class AbstractDiscreteDistribution :
   public AbstractParameterAliasable
 {
 public:
+  static short DISCRETIZATION_EQUAL_PROB;
+  static short DISCRETIZATION_EQUAL_INTERVAL;
+  static short DISCRETIZATION_EQUAL_PROB_WHEN_POSSIBLE;
+
   /**
    * @brief Comparator class for AbstractDiscreteDistribution.
    */
@@ -115,26 +119,26 @@ protected:
 
   /**
    * @brief the interval where the distribution is defined/restricted.
-   *
    */
-
   std::shared_ptr<IntervalConstraint> intMinMax_;
 
   /**
    * Tells if the values in the classes is associated to the median or not (default: false)
-   *
    */
-
   bool median_;
 
+  /**
+   * Discretization policy.
+   */
+  short discretizationScheme_;
+
 public:
-  AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix = "");
+  AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix = "", short discretization = DISCRETIZATION_EQUAL_PROB);
 
   /**
    * With additional precision value to discriminate categories (default 1e-12)
-   *
    */
-  AbstractDiscreteDistribution(size_t nbClasses, double precision, const std::string& prefix = "");
+  AbstractDiscreteDistribution(size_t nbClasses, double precision, const std::string& prefix = "", short discretization = DISCRETIZATION_EQUAL_PROB);
 
   AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde);
 
@@ -218,7 +222,6 @@ public:
   }
 
   virtual void discretize();
-
   /** @} */
 
   /**
@@ -227,10 +230,12 @@ public:
    * constraints.
    *
    * @param c The Constraint to respect.
-   *
    */
+  virtual void restrictToConstraint(const ConstraintInterface& c);
 
-  virtual void restrictToConstraint(const Constraint& c);
+protected:
+  void discretizeEqualProportions();
+  void discretizeEqualIntervals();
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_ABSTRACTDISCRETEDISTRIBUTION_H

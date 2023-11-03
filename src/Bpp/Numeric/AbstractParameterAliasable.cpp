@@ -134,7 +134,7 @@ void AbstractParameterAliasable::aliasParameters(const std::string& p1, const st
   // We use a small trick here, we test the constraints on the basis of their string description (C++ does not provide a default operator==() :( ).
   if (param2->hasConstraint() && (param1->getConstraint()->getDescription() != param2->getConstraint()->getDescription()))
   {
-    std::shared_ptr<Constraint> nc(*param2->getConstraint() & *param1->getConstraint());
+    std::shared_ptr<ConstraintInterface> nc(*param2->getConstraint() & *param1->getConstraint());
     ApplicationTools::displayWarning("Aliasing parameter " + p2 + " to " + p1 + " with different constraints. They get the intersection of both constraints : " + nc->getDescription());
 
     param2->setConstraint(nc);

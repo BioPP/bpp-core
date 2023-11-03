@@ -57,7 +57,7 @@ ParameterEvent::ParameterEvent(Parameter* parameter) : parameter_(parameter) {}
 
 /** Constructors: *************************************************************/
 
-Parameter::Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint, double precision) :
+Parameter::Parameter(const std::string& name, double value, std::shared_ptr<ConstraintInterface> constraint, double precision) :
   name_(name), value_(0), precision_(0), constraint_(constraint), listeners_()
 {
   setValue(value);
@@ -109,7 +109,7 @@ void Parameter::setPrecision(double precision)
 
 /** Constraint: ***************************************************************/
 
-void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
+void Parameter::setConstraint(std::shared_ptr<ConstraintInterface> constraint)
 {
   if (constraint != nullptr && !constraint->isCorrect(value_))
     throw ConstraintException("Parameter::setConstraint", this, value_);
@@ -118,7 +118,7 @@ void Parameter::setConstraint(std::shared_ptr<Constraint> constraint)
 }
 
 
-std::shared_ptr<Constraint> Parameter::removeConstraint()
+std::shared_ptr<ConstraintInterface> Parameter::removeConstraint()
 {
   auto c = constraint_;
   constraint_ = nullptr;

@@ -305,7 +305,7 @@ void SimpleDiscreteDistribution::discretize()
   }
 }
 
-void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
+void SimpleDiscreteDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
   if (getNumberOfParameters() == 0)
     return;
@@ -333,8 +333,8 @@ void SimpleDiscreteDistribution::restrictToConstraint(const Constraint& c)
       getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_);
     else
     {
-      std::shared_ptr<Constraint> pc = getParameter_("V" + TextTools::toString(i + 1)).removeConstraint();
-      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(std::shared_ptr<Constraint>(*pc & *intMinMax_));
+      auto pc = getParameter_("V" + TextTools::toString(i + 1)).removeConstraint();
+      getParameter_("V" + TextTools::toString(i + 1)).setConstraint(std::shared_ptr<ConstraintInterface>(*pc & *intMinMax_));
     }
   }
 }

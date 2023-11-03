@@ -71,7 +71,7 @@ public:
    * @param constraint An optional shared pointer toward a Constraint object.
    * @throw ConstraintException If the parameter value does not match the contraint.
    */
-  AutoParameter(const std::string& name = "", double value = 0, std::shared_ptr<Constraint> constraint = 0);
+  AutoParameter(const std::string& name = "", double value = 0, std::shared_ptr<ConstraintInterface> constraint = nullptr);
 
   /**
    * @brief Copy constructor.

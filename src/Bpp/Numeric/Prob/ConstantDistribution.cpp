@@ -83,7 +83,7 @@ void ConstantDistribution::fireParameterChanged(const ParameterList& parameters)
 
 /******************************************************************************/
 
-void ConstantDistribution::restrictToConstraint(const Constraint& c)
+void ConstantDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
   if (getNumberOfParameters() == 0)
     return;

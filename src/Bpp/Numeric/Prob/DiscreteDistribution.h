@@ -313,10 +313,8 @@ public:
    * is launched.
    *
    * @param c The Constraint to respect.
-   *
    */
-
-  virtual void restrictToConstraint(const Constraint& c) = 0;
+  virtual void restrictToConstraint(const ConstraintInterface& c) = 0;
 
   /**
    * @brief Print the distribution (categories and corresponding probabilities) to a stream.

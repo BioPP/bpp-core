@@ -62,13 +62,14 @@ namespace bpp
  *
  * It provides a method that tells if a given value is correct.
  */
-class Constraint : public Clonable
+class ConstraintInterface :
+  public virtual Clonable
 {
 public:
-  Constraint() {}
-  virtual ~Constraint() {}
+  ConstraintInterface() {}
+  virtual ~ConstraintInterface() {}
 
-  Constraint* clone() const = 0;
+  ConstraintInterface* clone() const = 0;
 
 public:
   /**
@@ -119,12 +120,11 @@ public:
    * @param c the intersected Constraint
    * @return the intersection
    */
-  virtual Constraint* operator&(const Constraint& c) const = 0;
+  virtual ConstraintInterface* operator&(const ConstraintInterface& c) const = 0;
 
   /**
    * @brief Tells if this constraints defines an empty set
    */
-
   virtual bool isEmpty() const = 0;
 };
 
@@ -135,29 +135,29 @@ public:
  * Despite the mathematical non-sense, and infinite bound can be either excluded or included.
  */
 
-class IntervalConstraint : public Constraint
+class IntervalConstraint : 
+  public virtual ConstraintInterface
 {
 protected:
+  
   /**
    * @brief The boundaries of the interval
-   *
-   **/
+   */
   double lowerBound_, upperBound_;
 
   /**
    * @brief Boolean flags are true if the boundaries are included
-   *
-   **/
+   */
   bool inclLowerBound_, inclUpperBound_;
+  
   /**
-   *
    * @brief the accepted precision on the boundary (default: 1e-12)
-   **/
-
+   */
   double precision_;
 
 public:
-  IntervalConstraint() :  lowerBound_(NumConstants::MINF()),
+  IntervalConstraint() :
+    lowerBound_(NumConstants::MINF()),
     upperBound_(NumConstants::PINF()),
     inclLowerBound_(true),
     inclUpperBound_(true),
@@ -180,7 +180,6 @@ public:
    * @param incl Tell if the finite bound is included or not.
    * @param precision Parameter precision.
    */
-
   IntervalConstraint(bool isPositive, double bound, bool incl, double precision = NumConstants::TINY()) :
     lowerBound_(isPositive ? bound : NumConstants::MINF()),
     upperBound_(isPositive ? NumConstants::PINF() : bound),
@@ -191,9 +190,7 @@ public:
   /**
    * @brief Create an interval from a string description, using
    * readDescription method.
-   *
-   **/
-
+   */
   IntervalConstraint(std::string& desc) :
     lowerBound_(NumConstants::MINF()),
     upperBound_(NumConstants::PINF()),
@@ -206,7 +203,7 @@ public:
 
   virtual ~IntervalConstraint() {}
 
-  IntervalConstraint* clone() const { return new IntervalConstraint(*this); }
+  IntervalConstraint* clone() const override { return new IntervalConstraint(*this); }
 
 public:
   void setLowerBound(double lowerBound, bool strict) { lowerBound_ = lowerBound; inclLowerBound_ = !strict; }
@@ -287,8 +284,7 @@ public:
    *
    * @param desc the description in interval-like syntax, with signs
    * "[", ";", "]" as well as floats and "-inf" and "inf".
-   *
-   **/
+   */
   void readDescription(std::string& desc)
   {
     size_t pdp = desc.find(";");
@@ -315,7 +311,7 @@ public:
    * @return the intersection, or NULL if c is not an IntervalConstraint. The
    * resulting precision is the maximum of both precisions.
    */
-  Constraint* operator&(const Constraint& c) const
+  ConstraintInterface* operator&(const ConstraintInterface& c) const
   {
     double lowerBound, upperBound;
     bool inclLowerBound, inclUpperBound;
@@ -358,7 +354,7 @@ public:
    * @return this IntervalConstraint modified, or not modified if c is not an
    * IntervalConstraint. The precision is set to the maximum of bith precisions.
    */
-  IntervalConstraint& operator&=(const Constraint& c)
+  IntervalConstraint& operator&=(const ConstraintInterface& c)
   {
     try
     {

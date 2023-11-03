@@ -149,6 +149,23 @@ public:
   virtual bool matchParametersValues(const ParameterList& parameters) = 0;
 
   /**
+   * @brief Remove the constraint associated with one parameter, if any.
+   *
+   * @param name The name of the parameter to look for.
+   * @throw ParameterNotFoundException if no parameter with this name is found.
+   */
+  virtual void removeConstraint(const std::string& name) = 0;
+
+  /**
+   * @brief Set/Change the constraint associated with one parameter.
+   *
+   * @param name The name of the parameter to look for.
+   * @param constraint A pointer to the constraint (may be null)
+   * @throw ParameterNotFoundException if no parameter with this name is found.
+   */
+  virtual void setConstraint(const std::string& name, std::shared_ptr<ConstraintInterface> constraint) = 0;
+
+  /**
    * @brief Get the number of parameters.
    *
    * @see getNumberOfIndependentParameters If some parameters are aliased.
@@ -217,6 +234,8 @@ public:
   void setParameterValue(const std::string& name, double value) {}
   void setParametersValues(const ParameterList& parameters) {}
   bool matchParametersValues(const ParameterList& parameters) { return false; }
+  void removeConstraint(const std::string& name) override {}
+  void setConstraint(const std::string& name, std::shared_ptr<ConstraintInterface> constraint) override {}
   size_t getNumberOfParameters() const { return 0; }
   void setNamespace(const std::string& prefix) {}
   std::string getNamespace() const { return ""; }

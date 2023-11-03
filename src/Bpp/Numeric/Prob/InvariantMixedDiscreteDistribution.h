@@ -149,7 +149,7 @@ public:
     updateDistribution();
   }
 
-  void restrictToConstraint(const Constraint& c);
+  void restrictToConstraint(const ConstraintInterface& c);
 
 protected:
   void updateDistribution();

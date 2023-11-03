@@ -118,6 +118,16 @@ public:
     return test;
   }
 
+  void removeConstraint(const std::string& name) override
+  {
+    getParameter_(name).removeConstraint();
+  }
+
+  void setConstraint(const std::string& name, std::shared_ptr<ConstraintInterface> constraint) override
+  {
+    getParameter_(name).setConstraint(constraint);
+  }
+
   size_t getNumberOfParameters() const { return parameters_.size(); }
 
   void setNamespace(const std::string& prefix);

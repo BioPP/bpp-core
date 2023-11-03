@@ -138,7 +138,7 @@ protected:
   std::string name_;             // Parameter name
   double value_;            // Parameter value
   double precision_;  // Precision needed for Parameter value
-  std::shared_ptr<Constraint> constraint_;
+  std::shared_ptr<ConstraintInterface> constraint_;
   std::vector< std::shared_ptr<ParameterListener> > listeners_;
   
 public:
@@ -158,9 +158,9 @@ public:
    * @param precision An optional parameter precision (default 0)
    * @throw ConstraintException If the parameter value does not match the contraint.
    */
-  Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint = 0, double precision = 0);
+  Parameter(const std::string& name, double value, std::shared_ptr<ConstraintInterface> constraint = 0, double precision = 0);
 
-  Parameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint, bool precision) = delete;
+  Parameter(const std::string& name, double value, std::shared_ptr<ConstraintInterface> constraint, bool precision) = delete;
 
   /**
    * @brief Copy constructor.
@@ -230,7 +230,20 @@ public:
    * @return A shared pointer toward the constraint, or NULL if
    * there is no constraint.
    */
-  virtual const std::shared_ptr<Constraint> getConstraint() const { return constraint_; }
+  virtual std::shared_ptr<const ConstraintInterface> getConstraint() const { return constraint_; }
+
+  /**
+   * @brief Return the constraint associated to this parameter if there is one.
+   *
+   * @return A referec toward the constraint if there is one, otherwise throw an exception.
+   */
+  virtual const ConstraintInterface& constraint() const
+  {
+    if (constraint_)
+      return *constraint_;
+    else
+      throw NullPointerException("Parameter::constraint(). No contraint is associated to this parameter.");
+  }
 
   /**
    * @brief Return the constraint associated to this parameter if
@@ -239,7 +252,20 @@ public:
    * @return A shared pointer toward the constraint, or NULL if there is no
    * constraint.
    */
-  virtual std::shared_ptr<Constraint> getConstraint() { return constraint_; }
+  virtual std::shared_ptr<ConstraintInterface> getConstraint() { return constraint_; }
+
+  /**
+   * @brief Return the constraint associated to this parameter if there is one.
+   *
+   * @return A referec toward the constraint if there is one, otherwise throw an exception.
+   */
+  virtual ConstraintInterface& constraint()
+  {
+    if (constraint_)
+      return *constraint_;
+    else
+      throw NullPointerException("Parameter::constraint(). No contraint is associated to this parameter.");
+  }
 
   /**
    * @brief Tells if this parameter has a constraint.
@@ -255,16 +281,14 @@ public:
    *
    * @return A pointer toward the formerly used contraint.
    */
-
-  virtual std::shared_ptr<Constraint> removeConstraint();
+  virtual std::shared_ptr<ConstraintInterface> removeConstraint();
 
   /**
    * @brief Set a constraint to this parameter.
    *
-   * @param constraint a pointer to the constraint (may be null)
+   * @param constraint A pointer to the constraint (may be null)
    */
-
-  virtual void setConstraint(std::shared_ptr<Constraint> constraint);
+  virtual void setConstraint(std::shared_ptr<ConstraintInterface> constraint);
 
   /**
    * @brief Add a new listener to this parameter.

@@ -144,7 +144,7 @@ public:
       return (1. / lambda_ - exp(-tp_ * lambda_) * (tp_ + 1. / lambda_)) / cond_;
   }
 
-  void restrictToConstraint(const Constraint& c);
+  void restrictToConstraint(const ConstraintInterface& c);
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_TRUNCATEDEXPONENTIALDISCRETEDISTRIBUTION_H

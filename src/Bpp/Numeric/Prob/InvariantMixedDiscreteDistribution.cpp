@@ -53,7 +53,7 @@ InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
   dist_(move(dist)),
   invariant_(invariant),
   p_(p),
-  nestedPrefix_(dist->getNamespace())
+  nestedPrefix_(dist_->getNamespace())
 {
   // We first change the namespace of the nested distribution:
   dist_->setNamespace("Invariant." + nestedPrefix_);
@@ -147,7 +147,7 @@ void InvariantMixedDiscreteDistribution::setNamespace(const string& prefix)
 
 /******************************************************************************/
 
-void InvariantMixedDiscreteDistribution::restrictToConstraint(const Constraint& c)
+void InvariantMixedDiscreteDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
   if (!c.isCorrect(invariant_))
     throw ConstraintException("Impossible to restrict to Constraint", &getParameter_("p"), invariant_);

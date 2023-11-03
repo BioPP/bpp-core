@@ -46,23 +46,28 @@
 using namespace bpp;
 using namespace std;
 
+short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_PROB = 1;
+short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_INTERVAL = 2;
+short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_PROB_WHEN_POSSIBLE = 3;
 
-AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix) :
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix, short discretization) :
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(),
   bounds_(nbClasses - 1),
   intMinMax_(new IntervalConstraint(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true)),
-  median_(false)
+  median_(false),
+  discretizationScheme_(discretization)
 {}
 
-AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, double delta, const std::string& prefix) :
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, double delta, const std::string& prefix, short discretization) :
   AbstractParameterAliasable(prefix),
   numberOfCategories_(nbClasses),
   distribution_(Order(delta)),
   bounds_(nbClasses - 1),
   intMinMax_(new IntervalConstraint(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true)),
-  median_(false)
+  median_(false),
+  discretizationScheme_(discretization)
 {}
 
 AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde) :
@@ -71,7 +76,8 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscret
   distribution_(adde.distribution_),
   bounds_(adde.bounds_),
   intMinMax_(adde.intMinMax_->clone()),
-  median_(adde.median_)
+  median_(adde.median_),
+  discretizationScheme_(adde.discretizationScheme_)
 {}
 
 AbstractDiscreteDistribution& AbstractDiscreteDistribution::operator=(const AbstractDiscreteDistribution& adde)
@@ -82,6 +88,7 @@ AbstractDiscreteDistribution& AbstractDiscreteDistribution::operator=(const Abst
   bounds_ = adde.bounds_;
   intMinMax_ = std::shared_ptr<IntervalConstraint>(adde.intMinMax_->clone());
   median_ = adde.median_;
+  discretizationScheme_ = adde.discretizationScheme_;
 
   return *this;
 }
@@ -321,8 +328,7 @@ size_t AbstractDiscreteDistribution::getCategoryIndex(double value) const
 
 /***********************************************************************/
 
-
-void AbstractDiscreteDistribution::discretize()
+void AbstractDiscreteDistribution::discretizeEqualProportions()
 {
   /* discretization of distribution with equal proportions in each
      category
@@ -342,7 +348,6 @@ void AbstractDiscreteDistribution::discretize()
   {
     // divide the domain into equiprobable intervals
     ec = (maxX - minX) / static_cast<double>(numberOfCategories_);
-
     for (i = 1; i < numberOfCategories_; i++)
     {
       bounds_[i - 1] = qProb(minX + static_cast<double>(i) * ec);
@@ -369,20 +374,32 @@ void AbstractDiscreteDistribution::discretize()
       {
         values[i] *= mean / t / ec;
       }
+
     }
     else
     // for each category, sets the value v such that
     //      v * length_of_the_interval = the surface of the category
     {
-      double a = Expectation(intMinMax_->getLowerBound()), b;
+      double firstBound = intMinMax_->getLowerBound(), secondBound; 
+      double a = Expectation(firstBound), b;
       for (i = 0; i < numberOfCategories_ - 1; i++)
       {
-        b = Expectation(bounds_[i]);
+        secondBound = bounds_[i];
+        b = Expectation(secondBound);
         values[i] = (b - a) / ec;
+        if (values[i] < firstBound || values[i] > secondBound) { //May happen if the two bounds are undistinguishable.
+          values[i] = (firstBound + secondBound) / 2.;
+        }
         a = b;
+        firstBound = secondBound;
       }
-      values[numberOfCategories_ - 1] = (Expectation(intMinMax_->getUpperBound()) - a) / ec;
+      secondBound = intMinMax_->getUpperBound();
+      values[numberOfCategories_ - 1] = (Expectation(secondBound) - a) / ec;
+      if (values[numberOfCategories_ - 1] < firstBound || values[numberOfCategories_ - 1] > secondBound) { //May happen if the two bounds are undistinguishable.
+        values[numberOfCategories_ - 1] = (firstBound + secondBound) / 2.;
+      }
     }
+
   }
   else
   // if maxX==minX, uniform discretization of the range
@@ -469,6 +486,70 @@ void AbstractDiscreteDistribution::discretize()
   return;
 }
 
+/***********************************************************************/
+
+void AbstractDiscreteDistribution::discretizeEqualIntervals()
+{
+  /* discretization of distribution with equal intervals
+   */
+
+  distribution_.clear();
+  bounds_.resize(numberOfCategories_ - 1);
+  vector<double> values(numberOfCategories_);
+
+  double lowerBound = intMinMax_->getLowerBound();
+  double upperBound = intMinMax_->getUpperBound();
+  double condProb = pProb(upperBound) - pProb(lowerBound);
+  double interval = (upperBound - lowerBound) / static_cast<double>(numberOfCategories_);
+
+  // Compute bounds:
+  for (size_t i = 0; i < numberOfCategories_ - 1; ++i) {
+    bounds_[i] = lowerBound + (static_cast<double>(i) + 1.) * interval;
+  }
+
+  // Compute values:
+  for (size_t i = 0; i < numberOfCategories_; ++i) {
+    values[i] = lowerBound + (static_cast<double>(i) + 0.5) * interval;
+  }
+
+  // Compute proportions:
+  deque<double> allBounds(bounds_.begin(), bounds_.end());
+  allBounds.push_front(lowerBound);
+  allBounds.push_back(upperBound);
+  for (size_t i = 0; i < numberOfCategories_; ++i)
+  {
+    distribution_[values[i]] = (pProb(allBounds[i + 1]) - pProb(allBounds[i])) / condProb;
+  }
+
+  return;
+}
+
+/***********************************************************************/
+
+void AbstractDiscreteDistribution::discretize() {
+  if (discretizationScheme_ == DISCRETIZATION_EQUAL_PROB) {
+    discretizeEqualProportions();
+  } else if (discretizationScheme_ == DISCRETIZATION_EQUAL_INTERVAL) {
+    discretizeEqualIntervals();
+  } else {
+    discretizeEqualProportions();
+    //Check bounds:
+    deque<double> allBounds(bounds_.begin(), bounds_.end());
+    allBounds.push_front(intMinMax_->getLowerBound());
+    allBounds.push_back(intMinMax_->getUpperBound());
+    bool check = true;
+    for (size_t i = 1; check && i < numberOfCategories_ + 1; ++i) {
+      if (allBounds[i] == allBounds[i - 1]) check = false;
+    }
+    if (! check) {
+      //cout << "Unidentifiable bounds. Falling back to equal intervals." << endl;
+      discretizeEqualIntervals();
+    }
+  }
+}
+
+/***********************************************************************/
+
 Vdouble AbstractDiscreteDistribution::getBounds() const
 {
   Vdouble vb(numberOfCategories_ + 1);
@@ -481,16 +562,17 @@ Vdouble AbstractDiscreteDistribution::getBounds() const
   return vb;
 }
 
-void AbstractDiscreteDistribution::restrictToConstraint(const Constraint& c)
+void AbstractDiscreteDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
-  const IntervalConstraint* pi = dynamic_cast<const IntervalConstraint*>(&c);
+  try {
+    const IntervalConstraint& pi = dynamic_cast<const IntervalConstraint&>(c);
 
-  if (!pi)
+    if (!(*intMinMax_ <= pi))
+    {
+      *intMinMax_ &= c;
+      discretize();
+    }
+  } catch(exception& e) {
     throw Exception("AbstractDiscreteDistribution::restrictToConstraint: the constraint is not an interval");
-
-  if (!(*intMinMax_ <= (*pi)))
-  {
-    *intMinMax_ &= c;
-    discretize();
   }
 }

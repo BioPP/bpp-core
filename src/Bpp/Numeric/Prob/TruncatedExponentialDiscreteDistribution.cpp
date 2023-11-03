@@ -83,7 +83,7 @@ void TruncatedExponentialDiscreteDistribution::fireParameterChanged(const Parame
 
 /******************************************************************************/
 
-void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const Constraint& c)
+void TruncatedExponentialDiscreteDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
   AbstractDiscreteDistribution::restrictToConstraint(c);
   getParameter_("tp").setConstraint(intMinMax_);

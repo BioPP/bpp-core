@@ -6,7 +6,7 @@
 //
 
 /*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
+  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
   
   This software is a computer program whose purpose is to provide classes
   for numerical calculus.
@@ -53,33 +53,21 @@ using namespace std;
 
 /** Constructor: **************************************************************/
 
-BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, double beta) :
-  AbstractDiscreteDistribution(n, NumConstants::VERY_TINY(), "Beta."), alpha_(alpha), beta_(beta), diffln_(0)
+BetaDiscreteDistribution::BetaDiscreteDistribution(size_t n, double alpha, double beta, short discretization) :
+  AbstractDiscreteDistribution(n, NumConstants::VERY_TINY(), "Beta.", discretization),
+  alpha_(alpha),
+  beta_(beta),
+  diffln_(0)
 {
-  addParameter_(new Parameter("Beta.alpha", alpha, std::make_shared<IntervalConstraint>(1, 0.0001, true)));
+  addParameter_(new Parameter("Beta.alpha", alpha, std::make_shared<IntervalConstraint>(true, 0.0001, true)));
 
   // For precision issues, beta cannot be too low
-  addParameter_(new Parameter("Beta.beta", beta, std::make_shared<IntervalConstraint>(1, 0.1, true)));
+  addParameter_(new Parameter("Beta.beta", beta, std::make_shared<IntervalConstraint>(true, 0.0001, true)));
   intMinMax_->setLowerBound(0, true);
   intMinMax_->setUpperBound(1, true);
 
   diffln_ = exp(RandomTools::lnBeta(alpha_ + 1, beta_) - RandomTools::lnBeta(alpha_, beta_));
   discretize();
-}
-
-BetaDiscreteDistribution::BetaDiscreteDistribution(const BetaDiscreteDistribution& bdd) :
-  AbstractDiscreteDistribution(bdd), alpha_(bdd.alpha_), beta_(bdd.beta_), diffln_(bdd.diffln_)
-{}
-
-BetaDiscreteDistribution& BetaDiscreteDistribution::operator=(const BetaDiscreteDistribution& bdd)
-{
-  AbstractDiscreteDistribution::operator=(bdd);
-
-  alpha_ = bdd.alpha_;
-  beta_ = bdd.beta_;
-  diffln_ = bdd.diffln_;
-
-  return *this;
 }
 
 /******************************************************************************/

@@ -59,29 +59,29 @@ Simplex::Simplex(const std::vector<double>& probas, unsigned short method, bool 
   if (fabs(1. - sum) > NumConstants::SMALL())
     throw Exception("Simplex. Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
 
-  std::shared_ptr<Constraint> pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
+  std::shared_ptr<ConstraintInterface> pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
 
-  for (unsigned int i = 0; i < dim_; i++)
+  for (auto& p : probas)
   {
-    vProb_.push_back(probas[i]);
+    vProb_.push_back(p);
   }
 
   double y = 1;
   switch (method_)
   {
   case 1:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, pc));
       y -= vProb_[i];
     }
     break;
   case 2:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / (vProb_[i] + vProb_[i + 1]), pc));
     }
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       valpha_.push_back(vProb_[i + 1] / vProb_[i]);
     }
@@ -133,30 +133,30 @@ Simplex::Simplex(size_t dim, unsigned short method, bool allowNull, const std::s
     vProb_.push_back(1. / static_cast<double>(dim_));
   }
 
-  std::shared_ptr<Constraint> pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
+  auto pc = (allowNull ? Parameter::PROP_CONSTRAINT_IN : Parameter::PROP_CONSTRAINT_EX);
 
   double y = 1;
   switch (method_)
   {
   case 1:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), vProb_[i] / y, pc));
       y -= vProb_[i];
     }
     break;
   case 2:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), 0.5, pc));
     }
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       valpha_.push_back(1.);
     }
     break;
   case 3:
-    for (unsigned int i = 0; i < dim_ - 1; i++)
+    for (size_t i = 0; i < dim_ - 1; i++)
     {
       addParameter_(new Parameter(name + "theta" + TextTools::toString(i + 1), 0.5, pc));
     }

@@ -59,7 +59,7 @@ string AutoParameter::CONSTRAINTS_KEEP   = "keep";
 
 /** Constructors: *************************************************************/
 
-AutoParameter::AutoParameter(const std::string& name, double value, std::shared_ptr<Constraint> constraint) :
+AutoParameter::AutoParameter(const std::string& name, double value, std::shared_ptr<ConstraintInterface> constraint) :
   Parameter(name, value, constraint), messageHandler_(ApplicationTools::message) {}
 
 AutoParameter::AutoParameter(const Parameter& p) : Parameter(p), messageHandler_(ApplicationTools::message) {}

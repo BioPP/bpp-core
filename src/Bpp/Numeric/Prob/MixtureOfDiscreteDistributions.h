@@ -146,7 +146,7 @@ public:
 
   void setMedian(bool median);
 
-  void restrictToConstraint(const Constraint& c);
+  void restrictToConstraint(const ConstraintInterface& c);
 
   void discretize();
 

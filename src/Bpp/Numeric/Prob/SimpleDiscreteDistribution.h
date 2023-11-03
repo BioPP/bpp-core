@@ -149,7 +149,7 @@ public:
 
   double Expectation(double a) const;
 
-  void restrictToConstraint(const Constraint& c);
+  void restrictToConstraint(const ConstraintInterface& c);
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_SIMPLEDISCRETEDISTRIBUTION_H

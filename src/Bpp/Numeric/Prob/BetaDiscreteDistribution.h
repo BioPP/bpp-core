@@ -77,16 +77,15 @@ public:
    * @param n the number of categories to use.
    * @param alpha The alpha parameter.
    * @param beta The beta parameter.
-   *
+   * @param discretization The discretization scheme to use.
    */
+  BetaDiscreteDistribution(size_t n, double alpha = 1, double beta = 1, short discretization = DISCRETIZATION_EQUAL_PROB_WHEN_POSSIBLE);
 
-  BetaDiscreteDistribution(size_t n, double alpha = 1, double beta = 1);
+  BetaDiscreteDistribution(const BetaDiscreteDistribution&) = default;
 
-  BetaDiscreteDistribution(const BetaDiscreteDistribution&);
+  BetaDiscreteDistribution& operator=(const BetaDiscreteDistribution&) = default;
 
-  BetaDiscreteDistribution& operator=(const BetaDiscreteDistribution&);
-
-  BetaDiscreteDistribution* clone() const { return new BetaDiscreteDistribution(*this); }
+  BetaDiscreteDistribution* clone() const override { return new BetaDiscreteDistribution(*this); }
 
 public:
   std::string getName() const { return "Beta";}

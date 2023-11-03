@@ -51,7 +51,7 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
   for (size_t i = 0; i < functionParameters_.size(); i++)
   {
     Parameter& p = functionParameters_[i];
-    std::shared_ptr<Constraint> constraint = p.getConstraint();
+    auto constraint = p.getConstraint();
     const string name = p.getName();
     double value = p.getValue();
     if (!constraint)
@@ -62,7 +62,7 @@ void ReparametrizationFunctionWrapper::init_(bool verbose)
     }
     else
     {
-      IntervalConstraint* interval = dynamic_cast<IntervalConstraint*>(constraint.get());
+      auto interval = dynamic_pointer_cast<IntervalConstraint>(constraint);
       if (interval)
       {
         bool isInfinite = (!interval->finiteLowerBound()) || (!interval->finiteUpperBound());

@@ -335,6 +335,16 @@ public:
     return function_->matchParametersValues(parameters);
   }
 
+  void removeConstraint(const std::string& name) override
+  {
+    return function_->removeConstraint(name);
+  }
+
+  void setConstraint(const std::string& name, std::shared_ptr<ConstraintInterface> constraint) override
+  {
+    return function_->setConstraint(name, constraint);
+  }
+
   size_t getNumberOfParameters() const
   {
     return function_->getNumberOfParameters();
@@ -448,7 +458,7 @@ public:
   InfinityFunctionWrapper* clone() const { return new InfinityFunctionWrapper(*this); }
 
 public:
-  void setParameters(const ParameterList& parameters)
+  void setParameters(const ParameterList& parameters) override
   {
     try
     {
@@ -525,6 +535,7 @@ public:
       return false;
     }
   }
+
 };
 
 /**
