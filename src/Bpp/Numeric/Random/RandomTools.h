@@ -652,10 +652,18 @@ public:
   /**
    * @brief The Beta quantile function.
    *
-   * An adaptation from the C code of R
-   *  Copyright (C) 1995, 1996  Robert Gentleman and Ross Ihaka
-   *  Copyright (C) 1998--2007  The R Development Core Team
-   *  based on code (C) 1979 and later Royal Statistical Society
+   * Code adapted from Ziheng Yang's PAML.
+   * Original comment from the PAML package:
+   * Cran, G. W., K. J. Martin and G. E. Thomas (1977).
+   * Remark AS R19 and Algorithm AS 109, Applied Statistics, 26(1), 111-114.
+   * Remark AS R83 (v.39, 309-310) and correction (v.40(1) p.236).
+   *
+   * My own implementation of the algorithm did not bracket the variable well.
+   * This version is Adpated from the pbeta and qbeta routines from
+   * "R : A Computer Language for Statistical Data Analysis".  It fails for
+   * extreme values of p and q as well, although it seems better than my
+   * previous version.
+   * Ziheng Yang, May 2001
    *
    * @param prob The probability.
    * @param alpha Alpha parameter.
