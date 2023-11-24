@@ -72,11 +72,11 @@ public:
   virtual ~AbstractParametrizable() {}
 
 public:
-  bool hasParameter(const std::string& name) const { return parameters_.hasParameter(prefix_ + name); }
+  bool hasParameter(const std::string& name) const override { return parameters_.hasParameter(prefix_ + name); }
 
-  const ParameterList& getParameters() const { return parameters_; }
+  const ParameterList& getParameters() const override { return parameters_; }
 
-  const Parameter& getParameter(const std::string& name) const
+  const Parameter& getParameter(const std::string& name) const override
   {
     return parameters_.getParameter(prefix_ + name);
   }
@@ -86,30 +86,30 @@ public:
     return parameters_.getSharedParameter(prefix_ + name);
   }
 
-  double getParameterValue(const std::string& name) const
+  double getParameterValue(const std::string& name) const override
   {
     return getParameter(name).getValue();
   }
 
-  void setAllParametersValues(const ParameterList& parameters)
+  void setAllParametersValues(const ParameterList& parameters) override
   {
     parameters_.setAllParametersValues(parameters);
     fireParameterChanged(parameters);
   }
 
-  void setParameterValue(const std::string& name, double value)
+  void setParameterValue(const std::string& name, double value) override
   {
     parameters_.setParameterValue(prefix_ + name, value);
     fireParameterChanged(parameters_.createSubList(prefix_ + name));
   }
 
-  void setParametersValues(const ParameterList& parameters)
+  void setParametersValues(const ParameterList& parameters) override
   {
     parameters_.setParametersValues(parameters);
     fireParameterChanged(parameters);
   }
 
-  bool matchParametersValues(const ParameterList& parameters)
+  bool matchParametersValues(const ParameterList& parameters) override
   {
     std::unique_ptr< std::vector<size_t> > updatedParameters(new std::vector<size_t>());
     bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
@@ -128,13 +128,13 @@ public:
     getParameter_(name).setConstraint(constraint);
   }
 
-  size_t getNumberOfParameters() const { return parameters_.size(); }
+  size_t getNumberOfParameters() const override { return parameters_.size(); }
 
-  void setNamespace(const std::string& prefix);
+  void setNamespace(const std::string& prefix) override;
 
-  std::string getNamespace() const { return prefix_; }
+  std::string getNamespace() const override { return prefix_; }
 
-  std::string getParameterNameWithoutNamespace(const std::string& name) const;
+  std::string getParameterNameWithoutNamespace(const std::string& name) const override;
 
   /**
    * @brief Notify the class when one or several parameters have changed.
@@ -238,7 +238,7 @@ protected:
   }
 
 
-  ParameterList& getParameters_() { return parameters_; }
+  ParameterList& getParameters_() override { return parameters_; }
 
   /**
    * @return The shared_ptr parameter at a given position.

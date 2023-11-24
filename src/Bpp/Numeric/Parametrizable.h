@@ -226,20 +226,20 @@ public:
    *
    * @{
    */
-  bool hasParameter(const std::string& name) const { return parameters_.hasParameter(name); }
-  const ParameterList& getParameters() const { return parameters_; }
-  const Parameter& getParameter(const std::string& name) const { return parameter_; }
-  double getParameterValue(const std::string& name) const { return 0; }
-  void setAllParametersValues(const ParameterList& parameters) {}
-  void setParameterValue(const std::string& name, double value) {}
-  void setParametersValues(const ParameterList& parameters) {}
-  bool matchParametersValues(const ParameterList& parameters) { return false; }
+  bool hasParameter(const std::string& name) const override { return parameters_.hasParameter(name); }
+  const ParameterList& getParameters() const override { return parameters_; }
+  const Parameter& getParameter(const std::string& name) const override { return parameter_; }
+  double getParameterValue(const std::string& name) const override { return 0; }
+  void setAllParametersValues(const ParameterList& parameters) override {}
+  void setParameterValue(const std::string& name, double value) override {}
+  void setParametersValues(const ParameterList& parameters) override {}
+  bool matchParametersValues(const ParameterList& parameters) override { return false; }
   void removeConstraint(const std::string& name) override {}
   void setConstraint(const std::string& name, std::shared_ptr<ConstraintInterface> constraint) override {}
-  size_t getNumberOfParameters() const { return 0; }
-  void setNamespace(const std::string& prefix) {}
-  std::string getNamespace() const { return ""; }
-  std::string getParameterNameWithoutNamespace(const std::string& name) const { return name; }
+  size_t getNumberOfParameters() const override { return 0; }
+  void setNamespace(const std::string& prefix) override {}
+  std::string getNamespace() const override { return ""; }
+  std::string getParameterNameWithoutNamespace(const std::string& name) const override { return name; }
   /** @} */
 };
 } // end of namespace bpp.

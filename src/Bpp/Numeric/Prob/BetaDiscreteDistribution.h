@@ -88,11 +88,11 @@ public:
   BetaDiscreteDistribution* clone() const override { return new BetaDiscreteDistribution(*this); }
 
 public:
-  std::string getName() const { return "Beta";}
+  std::string getName() const override { return "Beta";}
 
-  void fireParameterChanged(const ParameterList& parameters);
+  void fireParameterChanged(const ParameterList& parameters) override;
 
-  double randC() const
+  double randC() const override
   {
     double x = RandomTools::randBeta(getParameterValue("alpha"),
                                      getParameterValue("beta"));
@@ -102,11 +102,11 @@ public:
     return x;
   }
 
-  double qProb(double x) const;
+  double qProb(double x) const override;
 
-  double pProb(double x) const;
+  double pProb(double x) const override;
 
-  double Expectation(double a) const;
+  double Expectation(double a) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_BETADISCRETEDISTRIBUTION_H
