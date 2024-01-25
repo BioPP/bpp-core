@@ -56,7 +56,7 @@ class InvariantMixedDiscreteDistribution :
   public AbstractDiscreteDistribution
 {
 private:
-  std::unique_ptr<DiscreteDistribution> dist_;
+  std::unique_ptr<DiscreteDistributionInterface> dist_;
   double invariant_, p_;
   std::string nestedPrefix_;
 
@@ -70,7 +70,7 @@ public:
    * @param p               The probability of being in the invariant category.
    * @param invariant       The value of the invariant category (typically 0, but other values may be specified).
    */
-  InvariantMixedDiscreteDistribution(std::unique_ptr<DiscreteDistribution> dist, double p, double invariant = 0.);
+  InvariantMixedDiscreteDistribution(std::unique_ptr<DiscreteDistributionInterface> dist, double p, double invariant = 0.);
 
   virtual ~InvariantMixedDiscreteDistribution() {}
 
@@ -116,7 +116,7 @@ public:
   /**
    * @return The nested, conditional, sub-distribution.
    */
-  const DiscreteDistribution& variableSubDistribution() const { return *dist_; }
+  const DiscreteDistributionInterface& variableSubDistribution() const { return *dist_; }
 
   double qProb(double x) const
   {

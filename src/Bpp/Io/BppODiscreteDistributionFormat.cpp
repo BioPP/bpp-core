@@ -66,13 +66,13 @@ using namespace bpp;
 using namespace std;
 
 
-unique_ptr<DiscreteDistribution> BppODiscreteDistributionFormat::readDiscreteDistribution(
+unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDiscreteDistribution(
   const std::string& distDescription,
   bool parseArguments)
 {
   unparsedArguments_.clear();
   string distName;
-  unique_ptr<DiscreteDistribution> rDist;
+  unique_ptr<DiscreteDistributionInterface> rDist;
   map<string, string> args;
   KeyvalTools::parseProcedure(distDescription, distName, args);
 
@@ -167,8 +167,8 @@ unique_ptr<DiscreteDistribution> BppODiscreteDistributionFormat::readDiscreteDis
     if (args.find("probas") == args.end())
       throw Exception("Missing argument 'probas' in Mixture distribution");
     vector<double> probas;
-    vector< unique_ptr<DiscreteDistribution> > v_pdd;
-    unique_ptr<DiscreteDistribution> pdd;
+    vector<unique_ptr<DiscreteDistributionInterface>> v_pdd;
+    unique_ptr<DiscreteDistributionInterface> pdd;
     string rf = args["probas"];
     StringTokenizer strtok2(rf.substr(1, rf.length() - 2), ",");
     while (strtok2.hasMoreToken())
@@ -294,7 +294,7 @@ unique_ptr<DiscreteDistribution> BppODiscreteDistributionFormat::readDiscreteDis
 
 
 void BppODiscreteDistributionFormat::writeDiscreteDistribution(
-  const DiscreteDistribution& dist,
+  const DiscreteDistributionInterface& dist,
   OutputStream& out,
   std::map<std::string, std::string>& globalAliases,
   std::vector<std::string>& writtenNames) const
@@ -415,7 +415,7 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
 }
 
 void BppODiscreteDistributionFormat::initialize_(
-  DiscreteDistribution& rDist)
+  DiscreteDistributionInterface& rDist)
 {
   ParameterList pl = rDist.getIndependentParameters();
 

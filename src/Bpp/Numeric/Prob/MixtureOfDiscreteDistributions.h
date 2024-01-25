@@ -72,7 +72,7 @@ class MixtureOfDiscreteDistributions :
   public AbstractDiscreteDistribution
 {
 protected:
-  std::vector<DiscreteDistribution*> vdd_;
+  std::vector<DiscreteDistributionInterface*> vdd_;
 
   std::vector<double> probas_;
 
@@ -87,8 +87,7 @@ public:
    * Distributions.
    * @param probas The vector of probabilities.
    */
-
-  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistribution> >& distributions, const std::vector<double>& probas);
+  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistributionInterface>>& distributions, const std::vector<double>& probas);
 
   virtual ~MixtureOfDiscreteDistributions();
 
@@ -105,14 +104,14 @@ public:
    * @brief Returns the number of discrete distributions in the
    * mixture.
    */
-  size_t getNumberOfDistributions() const {return vdd_.size(); }
+  size_t getNumberOfDistributions() const { return vdd_.size(); }
 
   /**
    * @brief Returns a pointer to the n-th discrete distribution in the mixture.
    *
    * @param n tne number of the distribution in the mixture;
    */
-  const DiscreteDistribution& nDistribution(size_t n) const
+  const DiscreteDistributionInterface& nDistribution(size_t n) const
   {
     return *vdd_[n];
   }

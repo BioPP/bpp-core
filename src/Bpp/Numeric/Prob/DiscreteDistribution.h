@@ -66,15 +66,15 @@ namespace bpp
  * depend on the parameters values, depending on the kind of
  * discretization used.
  */
-class DiscreteDistribution :
+class DiscreteDistributionInterface :
   public virtual ParameterAliasable
 {
 public:
-  DiscreteDistribution() {}
-  virtual ~DiscreteDistribution() {}
+  DiscreteDistributionInterface() {}
+  virtual ~DiscreteDistributionInterface() {}
 
 
-  DiscreteDistribution* clone() const = 0;
+  DiscreteDistributionInterface* clone() const = 0;
 
 public:
   /**

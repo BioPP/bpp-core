@@ -82,7 +82,7 @@ public:
    * @return A new DiscreteDistribution object according to options specified.
    * @throw Exception if an error occured.
    */
-  virtual std::unique_ptr<DiscreteDistribution> readDiscreteDistribution(
+  virtual std::unique_ptr<DiscreteDistributionInterface> readDiscreteDistribution(
     const std::string& distrDescription,
     bool parseArguments = true) = 0;
 
@@ -114,7 +114,7 @@ public:
    * @throw Exception if an error occured.
    */
   virtual void writeDiscreteDistribution(
-    const DiscreteDistribution& dist,
+    const DiscreteDistributionInterface& dist,
     OutputStream& out,
     std::map<std::string, std::string>& globalAliases,
     std::vector<std::string>& writtenNames) const = 0;

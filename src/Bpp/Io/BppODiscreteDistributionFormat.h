@@ -72,12 +72,12 @@ public:
 
   const std::string getFormatDescription() const { return "Bpp Options format."; }
 
-  std::unique_ptr<DiscreteDistribution> readDiscreteDistribution(const std::string& distDescription, bool parseArguments = true);
+  std::unique_ptr<DiscreteDistributionInterface> readDiscreteDistribution(const std::string& distDescription, bool parseArguments = true);
 
   const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
   void writeDiscreteDistribution(
-    const DiscreteDistribution& dist,
+    const DiscreteDistributionInterface& dist,
     OutputStream& out,
     std::map<std::string, std::string>& globalAliases,
     std::vector<std::string>& writtenNames) const;
@@ -91,7 +91,7 @@ protected:
    * @param rDist The distribution to set up.
    * @throw Exception if an error occured.
    */
-  void initialize_(DiscreteDistribution& rDist);
+  void initialize_(DiscreteDistributionInterface& rDist);
 };
 } // end of namespace bpp.
 #endif // BPP_IO_BPPODISCRETEDISTRIBUTIONFORMAT_H
