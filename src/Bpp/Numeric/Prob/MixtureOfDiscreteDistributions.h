@@ -72,7 +72,7 @@ class MixtureOfDiscreteDistributions :
   public AbstractDiscreteDistribution
 {
 protected:
-  std::vector<DiscreteDistributionInterface*> vdd_;
+  std::vector<std::unique_ptr<DiscreteDistributionInterface> > vdd_;
 
   std::vector<double> probas_;
 
