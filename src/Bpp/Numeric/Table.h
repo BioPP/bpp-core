@@ -533,6 +533,28 @@ public:
     nCol_--;
   }
 
+  /**
+   * @brief Delete the given columns.
+   *
+   * @param index The index of the first column
+   * @param len the number of columns to delete
+   * @throw IndexOutOfBoundsException If index is >= number of columns.
+   */
+  
+  void deleteColumns(size_t index, size_t len)
+  {
+    if (index >= nCol_)
+      throw IndexOutOfBoundsException("Table::deleteColumns(size_t, size_t).", index, 0, nCol_ - 1);
+    if (index+len >= nCol_)
+      throw IndexOutOfBoundsException("Table::deleteColumns(size_t, size_t).", index+len, 0, nCol_ - 1);
+    
+    data_.erase(data_.begin() + (long)index, data_.begin() + (long)(index+len));
+    if (colNames_.size() != 0)
+      colNames_.erase(colNames_.begin() + (long)(index), colNames_.begin() + (long)(index+len));
+
+    nCol_ -= len;
+  }
+
 /**
  * @brief Delete the given column.
  *
