@@ -189,7 +189,7 @@ public:
   double getFirstOrderDerivative(const std::string& variable) const
   {
     return std::dynamic_pointer_cast<const FirstOrderDerivable>(function_)->getFirstOrderDerivative(variable)
-           * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative();
+           * dynamic_cast<const TransformedParameter&>(parameter(variable)).getFirstOrderDerivative();
   }
 };
 
@@ -243,16 +243,16 @@ public:
   double getSecondOrderDerivative(const std::string& variable) const
   {
     return std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable)
-           * std::pow(dynamic_cast<const TransformedParameter&>(getParameter(variable)).getFirstOrderDerivative(), 2)
+           * std::pow(dynamic_cast<const TransformedParameter&>(parameter(variable)).getFirstOrderDerivative(), 2)
            + std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getFirstOrderDerivative(variable)
-           * dynamic_cast<const TransformedParameter&>(getParameter(variable)).getSecondOrderDerivative();
+           * dynamic_cast<const TransformedParameter&>(parameter(variable)).getSecondOrderDerivative();
   }
 
   double getSecondOrderDerivative(const std::string& variable1, const std::string& variable2) const
   {
     return std::dynamic_pointer_cast<const SecondOrderDerivable>(function_)->getSecondOrderDerivative(variable1, variable2)
-           * dynamic_cast<const TransformedParameter&>(getParameter(variable1)).getFirstOrderDerivative()
-           * dynamic_cast<const TransformedParameter&>(getParameter(variable2)).getFirstOrderDerivative();
+           * dynamic_cast<const TransformedParameter&>(parameter(variable1)).getFirstOrderDerivative()
+           * dynamic_cast<const TransformedParameter&>(parameter(variable2)).getFirstOrderDerivative();
   }
 };
 } // end of namespace bpp.

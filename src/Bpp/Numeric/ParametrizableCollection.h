@@ -331,7 +331,7 @@ public:
 
     for (const auto& pname:nplm)
     {
-      Parameter* p = new Parameter(object->getParameters().getParameter(pname));
+      Parameter* p = new Parameter(object->getParameters().parameter(pname));
       p->setName(pname + "_" + TextTools::toString(objectIndex));
       addParameter_(p);
     }

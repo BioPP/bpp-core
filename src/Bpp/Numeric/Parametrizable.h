@@ -89,7 +89,7 @@ public:
    * @return The parameter with given name.
    * @throw ParameterNotFoundException if no parameter with this name is found.
    */
-  virtual const Parameter& getParameter(const std::string& name) const = 0;
+  virtual const Parameter& parameter(const std::string& name) const = 0;
 
   /**
    * @brief Get the value for parameter of name 'name'.
@@ -228,7 +228,7 @@ public:
    */
   bool hasParameter(const std::string& name) const override { return parameters_.hasParameter(name); }
   const ParameterList& getParameters() const override { return parameters_; }
-  const Parameter& getParameter(const std::string& name) const override { return parameter_; }
+  const Parameter& parameter(const std::string& name) const override { return parameter_; }
   double getParameterValue(const std::string& name) const override { return 0; }
   void setAllParametersValues(const ParameterList& parameters) override {}
   void setParameterValue(const std::string& name, double value) override {}

@@ -130,7 +130,7 @@ bool ParametersStopCondition::isToleranceReached() const
   for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
   {
     Parameter& p = newParametersEstimates_[i];
-    double lastEstimate = lastParametersEstimates_.getParameter(p.getName()).getValue();
+    double lastEstimate = lastParametersEstimates_.parameter(p.getName()).getValue();
     double newEstimate = p.getValue();
     double tol = NumTools::abs<double>(newEstimate - lastEstimate);
     if (tol > tolerance_)
@@ -151,7 +151,7 @@ double ParametersStopCondition::getCurrentTolerance() const
     for (unsigned int i = 0; i < newParametersEstimates_.size(); i++)
     {
       Parameter& p = newParametersEstimates_[i];
-      double lastEstimate = lastParametersEstimates_.getParameter(p.getName()).getValue();
+      double lastEstimate = lastParametersEstimates_.parameter(p.getName()).getValue();
       double newEstimate = p.getValue();
       double tol = NumTools::abs<double>(newEstimate - lastEstimate);
       if (tol > maxTol)

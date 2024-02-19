@@ -117,7 +117,7 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
       string pname = optDesc_->getParameterNames(i)[j];
       if (parameters.hasParameter(pname))
       {
-        optParameters_[i].addParameter(parameters.getParameter(pname));
+        optParameters_[i].addParameter(parameters.parameter(pname));
       }
     }
     nbParameters_[i] = optParameters_[i].size();

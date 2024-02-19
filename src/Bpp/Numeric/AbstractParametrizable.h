@@ -76,19 +76,19 @@ public:
 
   const ParameterList& getParameters() const override { return parameters_; }
 
-  const Parameter& getParameter(const std::string& name) const override
+  const Parameter& parameter(const std::string& name) const override
+  {
+    return parameters_.parameter(prefix_ + name);
+  }
+
+  const std::shared_ptr<Parameter>& getParameter(const std::string& name) const
   {
     return parameters_.getParameter(prefix_ + name);
   }
 
-  const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const
-  {
-    return parameters_.getSharedParameter(prefix_ + name);
-  }
-
   double getParameterValue(const std::string& name) const override
   {
-    return getParameter(name).getValue();
+    return parameter(name).getValue();
   }
 
   void setAllParametersValues(const ParameterList& parameters) override
@@ -201,7 +201,7 @@ protected:
   {
     if (!hasParameter(name))
       throw ParameterNotFoundException("AbstractParametrizable::getParameter_().", prefix_ + name);
-    return parameters_.getParameter(prefix_ + name);
+    return parameters_.parameter(prefix_ + name);
   }
 
   /**
@@ -220,7 +220,7 @@ protected:
    */
   const Parameter& getParameterWithNamespace_(const std::string& name) const
   {
-    return getParameter(name);
+    return parameter(name);
   }
 
   Parameter& getParameter_(size_t index)
@@ -244,14 +244,14 @@ protected:
    * @return The shared_ptr parameter at a given position.
    * @warning No check is performed on the validity of the index given as input!
    */
-  const std::shared_ptr<Parameter>& getSharedParameter(size_t i) const
+  const std::shared_ptr<Parameter>& getParameter(size_t i) const
   {
-    return parameters_.getSharedParameter(i);
+    return parameters_.getParameter(i);
   }
 
-  std::shared_ptr<Parameter>& getSharedParameter(size_t i)
+  std::shared_ptr<Parameter>& getParameter(size_t i)
   {
-    return parameters_.getSharedParameter(i);
+    return parameters_.getParameter(i);
   }
 };
 } // end of namespace bpp.

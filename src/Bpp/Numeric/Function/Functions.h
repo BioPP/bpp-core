@@ -295,9 +295,9 @@ public:
     return function_->getParameters();
   }
 
-  const Parameter& getParameter(const std::string& name) const override
+  const Parameter& parameter(const std::string& name) const override
   {
-    return function_->getParameter(name);
+    return function_->parameter(name);
   }
 
   double getValue() const override
@@ -633,8 +633,8 @@ public:
 
   double getValue() const
   {
-    double x = getParameter("x").getValue();
-    double y = getParameter("y").getValue();
+    double x = parameter("x").getValue();
+    double y = parameter("y").getValue();
     return x * x + y * y;
   }
 

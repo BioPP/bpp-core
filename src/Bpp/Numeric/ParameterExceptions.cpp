@@ -54,7 +54,7 @@ ParameterException::ParameterException(const std::string& text, const Parameter*
   Exception("ParameterException: " + text + (param != 0 ? "(" + param->getName() + ")" : string(""))),
   parameter_(param) {}
 
-const Parameter* ParameterException::getParameter() const { return parameter_; }
+const Parameter* ParameterException::parameter() const { return parameter_; }
 
 /******************************************************************************/
 
@@ -71,6 +71,6 @@ ParameterNotFoundException::ParameterNotFoundException(const string& text, const
   Exception("ParameterNotFoundException: " + text + (!TextTools::isEmpty(param) ? "(" + param + ")" : string(""))),
   parameter_(param) {}
 
-std::string ParameterNotFoundException::getParameter() const { return parameter_; }
+std::string ParameterNotFoundException::parameter() const { return parameter_; }
 
 /******************************************************************************/

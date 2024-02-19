@@ -86,7 +86,7 @@ ParameterList::~ParameterList()
 
 /******************************************************************************/
 
-const Parameter& ParameterList::getParameter(const std::string& name) const
+const Parameter& ParameterList::parameter(const std::string& name) const
 {
   for (size_t i = 0; i < size(); i++)
   {
@@ -94,12 +94,12 @@ const Parameter& ParameterList::getParameter(const std::string& name) const
     if (p->getName() == name)
       return *p;
   }
-  throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
+  throw ParameterNotFoundException("ParameterList::parameter('name').", name);
 }
 
 /******************************************************************************/
 
-const shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name) const
+const shared_ptr<Parameter>& ParameterList::getParameter(const std::string& name) const
 {
   for (size_t i = 0; i < size(); i++)
   {
@@ -107,7 +107,7 @@ const shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string
     if (p->getName() == name)
       return p;
   }
-  throw ParameterNotFoundException("ParameterList::getSharedParameter('name').", name);
+  throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
 
 
@@ -126,7 +126,7 @@ double ParameterList::getParameterValue(const std::string& name) const
 
 /******************************************************************************/
 
-Parameter& ParameterList::getParameter(const std::string& name)
+Parameter& ParameterList::parameter(const std::string& name)
 {
   for (size_t i = 0; i < size(); i++)
   {
@@ -134,12 +134,12 @@ Parameter& ParameterList::getParameter(const std::string& name)
     if (p->getName() == name)
       return *p;
   }
-  throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
+  throw ParameterNotFoundException("ParameterList::parameter('name').", name);
 }
 
 /******************************************************************************/
 
-shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name)
+shared_ptr<Parameter>& ParameterList::getParameter(const std::string& name)
 {
   for (size_t i = 0; i < size(); i++)
   {
@@ -147,7 +147,7 @@ shared_ptr<Parameter>& ParameterList::getSharedParameter(const std::string& name
     if (p->getName() == name)
       return p;
   }
-  throw ParameterNotFoundException("ParameterList::getSharedParameter('name').", name);
+  throw ParameterNotFoundException("ParameterList::getParameter('name').", name);
 }
 
 
@@ -158,7 +158,7 @@ ParameterList ParameterList::createSubList(const std::vector<std::string>& names
   ParameterList pl;
   for (size_t i = 0; i < names.size(); i++)
   {
-    Parameter param = getParameter(names[i]);
+    Parameter param = parameter(names[i]);
     pl.addParameter(param);
   }
   return pl;
@@ -171,7 +171,7 @@ ParameterList ParameterList::shareSubList(const std::vector<std::string>& names)
   ParameterList pl;
   for (const auto& name:names)
   {
-    pl.shareParameter(getSharedParameter(name));
+    pl.shareParameter(getParameter(name));
   }
 
   return pl;
@@ -182,7 +182,7 @@ ParameterList ParameterList::shareSubList(const std::vector<std::string>& names)
 ParameterList ParameterList::createSubList(const std::string& name) const
 {
   ParameterList pl;
-  Parameter param = getParameter(name);
+  Parameter param = parameter(name);
   pl.addParameter(param);
   return pl;
 }
@@ -356,7 +356,7 @@ void ParameterList::shareParameters(const ParameterList& params)
 {
   for (size_t i = 0; i < params.size(); i++)
   {
-    shareParameter(params.getSharedParameter(i));
+    shareParameter(params.getParameter(i));
   }
 }
 
@@ -364,7 +364,7 @@ void ParameterList::shareParameters(const ParameterList& params)
 
 void ParameterList::setParameterValue(const string& name, double value)
 {
-  Parameter* p = &getParameter(name);
+  Parameter* p = &parameter(name);
   p->setValue(value);
 }
 
@@ -375,7 +375,7 @@ void ParameterList::setAllParametersValues(const ParameterList& params)
   // First we check if all values are correct:
   for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
-    const Parameter* p = &params.getParameter((*it)->getName());
+    const Parameter* p = &params.parameter((*it)->getName());
     if ((*it)->hasConstraint() && !(*it)->getConstraint()->isCorrect(p->getValue()))
       throw ConstraintException("ParameterList::setParametersValues()", (*it).get(), p->getValue());
   }
@@ -383,7 +383,7 @@ void ParameterList::setAllParametersValues(const ParameterList& params)
   // If all values are ok, we set them:
   for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
-    const Parameter* p = &params.getParameter((*it)->getName());
+    const Parameter* p = &params.parameter((*it)->getName());
     (*it)->setValue(p->getValue());
   }
 }
@@ -397,7 +397,7 @@ void ParameterList::setParametersValues(const ParameterList& params)
   {
     if (hasParameter((*it)->getName()))
     {
-      Parameter* p = &getParameter((*it)->getName());
+      Parameter* p = &parameter((*it)->getName());
       if (p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
         throw ConstraintException("ParameterList::setParametersValues()", p, (*it)->getValue());
     }
@@ -409,7 +409,7 @@ void ParameterList::setParametersValues(const ParameterList& params)
     {
       if (hasParameter((*it)->getName()))
       {
-        Parameter* p = &getParameter((*it)->getName());
+        Parameter* p = &parameter((*it)->getName());
         p->setValue((*it)->getValue());
       }
     }
@@ -425,7 +425,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
   {
     if (hasParameter((*it)->getName()))
     {
-      const Parameter* p = &getParameter((*it)->getName());
+      const Parameter* p = &parameter((*it)->getName());
       if (p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
         throw ConstraintException("ParameterList::testParametersValues()", p, (*it)->getValue());
     }
@@ -438,7 +438,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
   {
     if (hasParameter((*it)->getName()))
     {
-      const Parameter* p = &getParameter((*it)->getName());
+      const Parameter* p = &parameter((*it)->getName());
       if (p->getValue() != (*it)->getValue())
         ch |= 1;
     }
@@ -455,7 +455,7 @@ bool ParameterList::matchParametersValues(const ParameterList& params, vector<si
   {
     if (hasParameter((*it)->getName()))
     {
-      Parameter* p = &getParameter((*it)->getName());
+      Parameter* p = &parameter((*it)->getName());
       if (p->hasConstraint() && !p->getConstraint()->isCorrect((*it)->getValue()))
         throw ConstraintException("ParameterList::matchParametersValues()", p, (*it)->getValue());
     }
@@ -469,7 +469,7 @@ bool ParameterList::matchParametersValues(const ParameterList& params, vector<si
   {
     if (hasParameter((*it)->getName()))
     {
-      Parameter* p = &getParameter((*it)->getName());
+      Parameter* p = &parameter((*it)->getName());
       if (p->getValue() != (*it)->getValue())
       {
         ch |= 1;
@@ -488,7 +488,7 @@ void ParameterList::setAllParameters(const ParameterList& params)
 {
   for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
-    const Parameter* p = &params.getParameter((*it)->getName());
+    const Parameter* p = &params.parameter((*it)->getName());
     **it = *p;
   }
 }
@@ -498,7 +498,7 @@ void ParameterList::setParameters(const ParameterList& params)
 {
   for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
-    Parameter* p = &getParameter((*it)->getName());
+    Parameter* p = &parameter((*it)->getName());
     *p = **it;
   }
 }
@@ -522,7 +522,7 @@ void ParameterList::matchParameters(const ParameterList& params)
   {
     if (hasParameter((*it)->getName()))
     {
-      Parameter* p = &getParameter((*it)->getName());
+      Parameter* p = &parameter((*it)->getName());
       *p = **it;
     }
   }

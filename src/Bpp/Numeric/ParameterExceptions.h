@@ -93,7 +93,7 @@ public:
    *
    * @return A const pointer toward the parameter.
    */
-  virtual const Parameter* getParameter() const;
+  virtual const Parameter* parameter() const;
 };
 
 /**
@@ -157,7 +157,7 @@ public:
    *
    * @return The parameter name.
    */
-  virtual std::string getParameter() const;
+  virtual std::string parameter() const;
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PARAMETEREXCEPTIONS_H
