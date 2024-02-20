@@ -51,7 +51,8 @@
 
 namespace bpp
 {
-/** @brief Exception base class.
+/** 
+ * @brief Exception base class.
  * Overload exception constructor (to control the exceptions mechanism).
  * Destructor is already virtual (from std::exception)
  */
