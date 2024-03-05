@@ -109,7 +109,7 @@ public:
     Parameter* p = &(*pl_)[alias_];
     if (p->getName() != name_)
       throw Exception("AbstractParameterAliasable::AliasParameterListener::parameterValueChanged. Error, aliased parameter have change, maybe because it was renamed, or a parameter was removed?");
-    p->setValue(event.getParameter()->Parameter::getValue());
+    p->setValue(event.parameter()->Parameter::getValue());
   }
 
   void parameterConstraintChanged(ParameterEvent& event)
@@ -117,7 +117,7 @@ public:
     Parameter* p = &(*pl_)[alias_];
     if (p->getName() != name_)
       throw Exception("AbstractParameterAliasable::AliasParameterListener::parameterConstraintChanged. Error, aliased parameter have change, maybe because it was renamed, or a parameter was removed?");
-    p->setConstraint(event.getParameter()->getConstraint());
+    p->setConstraint(event.parameter()->getConstraint());
   }
 
   const std::string& getName() const { return name_; }
@@ -232,7 +232,7 @@ protected:
   void addParameter_(Parameter* parameter)
   {
     AbstractParametrizable::addParameter_(parameter);
-    independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameter->getName())));
+    independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(parameter->getName())));
   }
 
   void addParameters_(const ParameterList& parameters)
@@ -241,7 +241,7 @@ protected:
 
     for (size_t i = 0; i < parameters.size(); ++i)
     {
-      independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
+      independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
   }
 
@@ -256,7 +256,7 @@ protected:
     AbstractParametrizable::shareParameters_(parameters);
     for (size_t i = 0; i < parameters.size(); ++i)
     {
-      independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
+      independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
   }
 
@@ -265,7 +265,7 @@ protected:
     AbstractParametrizable::includeParameters_(parameters);
     for (size_t i = 0; i < parameters.size(); ++i)
     {
-      independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
+      independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(parameters[i].getName())));
     }
   }
 

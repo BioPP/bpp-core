@@ -102,8 +102,8 @@ public:
    * @return The shared_ptr parameter at a given position.
    * @warning No check is performed on the validity of the index given as input!
    */
-  virtual const std::shared_ptr<Parameter>& getSharedParameter(size_t i) const { return parameters_[i]; }
-  virtual std::shared_ptr<Parameter>& getSharedParameter(size_t i) { return parameters_[i]; }
+  virtual const std::shared_ptr<Parameter>& getParameter(size_t i) const { return parameters_[i]; }
+  virtual std::shared_ptr<Parameter>& getParameter(size_t i) { return parameters_[i]; }
 
   /**
    * @brief Get the parameter with name <i>name</i>.
@@ -112,7 +112,7 @@ public:
    * @return A const reference toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual const Parameter& getParameter(const std::string& name) const;
+  virtual const Parameter& parameter(const std::string& name) const;
 
   /**
    * @brief Get the parameter with name <i>name</i> as a shared pointer.
@@ -121,7 +121,7 @@ public:
    * @return A const shared parameter toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual const std::shared_ptr<Parameter>& getSharedParameter(const std::string& name) const;
+  virtual const std::shared_ptr<Parameter>& getParameter(const std::string& name) const;
 
   /**
    * @brief Get the value of the parameter with name <i>name</i>.
@@ -140,7 +140,7 @@ public:
    * @return A reference toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual Parameter& getParameter(const std::string& name);
+  virtual Parameter& parameter(const std::string& name);
 
   /**
    * @brief Get the parameter with name <i>name</i> as a shared pointer.
@@ -149,7 +149,7 @@ public:
    * @return A shared parameter toward the parameter with name <i>name</i>.
    * @throw ParameterNotFoundException If no parameter with the given name is found.
    */
-  virtual std::shared_ptr<Parameter>& getSharedParameter(const std::string& name);
+  virtual std::shared_ptr<Parameter>& getParameter(const std::string& name);
 
   /**
    * @brief Get given parameters as a sublist.

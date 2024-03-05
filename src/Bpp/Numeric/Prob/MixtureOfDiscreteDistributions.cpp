@@ -48,7 +48,7 @@ using namespace bpp;
 using namespace std;
 
 MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(
-    const vector< unique_ptr<DiscreteDistribution> >& distributions,
+    const vector<unique_ptr<DiscreteDistributionInterface>>& distributions,
     const vector<double>& probas ) :
   AbstractDiscreteDistribution(1, "Mixture."),
   vdd_(),
@@ -86,7 +86,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(
 
   for (size_t i = 0; i < size; i++)
   {
-    vdd_.push_back(distributions[i]->clone());
+    vdd_.push_back(unique_ptr<DiscreteDistributionInterface>(distributions[i]->clone()));
   }
 
   //  Parameters
@@ -118,7 +118,7 @@ MixtureOfDiscreteDistributions::MixtureOfDiscreteDistributions(const MixtureOfDi
   for (size_t i = 0; i < mdd.vdd_.size(); i++)
   {
     probas_.push_back(mdd.probas_[i]);
-    vdd_.push_back(mdd.vdd_[i]->clone());
+    vdd_.push_back(unique_ptr<DiscreteDistributionInterface>(mdd.vdd_[i]->clone()));
     vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
   }
 }
@@ -133,7 +133,7 @@ MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const 
   for (size_t i = 0; i < mdd.vdd_.size(); i++)
   {
     probas_.push_back(mdd.probas_[i]);
-    vdd_.push_back(mdd.vdd_[i]->clone());
+    vdd_.push_back(unique_ptr<DiscreteDistributionInterface>(mdd.vdd_[i]->clone()));
     vNestedPrefix_.push_back(mdd.vNestedPrefix_[i]);
   }
 
@@ -142,11 +142,6 @@ MixtureOfDiscreteDistributions& MixtureOfDiscreteDistributions::operator=(const 
 
 MixtureOfDiscreteDistributions::~MixtureOfDiscreteDistributions()
 {
-  for (size_t i = 0; i < vdd_.size(); i++)
-  {
-    delete vdd_[i];
-  }
-
   vdd_.clear();
 }
 

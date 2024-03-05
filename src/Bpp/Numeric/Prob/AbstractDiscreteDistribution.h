@@ -57,7 +57,7 @@ namespace bpp
  * By default, category values that differ less than 10E-9 will be considered identical.
  */
 class AbstractDiscreteDistribution :
-  public virtual DiscreteDistribution,
+  public virtual DiscreteDistributionInterface,
   public AbstractParameterAliasable
 {
 public:

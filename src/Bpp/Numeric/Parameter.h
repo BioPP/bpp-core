@@ -76,8 +76,8 @@ public:
   ParameterEvent* clone() const { return new ParameterEvent(*this); }
 
 public:
-  const Parameter* getParameter() const { return parameter_; }
-  Parameter* getParameter() { return parameter_; }
+  const Parameter* parameter() const { return parameter_; }
+  Parameter* parameter() { return parameter_; }
 };
 
 /**

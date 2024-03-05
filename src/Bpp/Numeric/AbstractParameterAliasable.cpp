@@ -52,7 +52,7 @@ AbstractParameterAliasable::AbstractParameterAliasable(const AbstractParameterAl
 {
   for (size_t i = 0; i < ap.independentParameters_.size(); ++i)
   {
-    independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
+    independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
   }
 
   // Actualize the register with adequate pointers:
@@ -79,7 +79,7 @@ AbstractParameterAliasable& AbstractParameterAliasable::operator=(const Abstract
 
   for (size_t i = 0; i < ap.independentParameters_.size(); i++)
   {
-    independentParameters_.shareParameter(getSharedParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
+    independentParameters_.shareParameter(getParameter(getParameterNameWithoutNamespace(ap.independentParameters_[i].getName())));
   }
 
   // Actualize the register with adequate pointers:
@@ -174,7 +174,7 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
       Parameter* pp = 0;
       try
       {
-        pp = &plpars.getParameter(it->second);
+        pp = &plpars.parameter(it->second);
       }
       catch (ParameterNotFoundException& e)
       {
@@ -185,7 +185,7 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
       unique_ptr<Parameter> p2(pp->clone());
       p2->setName(it->first);
       plpars.addParameter(p2.release());
-      plpars.getParameter(it->first);
+      plpars.parameter(it->first);
       aliasParameters(it->second, it->first);
       if (verbose)
         ApplicationTools::displayResult("Parameter alias found", it->first + " -> " + it->second + " = " + TextTools::toString(pp->getValue()));
@@ -217,7 +217,7 @@ void AbstractParameterAliasable::unaliasParameters(const std::string& p1, const 
   getParameter_(p1).removeParameterListener(id);
   aliasListenersRegister_.erase(it);
   // Finally we re-add p2 to the list of independent parameters:
-  independentParameters_.shareParameter(getSharedParameter(p2));
+  independentParameters_.shareParameter(getParameter(p2));
 }
 
 void AbstractParameterAliasable::setNamespace(const std::string& prefix)
@@ -291,7 +291,7 @@ ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterLi
              pl.hasParameter(it.second->getAlias())))
     {
       b = true;
-      aliases.addParameter(getParameter(it.second->getAlias()));
+      aliases.addParameter(parameter(it.second->getAlias()));
     }
   }
 
@@ -306,7 +306,7 @@ ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterLi
                pl.hasParameter(it.second->getAlias())))
       {
         b = true;
-        aliases.addParameter(getParameter(it.second->getAlias()));
+        aliases.addParameter(parameter(it.second->getAlias()));
       }
     }
   }
@@ -344,7 +344,7 @@ ParameterList AbstractParameterAliasable::getFromParameters(const ParameterList&
              pl.hasParameter(it.second->getFrom())))
     {
       b = true;
-      from.addParameter(getParameter(it.second->getFrom()));
+      from.addParameter(parameter(it.second->getFrom()));
     }
   }
 
@@ -359,7 +359,7 @@ ParameterList AbstractParameterAliasable::getFromParameters(const ParameterList&
                pl.hasParameter(it.second->getFrom())))
       {
         b = true;
-        from.addParameter(getParameter(it.second->getFrom()));
+        from.addParameter(parameter(it.second->getFrom()));
       }
     }
   }

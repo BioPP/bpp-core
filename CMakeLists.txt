@@ -5,7 +5,7 @@
 #   Francois Gindraud (2017)
 # Created: 17/09/2010
 
-cmake_minimum_required (VERSION 2.8.12)
+cmake_minimum_required (VERSION 3.5)
 project (bpp-core3 CXX)
 
 # Compile options

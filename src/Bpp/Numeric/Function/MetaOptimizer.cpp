@@ -60,7 +60,7 @@ MetaOptimizer::MetaOptimizer(
   unique_ptr<MetaOptimizerInfos> desc,
   unsigned int n) :
   AbstractOptimizer(function),
-  optDesc_(move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
+  optDesc_(std::move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
   nbParameters_(optDesc_->getNumberOfOptimizers()), n_(n),
   precisionStep_(-1.), stepCount_(0), initialValue_(-1.)
 {
@@ -117,7 +117,7 @@ void MetaOptimizer::doInit(const ParameterList& parameters)
       string pname = optDesc_->getParameterNames(i)[j];
       if (parameters.hasParameter(pname))
       {
-        optParameters_[i].addParameter(parameters.getParameter(pname));
+        optParameters_[i].addParameter(parameters.parameter(pname));
       }
     }
     nbParameters_[i] = optParameters_[i].size();
