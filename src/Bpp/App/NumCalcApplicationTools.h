@@ -86,7 +86,7 @@ public:
    * @param warn             Tell if a warning must be sent in case the parameter is not found.
    * @return a parameter grid object.
    */
-  static ParameterGrid* getParameterGrid(
+  static std::shared_ptr<ParameterGrid> getParameterGrid(
     std::map<std::string, std::string>& params,
     const std::string& suffix = "",
     bool suffixIsOptional = true,
