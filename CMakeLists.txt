@@ -1,9 +1,6 @@
-# CMake script for Bio++ Core
-# Authors:
-#   Sylvain Gaillard
-#   Julien Dutheil
-#   Francois Gindraud (2017)
-# Created: 17/09/2010
+# SPDX-FileCopyrightText: The Bio++ Development Group
+#
+# SPDX-License-Identifier: CECILL-2.1
 
 cmake_minimum_required (VERSION 3.5)
 project (bpp-core3 CXX)

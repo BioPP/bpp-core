@@ -1,9 +1,6 @@
-# CMake script for Bio++ Core
-# Authors:
-#   Sylvain Gaillard
-#   Julien Dutheil
-#   Francois Gindraud (2017)
-# Created: 17/08/2009
+# SPDX-FileCopyrightText: The Bio++ Development Group
+#
+# SPDX-License-Identifier: CECILL-2.1
 
 # File list
 set (CPP_FILES

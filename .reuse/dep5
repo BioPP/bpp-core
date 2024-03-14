@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: The Bio++ Core Libraries
+Upstream-Contact: The Bio++ Development Group
+Source: https://biopp.github.io/
+
+Files: src/*
+Copyright: $NAME
+License: CECILL-2.1
+
+Files: test/*
+Copyright: $NAME
+License: CECILL-2.1
