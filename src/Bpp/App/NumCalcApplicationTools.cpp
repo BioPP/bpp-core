@@ -127,14 +127,14 @@ double NumCalcApplicationTools::getDefaultValue(const ParameterList& pl, const s
 }
 
 
-ParameterGrid* NumCalcApplicationTools::getParameterGrid(
+shared_ptr<ParameterGrid> NumCalcApplicationTools::getParameterGrid(
   map<string, string>& params,
   const string& suffix,
   bool suffixIsOptional,
   bool warn)
 {
   unsigned int nbParams = ApplicationTools::getParameter<unsigned int>("grid.number_of_parameters", params, 1, suffix, suffixIsOptional, warn);
-  ParameterGrid* grid = new ParameterGrid();
+  auto grid = std::make_shared<ParameterGrid>();
   for (unsigned int i = 0; i < nbParams; i++)
   {
     string name = ApplicationTools::getStringParameter("grid.parameter" + TextTools::toString(i + 1) + ".name", params, "", suffix, suffixIsOptional, warn);

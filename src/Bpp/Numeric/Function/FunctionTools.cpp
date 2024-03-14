@@ -87,21 +87,26 @@ size_t ParameterGrid::getTotalNumberOfPoints() const
   return n;
 }
 
-VVdouble* FunctionTools::computeGrid(
+shared_ptr<DataTable> FunctionTools::computeGrid(
   FunctionInterface& function,
   const ParameterGrid& grid)
 {
   // Init stuff...
   size_t n = grid.getNumberOfDimensions();
-  VVdouble* data = new VVdouble();
   if (n == 0)
-    return data; // Empty data table returned.
+    return make_shared<DataTable>(0);; // Empty data table returned.
 
   VVdouble points = grid.getPoints();
 
   // Get the parameter list. this may throw an exception if the grid does not
   // match the function parameters...
-  ParameterList pl = function.getParameters().createSubList(grid.getDimensionNames());
+  auto parNames = grid.getDimensionNames();
+  ParameterList pl = function.getParameters().createSubList(parNames);
+  auto colNames = parNames;
+
+  colNames.push_back("value");
+  auto data = make_shared<DataTable>(colNames);
+  
   for (unsigned int i = 0; i < n; i++)
   {
     pl.setParameterValue(grid.getDimensionName(i), grid.getPointsForDimension(i)[0]);
@@ -110,7 +115,7 @@ VVdouble* FunctionTools::computeGrid(
   // Iterate over all dimensions:
   unsigned int currentDimension = 0;
   vector<unsigned int> currentPointInDimension(n);
-  vector<double> row(n + 1);
+  vector<string> row(n + 1);
   size_t nbPoints = grid.getTotalNumberOfPoints();
   ApplicationTools::displayMessage("Computing likelihood profile...");
   for (unsigned int i = 0; true; ++i)
@@ -119,10 +124,10 @@ VVdouble* FunctionTools::computeGrid(
     // We start by adding the current point to the table:
     for (unsigned int j = 0; j < n; ++j)
     {
-      row[j] = pl[j].getValue();
+      row[j] = TextTools::toString(pl[j].getValue());
     }
-    row[n] = function.f(pl);
-    data->push_back(row);
+    row[n] = TextTools::toString(function.f(pl));
+    data->addRow(row);
 
     // Now increment iterator:
     bool dimensionChanged = false;

@@ -68,8 +68,8 @@ class DataTable :
 protected:
   size_t nRow_, nCol_;
   std::vector< std::vector<std::string> > data_;
-  std::vector<std::string>* rowNames_;
-  std::vector<std::string>* colNames_;
+  std::vector<std::string> rowNames_;
+  std::vector<std::string> colNames_;
 
 public:
   /**
@@ -228,7 +228,7 @@ public:
   /**
    * @return true If column names are associated to this table.
    */
-  bool hasColumnNames() const { return colNames_ != 0; }
+  bool hasColumnNames() const { return colNames_.size() != 0; }
 
   /**
    * @return The values in the given column.
@@ -363,7 +363,7 @@ public:
   /**
    * @return true If row names are associated to this table.
    */
-  bool hasRowNames() const { return rowNames_ != 0; }
+  bool hasRowNames() const { return rowNames_.size() != 0; }
 
   /**
    * @return A vector which contains a copy  in the given row.

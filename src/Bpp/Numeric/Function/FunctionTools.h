@@ -43,6 +43,7 @@
 
 
 #include "../VectorTools.h"
+#include "../DataTable.h"
 #include "Functions.h"
 
 namespace bpp
@@ -103,16 +104,17 @@ public:
    *
    * @param function The function to use for the evaluation.
    * @param grid     The grid defining the set of points to evaluate.
-   * @return A pointer toward a dynamically created vector of vector
-   * of doubles. Each row correpsonds to a combination of parameters
-   * and the corresponding function value. There is hence one column
-   * per parameter, and one additional column containing the
-   * corresponding function evaluations. When DataTable supports
-   * different column type, we will probably return a DataTable instead.
-   * @throw Exception If the parameter names in the grid do not match
-   * the ones in the function, or a constraint is matched, etc.
+   *
+   * @return A shared pointer toward a dynamically created DataTable.
+   *         Each row corresponds to a combination of parameters
+   *         values and the corresponding function value. There is
+   *         hence one column per parameter, and one additional column
+   *         containing the corresponding function evaluations. When
+   *         DataTable supports different column type, we will
+   *         probably return a DataTable instead.
    */
-  static VVdouble* computeGrid(
+  
+  static std::shared_ptr<DataTable> computeGrid(
     FunctionInterface& function,
     const ParameterGrid& grid);
 };
