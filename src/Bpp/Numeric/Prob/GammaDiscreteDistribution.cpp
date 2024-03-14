@@ -1,9 +1,3 @@
-//
-// File: GammaDiscreteDistribution.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-10-26 20:36:12
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

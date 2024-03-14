@@ -1,9 +1,3 @@
-//
-// File: SimpleDiscreteDistribution.h
-// Authors:
-//   Julien Dutheil
-// Created: ?
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

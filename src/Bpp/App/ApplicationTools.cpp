@@ -1,9 +1,3 @@
-//
-// File: ApplicationTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2005-10-21 16:19:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

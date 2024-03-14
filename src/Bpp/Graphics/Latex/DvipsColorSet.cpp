@@ -1,9 +1,3 @@
-//
-// File: DvipsColorSet.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2008-04-14 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2008)

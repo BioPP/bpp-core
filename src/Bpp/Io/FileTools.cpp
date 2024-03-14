@@ -1,10 +1,3 @@
-//
-// File: FileTools.cpp
-// Authors:
-//   Guillaume Deuchst
-//   Julien Dutheil
-// Last modified: 2005-08-23 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

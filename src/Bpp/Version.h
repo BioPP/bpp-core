@@ -1,9 +1,3 @@
-//
-// File: Version.h
-// Authors:
-//   Julien Dutheil
-// Created: 2017-04-02 20:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (April 2, 2017)

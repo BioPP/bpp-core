@@ -1,9 +1,3 @@
-//
-// File: AbstractParametrizable.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2009-03-29 09:10:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 19, 2004)

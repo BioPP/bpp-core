@@ -1,9 +1,3 @@
-//
-// File: RandomTools.cpp
-// Authors:
-//   Julien Dutheil
-// Last modified: Friday Septembre 24 2004
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

@@ -1,9 +1,3 @@
-//
-// File: BrentOneDimension.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-11-17 11:45:58
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

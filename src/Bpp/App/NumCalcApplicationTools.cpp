@@ -1,9 +1,3 @@
-//
-// File: NumCalcApplicationTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2009-03-29 15:13:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (January 13, 2009)

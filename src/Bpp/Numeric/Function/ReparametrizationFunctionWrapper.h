@@ -1,9 +1,3 @@
-//
-// File: ReparametrizationFunctionWrapper.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-01-30 09:30:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

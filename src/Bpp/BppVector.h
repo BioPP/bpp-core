@@ -1,11 +1,3 @@
-//
-// File: BppVector.h
-// Authors:
-//   Julien Dutheil
-//   Francois Gindraud (2017)
-// Created: 2008-04-07 15:14:00
-// Last modified: 2017-06-27 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

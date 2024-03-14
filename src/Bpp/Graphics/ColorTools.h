@@ -1,9 +1,3 @@
-//
-// File: ColorTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2006-03-16 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

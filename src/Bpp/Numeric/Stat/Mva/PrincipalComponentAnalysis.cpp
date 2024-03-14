@@ -1,8 +1,3 @@
-//
-// File: PrincipalComponentAnalysis.cpp
-// Authors:
-//   Mathieu Groussin
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

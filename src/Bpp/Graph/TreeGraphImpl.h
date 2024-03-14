@@ -1,9 +1,3 @@
-//
-// File: TreeGraphImpl.h
-// Authors:
-//   Thomas Bigot
-// Last modified: vendredi 4 novembre 2016, à 10h 21
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

@@ -1,9 +1,3 @@
-//
-// File: BppApplication.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2009-08-08 08:21:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

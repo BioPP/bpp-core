@@ -1,9 +1,3 @@
-//
-// File: TableExceptions.h
-// Authors:
-//   Julien Dutheil
-// Created: 2005-11-08 14:10:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

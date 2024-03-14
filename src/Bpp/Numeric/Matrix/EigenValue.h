@@ -1,9 +1,3 @@
-//
-// File: EigenValue.h
-// Authors:
-//   Julien Dutheil
-// Created: 2004-04-07 16:24:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

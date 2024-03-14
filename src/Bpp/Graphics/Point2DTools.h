@@ -1,8 +1,3 @@
-//
-// File: Point2DTools.h
-// Authors:
-//   Sylvain Gaillard
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

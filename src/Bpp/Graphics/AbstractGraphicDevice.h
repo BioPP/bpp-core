@@ -1,9 +1,3 @@
-//
-// File: AbstractGraphicDevice.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-07-24 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2006)

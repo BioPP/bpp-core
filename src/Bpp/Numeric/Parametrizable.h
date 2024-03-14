@@ -1,9 +1,3 @@
-//
-// File: Parametrizable.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-10-19 23:06:42
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

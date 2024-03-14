@@ -1,9 +1,3 @@
-//
-// File: ConstantDistribution.h
-// Authors:
-//   jdutheil
-// Created: 2003-10-24 08:48:03
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

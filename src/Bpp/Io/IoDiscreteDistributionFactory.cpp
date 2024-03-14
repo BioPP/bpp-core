@@ -1,9 +1,3 @@
-//
-// File: IoDiscreteDistributionFactory.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 3 septembre 2012, à 14h 44
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

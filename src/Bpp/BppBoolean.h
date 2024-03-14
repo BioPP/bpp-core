@@ -1,10 +1,3 @@
-//
-// File: BppBoolean.h
-// Authors:
-//   Julien Dutheil
-//   Francois Gindraud (2017)
-// Last modified: 2017-06-27 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

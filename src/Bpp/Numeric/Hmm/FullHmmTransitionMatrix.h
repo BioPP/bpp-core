@@ -1,9 +1,3 @@
-//
-// File: FullHmmTransitionMatrix.h
-// Authors:
-//   Laurent Guéguen
-// Created: samedi 21 septembre 2013, à 00h 41
-//
 
 /*
   Copyright or © or Copr. Bio++Development Team, (November 16, 2004)

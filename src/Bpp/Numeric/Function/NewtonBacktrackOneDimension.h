@@ -1,9 +1,3 @@
-//
-// File: NewtonBacktrackOneDimension.h
-// Authors:
-//   Laurent Guéguen
-// Created: jeudi 16 décembre 2010, à 15h 43
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

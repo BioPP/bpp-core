@@ -1,9 +1,3 @@
-//
-// File: BppApplication.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-08-08 08:21:00
-//
 
 /*
   Copyright or © or Copr. Development Team, (November 17, 2004)

@@ -1,9 +1,3 @@
-//
-// File: DownhillSimplexMethod.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-11-04 17:10:05
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

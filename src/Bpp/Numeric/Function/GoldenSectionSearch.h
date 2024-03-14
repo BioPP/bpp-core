@@ -1,9 +1,3 @@
-//
-// File: GoldenSectionSearch.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-11-10 10:42:17
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

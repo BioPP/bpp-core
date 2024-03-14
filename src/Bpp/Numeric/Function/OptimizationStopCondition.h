@@ -1,9 +1,3 @@
-//
-// File: OptimizationStopCondition.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-12-23 11:51:31
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

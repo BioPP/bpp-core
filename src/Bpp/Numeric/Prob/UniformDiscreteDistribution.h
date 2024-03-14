@@ -1,9 +1,3 @@
-//
-// File: UniformDiscreteDistribution.h
-// Authors:
-//   Laurent Guéguen
-// Created: 2010-04-07 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (2010)

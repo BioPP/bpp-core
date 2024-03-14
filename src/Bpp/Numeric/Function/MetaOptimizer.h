@@ -1,9 +1,3 @@
-//
-// File: MetaOptimizer.h
-// Authors:
-//   Julien Dutheil
-// Created: 2004-11-17 17:22:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

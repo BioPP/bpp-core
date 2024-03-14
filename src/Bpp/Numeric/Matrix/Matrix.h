@@ -1,10 +1,3 @@
-//
-// File: Matrix.h
-// Authors:
-//   Julien Dutheil
-//   Sylvain Gaillard
-// Created: 2004-04-07 11:58:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

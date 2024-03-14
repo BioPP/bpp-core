@@ -1,8 +1,3 @@
-//
-// File: DualityDiagram.cpp
-// Authors:
-//   Mathieu Groussin
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Tools, (November 16, 2004)

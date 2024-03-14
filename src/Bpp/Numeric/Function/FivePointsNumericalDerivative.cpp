@@ -1,9 +1,3 @@
-//
-// File: FivePointsNumericalDerivative.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2006-08-17 15:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

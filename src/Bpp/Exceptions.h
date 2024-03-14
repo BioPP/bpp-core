@@ -1,12 +1,3 @@
-//
-// File: Exceptions.h
-// Authors:
-//   Guillaume Deuchst
-//   Julien Dutheil
-//   Sylvain Gaillard
-//   Francois Gindraud (2017)
-// Last modified: 2017-06-26 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

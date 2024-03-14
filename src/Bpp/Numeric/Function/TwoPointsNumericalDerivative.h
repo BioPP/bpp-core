@@ -1,9 +1,3 @@
-//
-// File: TwoPointsNumericalDerivative.h
-// Authors:
-//   Julien Dutheil
-// Created: 2007-05-28 10:33:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

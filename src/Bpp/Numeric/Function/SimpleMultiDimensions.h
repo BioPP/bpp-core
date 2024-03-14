@@ -1,9 +1,3 @@
-//
-// File: SimpleMultiDimensions.h
-// Authors:
-//   Julien Dutheil
-// Created: 2004-11-16 17:51:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

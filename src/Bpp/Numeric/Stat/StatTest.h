@@ -1,9 +1,3 @@
-//
-// File: StatTest.h
-// Authors:
-//   Julien Dutheil
-// Created: 2008-03-18 13:56:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

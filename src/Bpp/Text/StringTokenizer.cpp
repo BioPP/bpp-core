@@ -1,10 +1,3 @@
-//
-// File: StringTokenizer.cpp
-// Authors:
-//   Julien Dutheil
-//   Sylvain Gaillard
-// Last modified: 2004-09-20 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

@@ -1,9 +1,3 @@
-//
-// File: PrincipalComponentAnalysis.h
-// Authors:
-//   Mathieu Groussin
-// Created: 2011-03-03 10:13:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

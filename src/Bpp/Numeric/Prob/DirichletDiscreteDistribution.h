@@ -1,9 +1,3 @@
-//
-// File: DirichletDiscreteDistribution.h
-// Authors:
-//   Laurent Guéguen
-// Created: jeudi 2 septembre 2010, à 17h 03
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

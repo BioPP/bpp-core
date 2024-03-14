@@ -1,9 +1,3 @@
-//
-// File: DirichletDiscreteDistribution.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: jeudi 2 septembre 2010, à 17h 03
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

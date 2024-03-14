@@ -1,9 +1,3 @@
-//
-// File: SimpleNewtonMultiDimensions.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2007-04-26 15:29:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 19, 2004)

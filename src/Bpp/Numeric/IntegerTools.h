@@ -1,10 +1,3 @@
-//
-// File: IntegerTools.h
-// Authors:
-//   Francois Gindraud (2017)
-// Created: 2017-03-28 00:00:00
-// Last modified: 2017-06-26 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

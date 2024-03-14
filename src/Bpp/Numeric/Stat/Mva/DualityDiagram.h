@@ -1,9 +1,3 @@
-//
-// File: DualityDiagram.h
-// Authors:
-//   Mathieu Groussin
-// Created: 2011-02-27 22:03:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

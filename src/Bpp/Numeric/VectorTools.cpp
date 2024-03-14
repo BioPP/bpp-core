@@ -1,9 +1,3 @@
-//
-// File: VectorTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-03-14 14:16:32
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

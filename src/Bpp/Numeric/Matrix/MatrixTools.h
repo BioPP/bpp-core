@@ -1,9 +1,3 @@
-//
-// File: MatrixTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2004-01-19 16:42:25
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

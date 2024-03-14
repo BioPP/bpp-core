@@ -1,9 +1,3 @@
-//
-// File: HmmExceptions.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-09-04 15:30:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 16, 2004)

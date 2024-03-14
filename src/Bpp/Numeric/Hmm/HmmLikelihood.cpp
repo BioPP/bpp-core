@@ -1,9 +1,3 @@
-//
-// File: HmmLikelihood.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: jeudi 26 septembre 2013, à 13h 55
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

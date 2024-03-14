@@ -1,9 +1,3 @@
-//
-// File: UniformDiscreteDistribution.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: 2010-04-07 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (2010)

@@ -1,9 +1,3 @@
-//
-// File: FontManager.h
-// Authors:
-//   Julien Dutheil
-// Created: 2008-03-08 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Developement Team, (November 17, 2004)

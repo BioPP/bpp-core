@@ -1,9 +1,3 @@
-//
-// File: MixtureOfDiscreteDistributions.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: mercredi 9 juin 2010, à 23h 09
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

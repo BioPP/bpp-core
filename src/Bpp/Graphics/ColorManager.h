@@ -1,9 +1,3 @@
-//
-// File: ColorManager.h
-// Authors:
-//   Julien Dutheil
-// Created: 2006-05-08 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

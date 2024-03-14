@@ -1,9 +1,3 @@
-//
-// File: KeyvalTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-05-11 13:16:00+02:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Tools, (2009)

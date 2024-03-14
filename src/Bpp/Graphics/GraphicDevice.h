@@ -1,9 +1,3 @@
-//
-// File: GraphicDevice.h
-// Authors:
-//   Julien Dutheil
-// Created: 2008-03-03 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2006)

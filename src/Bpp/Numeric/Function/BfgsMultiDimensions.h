@@ -1,9 +1,3 @@
-//
-// File: BfgsMultiDimensions.h
-// Authors:
-//   Laurent Guéguen
-// Created: 2010-12-16 13:49:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

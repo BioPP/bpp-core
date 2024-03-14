@@ -1,9 +1,3 @@
-//
-// File: CorrespondenceAnalysis.cpp
-// Authors:
-//   Mathieu Groussin
-// Created: 2011-03-06 10:03:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

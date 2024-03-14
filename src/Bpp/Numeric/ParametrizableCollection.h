@@ -1,9 +1,3 @@
-//
-// File: ParametrizableCollection.h
-// Authors:
-//   Laurent Guéguen
-// Created: mercredi 12 juin 2013, à 14h 24
-//
 
 /*
   Copyright or (c) or Copr. Bio++ Development Team, (November 16, 2004)

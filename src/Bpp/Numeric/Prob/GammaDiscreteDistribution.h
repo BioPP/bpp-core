@@ -1,9 +1,3 @@
-//
-// File: GammaDiscreteDistribution.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-10-26 20:36:12
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

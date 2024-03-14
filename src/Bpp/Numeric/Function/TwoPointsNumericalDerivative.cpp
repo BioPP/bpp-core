@@ -1,9 +1,3 @@
-//
-// File: TwoPointsNumericalDerivative.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2007-05-28 10:33:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

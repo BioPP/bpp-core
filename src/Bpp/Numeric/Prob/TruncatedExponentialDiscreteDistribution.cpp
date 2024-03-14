@@ -1,9 +1,3 @@
-//
-// File: TruncatedExponentialDiscreteDistribution.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2008-01-25 15:24:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

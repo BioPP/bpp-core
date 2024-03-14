@@ -1,9 +1,3 @@
-//
-// File: HmmEmissionProbabilities.h
-// Authors:
-//   Julien Dutheil
-// Created: Fri Sep 04 13:14 2009 from file HmmLikelihood.
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

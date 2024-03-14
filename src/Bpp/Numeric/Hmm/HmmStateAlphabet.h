@@ -1,9 +1,3 @@
-//
-// File: HmmStateAlphabet.h
-// Authors:
-//   Julien Dutheil
-// Created: 2007-10-26 11:07:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

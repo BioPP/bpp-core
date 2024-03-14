@@ -1,9 +1,3 @@
-//
-// File: AssociationDAGraphObserver.h
-// Authors:
-//   Laurent Guéguen
-// Last modified: lundi 19 décembre 2016, à 21h 48
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

@@ -1,9 +1,3 @@
-//
-// File: XFigPostscriptFontManager.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2009-12-30 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

@@ -1,10 +1,3 @@
-//
-// File: RandomTools.h
-// Authors:
-//   Julien Dutheil
-//   Sylvain Gaillard
-// Last modified: 2008-11-06 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

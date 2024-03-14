@@ -1,9 +1,3 @@
-//
-// File: AbstractHmmTransitionMatrix.h
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 10 février 2014, à 10h 55
-//
 
 /*
   Copyright or © or Copr. Bio++Development Team, (November 16, 2004)

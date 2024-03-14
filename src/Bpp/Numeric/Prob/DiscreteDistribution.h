@@ -1,9 +1,3 @@
-//
-// File: DiscreteDistribution.h
-// Authors:
-//   Julien Dutheil
-// Created: ?
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

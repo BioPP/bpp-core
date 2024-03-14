@@ -1,9 +1,3 @@
-//
-// File: RescaledHmmLikelihood.h
-// Authors:
-//   Julien Dutheil
-// Created: 2007-10-26 11:57:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 16, 2004)

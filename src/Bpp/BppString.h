@@ -1,11 +1,3 @@
-//
-// File: BppString.h
-// Authors:
-//   Julien Dutheil
-//   Francois Gindraud (2017)
-// Created: 2006-05-04 10:21:00
-// Last modified: 2017-06-27 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

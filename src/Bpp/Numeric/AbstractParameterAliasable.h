@@ -1,9 +1,3 @@
-//
-// File: AbstractParameterAliasable.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-05-14 17:08:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

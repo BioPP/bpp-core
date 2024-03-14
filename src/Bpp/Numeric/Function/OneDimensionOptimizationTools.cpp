@@ -1,9 +1,3 @@
-//
-// File: OneDimensionOptimizationTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-11-17 11:15:22
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

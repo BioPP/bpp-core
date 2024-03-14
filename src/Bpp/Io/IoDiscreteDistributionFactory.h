@@ -1,9 +1,3 @@
-//
-// File: IoDiscreteDistributionFactory.h
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 3 septembre 2012, à 14h 45
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

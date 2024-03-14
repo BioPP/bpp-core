@@ -1,9 +1,3 @@
-//
-// File: TransformedParameter.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-01-30 09:42:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

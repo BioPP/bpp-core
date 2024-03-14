@@ -1,9 +1,3 @@
-//
-// File: LogsumHmmLikelihood.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-11-23 11:27:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

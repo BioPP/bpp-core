@@ -1,9 +1,3 @@
-//
-// File: NestedStringTokenizer.cpp
-// Authors:
-//   Julien Dutheil
-// Last modified: 2006-05-22 10:57:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

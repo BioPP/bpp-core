@@ -1,9 +1,3 @@
-//
-// File: MapTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-05-13 18:16:10
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

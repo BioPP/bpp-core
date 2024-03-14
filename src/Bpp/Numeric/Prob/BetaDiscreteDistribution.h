@@ -1,9 +1,3 @@
-//
-// File: BetaDiscreteDistribution.h
-// Authors:
-//   Laurent Guéguen
-// Created: jeudi 27 mai 2010, à 23h 34
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

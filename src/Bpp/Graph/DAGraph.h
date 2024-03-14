@@ -1,9 +1,3 @@
-//
-// File: DAGraph.h
-// Authors:
-//   Laurent Guéguen
-// Last modified: lundi 19 décembre 2016, à 22h 46
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

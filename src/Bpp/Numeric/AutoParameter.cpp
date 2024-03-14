@@ -1,9 +1,3 @@
-//
-// File: AutoParameter.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-11-11 22:15:16
-//
 
 /*
   * Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

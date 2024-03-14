@@ -1,9 +1,3 @@
-//
-// File: GaussianDiscreteDistribution.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: 2010-04-07 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

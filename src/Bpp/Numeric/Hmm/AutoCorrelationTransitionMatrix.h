@@ -1,9 +1,3 @@
-//
-// File: AutoCorrelationTransitionMatrix.h
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 10 février 2014, à 09h 56
-//
 
 /*
   Copyright or © or Copr. Bio++Development Team, (November 16, 2004)

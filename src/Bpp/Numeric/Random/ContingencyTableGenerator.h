@@ -1,9 +1,3 @@
-//
-// File: ContingencyTableGenerator.h
-// Authors:
-//   Julien Dutheil
-// Created: 2010-12-10 16:19:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

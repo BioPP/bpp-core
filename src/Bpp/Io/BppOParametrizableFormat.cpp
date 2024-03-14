@@ -1,9 +1,3 @@
-//
-// File: BppOParametrizableFormat.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 3 septembre 2012, à 15h 37
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 16, 2004)

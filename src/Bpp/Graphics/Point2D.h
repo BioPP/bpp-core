@@ -1,9 +1,3 @@
-//
-// File: Point2D.h
-// Authors:
-//   Sylvain Gaillard
-//   Julien Dutheil
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 17, 2004)

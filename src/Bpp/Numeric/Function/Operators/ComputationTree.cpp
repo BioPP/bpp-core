@@ -1,9 +1,3 @@
-//
-// File: ComputationTree.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: mardi 6 décembre 2016, à 00h 07
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 16, 2004)

@@ -1,9 +1,3 @@
-//
-// File: Table.h
-// Authors:
-//   Laurent Guéguen
-// Created: dimanche 2 avril 2017, à 22h 59
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

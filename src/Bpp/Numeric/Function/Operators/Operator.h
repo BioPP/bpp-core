@@ -1,9 +1,3 @@
-//
-// File: Operator.h
-// Authors:
-//   Laurent Guéguen
-// Created: lundi 5 décembre 2016, à 23h 02
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

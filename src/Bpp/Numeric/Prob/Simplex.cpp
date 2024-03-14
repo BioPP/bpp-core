@@ -1,9 +1,3 @@
-//
-// File: Simplex.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: mardi 31 mai 2011, à 13h 16
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

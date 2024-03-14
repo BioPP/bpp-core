@@ -1,9 +1,3 @@
-//
-// File: ConjugateGradientMultiDimensions.h
-// Authors:
-//   Julien Dutheil
-// Created: 2007-04-11 16:51:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 19, 2004)

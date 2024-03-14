@@ -1,9 +1,3 @@
-//
-// File: MultipleDiscreteDistribution.h
-// Authors:
-//   Laurent Guéguen
-// Created: mardi 20 juillet 2010, à 14h 52
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)

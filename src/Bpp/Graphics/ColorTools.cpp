@@ -1,9 +1,3 @@
-//
-// File: ColorTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2006-03-16 00:00:00
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)

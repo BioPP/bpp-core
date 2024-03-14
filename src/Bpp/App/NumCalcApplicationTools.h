@@ -1,9 +1,3 @@
-//
-// File: NumCalcApplicationTools.h
-// Authors:
-//   Sylvain Gaillard
-// Created: 2009-01-13 14:58:50+01:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (January 13, 2009)

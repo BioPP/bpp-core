@@ -1,9 +1,3 @@
-//
-// File: SvgGraphicDevice.h
-// Authors:
-//   Julien Dutheil
-// Created: 2008-03-10 00:00:00
-//
 
 /*
   Copyright or © or Copr. CNRS, (November 16, 2006)

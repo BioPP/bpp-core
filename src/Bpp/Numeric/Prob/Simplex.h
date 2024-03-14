@@ -1,9 +1,3 @@
-//
-// File: Simplex.h
-// Authors:
-//   Laurent Guéguen
-// Created: mardi 31 mai 2011, à 11h 02
-//
 
 /*
   Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
