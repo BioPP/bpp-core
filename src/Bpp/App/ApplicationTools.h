@@ -469,7 +469,6 @@ public:
    * @param warn             Tell if a warning must be sent in case the parameter is not found.
    * @return The corresponding value.
    */
-
   template<class T> static RowMatrix<T> getMatrixParameter(
     const std::string& parameterName,
     const std::map<std::string, std::string>& params,

@@ -18,7 +18,6 @@
 
 namespace bpp
 {
-
 class Parameter;
 
 class ParameterEvent :
@@ -104,7 +103,7 @@ protected:
   double precision_;  // Precision needed for Parameter value
   std::shared_ptr<ConstraintInterface> constraint_;
   std::vector< std::shared_ptr<ParameterListener> > listeners_;
-  
+
 public:
   // Class constructors and destructors:
 

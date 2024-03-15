@@ -55,7 +55,6 @@ typedef std::vector<VVVuint> VVVVuint;
  * @name Element-wise operations.
  * @{
  */
-
 template<class T>
 std::vector<T>  operator+(const std::vector<T>& v1, const std::vector<T>& v2)
 {
@@ -598,7 +597,6 @@ public:
    * @param v1 a std::vector.
    * @param v2 another std::vector.
    */
-
   template<class T>
   static T sumProd(const std::vector<T>& v1, const std::vector<T>& v2)
   {
@@ -760,7 +758,6 @@ public:
    *
    * @{
    */
-
   template<class T>
   static std::vector<T> log(const std::vector<T>& v1)
   {

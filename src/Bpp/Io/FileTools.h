@@ -6,7 +6,6 @@
 #define BPP_IO_FILETOOLS_H
 
 
-
 // From the STL:
 #include <string>
 #include <vector>

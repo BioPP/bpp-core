@@ -11,7 +11,8 @@
 using namespace bpp;
 using namespace std;
 
-int main() {
+int main()
+{
   auto f = make_shared<PolynomialFunction1Der1>(false);
   cout << f->getValue() << endl;
   BfgsMultiDimensions optimizer(f);
@@ -28,5 +29,5 @@ int main() {
   cout << "f=" << minf << endl;
   cout << setprecision(20) << (abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3)) << endl;
   bool test = abs(minf) + abs(x - 5) + abs(y + 2) + abs(z - 3) < 0.01;
-  return (test ? 0 : 1);
+  return test ? 0 : 1;
 }

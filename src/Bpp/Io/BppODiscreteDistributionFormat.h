@@ -26,7 +26,6 @@ protected:
   bool verbose_;
   std::map<std::string, std::string> unparsedArguments_;
 
-
 public:
   BppODiscreteDistributionFormat(bool verbose = true) : verbose_(verbose), unparsedArguments_() {}
   virtual ~BppODiscreteDistributionFormat() {}

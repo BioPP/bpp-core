@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_HMM_HMMLIKELIHOOD_H
 
 
-
 // From NumCalc:
 #include "../Function/Functions.h"
 #include "../VectorTools.h"

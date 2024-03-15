@@ -173,7 +173,7 @@ public:
   virtual void resetCounter() { callCount_ = 0; }
 
   virtual void setBurnin(int burnin) { burnin_ = burnin; }
-  
+
   virtual int getBurnin() const { return burnin_; }
 };
 

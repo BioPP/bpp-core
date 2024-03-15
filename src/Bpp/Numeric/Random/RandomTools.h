@@ -31,7 +31,7 @@ namespace bpp
  *
  **/
 
-  class RandomTools
+class RandomTools
 {
 public:
   RandomTools() {}
@@ -86,7 +86,7 @@ public:
    *
    * @param prob Probability of getting 'true'.
    */
-  static bool flipCoin(double prob = 0.5) 
+  static bool flipCoin(double prob = 0.5)
   {
     std::bernoulli_distribution d(prob);
     return d(DEFAULT_GENERATOR);
@@ -160,7 +160,7 @@ public:
   /**
    * @brief Pick (and extract) one element randomly in a vector and return it.
    * @param v The vector of elements.
-   
+
    * @param replace If set to yes, then elements are allowed to be
    *             picked more than once, and therefore can be
    *             re-"placed" in the final sample (default: false, in
@@ -231,7 +231,9 @@ public:
     if (replace)
     {
       for (size_t i = 0; i < vout.size(); ++i)
+      {
         vout[i] = pickOne(vin);
+      }
     }
     else
     {
@@ -239,7 +241,9 @@ public:
       std::iota(hat.begin(), hat.end(), 0);
       std::shuffle(hat.begin(), hat.end(), DEFAULT_GENERATOR);
       for (size_t i = 0; i < vout.size(); i++)
+      {
         vout[i] = vin[hat[i]];
+      }
     }
   }
 
@@ -375,7 +379,6 @@ public:
    * as it recomputes the some of weights for each element picked.
    * @author Julien Dutheil
    */
-  
   template<class T>
   static void getSample(const std::vector<T>& vin, const std::vector<double>& w, std::vector<T>& vout, bool replace = false)
   {
@@ -386,7 +389,9 @@ public:
     if (replace)
     {
       for (size_t i = 0; i < vout.size(); i++)
+      {
         vout[i] = vin[pickOne(hat, w)];
+      }
     }
     else
     {

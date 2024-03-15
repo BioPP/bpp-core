@@ -6,7 +6,6 @@
 #define BPP_CLONABLE_H
 
 
-
 /**
  * @mainpage
  *

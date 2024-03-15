@@ -57,7 +57,8 @@ shared_ptr<DataTable> FunctionTools::computeGrid(
   // Init stuff...
   size_t n = grid.getNumberOfDimensions();
   if (n == 0)
-    return make_shared<DataTable>(0);; // Empty data table returned.
+    return make_shared<DataTable>(0);
+  ; // Empty data table returned.
 
   VVdouble points = grid.getPoints();
 
@@ -69,7 +70,7 @@ shared_ptr<DataTable> FunctionTools::computeGrid(
 
   colNames.push_back("value");
   auto data = make_shared<DataTable>(colNames);
-  
+
   for (unsigned int i = 0; i < n; i++)
   {
     pl.setParameterValue(grid.getDimensionName(i), grid.getPointsForDimension(i)[0]);

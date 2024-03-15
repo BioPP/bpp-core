@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_PARAMETEREXCEPTIONS_H
 
 
-
 // From Utils:
 #include "../Exceptions.h"
 

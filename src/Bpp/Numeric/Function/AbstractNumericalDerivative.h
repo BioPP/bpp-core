@@ -83,7 +83,7 @@ public:
 
   virtual ~AbstractNumericalDerivative() {}
 
-  AbstractNumericalDerivative* clone() const override= 0;
+  AbstractNumericalDerivative* clone() const override = 0;
 
 public:
   /**

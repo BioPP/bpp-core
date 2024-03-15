@@ -41,7 +41,6 @@ public:
    * Specific copy of A and B objects, if clonable or not.
    *
    */
-
   template<class A, class B>
   static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && !std::is_abstract<B>::value, B*>::type* = 0)
   {

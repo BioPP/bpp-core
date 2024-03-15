@@ -213,13 +213,13 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(
 /******************************************************************************/
 
 unsigned int OneDimensionOptimizationTools::lineSearch(
-    std::shared_ptr<DirectionFunction> f1dim,
-    ParameterList& parameters,
-    std::vector<double>& xi,
-    std::vector<double>& gradient,
-    std::shared_ptr<OutputStream> profiler,
-    std::shared_ptr<OutputStream> messenger,
-    unsigned int verbose)
+  std::shared_ptr<DirectionFunction> f1dim,
+  ParameterList& parameters,
+  std::vector<double>& xi,
+  std::vector<double>& gradient,
+  std::shared_ptr<OutputStream> profiler,
+  std::shared_ptr<OutputStream> messenger,
+  unsigned int verbose)
 {
   size_t size = xi.size();
 

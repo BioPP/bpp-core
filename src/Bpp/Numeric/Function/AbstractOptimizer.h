@@ -129,7 +129,7 @@ public:
    *
    * Store all parameters, call the doInit method, print to profiler, initialize timer and notify all listeners.
    */
-  void init(const ParameterList& params) override ;
+  void init(const ParameterList& params) override;
   /**
    * @brief Basic implementation.
    *
@@ -149,32 +149,38 @@ public:
   const ParameterList& getParameters() const override { return parameters_; }
 
   double getParameterValue(const std::string& name) const override
-  { 
+  {
     return parameters_.getParameterValue(name);
   }
-  
+
   void setFunction(std::shared_ptr<FunctionInterface> function) override
   {
     function_ = function;
     if (function) stopCondition_->init();
   }
-  
+
   const FunctionInterface& function() const override
   {
-    if (function_) { 
+    if (function_)
+    {
       return *function_;
-    } else {
+    }
+    else
+    {
       throw NullPointerException("AbstractOptimizer::function() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   FunctionInterface& function() override
   {
-    if (function_) { 
+    if (function_)
+    {
       return *function_;
-    } else {
+    }
+    else
+    {
       throw NullPointerException("AbstractOptimizer::function() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   std::shared_ptr<const FunctionInterface> getFunction() const override { return function_; }
@@ -182,7 +188,7 @@ public:
   std::shared_ptr<FunctionInterface> getFunction() override { return function_; }
 
   bool hasFunction() const override { return function_ != 0; }
-  
+
   double getFunctionValue() const override
   {
     if (!function_) throw NullPointerException("AbstractOptimizer::getFunctionValue. No function associated to this optimizer.");
@@ -198,12 +204,12 @@ public:
   std::shared_ptr<OutputStream> getProfiler() const override { return profiler_; }
 
   unsigned int getNumberOfEvaluations() const override { return nbEval_; }
-  
+
   void setStopCondition(std::shared_ptr<OptimizationStopCondition> stopCondition) override
   {
     stopCondition_ = stopCondition;
   }
-  
+
   std::shared_ptr<OptimizationStopCondition> getStopCondition() override { return stopCondition_; }
 
   std::shared_ptr<const OptimizationStopCondition> getStopCondition() const override { return stopCondition_; }
@@ -217,15 +223,15 @@ public:
   bool isMaximumNumberOfEvaluationsReached() const override { return nbEval_ >= nbEvalMax_; }
 
   void setMaximumNumberOfEvaluations(unsigned int max) override { nbEvalMax_ = max; }
-  
+
   void setVerbose(unsigned int v) override { verbose_ = v; }
-  
+
   unsigned int getVerbose() const override { return verbose_; }
-  
+
   void setConstraintPolicy(const std::string& constraintPolicy) override { constraintPolicy_ = constraintPolicy; }
-  
+
   std::string getConstraintPolicy() const override { return constraintPolicy_; }
-  
+
   void addOptimizationListener(std::shared_ptr<OptimizationListener> listener) override
   {
     if (listener)
@@ -377,9 +383,9 @@ protected:
 
 protected:
   ParameterList& getParameters_() { return parameters_; }
-  
+
   Parameter& getParameter_(size_t i) { return parameters_[i]; }
-  
+
   std::shared_ptr<FunctionInterface> getFunction_() { return function_; }
 
   void setDefaultStopCondition_(std::shared_ptr<OptimizationStopCondition> osc)

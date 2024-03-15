@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_TABLEEXCEPTIONS_H
 
 
-
 // #include "VectorTools.h"
 
 // From Utils:

@@ -77,7 +77,7 @@ public:
    *         DataTable supports different column type, we will
    *         probably return a DataTable instead.
    */
-  
+
   static std::shared_ptr<DataTable> computeGrid(
     FunctionInterface& function,
     const ParameterGrid& grid);

@@ -73,7 +73,7 @@ public:
    * @return The set of parameters associated to the function, as specified by the init() method.
    */
   ParameterList getFunctionParameters() const { return p_; }
-  
+
   size_t getNumberOfParameters() const override { return p_.size(); }
 
 protected:

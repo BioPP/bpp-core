@@ -193,7 +193,7 @@ public:
 
   double getLikelihoodForASite(size_t site) const override;
 
-  double getDLogLikelihoodForASite(size_t site) const override ;
+  double getDLogLikelihoodForASite(size_t site) const override;
 
   double getD2LogLikelihoodForASite(size_t site) const override;
 

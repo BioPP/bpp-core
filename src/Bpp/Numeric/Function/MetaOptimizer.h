@@ -102,7 +102,7 @@ public:
    * @return A shared pointer toward the ith optimizer in the set.
    */
   virtual std::shared_ptr<OptimizerInterface> getOptimizer(size_t i) { return optimizers_[i]; }
-  
+
   /**
    * @return A shared pointer toward the ith optimizer in the set.
    */
@@ -211,7 +211,6 @@ public:
    * @return The MetaOptimizerInfos object associated to this optimizer.
    */
   const MetaOptimizerInfos optimizers() const { return *optDesc_; }
-    
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_METAOPTIMIZER_H

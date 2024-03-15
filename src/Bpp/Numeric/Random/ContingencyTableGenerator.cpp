@@ -76,7 +76,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
   {
     ia = nrowt_[l];
     ic = jc;
-    jc -= ia;/* = n_tot - sum(nr[0:l]) */
+    jc -= ia; /* = n_tot - sum(nr[0:l]) */
 
     for (m = 0; m < nc_1; ++m)
     {
@@ -99,7 +99,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
       /* Generate pseudo-random number */
       dummy = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
 
-      do/* Outer Loop */
+      do /* Outer Loop */
 
       /* Compute conditional expected value of MATRIX(L, M) */
 
@@ -162,7 +162,7 @@ L160:
       ia -= nlm;
       jwork_[m] -= nlm;
     }
-    table(l, nc_1) = ia;/* last column in row l */
+    table(l, nc_1) = ia; /* last column in row l */
   }
 
   /* Compute entries in last row of MATRIX */

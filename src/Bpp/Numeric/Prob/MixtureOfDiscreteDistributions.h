@@ -51,7 +51,7 @@ public:
    * Distributions.
    * @param probas The vector of probabilities.
    */
-  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistributionInterface>>& distributions, const std::vector<double>& probas);
+  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistributionInterface> >& distributions, const std::vector<double>& probas);
 
   virtual ~MixtureOfDiscreteDistributions();
 

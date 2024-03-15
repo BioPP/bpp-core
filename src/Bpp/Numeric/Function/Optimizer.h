@@ -14,7 +14,6 @@
 
 namespace bpp
 {
-
 class OptimizerInterface;
 
 /**
@@ -355,7 +354,6 @@ public:
    * @return yn true/false
    */
   virtual bool updateParameters() const = 0;
-  
 };
 
 

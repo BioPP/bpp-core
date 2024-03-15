@@ -51,22 +51,28 @@ public:
 
   const FirstOrderDerivable& firstOrderDerivableFunction() const
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("ConjugateGradientMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   FirstOrderDerivable& firstOrderDerivableFunction()
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("ConjugateGradientMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
-  
+
   std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
   {
     return dynamic_pointer_cast<const FirstOrderDerivable>(function_);
@@ -78,7 +84,6 @@ public:
   }
 
   void getGradient(std::vector<double>& gradient) const;
-
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_CONJUGATEGRADIENTMULTIDIMENSIONS_H

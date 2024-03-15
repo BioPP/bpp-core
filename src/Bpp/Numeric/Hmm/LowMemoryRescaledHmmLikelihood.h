@@ -137,7 +137,7 @@ public:
 
   const HmmEmissionProbabilities& hmmEmissionProbabilities() const override { return *emissionProbabilities_; }
   std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const override { return emissionProbabilities_; }
-  
+
   HmmEmissionProbabilities& hmmEmissionProbabilities() override { return *emissionProbabilities_; }
   std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() override { return emissionProbabilities_; }
 

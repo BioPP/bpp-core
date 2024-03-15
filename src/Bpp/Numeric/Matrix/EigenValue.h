@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_MATRIX_EIGENVALUE_H
 
 
-
 #define TOST(i) static_cast<size_t>(i)
 
 #include <algorithm>

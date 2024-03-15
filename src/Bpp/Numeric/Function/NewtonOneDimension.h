@@ -35,22 +35,28 @@ public:
 
   const FirstOrderDerivable& firstOrderDerivableFunction() const
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("NewtonOneDimension::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   FirstOrderDerivable& firstOrderDerivableFunction()
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("NewtonOneDimension::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
-  
+
   std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
   {
     return dynamic_pointer_cast<const FirstOrderDerivable>(function_);
@@ -63,22 +69,28 @@ public:
 
   const SecondOrderDerivable& secondOrderDerivableFunction() const
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<const SecondOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("NewtonOneDimension::secondOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   SecondOrderDerivable& secondOrderDerivableFunction()
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<SecondOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("NewtonOneDimension::secondOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
-  
+
   std::shared_ptr<const SecondOrderDerivable> getSecondOrderDerivableFunction() const
   {
     return dynamic_pointer_cast<const SecondOrderDerivable>(function_);
@@ -88,8 +100,6 @@ public:
   {
     return dynamic_pointer_cast<SecondOrderDerivable>(function_);
   }
-
-
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_FUNCTION_NEWTONONEDIMENSION_H

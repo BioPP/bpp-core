@@ -531,7 +531,6 @@ public:
    * @param nodeObject object to associate
    * @param graphNode existing node to be associated
    */
-  
   void associateNode(Nref nodeObject, NodeGraphid graphNode)
   {
     if (hasNode(nodeObject))

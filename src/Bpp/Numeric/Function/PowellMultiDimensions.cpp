@@ -81,8 +81,8 @@ double PowellMultiDimensions::doStep()
     }
     fptt = fret_;
     nbEval_ += OneDimensionOptimizationTools::lineMinimization(
-		   f1dim_, getParameters_(), xit, getStopCondition()->getTolerance(),
-       0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
+      f1dim_, getParameters_(), xit, getStopCondition()->getTolerance(),
+      0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
     fret_ = function().f(getParameters());
     if (getVerbose() > 2)
       printPoint(getParameters(), fret_);

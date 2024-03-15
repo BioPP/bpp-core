@@ -160,7 +160,7 @@ public:
    * @param parameters The set of parameters for which to compute the hessian matrix.
    * @return A matrix with size equal to the number of parameters.
    */
-  static std::unique_ptr<RowMatrix<double>> computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters);
+  static std::unique_ptr<RowMatrix<double> > computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters);
 
   /**************************************************************************/
 };

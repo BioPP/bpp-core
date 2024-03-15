@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_STAT_STATTOOLS_H
 
 
-
 // From the STL:
 #include <vector>
 #include <cstddef>
@@ -24,7 +23,8 @@ private:
     double pvalue_;
     size_t index_;
     PValue_(double pvalue, size_t index) :
-      pvalue_(pvalue), index_(index) {}
+      pvalue_(pvalue),
+      index_(index) {}
 
     bool operator<(const PValue_& pvalue) const
     {

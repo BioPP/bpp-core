@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_CONSTRAINTS_H
 
 
-
 // From the STL:
 #include <string>
 #include <iostream>
@@ -99,11 +98,10 @@ public:
  * Despite the mathematical non-sense, and infinite bound can be either excluded or included.
  */
 
-class IntervalConstraint : 
+class IntervalConstraint :
   public virtual ConstraintInterface
 {
 protected:
-  
   /**
    * @brief The boundaries of the interval
    */
@@ -113,7 +111,7 @@ protected:
    * @brief Boolean flags are true if the boundaries are included
    */
   bool inclLowerBound_, inclUpperBound_;
-  
+
   /**
    * @brief the accepted precision on the boundary (default: 1e-12)
    */

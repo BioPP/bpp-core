@@ -69,7 +69,7 @@ void AttributesTools::getAttributesMap(
   {
     string arg = argv2[i];
     if (arg == "")
-      continue;                   // Skipping void line.
+      continue; // Skipping void line.
     while (arg[arg.size() - 1] == '\\')
     {
       // Splitted line
@@ -166,7 +166,8 @@ void AttributesTools::resolveVariables(
         }
         else
         {
-          if (varIt->second==value){
+          if (varIt->second == value)
+          {
             if (ApplicationTools::error)
               (*ApplicationTools::error << "Variable '" << varName << "' definition is cyclic and was ignored.").endLine();
           }
@@ -198,7 +199,7 @@ std::string AttributesTools::removeComments(
   {
     auto first = r.find(begin, last);
     if (first == string::npos)
-      return r;                   // No shell comment.
+      return r; // No shell comment.
     // else:
     last = r.find(end, first);
     if (last == string::npos)

@@ -6,7 +6,6 @@
 #define BPP_TEXT_NESTEDSTRINGTOKENIZER_H
 
 
-
 // From the STL:
 #include <deque>
 #include <string>

@@ -33,7 +33,7 @@ public:
   virtual ~HmmStateAlphabet() {}
 
   virtual HmmStateAlphabet* clone() const override = 0;
-  
+
 public:
   /**
    * @param stateIndex The index of a hidden state.

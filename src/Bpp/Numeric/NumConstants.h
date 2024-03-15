@@ -60,5 +60,5 @@ public:
 
   static double PI() { return 3.141593; }
 };
-}// end of namespace bpp.
+} // end of namespace bpp.
 #endif // BPP_NUMERIC_NUMCONSTANTS_H

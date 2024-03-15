@@ -6,7 +6,6 @@
 #define BPP_NUMERIC_PARAMETRIZABLE_H
 
 
-
 // From Utils:
 #include "../Clonable.h"
 

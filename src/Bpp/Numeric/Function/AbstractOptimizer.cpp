@@ -323,4 +323,3 @@ bool AbstractOptimizer::listenerModifiesParameters() const
 }
 
 /******************************************************************************/
-

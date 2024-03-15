@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #include "../NumConstants.h"
@@ -418,120 +417,133 @@ double RandomTools::qBeta(double prob, double alpha, double beta)
 {
   double p = alpha;
   double q = beta;
-   /* This calculates the Quantile of the beta distribution
+  /* This calculates the Quantile of the beta distribution
 
-      Cran, G. W., K. J. Martin and G. E. Thomas (1977).
-      Remark AS R19 and Algorithm AS 109, Applied Statistics, 26(1), 111-114.
-      Remark AS R83 (v.39, 309-310) and correction (v.40(1) p.236).
+     Cran, G. W., K. J. Martin and G. E. Thomas (1977).
+     Remark AS R19 and Algorithm AS 109, Applied Statistics, 26(1), 111-114.
+     Remark AS R83 (v.39, 309-310) and correction (v.40(1) p.236).
 
-      My own implementation of the algorithm did not bracket the variable well.
-      This version is Adpated from the pbeta and qbeta routines from
-      "R : A Computer Language for Statistical Data Analysis".  It fails for
-      extreme values of p and q as well, although it seems better than my
-      previous version.
-      Ziheng Yang, May 2001
+     My own implementation of the algorithm did not bracket the variable well.
+     This version is Adpated from the pbeta and qbeta routines from
+     "R : A Computer Language for Statistical Data Analysis".  It fails for
+     extreme values of p and q as well, although it seems better than my
+     previous version.
+     Ziheng Yang, May 2001
    */
-   double fpu = 3e-308, acu_min = 1e-300, lower = fpu, upper = 1 - 2.22e-16;
-   /* acu_min>= fpu: Minimal value for accuracy 'acu' which will depend on (a,p); */
-   int swap_tail, i_pb, i_inn, niterations = 2000;
-   double a, adj, g, h, pp, prev = 0, qq, r, s, t, tx = 0, w, y, yprev;
-   double acu, xinbta;
+  double fpu = 3e-308, acu_min = 1e-300, lower = fpu, upper = 1 - 2.22e-16;
+  /* acu_min>= fpu: Minimal value for accuracy 'acu' which will depend on (a,p); */
+  int swap_tail, i_pb, i_inn, niterations = 2000;
+  double a, adj, g, h, pp, prev = 0, qq, r, s, t, tx = 0, w, y, yprev;
+  double acu, xinbta;
 
-   if (prob < 0 || prob > 1) throw Exception("RandomTools::qBeta. Prob muwt be between 0 and 1.");
-   if (p < 0 || q < 0) throw Exception("RandomTools::qBeta. Alpha and beta should be positive numbers.");
+  if (prob < 0 || prob > 1)
+    throw Exception("RandomTools::qBeta. Prob muwt be between 0 and 1.");
+  if (p < 0 || q < 0)
+    throw Exception("RandomTools::qBeta. Alpha and beta should be positive numbers.");
 
-   /* define accuracy and initialize */
-   xinbta = prob;
+  /* define accuracy and initialize */
+  xinbta = prob;
 
-   if (prob == 0 || prob == 1)
-      return prob;
+  if (prob == 0 || prob == 1)
+    return prob;
 
-   double lnbeta = lnBeta(p, q);
+  double lnbeta = lnBeta(p, q);
 
-   /* change tail if necessary;  afterwards   0 < a <= 1/2    */
-   if (prob <= 0.5) {
-      a = prob;   pp = p; qq = q; swap_tail = 0;
-   }
-   else {
-      a = 1. - prob; pp = q; qq = p; swap_tail = 1;
-   }
+  /* change tail if necessary;  afterwards   0 < a <= 1/2    */
+  if (prob <= 0.5)
+  {
+    a = prob;   pp = p; qq = q; swap_tail = 0;
+  }
+  else
+  {
+    a = 1. - prob; pp = q; qq = p; swap_tail = 1;
+  }
 
-   /* calculate the initial approximation */
-   r = sqrt(-log(a * a));
-   y = r - (2.30753 + 0.27061*r) / (1. + (0.99229 + 0.04481*r) * r);
+  /* calculate the initial approximation */
+  r = sqrt(-log(a * a));
+  y = r - (2.30753 + 0.27061 * r) / (1. + (0.99229 + 0.04481 * r) * r);
 
-   if (pp > 1. && qq > 1.) {
-      r = (y * y - 3.) / 6.;
-      s = 1. / (pp*2. - 1.);
-      t = 1. / (qq*2. - 1.);
-      h = 2. / (s + t);
-      w = y * sqrt(h + r) / h - (t - s) * (r + 5. / 6. - 2. / (3.*h));
-      xinbta = pp / (pp + qq * exp(w + w));
-   }
-   else {
-      r = qq*2.;
-      t = 1. / (9. * qq);
-      t = r * pow(1. - t + y * sqrt(t), 3.);
-      if (t <= 0.)
-         xinbta = 1. - exp((log((1. - a) * qq) + lnbeta) / qq);
-      else {
-         t = (4.*pp + r - 2.) / t;
-         if (t <= 1.)
-            xinbta = exp((log(a * pp) + lnbeta) / pp);
-         else
-            xinbta = 1. - 2. / (t + 1.);
-      }
-   }
+  if (pp > 1. && qq > 1.)
+  {
+    r = (y * y - 3.) / 6.;
+    s = 1. / (pp * 2. - 1.);
+    t = 1. / (qq * 2. - 1.);
+    h = 2. / (s + t);
+    w = y * sqrt(h + r) / h - (t - s) * (r + 5. / 6. - 2. / (3. * h));
+    xinbta = pp / (pp + qq * exp(w + w));
+  }
+  else
+  {
+    r = qq * 2.;
+    t = 1. / (9. * qq);
+    t = r * pow(1. - t + y * sqrt(t), 3.);
+    if (t <= 0.)
+      xinbta = 1. - exp((log((1. - a) * qq) + lnbeta) / qq);
+    else
+    {
+      t = (4. * pp + r - 2.) / t;
+      if (t <= 1.)
+        xinbta = exp((log(a * pp) + lnbeta) / pp);
+      else
+        xinbta = 1. - 2. / (t + 1.);
+    }
+  }
 
-   /* solve for x by a modified newton-raphson method, using CDFBeta */
-   r = 1. - pp;
-   t = 1. - qq;
-   yprev = 0.;
-   adj = 1.;
+  /* solve for x by a modified newton-raphson method, using CDFBeta */
+  r = 1. - pp;
+  t = 1. - qq;
+  yprev = 0.;
+  adj = 1.;
 
 
-   /* Changes made by Ziheng to fix a bug in qbeta()
-      qbeta(0.25, 0.143891, 0.05) = 3e-308   wrong (correct value is 0.457227)
+  /* Changes made by Ziheng to fix a bug in qbeta()
+     qbeta(0.25, 0.143891, 0.05) = 3e-308   wrong (correct value is 0.457227)
    */
-   if (xinbta <= lower || xinbta >= upper)  xinbta = (a + .5) / 2;
+  if (xinbta <= lower || xinbta >= upper)
+    xinbta = (a + .5) / 2;
 
-   /* Desired accuracy should depend on (a,p)
-    * This is from Remark .. on AS 109, adapted.
-    * However, it's not clear if this is "optimal" for IEEE double prec.
-    * acu = fmax2(acu_min, pow(10., -25. - 5./(pp * pp) - 1./(a * a)));
-    * NEW: 'acu' accuracy NOT for squared adjustment, but simple;
-    * ---- i.e.,  "new acu" = sqrt(old acu)
-    */
-   acu = pow(10., -13. - 2.5 / (pp * pp) - 0.5 / (a * a));
-   acu = max(acu, acu_min);
+  /* Desired accuracy should depend on (a,p)
+   * This is from Remark .. on AS 109, adapted.
+   * However, it's not clear if this is "optimal" for IEEE double prec.
+   * acu = fmax2(acu_min, pow(10., -25. - 5./(pp * pp) - 1./(a * a)));
+   * NEW: 'acu' accuracy NOT for squared adjustment, but simple;
+   * ---- i.e.,  "new acu" = sqrt(old acu)
+   */
+  acu = pow(10., -13. - 2.5 / (pp * pp) - 0.5 / (a * a));
+  acu = max(acu, acu_min);
 
-   for (i_pb = 0; i_pb < niterations; i_pb++) {
-      y = pBeta(xinbta, pp, qq);
-      y = (y - a) *
-         exp(lnbeta + r * log(xinbta) + t * log(1. - xinbta));
-      if (y * yprev <= 0)
-         prev = max(fabs(adj), fpu);
-      for (i_inn = 0, g = 1; i_inn < niterations; i_inn++) {
-         adj = g * y;
-         if (fabs(adj) < prev) {
-            tx = xinbta - adj; /* trial new x */
-            if (tx >= 0. && tx <= 1.) {
-               if (prev <= acu || fabs(y) <= acu)   goto L_converged;
-               if (tx != 0. && tx != 1.)  break;
-            }
-         }
-         g /= 3.;
+  for (i_pb = 0; i_pb < niterations; i_pb++)
+  {
+    y = pBeta(xinbta, pp, qq);
+    y = (y - a) *
+        exp(lnbeta + r * log(xinbta) + t * log(1. - xinbta));
+    if (y * yprev <= 0)
+      prev = max(fabs(adj), fpu);
+    for (i_inn = 0, g = 1; i_inn < niterations; i_inn++)
+    {
+      adj = g * y;
+      if (fabs(adj) < prev)
+      {
+        tx = xinbta - adj; /* trial new x */
+        if (tx >= 0. && tx <= 1.)
+        {
+          if (prev <= acu || fabs(y) <= acu)
+            goto L_converged;
+          if (tx != 0. && tx != 1.)
+            break;
+        }
       }
-      if (fabs(tx - xinbta) < fpu)
-         goto L_converged;
-      xinbta = tx;
-      yprev = y;
-   }
+      g /= 3.;
+    }
+    if (fabs(tx - xinbta) < fpu)
+      goto L_converged;
+    xinbta = tx;
+    yprev = y;
+  }
 
 L_converged:
-   return (swap_tail ? 1. - xinbta : xinbta);
+  return swap_tail ? 1. - xinbta : xinbta;
 }
-
 
 
 double RandomTools::incompleteBeta(double x, double alpha, double beta)

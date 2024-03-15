@@ -36,7 +36,7 @@ public:
    * @return The hidden alphabet associated to this model.
    */
   virtual const HmmStateAlphabet& hmmStateAlphabet() const = 0;
-  
+
   /**
    * @return A shared pointer toward the hidden alphabet associated to this model.
    */

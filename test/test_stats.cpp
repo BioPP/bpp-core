@@ -14,9 +14,10 @@
 using namespace bpp;
 using namespace std;
 
-//tbl<-rbind(c(6,12,16,20),c(9,34,28,12))
-//chisq.test(tbl);
-int main() {
+// tbl<-rbind(c(6,12,16,20),c(9,34,28,12))
+// chisq.test(tbl);
+int main()
+{
   vector< vector<size_t> > table;
   vector<size_t> row1;
   row1.push_back(6);
@@ -41,7 +42,7 @@ int main() {
   if (abs(test.getPValue() - 0.01324) > 0.0001)
     return 1;
 
-  //Now test permutations:
+  // Now test permutations:
   ContingencyTableTest test2(table, 20000);
   cout << test2.getStatistic() << " \t" << test2.getPValue() << endl;
   if (abs(test2.getPValue() - 0.01324) > 0.01)
@@ -49,4 +50,3 @@ int main() {
 
   return 0;
 }
-

@@ -51,7 +51,6 @@ public:
    * @param A [in] Original matrix.
    * @param O [out] A copy of the given matrix.
    */
-
   template<class MatrixA, class MatrixO>
   static void copyUp(const MatrixA& A, MatrixO& O)
   {
@@ -76,7 +75,6 @@ public:
    * @param A [in] Original matrix.
    * @param O [out] A copy of the given matrix.
    */
-
   template<class MatrixA, class MatrixO>
   static void copyDown(const MatrixA& A, MatrixO& O)
   {
@@ -202,9 +200,9 @@ public:
   template<class Matrix, class Scalar>
   static void scale(Matrix& A, Scalar a, Scalar b = 0)
   {
-    if ((a==1) && (b==0))
+    if ((a == 1) && (b == 0))
       return;
-    
+
     for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
       for (size_t j = 0; j < A.getNumberOfColumns(); j++)
@@ -251,7 +249,6 @@ public:
    * @param O  [out] The dot product of two matrices (real part)
    * @param iO [out] The dot product of two matrices(imaginary part)
    */
-
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO)
   {
@@ -413,7 +410,6 @@ public:
    * @param B [in] Matrix B
    * @throw DimensionException If A and B have note the same size.
    */
-
   template<class MatrixA, class MatrixB>
   static void add(MatrixA& A, const MatrixB& B)
   {
@@ -557,7 +553,6 @@ public:
    *
    * @throw DimensionException If m is not a square matrix.
    */
-
   template<class Matrix, class Scalar>
   static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> >& vO)
   {
@@ -1303,7 +1298,7 @@ public:
         colSol[j - 1] = static_cast<int>(iMin);
       }
       else
-        colSol[j - 1] = -1;                                       // row already assigned, column not assigned.
+        colSol[j - 1] = -1; // row already assigned, column not assigned.
     }
 
     // Reduction tranfer

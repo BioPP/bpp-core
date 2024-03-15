@@ -514,7 +514,7 @@ std::vector<Graph::NodeId> TreeGraphImpl<GraphImpl>::getNodePathBetweenTwoNodes(
     path.push_back(pathMatrix1[y]);
   }
   if (includeAncestor) // FIXME: one of the extremities may be the ancestor!!!
-    path.push_back(pathMatrix1[tmp1]);                                                                                      // pushing once, the Node that was common to both.
+    path.push_back(pathMatrix1[tmp1]); // pushing once, the Node that was common to both.
   for (size_t j = tmp2; j > 0; --j)
   {
     path.push_back(pathMatrix2[j - 1]);
@@ -593,14 +593,16 @@ Graph::NodeId TreeGraphImpl<GraphImpl>::MRCA(const std::vector<Graph::NodeId>& n
   auto sons = std::make_shared<std::map<Graph::NodeId, uint> >();
 
   for (auto nodeid:nodes)
+  {
     (*sons)[nodeid] = 1;
+  }
 
   while (sons->size() > 1)
   {
     // From sons to fathers
     for (auto son:(*sons))
     {
-      Graph::NodeId here=(!hasFather(son.first))?son.first:getFatherOfNode(son.first);
+      Graph::NodeId here = (!hasFather(son.first)) ? son.first : getFatherOfNode(son.first);
 
       if (fathers->find(here) == fathers->end())
         (*fathers)[here] = son.second;

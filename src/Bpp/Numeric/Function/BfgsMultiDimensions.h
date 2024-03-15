@@ -56,22 +56,28 @@ public:
 
   const FirstOrderDerivable& firstOrderDerivableFunction() const
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<const FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("BfgsMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
 
   FirstOrderDerivable& firstOrderDerivableFunction()
   {
-    if (function_) { 
+    if (function_)
+    {
       return *dynamic_pointer_cast<FirstOrderDerivable>(function_);
-    } else {
+    }
+    else
+    {
       throw NullPointerException("BfgsMultiDimensions::firstOrderDerivableFunction() : no function associated to this optimizer.");
-    } 
+    }
   }
-  
+
   std::shared_ptr<const FirstOrderDerivable> getFirstOrderDerivableFunction() const
   {
     return dynamic_pointer_cast<const FirstOrderDerivable>(function_);

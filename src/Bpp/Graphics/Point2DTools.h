@@ -6,7 +6,6 @@
 #define BPP_GRAPHICS_POINT2DTOOLS_H
 
 
-
 // From local
 #include "Point2D.h"
 

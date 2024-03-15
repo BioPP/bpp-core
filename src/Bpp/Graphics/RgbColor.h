@@ -6,7 +6,6 @@
 #define BPP_GRAPHICS_RGBCOLOR_H
 
 
-
 // From the STL:
 #include <cmath>
 

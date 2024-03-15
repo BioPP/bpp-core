@@ -90,8 +90,7 @@ DataTable& DataTable::operator=(const DataTable& table)
 /******************************************************************************/
 
 DataTable::~DataTable()
-{
-}
+{}
 
 /******************************************************************************/
 /*                             Cell access                                    */
@@ -368,14 +367,14 @@ void DataTable::deleteColumn(size_t index)
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::deleteColumn(size_t).", index, 0, nCol_ - 1);
   data_.erase(data_.begin() + static_cast<ptrdiff_t>(index));
-  if (colNames_.size()!=0)
+  if (colNames_.size() != 0)
     colNames_.erase(colNames_.begin() + static_cast<ptrdiff_t>(index));
   nCol_--;
 }
 
 void DataTable::deleteColumn(const string& colName)
 {
-  if (colNames_.size()==0)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
   try
   {
@@ -392,7 +391,7 @@ void DataTable::deleteColumn(const string& colName)
 
 void DataTable::addColumn(const vector<string>& newColumn)
 {
-  if (colNames_.size()!=0)
+  if (colNames_.size() != 0)
     throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
   if (newColumn.size() != nRow_)
     throw DimensionException("DataTable::addColumn.", newColumn.size(), nRow_);
@@ -402,7 +401,7 @@ void DataTable::addColumn(const vector<string>& newColumn)
 
 void DataTable::addColumn(const string& colName, const vector<string>& newColumn)
 {
-  if (colNames_.size()==0)
+  if (colNames_.size() == 0)
   {
     if (nCol_ == 0)
       colNames_ = vector<string>(0);
@@ -436,7 +435,7 @@ vector<string> DataTable::getRow(size_t index) const
 
 vector<string> DataTable::getRow(const string& rowName) const
 {
-  if (rowNames_.size()==0)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::getRow(const string &).");
   try
   {
@@ -475,14 +474,14 @@ void DataTable::deleteRow(size_t index)
       throw IndexOutOfBoundsException("DataTable::deleteRow(size_t).", index, 0, column->size() - 1);
     column->erase(column->begin() + static_cast<ptrdiff_t>(index));
   }
-  if (rowNames_.size()!=0)
+  if (rowNames_.size() != 0)
     rowNames_.erase(rowNames_.begin() + static_cast<ptrdiff_t>(index));
   nRow_--;
 }
 
 void DataTable::deleteRow(const string& rowName)
 {
-  if (rowNames_.size()==0)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
   try
   {
@@ -503,7 +502,7 @@ void DataTable::deleteRow(const string& rowName)
 
 void DataTable::addRow(const vector<string>& newRow)
 {
-  if (rowNames_.size()!=0)
+  if (rowNames_.size() != 0)
     throw TableRowNamesException("DataTable::addRow. Table has row names.");
   if (newRow.size() != nCol_)
     throw DimensionException("DataTable::addRow.", newRow.size(), nCol_);
@@ -529,7 +528,7 @@ void DataTable::setRow(size_t rowIndex, const vector<string>& newRow)
 
 void DataTable::addRow(const string& rowName, const vector<string>& newRow)
 {
-  if (rowNames_.size()==0)
+  if (rowNames_.size() == 0)
   {
     if (nRow_ == 0)
       rowNames_ = vector<string>(0);

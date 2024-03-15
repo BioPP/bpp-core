@@ -10,7 +10,8 @@
 using namespace bpp;
 using namespace std;
 
-int main() {
+int main()
+{
   auto f = make_shared<PolynomialFunction1>();
   double initFValue = f->getValue();
   cout << initFValue << endl;
@@ -31,5 +32,5 @@ int main() {
   cout << "z=" << z << endl;
   cout << "f=" << minf << endl;
   bool test = f->getValue() < initFValue;
-  return (test ? 0 : 1);
+  return test ? 0 : 1;
 }

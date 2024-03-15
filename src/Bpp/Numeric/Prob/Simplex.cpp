@@ -281,30 +281,30 @@ OrderedSimplex::OrderedSimplex(const std::vector<double>& probas, unsigned short
 void OrderedSimplex::fireParameterChanged(const ParameterList& pl)
 {
   Simplex::fireParameterChanged(pl);
-  const auto& probs=Simplex::getFrequencies();
+  const auto& probs = Simplex::getFrequencies();
 
   auto dim = probs.size();
 
   double x = 0;
   for (auto i = dim; i > 0; i--)
   {
-    x+= probs[i-1]/(int)i;
-    vValues_[i-1]=x;
+    x += probs[i - 1] / (int)i;
+    vValues_[i - 1] = x;
   }
-
 }
 
 void OrderedSimplex::setFrequencies(const std::vector<double>& vValues)
 {
   vValues_ = vValues;
-  
+
   auto dim = vValues.size();
   Vdouble vprob(dim);
-  
-  for (size_t i = 0; i < dim - 1; ++i)
-    vprob[i] = static_cast<double>(i+1) * (vValues[i] - vValues[i+1]);
 
-  vprob[dim-1] = static_cast<double>(dim) * vValues[dim-1];
+  for (size_t i = 0; i < dim - 1; ++i)
+  {
+    vprob[i] = static_cast<double>(i + 1) * (vValues[i] - vValues[i + 1]);
+  }
+
+  vprob[dim - 1] = static_cast<double>(dim) * vValues[dim - 1];
   Simplex::setFrequencies(vprob);
 }
-

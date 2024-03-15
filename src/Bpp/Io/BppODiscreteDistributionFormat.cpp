@@ -130,7 +130,7 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
     if (args.find("probas") == args.end())
       throw Exception("Missing argument 'probas' in Mixture distribution");
     vector<double> probas;
-    vector<unique_ptr<DiscreteDistributionInterface>> v_pdd;
+    vector<unique_ptr<DiscreteDistributionInterface> > v_pdd;
     unique_ptr<DiscreteDistributionInterface> pdd;
     string rf = args["probas"];
     StringTokenizer strtok2(rf.substr(1, rf.length() - 2), ",");
@@ -267,13 +267,17 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
   out << dist.getName() + "(";
 
   auto* invar = dynamic_cast<const InvariantMixedDiscreteDistribution*>(&dist);
-  if (invar) {
+  if (invar)
+  {
     auto& pd = invar->variableSubDistribution();
     out << "dist=";
     writeDiscreteDistribution(pd, out, globalAliases, writtenNames);
     comma = true;
-  } else {
-    try {
+  }
+  else
+  {
+    try
+    {
       auto& mix = dynamic_cast<const MixtureOfDiscreteDistributions&>(dist);
       size_t nd = mix.getNumberOfDistributions();
       for (size_t i = 0; i < nd; ++i)
@@ -296,7 +300,9 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
       {
         writtenNames.push_back(mix.getNamespace() + "theta" + TextTools::toString(i));
       }
-    } catch (bad_cast&) {}
+    }
+    catch (bad_cast&)
+    {}
   }
 
   if (dynamic_cast<const BetaDiscreteDistribution*>(&dist) ||
@@ -312,18 +318,22 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
     comma = true;
   }
 
-  try {
+  try
+  {
     auto& pc = dynamic_cast<const ConstantDistribution&>(dist);
     if (dist.getNumberOfParameters() == 0)
     {
-     if (comma)
+      if (comma)
         out << ",";
       out << "value="  << pc.getLowerBound();
       comma = true;
     }
-  } catch (bad_cast&) {}
+  }
+  catch (bad_cast&)
+  {}
 
-  try {
+  try
+  {
     auto& ps = dynamic_cast<const SimpleDiscreteDistribution&>(dist);
     size_t nd = ps.getNumberOfCategories();
     if (comma)
@@ -369,7 +379,9 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
       writtenNames.push_back(ps.getNamespace() + "V" + TextTools::toString(i));
     }
     comma = true;
-  } catch (bad_cast&) {}
+  }
+  catch (bad_cast&)
+  {}
 
   // Writing the parameters
   BppOParametrizableFormat bOP;
