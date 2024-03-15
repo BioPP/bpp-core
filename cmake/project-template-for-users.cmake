@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The Bio++ Development Group
+#
+# SPDX-License-Identifier: CECILL-2.1
+
 # Template project file to compile a program with Bio++ libraries
 # Authors:
 #   Francois Gindraud (2017)
@@ -12,16 +16,16 @@
 # This is a basic configuration for users with Bio++ libraries installed in a standard system place (/usr/).
 
 # These two lines are CMake boilerplate
-cmake_minimum_required (VERSION 2.8.11) # Test of version. 2.8.11 is the oldest version supported by Bio++
+cmake_minimum_required (VERSION 3.5) # Test of version. 2.5 is the oldest version supported by Bio++
 project (myproject CXX) # The name is not critical
 
 # Find Bio++ libraries and import their configurations.
 find_package (bpp-core)
 find_package (bpp-seq)
 
-# Bio++ REQUIRES using at least the C++11 standard.
+# Bio++ REQUIRES using at least the C++14 standard.
 # This line specifies options passed to the compiler (you can add your own).
-set (CMAKE_CXX_FLAGS "-std=c++11")
+set (CMAKE_CXX_FLAGS "-std=c++1'")
 
 # Tells CMake to create a binary from dummy.cpp (replace with your .cpp file(s))
 add_executable (myprogram dummy.cpp other.cpp)
@@ -58,11 +62,11 @@ target_link_libraries (myprogram ${BPP_LIBS_SHARED})
 # find_package of a a module also does a find_package of dependency Bio++ modules.
 #
 # So, for bpp-phyl (which depends on bpp-seq and bpp-core):
-find_package (bpp-phyl)
+find_package (bpp-phyl3)
 # Is equivalent to:
-find_package (bpp-core)
-find_package (bpp-seq)
-find_package (bpp-phyl)
+find_package (bpp-core3)
+find_package (bpp-seq3)
+find_package (bpp-phyl3)
 # And the following target_link_libraries commands are equivalent:
 target_link_libraries (myprogram bpp-phyl-shared)
 target_link_libraries (myprogram bpp-core-shared bpp-seq-shared bpp-phyl-shared)

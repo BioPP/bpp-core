@@ -1,14 +1,20 @@
+# SPDX-FileCopyrightText: The Bio++ Development Group
+#
+# SPDX-License-Identifier: CECILL-2.1
+
 # files to be ignored
 
 BppCore.tag
 CMakeCache.txt
 CMakeFiles
 *.cmake
+*.cmake.in
 Makefile
 html
 install_manifest.txt
-libbpp-core.*
-.clang_complete
+.clang*
+*.sw*
+build
 
 # file to be specifically not ignored by previous rules
 
