@@ -4,7 +4,7 @@
 
 # files to be ignored
 
-BppCore.tag
+*.tag
 CMakeCache.txt
 CMakeFiles
 *.cmake
