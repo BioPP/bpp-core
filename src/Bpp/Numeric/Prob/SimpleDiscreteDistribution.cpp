@@ -12,8 +12,8 @@ using namespace std;
 
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const map<double, double>& distribution,
-                                                       double prec,
-                                                       bool fixed) :
+    double prec,
+    bool fixed) :
   AbstractDiscreteDistribution(distribution.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -47,10 +47,10 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const map<double, double>
 }
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& values,
-                                                       const vector<double>& probas,
-                                                       double prec,
-                                                       bool fixed
-                                                       ) :
+    const vector<double>& probas,
+    double prec,
+    bool fixed
+    ) :
   AbstractDiscreteDistribution(values.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -88,10 +88,10 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const vector<double>& val
 }
 
 SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>& values,
-                                                       const std::map<size_t, std::vector<double> >& ranges,
-                                                       const std::vector<double>& probas,
-                                                       double prec,
-                                                       bool fixed) :
+    const std::map<size_t, std::vector<double>>& ranges,
+    const std::vector<double>& probas,
+    double prec,
+    bool fixed) :
   AbstractDiscreteDistribution(values.size(), prec, "Simple."),
   givenRanges_()
 {
@@ -118,7 +118,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
     double y = 1;
     for (size_t i = 0; i < size - 1; i++)
     {
-      map<size_t, vector<double> >::const_iterator it = ranges.find(i + 1);
+      map<size_t, vector<double>>::const_iterator it = ranges.find(i + 1);
       if (it == ranges.end())
         addParameter_(new Parameter("Simple.V" + TextTools::toString(i + 1), values[i]));
       else
@@ -135,7 +135,7 @@ SimpleDiscreteDistribution::SimpleDiscreteDistribution(const std::vector<double>
       y -= probas[i];
     }
 
-    map<size_t, vector<double> >::const_iterator it = ranges.find(size);
+    map<size_t, vector<double>>::const_iterator it = ranges.find(size);
     if (it == ranges.end())
       addParameter_(new Parameter("Simple.V" + TextTools::toString(size), values[size - 1]));
     else
@@ -291,7 +291,7 @@ void SimpleDiscreteDistribution::restrictToConstraint(const ConstraintInterface&
   size_t size = distribution_.size();
   for (size_t i = 0; i < size; i++)
   {
-    map<size_t, vector<double> >::const_iterator itr = givenRanges_.find(i + 1);
+    map<size_t, vector<double>>::const_iterator itr = givenRanges_.find(i + 1);
     if (itr == givenRanges_.end())
       getParameter_("V" + TextTools::toString(i + 1)).setConstraint(intMinMax_);
     else

@@ -41,14 +41,14 @@ public:
    * @throw Exception if an error occured.
    */
   PrincipalComponentAnalysis(
-    const Matrix<double>& data,
-    unsigned int nbAxes,
-    const std::vector<double>& rowW,
-    const std::vector<double>& colW,
-    bool centered = true,
-    bool scaled = true,
-    double tol = 0.0000001,
-    bool verbose = true);
+      const Matrix<double>& data,
+      unsigned int nbAxes,
+      const std::vector<double>& rowW,
+      const std::vector<double>& colW,
+      bool centered = true,
+      bool scaled = true,
+      double tol = 0.0000001,
+      bool verbose = true);
 
   /**
    * @brief Build a new PrincipalComponentAnalysis object and specify default row and column weights.
@@ -62,12 +62,12 @@ public:
    * @throw Exception if an error occured.
    */
   PrincipalComponentAnalysis(
-    const Matrix<double>& data,
-    unsigned int nbAxes,
-    bool centered = true,
-    bool scaled = true,
-    double tol = 0.0000001,
-    bool verbose = true);
+      const Matrix<double>& data,
+      unsigned int nbAxes,
+      bool centered = true,
+      bool scaled = true,
+      double tol = 0.0000001,
+      bool verbose = true);
 
   virtual ~PrincipalComponentAnalysis() {}
 

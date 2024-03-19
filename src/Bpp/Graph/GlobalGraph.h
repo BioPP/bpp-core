@@ -35,14 +35,14 @@ public:
    *     N2 -> ((N1:E1, N3:E3),(N1:E1, N3:E3))
    *     N3 -> ((N2:E2),(N2:E2))
    */
-  typedef std::map<Node, std::pair<std::map<Node, Edge>, std::map<Node, Edge> > > nodeStructureType;
+  typedef std::map<Node, std::pair<std::map<Node, Edge>, std::map<Node, Edge>>> nodeStructureType;
 
   /**
    * The edge structure type
    * directed example: N1--E1-->N2 is coded as E1 -> (N1,N2)
    * undirected example: N1--E1--N2 is coded as E1 -> (N1,N2)
    */
-  typedef std::map<Edge, std::pair<Node, Node> > edgeStructureType;
+  typedef std::map<Edge, std::pair<Node, Node>> edgeStructureType;
 
 private:
   /**
@@ -198,7 +198,7 @@ private:
    * output a node to DOT format (recursive)
    */
 
-  void nodeToDot_(const Node& node, std::ostream& out, std::set<std::pair<Node, Node> >& alreadyFigured) const;
+  void nodeToDot_(const Node& node, std::ostream& out, std::set<std::pair<Node, Node>>& alreadyFigured) const;
 
 public:
   /** @name General Management
@@ -713,8 +713,8 @@ class NodesIteratorClass<Graph::ALLGRAPHITER, is_const> :
 {
 private:
   typedef typename std::conditional<is_const,
-                                    GlobalGraph::nodeStructureType::const_iterator,
-                                    GlobalGraph::nodeStructureType::iterator >::type itType;
+          GlobalGraph::nodeStructureType::const_iterator,
+          GlobalGraph::nodeStructureType::iterator >::type itType;
 
   itType it_,  begin_, end_;
 
@@ -749,14 +749,14 @@ class NeighborIteratorClass
 {
 protected:
   typedef typename std::conditional<is_const,
-                                    const std::map<GlobalGraph::Node, GlobalGraph::Edge>&,
-                                    std::map<GlobalGraph::Node, GlobalGraph::Edge>&>::type mapType;
+          const std::map<GlobalGraph::Node, GlobalGraph::Edge>&,
+          std::map<GlobalGraph::Node, GlobalGraph::Edge>&>::type mapType;
 
   mapType map_;
 
   typedef typename std::conditional<is_const,
-                                    std::map<GlobalGraph::Node, GlobalGraph::Edge>::const_iterator,
-                                    std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator>::type itType;
+          std::map<GlobalGraph::Node, GlobalGraph::Edge>::const_iterator,
+          std::map<GlobalGraph::Node, GlobalGraph::Edge>::iterator>::type itType;
 
   itType it_, begin_, end_;
 
@@ -843,8 +843,8 @@ class EdgesIteratorClass<Graph::ALLGRAPHITER, is_const> :
 {
 private:
   typedef typename std::conditional<is_const,
-                                    GlobalGraph::edgeStructureType::const_iterator,
-                                    GlobalGraph::edgeStructureType::iterator >::type itType;
+          GlobalGraph::edgeStructureType::const_iterator,
+          GlobalGraph::edgeStructureType::iterator >::type itType;
 
   itType it_, begin_, end_;
 

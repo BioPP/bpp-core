@@ -42,19 +42,19 @@ private:
    *@brief functions for the computation of incompleteBeta
    */
   static double incompletebetafe(double a,
-                                 double b,
-                                 double x,
-                                 double big,
-                                 double biginv);
+      double b,
+      double x,
+      double big,
+      double biginv);
   static double incompletebetafe2(double a,
-                                  double b,
-                                  double x,
-                                  double big,
-                                  double biginv);
+      double b,
+      double x,
+      double big,
+      double biginv);
   static double incompletebetaps(double a,
-                                 double b,
-                                 double x,
-                                 double maxgam);
+      double b,
+      double x,
+      double maxgam);
 
 public:
   static std::random_device RANDOM_DEVICE;

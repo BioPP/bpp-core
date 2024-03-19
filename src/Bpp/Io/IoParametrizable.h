@@ -49,9 +49,9 @@ public:
    *        beginning of the description.
    */
   virtual void write(const Parametrizable& parametrizable,
-                     OutputStream& out,
-                     std::vector<std::string>& writtenNames,
-                     bool printComma = false) const = 0;
+      OutputStream& out,
+      std::vector<std::string>& writtenNames,
+      bool printComma = false) const = 0;
 
   /**
    * @brief Write a ParameterAliasable to a stream.
@@ -67,12 +67,12 @@ public:
    *        beginning of the description.
    */
   virtual void write(const ParameterAliasable& parametrizable,
-                     OutputStream& out,
-                     std::map<std::string, std::string>& globalAliases,
-                     const std::vector<std::string>& names,
-                     std::vector<std::string>& writtenNames,
-                     bool printLocalAliases = true,
-                     bool printComma = false) const = 0;
+      OutputStream& out,
+      std::map<std::string, std::string>& globalAliases,
+      const std::vector<std::string>& names,
+      std::vector<std::string>& writtenNames,
+      bool printLocalAliases = true,
+      bool printComma = false) const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_IO_IOPARAMETRIZABLE_H

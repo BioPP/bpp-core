@@ -26,10 +26,10 @@ inline void Bracket::setC(double xc, double fc) { c.set(xc, fc); }
 /******************************************************************************/
 
 Bracket OneDimensionOptimizationTools::bracketMinimum(
-  double a,
-  double b,
-  FunctionInterface& function,
-  ParameterList parameters)
+    double a,
+    double b,
+    FunctionInterface& function,
+    ParameterList parameters)
 {
   Bracket bracket;
   // Copy the parameter to use.
@@ -66,7 +66,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
     double q = (bracket.b.x - bracket.c.x) * (bracket.b.f - bracket.a.f);
 
     double xu = bracket.b.x - ((bracket.b.x - bracket.c.x) * q - (bracket.b.x - bracket.a.x) * r) /
-                (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
+        (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
     double xulim = (bracket.b.x) + GLIMIT * (bracket.c.x - bracket.b.x);
     double fu;
 
@@ -124,11 +124,11 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
 /******************************************************************************/
 
 Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
-  double a,
-  double b,
-  FunctionInterface& function,
-  ParameterList parameters,
-  uint intervalsNum)
+    double a,
+    double b,
+    FunctionInterface& function,
+    ParameterList parameters,
+    uint intervalsNum)
 {
   Bracket bracket;
   // Copy the parameter to use.
@@ -171,13 +171,13 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
 /******************************************************************************/
 
 unsigned int OneDimensionOptimizationTools::lineMinimization(
-  std::shared_ptr<DirectionFunction> f1dim,
-  ParameterList& parameters,
-  std::vector<double>& xi,
-  double tolerance,
-  std::shared_ptr<OutputStream> profiler,
-  std::shared_ptr<OutputStream> messenger,
-  unsigned int verbose)
+    std::shared_ptr<DirectionFunction> f1dim,
+    ParameterList& parameters,
+    std::vector<double>& xi,
+    double tolerance,
+    std::shared_ptr<OutputStream> profiler,
+    std::shared_ptr<OutputStream> messenger,
+    unsigned int verbose)
 {
   // Initial guess for brackets:
   double ax = 0.;
@@ -213,13 +213,13 @@ unsigned int OneDimensionOptimizationTools::lineMinimization(
 /******************************************************************************/
 
 unsigned int OneDimensionOptimizationTools::lineSearch(
-  std::shared_ptr<DirectionFunction> f1dim,
-  ParameterList& parameters,
-  std::vector<double>& xi,
-  std::vector<double>& gradient,
-  std::shared_ptr<OutputStream> profiler,
-  std::shared_ptr<OutputStream> messenger,
-  unsigned int verbose)
+    std::shared_ptr<DirectionFunction> f1dim,
+    ParameterList& parameters,
+    std::vector<double>& xi,
+    std::vector<double>& gradient,
+    std::shared_ptr<OutputStream> profiler,
+    std::shared_ptr<OutputStream> messenger,
+    unsigned int verbose)
 {
   size_t size = xi.size();
 

@@ -187,12 +187,12 @@ public:
    * @return The corresponding value.
    */
   static std::string getStringParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     std::string sParam = defaultValue;
     std::map<std::string, std::string>::const_iterator it1 = params.find(parameterName + suffix);
@@ -244,12 +244,12 @@ public:
    * @return The corresponding value.
    */
   template<class T> static T getParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    T defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      T defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     T tParam = defaultValue;
     if (parameterExists(parameterName + suffix, params))
@@ -309,13 +309,13 @@ public:
    * @return The corresponding value.
    */
   template<class T> static std::vector<T> getVectorParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     if (separator == ' ') throw Exception("ApplicationTools::getVectorParameter(). Separator cannot be a space character.");
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
@@ -349,28 +349,28 @@ public:
    * @throw Exception If a space character is used as separator.
    * @return The corresponding value.
    */
-  template<class T> static std::vector< std::vector<T> > getVectorOfVectorsParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+  template<class T> static std::vector< std::vector<T>> getVectorOfVectorsParameter(
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     if (separator == ' ') throw Exception("ApplicationTools::getVectorOfVectorsParameter(). Separator cannot be a space character.");
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
-    if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+    if (TextTools::isEmpty(s)) return std::vector< std::vector<T>>(0);
     if (s[0] == '(' && s[s.size() - 1] == ')')
     {
       // This is a delimited vector:
       s = s.substr(1, s.size() - 2);
-      if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+      if (TextTools::isEmpty(s)) return std::vector< std::vector<T>>(0);
     }
     NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
     size_t n = st.numberOfRemainingTokens();
     std::string s2;
-    std::vector< std::vector<T> > v(n);
+    std::vector< std::vector<T>> v(n);
     for (size_t i = 0; i < n; ++i)
     {
       s2 = st.nextToken();
@@ -410,14 +410,14 @@ public:
    * @return The corresponding value.
    */
   template<class T> static std::vector<T> getVectorParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    char rangeOperator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool warn = true)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      char rangeOperator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true)
   {
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
     if (s[0] == '(' && s[s.size() - 1] == ')')
@@ -470,13 +470,13 @@ public:
    * @return The corresponding value.
    */
   template<class T> static RowMatrix<T> getMatrixParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool warn = true)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true)
   {
     RowMatrix<T> mat;
 

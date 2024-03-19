@@ -98,7 +98,7 @@ double RandomTools::DblGammaLessThanOne(double dblAlpha)
     if (dblRand0 <= (dblexp / (dblAlpha + dblexp)))
     {
       dblTemp = pow(((dblAlpha + dblexp) * dblRand0) /
-                    dblexp, 1.0 / dblAlpha);
+            dblexp, 1.0 / dblAlpha);
       if (dblRand1 <= exp(-1.0 * dblTemp))
         return dblTemp;
     }
@@ -658,10 +658,10 @@ double RandomTools::incompleteBeta(double x, double alpha, double beta)
 /**********************************************/
 
 double RandomTools::incompletebetafe(double a,
-                                     double b,
-                                     double x,
-                                     double big,
-                                     double biginv)
+    double b,
+    double x,
+    double big,
+    double biginv)
 {
   double result;
   double xk;
@@ -769,10 +769,10 @@ double RandomTools::incompletebetafe(double a,
 // SPDX-License-Identifier: CECILL-2.1
 
 double RandomTools::incompletebetafe2(double a,
-                                      double b,
-                                      double x,
-                                      double big,
-                                      double biginv)
+    double b,
+    double x,
+    double big,
+    double biginv)
 {
   double result;
   double xk;

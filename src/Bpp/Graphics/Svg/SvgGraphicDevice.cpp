@@ -27,7 +27,7 @@ void SvgGraphicDevice::end()
 
   out_ << "<g transform=\"translate(" << (-minx_) << "," << (-miny_) << ")\">" << endl;
 
-  for (map<int, vector<string> >::iterator it = layers_.begin(); it != layers_.end(); it++)
+  for (map<int, vector<string>>::iterator it = layers_.begin(); it != layers_.end(); it++)
   {
     out_ << "<g id=\"layer" << it->first << "\"";
     if (inkscapeEnabled_)

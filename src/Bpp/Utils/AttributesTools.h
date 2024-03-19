@@ -189,9 +189,9 @@ public:
    * @throw Exception If there is a syntax error.
    */
   static void resolveVariables(std::map<std::string, std::string>& am,
-                               char varCode = '$',
-                               char varBeg = '(',
-                               char varEnd = ')');
+      char varCode = '$',
+      char varBeg = '(',
+      char varEnd = ')');
 
   /**
    * @brief Global function that reads all parameters from command line and files,

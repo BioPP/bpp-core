@@ -30,8 +30,8 @@ using namespace std;
 
 
 unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDiscreteDistribution(
-  const std::string& distDescription,
-  bool parseArguments)
+    const std::string& distDescription,
+    bool parseArguments)
 {
   unparsedArguments_.clear();
   string distName;
@@ -88,7 +88,7 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
     while (strtok2.hasMoreToken())
       probas.push_back(TextTools::toDouble(strtok2.nextToken()));
 
-    std::map<size_t, std::vector<double> > ranges;
+    std::map<size_t, std::vector<double>> ranges;
 
     if (args.find("ranges") != args.end())
     {
@@ -130,7 +130,7 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
     if (args.find("probas") == args.end())
       throw Exception("Missing argument 'probas' in Mixture distribution");
     vector<double> probas;
-    vector<unique_ptr<DiscreteDistributionInterface> > v_pdd;
+    vector<unique_ptr<DiscreteDistributionInterface>> v_pdd;
     unique_ptr<DiscreteDistributionInterface> pdd;
     string rf = args["probas"];
     StringTokenizer strtok2(rf.substr(1, rf.length() - 2), ",");
@@ -165,7 +165,7 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
   {
     if (args.find("n") == args.end())
       throw Exception("Missing argument 'n' (number of classes) in " + distName
-                      + " distribution");
+            + " distribution");
     unsigned int nbClasses = TextTools::to<unsigned int>(args["n"]);
 
     if (distName == "Gamma")
@@ -234,9 +234,9 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
       if (args.find("end") == args.end())
         throw Exception("Missing argument 'end' in Uniform distribution");
       rDist.reset(new UniformDiscreteDistribution(
-                    nbClasses,
-                    TextTools::to<double>(args["begin"]),
-                    TextTools::to<double>(args["end"])));
+            nbClasses,
+            TextTools::to<double>(args["begin"]),
+            TextTools::to<double>(args["end"])));
     }
     else
     {
@@ -257,10 +257,10 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
 
 
 void BppODiscreteDistributionFormat::writeDiscreteDistribution(
-  const DiscreteDistributionInterface& dist,
-  OutputStream& out,
-  std::map<std::string, std::string>& globalAliases,
-  std::vector<std::string>& writtenNames) const
+    const DiscreteDistributionInterface& dist,
+    OutputStream& out,
+    std::map<std::string, std::string>& globalAliases,
+    std::vector<std::string>& writtenNames) const
 {
   bool comma = false;
 
@@ -390,7 +390,7 @@ void BppODiscreteDistributionFormat::writeDiscreteDistribution(
 }
 
 void BppODiscreteDistributionFormat::initialize_(
-  DiscreteDistributionInterface& rDist)
+    DiscreteDistributionInterface& rDist)
 {
   ParameterList pl = rDist.getIndependentParameters();
 
@@ -416,8 +416,8 @@ void BppODiscreteDistributionFormat::initialize_(
     for (size_t c = 0; c < rDist.getNumberOfCategories(); ++c)
     {
       ApplicationTools::displayResult("- Category " + TextTools::toString(c)
-                                      + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
-                                      TextTools::toString(rDist.getCategory(c)));
+          + " (Pr = " + TextTools::toString(rDist.getProbability(c)) + ") rate",
+          TextTools::toString(rDist.getCategory(c)));
     }
   }
 }

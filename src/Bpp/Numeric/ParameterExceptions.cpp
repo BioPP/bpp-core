@@ -23,7 +23,7 @@ const Parameter* ParameterException::parameter() const { return parameter_; }
 
 ConstraintException::ConstraintException(const std::string& text, const Parameter* param, double badValue) :
   ParameterException("ConstraintException: " + text + "(" + TextTools::toString(badValue) + ")"
-                     + (param->hasConstraint() ? param->getConstraint()->getDescription() : "no constraint"), param),
+      + (param->hasConstraint() ? param->getConstraint()->getDescription() : "no constraint"), param),
   badValue_(badValue) {}
 
 double ConstraintException::getBadValue() const { return badValue_; }

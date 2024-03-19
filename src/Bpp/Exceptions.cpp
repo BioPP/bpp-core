@@ -51,7 +51,7 @@ Exception::Exception(std::string text, int stack)
     int status;
 
     char* ret = abi::__cxa_demangle(beginName.c_str(),
-                                    NULL, NULL, &status);
+          NULL, NULL, &status);
     beginName = "";
     if (status == 0)
     {
@@ -109,7 +109,7 @@ NumberFormatException::NumberFormatException(std::string text, std::string badNu
 const std::string& NumberFormatException::getBadNumber() const { return badNumber_; }
 
 IndexOutOfBoundsException::IndexOutOfBoundsException(std::string text, std::size_t badInt, std::size_t lowerBound,
-                                                     std::size_t upperBound)
+    std::size_t upperBound)
   : Exception(std::to_string(badInt) + " out of [" + std::to_string(lowerBound) + ", " + std::to_string(upperBound) + "] " + std::move(text))
   , badIndex_(badInt)
   , bounds_{{lowerBound, upperBound}}
@@ -128,7 +128,7 @@ std::size_t BadSizeException::getCorrectSize() const { return correctSize_; }
 
 OutOfRangeException::OutOfRangeException(std::string text, double badValue, double lowerBound, double upperBound)
   : Exception(std::to_string(badValue) + " out of [" + std::to_string(lowerBound) + ", " +
-              std::to_string(upperBound) + "]" + std::move(text))
+      std::to_string(upperBound) + "]" + std::move(text))
   , badValue_(badValue)
   , bounds_{{lowerBound, upperBound}}
 {}

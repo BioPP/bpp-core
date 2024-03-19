@@ -36,7 +36,7 @@ class MixtureOfDiscreteDistributions :
   public AbstractDiscreteDistribution
 {
 protected:
-  std::vector<std::unique_ptr<DiscreteDistributionInterface> > vdd_;
+  std::vector<std::unique_ptr<DiscreteDistributionInterface>> vdd_;
 
   std::vector<double> probas_;
 
@@ -51,7 +51,7 @@ public:
    * Distributions.
    * @param probas The vector of probabilities.
    */
-  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistributionInterface> >& distributions, const std::vector<double>& probas);
+  MixtureOfDiscreteDistributions(const std::vector<std::unique_ptr<DiscreteDistributionInterface>>& distributions, const std::vector<double>& probas);
 
   virtual ~MixtureOfDiscreteDistributions();
 

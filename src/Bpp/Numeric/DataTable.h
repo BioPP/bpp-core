@@ -31,7 +31,7 @@ class DataTable :
 {
 protected:
   size_t nRow_, nCol_;
-  std::vector< std::vector<std::string> > data_;
+  std::vector< std::vector<std::string>> data_;
   std::vector<std::string> rowNames_;
   std::vector<std::string> colNames_;
 

@@ -37,10 +37,10 @@ public:
  * @throw Exception if an error occured.
  */
   CorrespondenceAnalysis(
-    const Matrix<double>& data,
-    unsigned int nbAxes,
-    double tol = 0.0000001,
-    bool verbose = true);
+      const Matrix<double>& data,
+      unsigned int nbAxes,
+      double tol = 0.0000001,
+      bool verbose = true);
 
   virtual ~CorrespondenceAnalysis() {}
 

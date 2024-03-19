@@ -61,12 +61,12 @@ public:
    * @throw Exception if an error occured.
    */
   DualityDiagram(
-    const Matrix<double>& matrix,
-    const std::vector<double>& rowWeights,
-    const std::vector<double>& colWeights,
-    unsigned int nbAxes,
-    double tol = 0.0000001,
-    bool verbose = true);
+      const Matrix<double>& matrix,
+      const std::vector<double>& rowWeights,
+      const std::vector<double>& colWeights,
+      unsigned int nbAxes,
+      double tol = 0.0000001,
+      bool verbose = true);
 
   virtual ~DualityDiagram();
 

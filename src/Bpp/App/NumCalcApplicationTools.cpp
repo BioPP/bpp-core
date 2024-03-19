@@ -91,10 +91,10 @@ double NumCalcApplicationTools::getDefaultValue(const ParameterList& pl, const s
 
 
 shared_ptr<ParameterGrid> NumCalcApplicationTools::getParameterGrid(
-  map<string, string>& params,
-  const string& suffix,
-  bool suffixIsOptional,
-  bool warn)
+    map<string, string>& params,
+    const string& suffix,
+    bool suffixIsOptional,
+    bool warn)
 {
   unsigned int nbParams = ApplicationTools::getParameter<unsigned int>("grid.number_of_parameters", params, 1, suffix, suffixIsOptional, warn);
   auto grid = std::make_shared<ParameterGrid>();

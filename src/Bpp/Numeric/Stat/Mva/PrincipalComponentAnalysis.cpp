@@ -14,14 +14,14 @@ using namespace bpp;
 using namespace std;
 
 PrincipalComponentAnalysis::PrincipalComponentAnalysis(
-  const Matrix<double>& data,
-  unsigned int nbAxes,
-  const vector<double>& rowW,
-  const vector<double>& colW,
-  bool centered,
-  bool scaled,
-  double tol,
-  bool verbose) :
+    const Matrix<double>& data,
+    unsigned int nbAxes,
+    const vector<double>& rowW,
+    const vector<double>& colW,
+    bool centered,
+    bool scaled,
+    double tol,
+    bool verbose) :
   DualityDiagram(),
   columnMeans_(),
   columnSd_()
@@ -46,12 +46,12 @@ PrincipalComponentAnalysis::PrincipalComponentAnalysis(
 /******************************************************************************/
 
 PrincipalComponentAnalysis::PrincipalComponentAnalysis(
-  const Matrix<double>& data,
-  unsigned int nbAxes,
-  bool centered,
-  bool scaled,
-  double tol,
-  bool verbose) :
+    const Matrix<double>& data,
+    unsigned int nbAxes,
+    bool centered,
+    bool scaled,
+    double tol,
+    bool verbose) :
   DualityDiagram(),
   columnMeans_(),
   columnSd_()

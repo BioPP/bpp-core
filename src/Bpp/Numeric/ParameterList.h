@@ -28,7 +28,7 @@ class ParameterList :
   public Clonable
 {
 private:
-  std::vector<std::shared_ptr<Parameter> > parameters_;
+  std::vector<std::shared_ptr<Parameter>> parameters_;
 
 public:
   /**

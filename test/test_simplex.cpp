@@ -51,12 +51,12 @@ int main()
       for (size_t j = 0; j < prob.size() - 1; j++)
       {
         vpsi[i]->setParameterValue("theta" + TextTools::toString(j + 1),
-                                   vpsi[i]->getParameterValue("theta" + TextTools::toString(j + 1)) + 0.1);
+            vpsi[i]->getParameterValue("theta" + TextTools::toString(j + 1)) + 0.1);
       }
       for (size_t j = 0; j < prob.size() - 1; j++)
       {
         vpsi[i]->setParameterValue("theta" + TextTools::toString(j + 1),
-                                   vpsi[i]->getParameterValue("theta" + TextTools::toString(j + 1)) - 0.1);
+            vpsi[i]->getParameterValue("theta" + TextTools::toString(j + 1)) - 0.1);
       }
       cout << "Method " << i + 1 << endl;
       cout << "prob\t";

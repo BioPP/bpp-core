@@ -112,7 +112,7 @@ private:
    * Contains all parameter listeners for maintening alias relationships.
    * The registry will be updated appropriately upon cloning and deleting.
    */
-  std::map<std::string, std::shared_ptr<AliasParameterListener> > aliasListenersRegister_;
+  std::map<std::string, std::shared_ptr<AliasParameterListener>> aliasListenersRegister_;
 
 public:
   AbstractParameterAliasable(const std::string& prefix) :

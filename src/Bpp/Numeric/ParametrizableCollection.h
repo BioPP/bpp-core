@@ -34,7 +34,7 @@ protected:
    * @brief Contains all objects used.
    */
 
-  std::map<size_t, std::shared_ptr<N> > objectsSet_;
+  std::map<size_t, std::shared_ptr<N>> objectsSet_;
 
   /**
    * @brief A vector of the numbers of objects that have changed

@@ -554,7 +554,7 @@ public:
    * @throw DimensionException If m is not a square matrix.
    */
   template<class Matrix, class Scalar>
-  static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> >& vO)
+  static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar>>& vO)
   {
     size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns())
@@ -1200,7 +1200,7 @@ public:
    * @param vO [out] The output vector of vector (will be resized accordingly).
    */
   template<class Scalar>
-  static void toVVdouble(const Matrix<Scalar>& M, std::vector< std::vector<Scalar> >& vO)
+  static void toVVdouble(const Matrix<Scalar>& M, std::vector< std::vector<Scalar>>& vO)
   {
     size_t n = M.getNumberOfRows();
     size_t m = M.getNumberOfColumns();
@@ -1251,10 +1251,10 @@ public:
    */
   template<class Scalar>
   static Scalar lap(Matrix<Scalar>& assignCost,
-                    std::vector<int>& rowSol,
-                    std::vector<int>& colSol,
-                    std::vector<Scalar>& u,
-                    std::vector<Scalar>& v)
+      std::vector<int>& rowSol,
+      std::vector<int>& colSol,
+      std::vector<Scalar>& u,
+      std::vector<Scalar>& v)
   {
     size_t dim = assignCost.getNumberOfRows();
     if (assignCost.getNumberOfColumns() != dim)

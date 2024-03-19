@@ -943,7 +943,7 @@ public:
   void outputToDot(std::ostream& out, const std::string& name) const
   {
     out << (getGraph()->isDirected() ? "digraph" : "graph") << " " << name << " {\n   ";
-    std::set<std::pair<Nref, Nref> > alreadyFigured;
+    std::set<std::pair<Nref, Nref>> alreadyFigured;
     auto allNodes = getAllNodes();
 
     for (const auto& node: allNodes)
@@ -1024,12 +1024,12 @@ public:
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> allNodesIterator()
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, false>(*this));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, false>(*this));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> allNodesIterator() const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, true>(*this));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::ALLGRAPHITER, true>(*this));
   }
 
 
@@ -1039,12 +1039,12 @@ public:
    */
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(Nref node)
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> outgoingNeighborNodesIterator(Nref node) const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
   }
 
 
@@ -1054,12 +1054,12 @@ public:
    */
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(Nref node)
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::NodeIterator> incomingNeighborNodesIterator(Nref node) const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::NodeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
   }
 
 
@@ -1362,12 +1362,12 @@ public:
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> allEdgesIterator()
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, false>(*this));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, false>(*this));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> allEdgesIterator() const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, true>(*this));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::ALLGRAPHITER, true>(*this));
   }
 
   /*
@@ -1376,12 +1376,12 @@ public:
    */
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(Nref node)
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, false>(*this, node));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> outgoingEdgesIterator(Nref node) const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::OUTGOINGNEIGHBORITER, true>(*this, node));
   }
 
   /*
@@ -1390,12 +1390,12 @@ public:
    */
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(Nref node)
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, false>(*this, node));
   }
 
   std::unique_ptr<typename AssociationGraphObserver<N, E>::EdgeIterator> incomingEdgesIterator(Nref node) const
   {
-    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true> >(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
+    return std::unique_ptr<AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>>(new AssociationGraphImplObserver<N, E, GraphImpl>::EdgeIteratorClass<Graph::INCOMINGNEIGHBORITER, true>(*this, node));
   }
 
   /**

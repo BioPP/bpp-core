@@ -64,7 +64,7 @@ public:
    * @return the father
    */
 
-  virtual std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getFathers(const std::shared_ptr<N>  node) const = 0;
 
   virtual std::vector<NodeIndex> getFathers(const NodeIndex node) const = 0;
 
@@ -81,7 +81,7 @@ public:
    * @return a vector of son Nodes
    */
 
-  virtual std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getSons(const std::shared_ptr<N>  node) const = 0;
 
   virtual std::vector<NodeIndex> getSons(const NodeIndex node) const = 0;
 
@@ -126,14 +126,14 @@ public:
    * @return a vector containing the leaves
    */
 
-  virtual std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getLeavesUnderNode(std::shared_ptr<N>  node) const = 0;
 
   /**
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
 
-  virtual std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node) = 0;
+  virtual std::vector<std::shared_ptr<N>> removeSons(const std::shared_ptr<N>  node) = 0;
 
   /**
    * Remove a son of a node
@@ -158,7 +158,7 @@ public:
    * @return a vector containing the removed fathers
    */
 
-  virtual std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N> node) = 0;
+  virtual std::vector<std::shared_ptr<N>> removeFathers(const std::shared_ptr<N> node) = 0;
 
   /**
    * Remove a father of a node
@@ -216,9 +216,9 @@ public:
    *
    */
 
-  virtual std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot) = 0;
+  virtual std::vector<std::shared_ptr<N>> getBelowNodes(const std::shared_ptr<N> localRoot) = 0;
 
-  virtual std::vector<std::shared_ptr<E> > getBelowEdges(const std::shared_ptr<N> localRoot) = 0;
+  virtual std::vector<std::shared_ptr<E>> getBelowEdges(const std::shared_ptr<N> localRoot) = 0;
 };
 }
 #endif // BPP_GRAPH_ASSOCIATIONDAGRAPHOBSERVER_H

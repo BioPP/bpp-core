@@ -218,7 +218,7 @@ void GlobalGraph::linkInNodeStructure_(const GlobalGraph::Node& nodeA, const Glo
 Graph::NodeId GlobalGraph::createNode()
 {
   GlobalGraph::Node newNode = highestNodeID_++;
-  nodeStructure_[newNode] = std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> >();
+  nodeStructure_[newNode] = std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge>>();
   this->topologyHasChanged_();
 
   return newNode;
@@ -399,9 +399,9 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   const auto& assoc = foundNode->second;
   return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-               (assoc.first.size() + assoc.second.size() <= 1)
-               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
-                   assoc.first.begin()->first == assoc.second.begin()->first)));
+           (assoc.first.size() + assoc.second.size() <= 1)
+           || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+           assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 
@@ -587,7 +587,7 @@ std::vector<Graph::NodeId> GlobalGraph::getLeavesFromNode(const Graph::NodeId no
   return listOfLeaves;
 }
 
-void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::set<std::pair<Node, Node> >& alreadyFigured) const
+void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::set<std::pair<Node, Node>>& alreadyFigured) const
 {
   out << node;
   const std::map<Node, Edge>& children = nodeStructure_.at(node).first;
@@ -782,14 +782,14 @@ void GlobalGraph::makeDirected()
   nodeStructureType undirectedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
   {
-    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge>>();
   }
 
   // copy each relation once, without the reciprocal link
   // (first met, first kept)
   // eg: A - B in undirected is represented as A->B and B->A
   //     in directed, becomes A->B only
-  std::set<pair<Node, Node> > alreadyConvertedRelations;
+  std::set<pair<Node, Node>> alreadyConvertedRelations;
   for (auto& currNodeRow : undirectedStructure)
   {
     Node nodeA = currNodeRow.first;
@@ -816,7 +816,7 @@ void GlobalGraph::makeUndirected()
   nodeStructureType directedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
   {
-    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge>>();
   }
 
   // copy each relation twice, making the reciprocal link
@@ -841,7 +841,7 @@ bool GlobalGraph::containsReciprocalRelations() const
 {
   if (!directed_)
     throw Exception("Cannot state reciprocal link in an undirected graph.");
-  std::set<pair<Node, Node> > alreadyMetRelations;
+  std::set<pair<Node, Node>> alreadyMetRelations;
   for (const auto& currNodeRow : nodeStructure_)
   {
     Node nodeA = currNodeRow.first;
@@ -910,7 +910,7 @@ vector<Graph::EdgeId> GlobalGraph::getEdges(Graph::NodeId node) const
 void GlobalGraph::outputToDot(ostream& out, const std::string& name) const
 {
   out << (directed_ ? "digraph" : "graph") << " " << name << " {\n   ";
-  set<pair<Node, Node> > alreadyFigured;
+  set<pair<Node, Node>> alreadyFigured;
   nodeToDot_(root_, out, alreadyFigured);
   for (const auto& node: nodeStructure_)
   {

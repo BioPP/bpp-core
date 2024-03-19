@@ -26,21 +26,21 @@ std::vector<RGBColor> ColorTools::gradient(unsigned int n, const RGBColor& low, 
   {
     colors[i][0] = low[0] + static_cast<unsigned int>(
       floor(
-        static_cast<double>(i) * static_cast<double>(static_cast<int>(high[0]) - static_cast<int>(low[0]))
-        / static_cast<double>(n - 1)
-        )
+      static_cast<double>(i) * static_cast<double>(static_cast<int>(high[0]) - static_cast<int>(low[0]))
+      / static_cast<double>(n - 1)
+      )
       );
     colors[i][1] = low[1] + static_cast<unsigned int>(
       floor(
-        static_cast<double>(i) * static_cast<double>(static_cast<int>(high[1]) - static_cast<int>(low[1]))
-        / static_cast<double>(n - 1)
-        )
+      static_cast<double>(i) * static_cast<double>(static_cast<int>(high[1]) - static_cast<int>(low[1]))
+      / static_cast<double>(n - 1)
+      )
       );
     colors[i][2] = low[2] + static_cast<unsigned int>(
       floor(
-        static_cast<double>(i) * static_cast<double>(static_cast<int>(high[2]) - static_cast<int>(low[2]))
-        / static_cast<double>(n - 1)
-        )
+      static_cast<double>(i) * static_cast<double>(static_cast<int>(high[2]) - static_cast<int>(low[2]))
+      / static_cast<double>(n - 1)
+      )
       );
   }
   colors[n - 1] = high;

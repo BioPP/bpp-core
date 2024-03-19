@@ -81,8 +81,8 @@ double PowellMultiDimensions::doStep()
     }
     fptt = fret_;
     nbEval_ += OneDimensionOptimizationTools::lineMinimization(
-      f1dim_, getParameters_(), xit, getStopCondition()->getTolerance(),
-      0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
+          f1dim_, getParameters_(), xit, getStopCondition()->getTolerance(),
+          0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
     fret_ = function().f(getParameters());
     if (getVerbose() > 2)
       printPoint(getParameters(), fret_);
@@ -110,8 +110,8 @@ double PowellMultiDimensions::doStep()
     {
       // cout << endl << "New direction: drection " << ibig << " removed." << endl;
       nbEval_ += OneDimensionOptimizationTools::lineMinimization(f1dim_,
-                                                                 getParameters_(), xit, getStopCondition()->getTolerance(),
-                                                                 0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
+            getParameters_(), xit, getStopCondition()->getTolerance(),
+            0, getMessageHandler(), getVerbose() > 0 ? getVerbose() - 1 : 0);
       fret_ = getFunction()->f(getParameters());
       if (fret_ > fp_)
         throw Exception("DEBUG: PowellMultiDimensions::doStep(). Line minimization failed!");

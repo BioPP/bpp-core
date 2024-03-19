@@ -23,11 +23,11 @@
 
 namespace bpp
 {
-typedef std::vector<std::complex<double> > Vcomplex;
+typedef std::vector<std::complex<double>> Vcomplex;
 typedef std::vector<Vcomplex> VVcomplex;
 typedef std::vector<VVcomplex> VVVcomplex;
 
-typedef std::vector<std::complex<long double> > Vlcomplex;
+typedef std::vector<std::complex<long double>> Vlcomplex;
 typedef std::vector<Vlcomplex> VVlcomplex;
 typedef std::vector<VVlcomplex> VVVlcomplex;
 
@@ -656,7 +656,7 @@ public:
       return M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-                          [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
 
@@ -717,7 +717,7 @@ public:
       return M < 0 ? 0 : M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-                          [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
     return x * std::exp(M);
@@ -1408,9 +1408,9 @@ public:
   {
     OutputType n = (OutputType)v1.size();
     OutputType x =  scalar<InputType, OutputType>(
-      center<InputType, OutputType>(v1),
-      center<InputType, OutputType>(v2)
-      ) / n;
+          center<InputType, OutputType>(v1),
+          center<InputType, OutputType>(v2)
+          ) / n;
     if (unbiased) x = x * n / (n - 1);
     return x;
   }
@@ -1432,10 +1432,10 @@ public:
     {
       std::vector<InputType> wn = w / sum(w);
       OutputType x = scalar<InputType, OutputType>(
-        center<InputType, OutputType>(v1, wn, false),
-        center<InputType, OutputType>(v2, wn, false),
-        wn
-        );
+            center<InputType, OutputType>(v1, wn, false),
+            center<InputType, OutputType>(v2, wn, false),
+            wn
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr<double>(wn)));
@@ -1445,10 +1445,10 @@ public:
     else
     {
       OutputType x = scalar<InputType, OutputType>(
-        center<InputType, OutputType>(v1, w, false),
-        center<InputType, OutputType>(v2, w, false),
-        w
-        );
+            center<InputType, OutputType>(v1, w, false),
+            center<InputType, OutputType>(v2, w, false),
+            w
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr(w)));
@@ -1621,7 +1621,7 @@ public:
       throw DimensionException("VectorTools::miDiscrete. The two samples must have the same length.", v2.size(), v1.size());
     std::map<InputType, double> counts1;
     std::map<InputType, double> counts2;
-    std::map<InputType, std::map<InputType, double> > counts12;
+    std::map<InputType, std::map<InputType, double>> counts12;
     for (size_t i = 0; i < v1.size(); i++)
     {
       counts1[v1[i]]++;
@@ -1827,7 +1827,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> vectorUnion(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> vectorUnion(const std::vector< std::vector<T>>& vecElementL)
   {
     std::vector<T> unionEl;
     for (auto it : vecElementL)
@@ -1873,7 +1873,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> vectorIntersection(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> vectorIntersection(const std::vector< std::vector<T>>& vecElementL)
   {
     if (vecElementL.size() == 1) return vecElementL[0];
     std::vector<T> interEl;
@@ -1918,7 +1918,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> append(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> append(const std::vector< std::vector<T>>& vecElementL)
   {
     if (vecElementL.size() == 1) return vecElementL[0];
     std::vector<T> v;

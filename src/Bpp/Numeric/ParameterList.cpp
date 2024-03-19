@@ -336,7 +336,7 @@ void ParameterList::setParameterValue(const string& name, double value)
 void ParameterList::setAllParametersValues(const ParameterList& params)
 {
   // First we check if all values are correct:
-  for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
     const Parameter* p = &params.parameter((*it)->getName());
     if ((*it)->hasConstraint() && !(*it)->getConstraint()->isCorrect(p->getValue()))
@@ -344,7 +344,7 @@ void ParameterList::setAllParametersValues(const ParameterList& params)
   }
 
   // If all values are ok, we set them:
-  for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
     const Parameter* p = &params.parameter((*it)->getName());
     (*it)->setValue(p->getValue());
@@ -356,7 +356,7 @@ void ParameterList::setAllParametersValues(const ParameterList& params)
 void ParameterList::setParametersValues(const ParameterList& params)
 {
   // First we check if all values are correct:
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
@@ -368,7 +368,7 @@ void ParameterList::setParametersValues(const ParameterList& params)
 
   // If all values are ok, we set them:
   {
-    for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+    for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
     {
       if (hasParameter((*it)->getName()))
       {
@@ -384,7 +384,7 @@ void ParameterList::setParametersValues(const ParameterList& params)
 bool ParameterList::testParametersValues(const ParameterList& params) const
 {
   // First we check if all values are correct:
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
@@ -397,7 +397,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
   // If all values are ok, we test them:
   bool ch = 0;
 
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
@@ -414,7 +414,7 @@ bool ParameterList::testParametersValues(const ParameterList& params) const
 bool ParameterList::matchParametersValues(const ParameterList& params, vector<size_t>* updatedParameters)
 {
   // First we check if all values are correct:
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
@@ -428,7 +428,7 @@ bool ParameterList::matchParametersValues(const ParameterList& params, vector<si
   bool ch = 0;
 
   size_t pos = 0;
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {
@@ -449,7 +449,7 @@ bool ParameterList::matchParametersValues(const ParameterList& params, vector<si
 /******************************************************************************/
 void ParameterList::setAllParameters(const ParameterList& params)
 {
-  for (vector<shared_ptr<Parameter> >::iterator it = parameters_.begin(); it < parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::iterator it = parameters_.begin(); it < parameters_.end(); it++)
   {
     const Parameter* p = &params.parameter((*it)->getName());
     **it = *p;
@@ -459,7 +459,7 @@ void ParameterList::setAllParameters(const ParameterList& params)
 /******************************************************************************/
 void ParameterList::setParameters(const ParameterList& params)
 {
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     Parameter* p = &parameter((*it)->getName());
     *p = **it;
@@ -481,7 +481,7 @@ bool ParameterList::hasParameter(const std::string& name) const
 /******************************************************************************/
 void ParameterList::matchParameters(const ParameterList& params)
 {
-  for (vector<shared_ptr<Parameter> >::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
+  for (vector<shared_ptr<Parameter>>::const_iterator it = params.parameters_.begin(); it < params.parameters_.end(); it++)
   {
     if (hasParameter((*it)->getName()))
     {

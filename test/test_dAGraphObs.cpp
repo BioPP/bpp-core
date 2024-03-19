@@ -50,8 +50,8 @@ int main()
   grObs.addFather(zero, three);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGrObs");
   // so now we have zero -> one -> two -> zero ...
-  vector<shared_ptr<string> > fromOne = grObs.getOutgoingNeighbors(zero);
-  vector<shared_ptr<string> > fromThree = grObs.getOutgoingNeighbors(two);
+  vector<shared_ptr<string>> fromOne = grObs.getOutgoingNeighbors(zero);
+  vector<shared_ptr<string>> fromThree = grObs.getOutgoingNeighbors(two);
   bool test = (*(fromOne.begin()) == one) && (*(fromThree.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGrObs");
 

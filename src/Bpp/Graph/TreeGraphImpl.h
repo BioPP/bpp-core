@@ -589,8 +589,8 @@ Graph::NodeId TreeGraphImpl<GraphImpl>::MRCA(const std::vector<Graph::NodeId>& n
     return nodes[0];
 
   // Forward counts
-  auto fathers = std::make_shared<std::map<Graph::NodeId, uint> >();
-  auto sons = std::make_shared<std::map<Graph::NodeId, uint> >();
+  auto fathers = std::make_shared<std::map<Graph::NodeId, uint>>();
+  auto sons = std::make_shared<std::map<Graph::NodeId, uint>>();
 
   for (auto nodeid:nodes)
   {

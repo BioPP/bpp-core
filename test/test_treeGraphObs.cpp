@@ -55,8 +55,8 @@ int main()
   grObs.link(three, zero);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGraph");
 
-  vector<shared_ptr<string> > fromOne = grObs.getOutgoingNeighbors(zero);
-  vector<shared_ptr<string> > fromThree = grObs.getOutgoingNeighbors(two);
+  vector<shared_ptr<string>> fromOne = grObs.getOutgoingNeighbors(zero);
+  vector<shared_ptr<string>> fromThree = grObs.getOutgoingNeighbors(two);
   bool test = (*(fromOne.begin()) == one) && (*(fromThree.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGrObs");
 
@@ -88,7 +88,7 @@ int main()
   cout << endl;
   cout << " Outgoing edges  of 2:" << endl;
 
-  vector<shared_ptr<unsigned int> > ve = grObs.getBranches(two);
+  vector<shared_ptr<unsigned int>> ve = grObs.getBranches(two);
   for (size_t i = 0; i < ve.size(); i++)
   {
     cout << *ve[i] << endl;

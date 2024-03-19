@@ -51,8 +51,8 @@ size_t ParameterGrid::getTotalNumberOfPoints() const
 }
 
 shared_ptr<DataTable> FunctionTools::computeGrid(
-  FunctionInterface& function,
-  const ParameterGrid& grid)
+    FunctionInterface& function,
+    const ParameterGrid& grid)
 {
   // Init stuff...
   size_t n = grid.getNumberOfDimensions();

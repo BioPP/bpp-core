@@ -14,11 +14,11 @@ using namespace bpp;
 using namespace std;
 
 DualityDiagram::DualityDiagram(
-  const Matrix<double>& matrix,
-  const vector<double>& rowWeights,
-  const vector<double>& colWeights,
-  unsigned int nbAxes,
-  double tol, bool verbose) :
+    const Matrix<double>& matrix,
+    const vector<double>& rowWeights,
+    const vector<double>& colWeights,
+    unsigned int nbAxes,
+    double tol, bool verbose) :
   rowWeights_(rowWeights),
   colWeights_(colWeights),
   nbAxes_(nbAxes),
@@ -34,10 +34,10 @@ DualityDiagram::DualityDiagram(
 }
 
 void DualityDiagram::check_(
-  const Matrix<double>& matrix,
-  const vector<double>& rowWeights,
-  const vector<double>& colWeights,
-  unsigned int nbAxes)
+    const Matrix<double>& matrix,
+    const vector<double>& rowWeights,
+    const vector<double>& colWeights,
+    unsigned int nbAxes)
 {
   size_t rowNb = matrix.getNumberOfRows();
   size_t colNb = matrix.getNumberOfColumns();
@@ -64,11 +64,11 @@ void DualityDiagram::check_(
 
 
 void DualityDiagram::setData(
-  const Matrix<double>& matrix,
-  const vector<double>& rowWeights,
-  const vector<double>& colWeights,
-  unsigned int nbAxes,
-  double tol, bool verbose)
+    const Matrix<double>& matrix,
+    const vector<double>& rowWeights,
+    const vector<double>& colWeights,
+    unsigned int nbAxes,
+    double tol, bool verbose)
 {
   check_(matrix, rowWeights, colWeights, verbose);
   rowWeights_ = rowWeights;
@@ -78,7 +78,7 @@ void DualityDiagram::setData(
 }
 
 void DualityDiagram::compute_(const Matrix<double>& matrix,
-                              double tol, bool verbose)
+    double tol, bool verbose)
 {
   size_t rowNb = matrix.getNumberOfRows();
   size_t colNb = matrix.getNumberOfColumns();

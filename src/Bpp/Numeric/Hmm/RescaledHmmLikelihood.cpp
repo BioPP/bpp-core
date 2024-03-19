@@ -12,10 +12,10 @@ using namespace bpp;
 using namespace std;
 
 RescaledHmmLikelihood::RescaledHmmLikelihood(
-  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
-  std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
-  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
-  const std::string& prefix) :
+    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
+    const std::string& prefix) :
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),
@@ -309,7 +309,7 @@ double RescaledHmmLikelihood::getLikelihoodForASite(size_t site) const
 
 Vdouble RescaledHmmLikelihood::getLikelihoodForEachSite() const
 {
-  std::vector< std::vector<double> > vv;
+  std::vector< std::vector<double>> vv;
   getHiddenStatesPosteriorProbabilities(vv);
 
   Vdouble ret(nbSites_);
@@ -343,7 +343,7 @@ Vdouble RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(siz
 }
 
 
-void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append) const
+void RescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append) const
 {
   size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);
@@ -524,7 +524,7 @@ void RescaledHmmLikelihood::computeD2Forward_() const
   for (size_t j = 0; j < nbStates_; j++)
   {
     d2Likelihood_[0][j] = d2Tmp[j] / scales_[0] - (d2Scales_[0] * tmp[j] + 2 * dScales_[0] * dTmp[j]) / pow(scales_[0], 2)
-                          +  2 * pow(dScales_[0], 2) * tmp[j] / pow(scales_[0], 3);
+        +  2 * pow(dScales_[0], 2) * tmp[j] / pow(scales_[0], 3);
   }
 
   // Recursion:
@@ -557,7 +557,7 @@ void RescaledHmmLikelihood::computeD2Forward_() const
         tmp[j] = (*emissions)[j] * x;
         dTmp[j] = (*dEmissions)[j] * x + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i - 1]);
         d2Tmp[j] = (*d2Emissions)[j] * x + 2 * (*dEmissions)[j] * VectorTools::sum(trans.getCol(j) * dLikelihood_[i - 1])
-                   + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * d2Likelihood_[i - 1]);
+            + (*emissions)[j] * VectorTools::sum(trans.getCol(j) * d2Likelihood_[i - 1]);
 
         d2Scales_[i] += d2Tmp[j];
       }
@@ -585,7 +585,7 @@ void RescaledHmmLikelihood::computeD2Forward_() const
     for (size_t j = 0; j < nbStates_; j++)
     {
       d2Likelihood_[i][j] = d2Tmp[j] / scales_[i] - (d2Scales_[i] * tmp[j] + 2 * dScales_[i] * dTmp[j]) / pow(scales_[i], 2)
-                            +  2 * pow(dScales_[i], 2) * tmp[j] / pow(scales_[i], 3);
+          +  2 * pow(dScales_[i], 2) * tmp[j] / pow(scales_[i], 3);
     }
   }
 

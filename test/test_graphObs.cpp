@@ -39,8 +39,8 @@ int main()
   grObs.link(three, zero);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGrObs");
   // so now we have zero -> one -> two -> zero ...
-  vector<shared_ptr<string> > fromZero = grObs.getOutgoingNeighbors(zero);
-  vector<shared_ptr<string> > fromTwo = grObs.getOutgoingNeighbors(two);
+  vector<shared_ptr<string>> fromZero = grObs.getOutgoingNeighbors(zero);
+  vector<shared_ptr<string>> fromTwo = grObs.getOutgoingNeighbors(two);
 
   bool test = (*(fromZero.begin()) == one) && (*(fromTwo.begin()) == zero);
   grObs.getGraph()->outputToDot(std::cout, "myTestDirGrObs");

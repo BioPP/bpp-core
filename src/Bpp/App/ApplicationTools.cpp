@@ -96,14 +96,14 @@ vector<string> ApplicationTools::matchingParameters(const string& pattern, vecto
 /******************************************************************************/
 
 string ApplicationTools::getAFilePath(
-  const string& parameter,
-  const map<string, string>& params,
-  bool isRequired,
-  bool mustExist,
-  const string& suffix,
-  bool suffixIsOptional,
-  const string& defaultPath,
-  int warn)
+    const string& parameter,
+    const map<string, string>& params,
+    bool isRequired,
+    bool mustExist,
+    const string& suffix,
+    bool suffixIsOptional,
+    const string& defaultPath,
+    int warn)
 {
   string filePath = getStringParameter(parameter, params, defaultPath, suffix, suffixIsOptional, warn);
   if (filePath == "")
@@ -124,12 +124,12 @@ string ApplicationTools::getAFilePath(
 /******************************************************************************/
 
 double ApplicationTools::getDoubleParameter(
-  const string& parameterName,
-  const map<string, string>& params,
-  double defaultValue,
-  const string& suffix,
-  bool suffixIsOptional,
-  int warn)
+    const string& parameterName,
+    const map<string, string>& params,
+    double defaultValue,
+    const string& suffix,
+    bool suffixIsOptional,
+    int warn)
 {
   double dParam = defaultValue;
   if (parameterExists(parameterName + suffix, params))
@@ -150,12 +150,12 @@ double ApplicationTools::getDoubleParameter(
 /******************************************************************************/
 
 int ApplicationTools::getIntParameter(
-  const string& parameterName,
-  const map<string, string>& params,
-  int defaultValue,
-  const string& suffix,
-  bool suffixIsOptional,
-  int warn)
+    const string& parameterName,
+    const map<string, string>& params,
+    int defaultValue,
+    const string& suffix,
+    bool suffixIsOptional,
+    int warn)
 {
   int iParam = defaultValue;
   if (parameterExists(parameterName + suffix, params))
@@ -177,12 +177,12 @@ int ApplicationTools::getIntParameter(
 
 
 bool ApplicationTools::getBooleanParameter(
-  const string& parameterName,
-  const map<string, string>& params,
-  bool defaultValue,
-  const string& suffix,
-  bool suffixIsOptional,
-  int warn)
+    const string& parameterName,
+    const map<string, string>& params,
+    bool defaultValue,
+    const string& suffix,
+    bool suffixIsOptional,
+    int warn)
 {
   string sParam;
   bool bParam = defaultValue;
@@ -213,14 +213,14 @@ bool ApplicationTools::getBooleanParameter(
       || (sParam == "1"))
     bParam = true;
   else if ((sParam == "false")
-           || (sParam == "FALSE")
-           || (sParam == "f")
-           || (sParam == "F")
-           || (sParam == "no")
-           || (sParam == "NO")
-           || (sParam == "n")
-           || (sParam == "N")
-           || (sParam == "0"))
+      || (sParam == "FALSE")
+      || (sParam == "f")
+      || (sParam == "F")
+      || (sParam == "no")
+      || (sParam == "NO")
+      || (sParam == "n")
+      || (sParam == "N")
+      || (sParam == "0"))
     bParam = false;
   else
     throw Exception("ApplicationTools::getBooleanParameter. Wrong description:" + sParam);

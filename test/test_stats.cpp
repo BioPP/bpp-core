@@ -18,7 +18,7 @@ using namespace std;
 // chisq.test(tbl);
 int main()
 {
-  vector< vector<size_t> > table;
+  vector< vector<size_t>> table;
   vector<size_t> row1;
   row1.push_back(6);
   row1.push_back(12);

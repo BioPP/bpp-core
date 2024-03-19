@@ -14,9 +14,9 @@ using namespace bpp;
 using namespace std;
 
 void BppOParametrizableFormat::write(const Parametrizable& parametrizable,
-                                     OutputStream& out,
-                                     std::vector<std::string>& writtenNames,
-                                     bool printComma) const
+    OutputStream& out,
+    std::vector<std::string>& writtenNames,
+    bool printComma) const
 {
   ParameterList pl = parametrizable.getParameters();
   int p = out.getPrecision();
@@ -39,12 +39,12 @@ void BppOParametrizableFormat::write(const Parametrizable& parametrizable,
 }
 
 void BppOParametrizableFormat::write(const ParameterAliasable& parametrizable,
-                                     OutputStream& out,
-                                     std::map<std::string, std::string>& globalAliases,
-                                     const std::vector<std::string>& names,
-                                     std::vector<std::string>& writtenNames,
-                                     bool printLocalAliases,
-                                     bool printComma) const
+    OutputStream& out,
+    std::map<std::string, std::string>& globalAliases,
+    const std::vector<std::string>& names,
+    std::vector<std::string>& writtenNames,
+    bool printLocalAliases,
+    bool printComma) const
 {
   ParameterList pl = parametrizable.getIndependentParameters().createSubList(names);
   int p = out.getPrecision();

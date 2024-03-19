@@ -13,8 +13,8 @@ using namespace std;
 /**************************************************************************/
 
 ContingencyTableGenerator::ContingencyTableGenerator(
-  const std::vector<size_t>& nrowt,
-  const std::vector<size_t>& ncolt) :
+    const std::vector<size_t>& nrowt,
+    const std::vector<size_t>& ncolt) :
   nrowt_(nrowt),
   ncolt_(ncolt),
   nrow_(nrowt.size()),
@@ -106,8 +106,8 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
       {
         nlm = static_cast<size_t>(ia * (static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
         x = exp(fact_[ia] + fact_[ib] + fact_[ic] + fact_[id]
-                - fact_[ie] - fact_[nlm]
-                - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
+              - fact_[ie] - fact_[nlm]
+              - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
         if (x >= dummy)
           break;
 

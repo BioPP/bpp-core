@@ -91,11 +91,11 @@ std::string removeSurroundingWhiteSpaces(const std::string& s)
 {
   // Copy s from first non-whitespace to last non-whitespace
   auto isNotWhitespace = [](char c) {
-                           return !std::isspace(c);
-                         };
+        return !std::isspace(c);
+      };
   auto firstNonWhitespace = std::find_if(s.begin(), s.end(), isNotWhitespace);
   auto lastNonWhitespace = std::find_if(
-    s.rbegin(), std::reverse_iterator<std::string::const_iterator>(firstNonWhitespace), isNotWhitespace);
+        s.rbegin(), std::reverse_iterator<std::string::const_iterator>(firstNonWhitespace), isNotWhitespace);
   return std::string(firstNonWhitespace, lastNonWhitespace.base());
 }
 
@@ -294,8 +294,8 @@ std::string removeSubstrings(const std::string& s, char blockBeginning, char blo
     {
       if (blockDepth == 0)
         throw Exception(
-                std::string("TextTools::removeSubstrings(): unmatched block closing character at position ") +
-                std::to_string(i));
+              std::string("TextTools::removeSubstrings(): unmatched block closing character at position ") +
+              std::to_string(i));
       blockDepth--;
     }
     else if (blockDepth == 0)
@@ -309,10 +309,10 @@ std::string removeSubstrings(const std::string& s, char blockBeginning, char blo
 /******************************************************************************/
 
 std::string removeSubstrings(const std::string& s,
-                             char blockBeginning,
-                             char blockEnding,
-                             std::vector<std::string>& exceptionsBeginning,
-                             std::vector<std::string>& exceptionsEnding)
+    char blockBeginning,
+    char blockEnding,
+    std::vector<std::string>& exceptionsBeginning,
+    std::vector<std::string>& exceptionsEnding)
 {
   // TODO didn't upgrade... move to a parser like system ? it is very specific...
   std::string t;
@@ -366,8 +366,8 @@ std::string removeSubstrings(const std::string& s,
       }
       else if (blockCount < 0)
         throw Exception("TextTools::removeSubstrings(). " +
-                        std::string("Ending block character without corresponding beginning one at position ") +
-                        toString((int)i) + ".");
+              std::string("Ending block character without corresponding beginning one at position ") +
+              toString((int)i) + ".");
     }
   }
   t += s.substr(begPos);

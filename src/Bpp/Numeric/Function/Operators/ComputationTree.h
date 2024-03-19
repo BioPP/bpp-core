@@ -22,7 +22,7 @@ class ComputationTree :
   public AssociationTreeGlobalGraphObserver<Operator, short>
 {
 private:
-  std::shared_ptr<Operator> readFormula_(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames);
+  std::shared_ptr<Operator> readFormula_(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface>>& functionNames);
 
 public:
   /*
@@ -32,7 +32,7 @@ public:
    *
    */
 
-  ComputationTree(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames);
+  ComputationTree(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface>>& functionNames);
 
   ComputationTree* clone() const
   {
@@ -54,7 +54,7 @@ public:
     return getRoot()->getSecondOrderDerivative(variable);
   }
 
-  void readFormula(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames)
+  void readFormula(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface>>& functionNames)
   {
     readFormula_(formula, functionNames);
   }

@@ -11,7 +11,7 @@ using namespace std;
 /******************************************************************************/
 
 InvariantMixedDiscreteDistribution::InvariantMixedDiscreteDistribution(
-  unique_ptr<DiscreteDistributionInterface> dist, double p, double invariant) :
+    unique_ptr<DiscreteDistributionInterface> dist, double p, double invariant) :
   AbstractDiscreteDistribution(1, "Invariant."),
   dist_(std::move(dist)),
   invariant_(invariant),

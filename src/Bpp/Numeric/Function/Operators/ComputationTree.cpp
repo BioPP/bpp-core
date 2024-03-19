@@ -14,7 +14,7 @@
 using namespace std;
 using namespace bpp;
 
-ComputationTree::ComputationTree(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames) :
+ComputationTree::ComputationTree(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface>>& functionNames) :
   AssociationTreeGlobalGraphObserver<Operator, short>(true)
 {
   getGraph();
@@ -22,17 +22,17 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
   std::string str2 = formula;
 
   str2.erase(std::remove_if(str2.begin(),
-                            str2.end(),
-                            [](char x){
+        str2.end(),
+        [](char x){
     return std::isspace(x);
   }),
-             str2.end());
+      str2.end());
   string form2 = TextTools::removeWhiteSpaces(formula);
 
   setRoot(readFormula_(str2, functionNames));
 }
 
-std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface> >& functionNames)
+std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formula, const std::map<std::string, std::shared_ptr<FunctionInterface>>& functionNames)
 {
   unsigned int level = 0;
   // inside parentheses check
@@ -59,7 +59,7 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       continue;
 
     if ((c == '+' || c == '-') && !(i == 1 || formula[i - 2] == '*' || formula[i - 2] == '/'
-                                    || formula[i - 2] == '+' || formula[i - 2] == '-' || formula[i - 2] == '('))
+        || formula[i - 2] == '+' || formula[i - 2] == '-' || formula[i - 2] == '('))
     {
       std::shared_ptr<Operator> left = readFormula_(formula.substr(0, i - 1), functionNames);
       std::shared_ptr<Operator> right = readFormula_(formula.substr(i), functionNames);

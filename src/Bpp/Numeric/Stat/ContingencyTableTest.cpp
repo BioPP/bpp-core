@@ -14,7 +14,7 @@
 using namespace bpp;
 using namespace std;
 
-ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<size_t> >& table, unsigned int nbPermutations, bool warn) :
+ContingencyTableTest::ContingencyTableTest(const std::vector< std::vector<size_t>>& table, unsigned int nbPermutations, bool warn) :
   statistic_(0),
   pvalue_(0),
   df_(0),

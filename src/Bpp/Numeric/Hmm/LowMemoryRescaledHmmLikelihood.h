@@ -72,11 +72,11 @@ public:
    * the size of the vector specify the memory usage of the class. A two low value can lead to numerical precision errors.
    */
   LowMemoryRescaledHmmLikelihood(
-    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
-    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
-    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
-    const std::string& prefix,
-    size_t maxSize = 1000000);
+      std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+      std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+      std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
+      const std::string& prefix,
+      size_t maxSize = 1000000);
 
   LowMemoryRescaledHmmLikelihood(const LowMemoryRescaledHmmLikelihood& lik) :
     AbstractHmmLikelihood(lik),
@@ -178,7 +178,7 @@ public:
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const override
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append = false) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }

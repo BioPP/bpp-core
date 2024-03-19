@@ -222,8 +222,8 @@ public:
   {
     return isCorrect(value) ? value :
            (*this >= value ?
-            strictLowerBound() ? lowerBound_ + precision_ : lowerBound_ :
-            strictUpperBound() ? upperBound_ - precision_ : upperBound_);
+           strictLowerBound() ? lowerBound_ + precision_ : lowerBound_ :
+           strictUpperBound() ? upperBound_ - precision_ : upperBound_);
   }
 
   double getPrecision() const
@@ -385,7 +385,7 @@ public:
   {
     return (lowerBound_ > upperBound_) ||
            ((lowerBound_ > upperBound_) &&
-            inclUpperBound_ && inclLowerBound_);
+           inclUpperBound_ && inclLowerBound_);
   }
 };
 } // end of namespace bpp.

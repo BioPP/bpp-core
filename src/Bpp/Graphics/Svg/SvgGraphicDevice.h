@@ -22,7 +22,7 @@ class SvgGraphicDevice :
 {
 private:
   std::ostream& out_;
-  std::map<int, std::vector<std::string>, std::greater<int> > layers_; // Layer display as in xfig
+  std::map<int, std::vector<std::string>, std::greater<int>> layers_; // Layer display as in xfig
   bool inkscapeEnabled_;
   double minx_, maxx_, miny_, maxy_;
   std::map<short int, std::string> fontStyles_;

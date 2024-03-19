@@ -229,8 +229,8 @@ std::string removeSubstrings(const std::string& s, char blockBeginning, char blo
  * @throw Exception If some blocks are not well formed.
  */
 std::string removeSubstrings(const std::string& s, char blockBeginning, char blockEnding,
-                             std::vector<std::string>& exceptionsBeginning,
-                             std::vector<std::string>& exceptionsEnding);
+    std::vector<std::string>& exceptionsBeginning,
+    std::vector<std::string>& exceptionsEnding);
 
 /**
  * @brief Remove all occurences of a character in a string.

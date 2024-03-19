@@ -29,7 +29,7 @@ class SimpleDiscreteDistribution :
   public AbstractDiscreteDistribution
 {
 private:
-  std::map<size_t, std::vector<double> > givenRanges_;
+  std::map<size_t, std::vector<double>> givenRanges_;
 
 public:
   /**
@@ -74,7 +74,7 @@ public:
    *
    */
 
-  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<size_t, std::vector<double> >& ranges, const std::vector<double>& probas, double prec = NumConstants::TINY(), bool fixed = false);
+  SimpleDiscreteDistribution(const std::vector<double>& values, const std::map<size_t, std::vector<double>>& ranges, const std::vector<double>& probas, double prec = NumConstants::TINY(), bool fixed = false);
 
   virtual ~SimpleDiscreteDistribution() {}
 
@@ -89,7 +89,7 @@ public:
    *@brief Returns the map of the given ranges for the values.
    *
    */
-  const std::map<size_t, std::vector<double> > getRanges() const { return givenRanges_;}
+  const std::map<size_t, std::vector<double>> getRanges() const { return givenRanges_;}
 
   std::string getName() const {return "Simple";}
 

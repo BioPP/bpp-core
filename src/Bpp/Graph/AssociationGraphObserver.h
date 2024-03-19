@@ -178,10 +178,10 @@ public:
   virtual const std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid) const = 0;
   virtual std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid) = 0;
 
-  virtual std::vector<std::shared_ptr<N> > getNodesFromGraphid(std::vector<NodeGraphid> ) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getNodesFromGraphid(std::vector<NodeGraphid> ) const = 0;
   virtual std::shared_ptr<E>  getEdgeFromGraphid(EdgeGraphid) = 0;
   virtual const std::shared_ptr<E>  getEdgeFromGraphid(EdgeGraphid) const = 0;
-  virtual std::vector<std::shared_ptr<E> > getEdgesFromGraphid(std::vector<EdgeGraphid> ) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const = 0;
 
 
   /**
@@ -214,7 +214,7 @@ public:
    */
 
   virtual NodeIndex getNodeIndex(const std::shared_ptr<N>  nodeObject) const = 0;
-  virtual std::vector<NodeIndex> getNodeIndexes(std::vector<std::shared_ptr<N> > nodeObjects) const = 0;
+  virtual std::vector<NodeIndex> getNodeIndexes(std::vector<std::shared_ptr<N>> nodeObjects) const = 0;
 
 
   /**
@@ -223,7 +223,7 @@ public:
    * @return a node index
    */
   virtual EdgeIndex getEdgeIndex(const std::shared_ptr<E>  edgeObject) const = 0;
-  virtual std::vector<EdgeIndex> getEdgeIndexes(std::vector<std::shared_ptr<E> > edgeObjects) const = 0;
+  virtual std::vector<EdgeIndex> getEdgeIndexes(std::vector<std::shared_ptr<E>> edgeObjects) const = 0;
 
   /**
    * Set an index associated to a node
@@ -328,7 +328,7 @@ public:
    * @return a vector containing the neighbors
    */
 
-  virtual std::vector<std::shared_ptr<N> > getNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -336,7 +336,7 @@ public:
    * @param node the node one wants to get its neighbor edges
    * @return a vector containing the edges
    */
-  virtual std::vector<std::shared_ptr<E> > getEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getEdges(NodeIndex node) const = 0;
 
   /**
@@ -345,7 +345,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  virtual std::vector<std::shared_ptr<N> > getOutgoingNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getOutgoingNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getOutgoingNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -354,7 +354,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the outgoing edges
    */
-  virtual std::vector<std::shared_ptr<E> > getOutgoingEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getOutgoingEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getOutgoingEdges(NodeIndex node) const = 0;
 
 
@@ -364,7 +364,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the incoming neighbors
    */
-  virtual std::vector<std::shared_ptr<N> > getIncomingNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getIncomingNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getIncomingNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -373,7 +373,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the incoming edges
    */
-  virtual std::vector<std::shared_ptr<E> > getIncomingEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getIncomingEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getIncomingEdges(NodeIndex node) const = 0;
 
 
@@ -384,27 +384,27 @@ public:
    * @param maxDepth the max recursion depth
    * @return a vector containing the leaves
    */
-  virtual std::vector<std::shared_ptr<N> > getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const = 0;
 
   /**
    * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
    * @return a vector containing the leaves
    */
-  virtual std::vector<std::shared_ptr<N> > getAllLeaves() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllLeaves() const = 0;
   virtual std::vector<NodeIndex> getAllLeavesIndexes() const = 0;
 
   /**
    * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
    * @return a vector containing the inner nodes.
    */
-  virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllInnerNodes() const = 0;
   virtual std::vector<NodeIndex> getAllInnerNodesIndexes() const = 0;
 
   /**
    * Get all the defined nodes of a graphO,
    * @return a vector containing the nodesObjects
    */
-  virtual std::vector<std::shared_ptr<N> > getAllNodes() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllNodes() const = 0;
   virtual std::vector<NodeIndex> getAllNodesIndexes() const = 0;
 
   /**
@@ -451,7 +451,7 @@ public:
    * @return a vector containing the branchesObjects
    */
 
-  virtual std::vector<std::shared_ptr<E> > getAllEdges() const = 0;
+  virtual std::vector<std::shared_ptr<E>> getAllEdges() const = 0;
   virtual std::vector<EdgeIndex> getAllEdgesIndexes() const = 0;
 
 

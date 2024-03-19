@@ -48,7 +48,7 @@ private:
 public:
   DimensionException(const std::string& text, size_t dimension, size_t correctDimension)
     : Exception("DimensionException (found " + std::to_string(dimension) + ", should be " +
-                std::to_string(correctDimension) + ") " + text)
+        std::to_string(correctDimension) + ") " + text)
     , dimension_(dimension)
     , correctDimension_(correctDimension){}
 

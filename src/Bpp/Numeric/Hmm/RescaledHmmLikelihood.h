@@ -55,8 +55,8 @@ private:
    * where the x are the observed states, and y the hidden states.
    */
 
-  mutable std::vector<std::vector<double> > dLikelihood_;
-  mutable std::vector<std::vector<double> > d2Likelihood_;
+  mutable std::vector<std::vector<double>> dLikelihood_;
+  mutable std::vector<std::vector<double>> d2Likelihood_;
 
   /**
    * @brief backward likelihood
@@ -65,7 +65,7 @@ private:
    * where the x are the observed states, and y the hidden states.
    */
 
-  mutable std::vector<std::vector<double> > backLikelihood_;
+  mutable std::vector<std::vector<double>> backLikelihood_;
   mutable bool backLikelihoodUpToDate_;
 
   /**
@@ -95,10 +95,10 @@ public:
    * be destroyed with this object.
    */
   RescaledHmmLikelihood(
-    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
-    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
-    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
-    const std::string& prefix);
+      std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+      std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+      std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
+      const std::string& prefix);
 
   RescaledHmmLikelihood(const RescaledHmmLikelihood& lik) :
     AbstractHmmLikelihood(lik),
@@ -205,7 +205,7 @@ public:
 
   Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override;
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double> >& probs, bool append = false) const override;
+  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append = false) const override;
 
 protected:
   void computeForward_();

@@ -38,8 +38,8 @@ std::vector<std::string> AttributesTools::getVector(int argc, char* argv[])
 /******************************************************************************/
 
 std::map<std::string, std::string> AttributesTools::getAttributesMap(
-  const std::vector<std::string>& argv,
-  const std::string& delimiter)
+    const std::vector<std::string>& argv,
+    const std::string& delimiter)
 {
   map<string, string> am;
   getAttributesMap(argv, am, delimiter);
@@ -49,9 +49,9 @@ std::map<std::string, std::string> AttributesTools::getAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::getAttributesMap(
-  const std::vector<std::string>& argv,
-  std::map<std::string, std::string>& am,
-  const std::string& delimiter)
+    const std::vector<std::string>& argv,
+    std::map<std::string, std::string>& am,
+    const std::string& delimiter)
 {
   vector<string> argv2(argv.size());
   // First make a few cleaning:
@@ -105,9 +105,9 @@ void AttributesTools::getAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::getAttributesMapFromFile(
-  const std::string& file,
-  std::map<std::string, std::string>& params,
-  const std::string& delimiter)
+    const std::string& file,
+    std::map<std::string, std::string>& params,
+    const std::string& delimiter)
 {
   cout << "Parsing file " << file << " for options." << endl;
   ifstream input(file.c_str(), ios::in);
@@ -118,8 +118,8 @@ void AttributesTools::getAttributesMapFromFile(
 /******************************************************************************/
 
 std::map<std::string, std::string> AttributesTools::getAttributesMapFromFile(
-  const std::string& file,
-  const std::string& delimiter)
+    const std::string& file,
+    const std::string& delimiter)
 {
   map<string, string> params;
   getAttributesMapFromFile(file, params, delimiter);
@@ -129,8 +129,8 @@ std::map<std::string, std::string> AttributesTools::getAttributesMapFromFile(
 /******************************************************************************/
 
 void AttributesTools::actualizeAttributesMap(
-  std::map<std::string, std::string>& attMap,
-  const std::map<std::string, std::string>& atts)
+    std::map<std::string, std::string>& attMap,
+    const std::map<std::string, std::string>& atts)
 {
   for (map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
   {
@@ -141,10 +141,10 @@ void AttributesTools::actualizeAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::resolveVariables(
-  std::map<std::string, std::string>& am,
-  char varCode,
-  char varBeg,
-  char varEnd)
+    std::map<std::string, std::string>& am,
+    char varCode,
+    char varBeg,
+    char varEnd)
 {
   // Now resolve any variable:
   for (map<string, string>::iterator it = am.begin(); it != am.end(); it++)
@@ -189,9 +189,9 @@ void AttributesTools::resolveVariables(
 /******************************************************************************/
 
 std::string AttributesTools::removeComments(
-  const std::string& s,
-  const std::string& begin,
-  const std::string& end)
+    const std::string& s,
+    const std::string& begin,
+    const std::string& end)
 {
   string r = s;
   string::size_type last = 0;
@@ -221,7 +221,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
-    AttributesTools::getVector(args, argv), "=");
+        AttributesTools::getVector(args, argv), "=");
 
 
   // Look for a specified file with parameters:

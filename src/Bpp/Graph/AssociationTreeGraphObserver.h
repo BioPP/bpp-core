@@ -87,7 +87,7 @@ public:
    * @return a vector of son Nodes
    */
 
-  virtual std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getSons(const std::shared_ptr<N>  node) const = 0;
 
   virtual std::vector<NodeIndex> getSons(const NodeIndex node) const = 0;
 
@@ -97,7 +97,7 @@ public:
    * @return a vector of branch Nodes
    */
 
-  virtual std::vector<std::shared_ptr<E> > getBranches(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getBranches(const std::shared_ptr<N>  node) const = 0;
 
   virtual std::vector<EdgeIndex> getBranches(const NodeIndex node) const = 0;
 
@@ -134,14 +134,14 @@ public:
    * @return a vector containing the leaves
    */
 
-  virtual std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getLeavesUnderNode(std::shared_ptr<N>  node) const = 0;
 
   /**
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
 
-  virtual std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node) = 0;
+  virtual std::vector<std::shared_ptr<N>> removeSons(const std::shared_ptr<N>  node) = 0;
 
   /**
    * Remove a son of a node
@@ -211,13 +211,13 @@ public:
    * @throw PhyloNodeNotFoundException If a node is not found.
    */
 
-  virtual std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor = true) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor = true) const = 0;
 
-  virtual std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const = 0;
 
-  virtual std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getSubtreeNodes(const std::shared_ptr<N> localRoot) const = 0;
 
-  virtual std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getSubtreeEdges(const std::shared_ptr<N> localRoot) const = 0;
 };
 }
 #endif // BPP_GRAPH_ASSOCIATIONTREEGRAPHOBSERVER_H

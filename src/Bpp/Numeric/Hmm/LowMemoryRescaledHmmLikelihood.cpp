@@ -11,11 +11,11 @@ using namespace bpp;
 using namespace std;
 
 LowMemoryRescaledHmmLikelihood::LowMemoryRescaledHmmLikelihood(
-  std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
-  std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
-  std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
-  const std::string& prefix,
-  size_t maxSize) :
+    std::shared_ptr<HmmStateAlphabet> hiddenAlphabet,
+    std::shared_ptr<HmmTransitionMatrix> transitionMatrix,
+    std::shared_ptr<HmmEmissionProbabilities> emissionProbabilities,
+    const std::string& prefix,
+    size_t maxSize) :
   AbstractHmmLikelihood(),
   AbstractParametrizable(prefix),
   hiddenAlphabet_(hiddenAlphabet),

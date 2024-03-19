@@ -43,11 +43,11 @@ double NumTools::uniRoot(FunctionInterface& f, const std::string& param, double 
 
 /******************************************************************************/
 
-unique_ptr<RowMatrix<double> > NumTools::computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters)
+unique_ptr<RowMatrix<double>> NumTools::computeHessianMatrix(SecondOrderDerivable& function, const ParameterList& parameters)
 {
   size_t n = parameters.size();
   vector<string> variables = parameters.getParameterNames();
-  auto hessian = make_unique<RowMatrix<double> >(n, n);
+  auto hessian = make_unique<RowMatrix<double>>(n, n);
   for (unsigned int i = 0; i < n; i++)
   {
     for (unsigned int j = 0; j < n; j++)

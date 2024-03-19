@@ -11,9 +11,9 @@ using namespace bpp;
 using namespace std;
 
 CorrespondenceAnalysis::CorrespondenceAnalysis(
-  const Matrix<double>& data,
-  unsigned int nbAxes,
-  double tol, bool verbose) :
+    const Matrix<double>& data,
+    unsigned int nbAxes,
+    double tol, bool verbose) :
   DualityDiagram(),
   n_()
 {

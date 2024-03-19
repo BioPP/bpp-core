@@ -31,17 +31,17 @@ public:
   const std::string getFormatDescription() const override { return "Bpp Options format."; }
 
   void write(const Parametrizable& parametrizable,
-             OutputStream& out,
-             std::vector<std::string>& writtenNames,
-             bool printComma = false) const override;
+      OutputStream& out,
+      std::vector<std::string>& writtenNames,
+      bool printComma = false) const override;
 
   void write(const ParameterAliasable& parametrizable,
-             OutputStream& out,
-             std::map<std::string, std::string>& globalAliases,
-             const std::vector<std::string>& names,
-             std::vector<std::string>& writtenNames,
-             bool printLocalAliases = true,
-             bool printComma = false) const override;
+      OutputStream& out,
+      std::map<std::string, std::string>& globalAliases,
+      const std::vector<std::string>& names,
+      std::vector<std::string>& writtenNames,
+      bool printLocalAliases = true,
+      bool printComma = false) const override;
 };
 } // end of namespace bpp.
 #endif // BPP_IO_BPPOPARAMETRIZABLEFORMAT_H

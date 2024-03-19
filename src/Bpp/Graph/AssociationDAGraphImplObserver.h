@@ -116,7 +116,7 @@ public:
    * @param node the concerned node
    * @return a vector of son Nodes
    */
-  std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getFathers(const std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(node)));
   }
@@ -153,7 +153,7 @@ public:
    * Return the sons of a node
    * @return a vector of son Nodes
    */
-  std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N> node) const
+  std::vector<std::shared_ptr<N>> getSons(const std::shared_ptr<N> node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(node)));
   }
@@ -221,7 +221,7 @@ public:
    * @param node the starting node
    * @return a vector containing the leaves
    */
-  std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getLeavesUnderNode(std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
   }
@@ -230,7 +230,7 @@ public:
    * Remove the fathers of a node
    * @return a vector containing the removed fathers
    */
-  std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N>  node)
+  std::vector<std::shared_ptr<N>> removeFathers(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeFathers(this->getNodeGraphid(node)));
   }
@@ -248,7 +248,7 @@ public:
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
-  std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node)
+  std::vector<std::shared_ptr<N>> removeSons(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
   }
@@ -345,12 +345,12 @@ public:
    * @return A vector of ancestor nodes ids.
    *
    */
-  std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<N>> getBelowNodes(const std::shared_ptr<N> localRoot)
   {
     return this->getNodesFromGraphid(this->getGraph()->getBelowNodes(this->getNodeGraphid(localRoot)));
   }
 
-  std::vector<std::shared_ptr<E> > getBelowEdges(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<E>> getBelowEdges(const std::shared_ptr<N> localRoot)
   {
     return AssociationGraphImplObserver<N, E, DAGraphImpl>::getEdgesFromGraphid(this->getGraph()->getBelowEdges(this->getNodeGraphid(localRoot)));
   }

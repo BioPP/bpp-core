@@ -18,9 +18,9 @@ string MetaOptimizerInfos::IT_TYPE_FULL = "full";
 /**************************************************************************/
 
 MetaOptimizer::MetaOptimizer(
-  shared_ptr<FunctionInterface> function,
-  unique_ptr<MetaOptimizerInfos> desc,
-  unsigned int n) :
+    shared_ptr<FunctionInterface> function,
+    unique_ptr<MetaOptimizerInfos> desc,
+    unsigned int n) :
   AbstractOptimizer(function),
   optDesc_(std::move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
   nbParameters_(optDesc_->getNumberOfOptimizers()), n_(n),
@@ -35,7 +35,7 @@ MetaOptimizer::MetaOptimizer(
 /**************************************************************************/
 
 MetaOptimizer::MetaOptimizer(
-  const MetaOptimizer& opt) :
+    const MetaOptimizer& opt) :
   AbstractOptimizer(opt),
   optDesc_(dynamic_cast<MetaOptimizerInfos*>(opt.optDesc_->clone())),
   optParameters_(opt.optParameters_),
@@ -49,7 +49,7 @@ MetaOptimizer::MetaOptimizer(
 /**************************************************************************/
 
 MetaOptimizer& MetaOptimizer::operator=(
-  const MetaOptimizer& opt)
+    const MetaOptimizer& opt)
 {
   AbstractOptimizer::operator=(opt);
   optDesc_.reset(dynamic_cast<MetaOptimizerInfos*>(opt.optDesc_->clone()));

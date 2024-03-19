@@ -75,7 +75,7 @@ public:
 
   bool matchParametersValues(const ParameterList& parameters) override
   {
-    std::unique_ptr< std::vector<size_t> > updatedParameters(new std::vector<size_t>());
+    std::unique_ptr< std::vector<size_t>> updatedParameters(new std::vector<size_t>());
     bool test = parameters_.matchParametersValues(parameters, updatedParameters.get());
     if (test)
       fireParameterChanged(parameters.shareSubList(*updatedParameters));
