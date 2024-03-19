@@ -93,13 +93,13 @@ public:
 
 
   static unsigned int lineMinimization(
-    std::shared_ptr<DirectionFunction> f1dim,
-    ParameterList& parameters,
-    std::vector<double>& xi,
-    double tolerance,
-    std::shared_ptr<OutputStream> profiler = nullptr,
-    std::shared_ptr<OutputStream> messenger = nullptr,
-    unsigned int verbose = 2);
+      std::shared_ptr<DirectionFunction> f1dim,
+      ParameterList& parameters,
+      std::vector<double>& xi,
+      double tolerance,
+      std::shared_ptr<OutputStream> profiler = nullptr,
+      std::shared_ptr<OutputStream> messenger = nullptr,
+      unsigned int verbose = 2);
 
   /**
    * @brief Search a 'sufficiently low' value for a function in a given direction.
@@ -114,13 +114,13 @@ public:
    * without the stpmax argument, since the steps are bounded in another way.
    */
   static unsigned int lineSearch(
-    std::shared_ptr<DirectionFunction> f1dim,
-    ParameterList& parameters,
-    std::vector<double>& xi,
-    std::vector<double>& gradient,
-    std::shared_ptr<OutputStream> profiler = nullptr,
-    std::shared_ptr<OutputStream> messenger = nullptr,
-    unsigned int verbose = 2);
+      std::shared_ptr<DirectionFunction> f1dim,
+      ParameterList& parameters,
+      std::vector<double>& xi,
+      std::vector<double>& gradient,
+      std::shared_ptr<OutputStream> profiler = nullptr,
+      std::shared_ptr<OutputStream> messenger = nullptr,
+      unsigned int verbose = 2);
 
 public:
   /**

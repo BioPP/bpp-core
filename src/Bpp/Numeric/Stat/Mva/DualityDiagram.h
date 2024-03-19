@@ -74,10 +74,10 @@ public:
 
 private:
   void check_(
-    const Matrix<double>& matrix,
-    const std::vector<double>& rowWeights,
-    const std::vector<double>& colWeights,
-    unsigned int nbAxes);
+      const Matrix<double>& matrix,
+      const std::vector<double>& rowWeights,
+      const std::vector<double>& colWeights,
+      unsigned int nbAxes);
   void compute_(const Matrix<double>& matrix, double tol, bool verbose);
 
 public:
@@ -93,12 +93,12 @@ public:
    * @throw Exception if an error occured.
    */
   void setData(
-    const Matrix<double>& matrix,
-    const std::vector<double>& rowWeights,
-    const std::vector<double>& colWeights,
-    unsigned int nbAxes,
-    double tol = 0.0000001,
-    bool verbose = true);
+      const Matrix<double>& matrix,
+      const std::vector<double>& rowWeights,
+      const std::vector<double>& colWeights,
+      unsigned int nbAxes,
+      double tol = 0.0000001,
+      bool verbose = true);
 
   std::vector<double> computeVariancePercentagePerAxis();
 

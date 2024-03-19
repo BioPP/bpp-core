@@ -40,10 +40,10 @@ public:
   const std::map<std::string, std::string>& getUnparsedArguments() const { return unparsedArguments_; }
 
   void writeDiscreteDistribution(
-    const DiscreteDistributionInterface& dist,
-    OutputStream& out,
-    std::map<std::string, std::string>& globalAliases,
-    std::vector<std::string>& writtenNames) const;
+      const DiscreteDistributionInterface& dist,
+      OutputStream& out,
+      std::map<std::string, std::string>& globalAliases,
+      std::vector<std::string>& writtenNames) const;
 
 protected:
   /**

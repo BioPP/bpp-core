@@ -123,8 +123,8 @@ public:
    * @return          The attribute map.
    */
   static std::map<std::string, std::string> getAttributesMap(
-    const std::vector<std::string>& argv,
-    const std::string& delimiter = "=");
+      const std::vector<std::string>& argv,
+      const std::string& delimiter = "=");
 
   /**
    * @brief Get an attribute map from a vector of arguments.
@@ -136,9 +136,9 @@ public:
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
   static void getAttributesMap(
-    const std::vector<std::string>& argv,
-    std::map<std::string, std::string>& am,
-    const std::string& delimiter = "=");
+      const std::vector<std::string>& argv,
+      std::map<std::string, std::string>& am,
+      const std::string& delimiter = "=");
 
   /**
    * @brief Get an attribute map from a file.
@@ -148,8 +148,8 @@ public:
    * @return An attribute map.
    */
   static std::map<std::string, std::string> getAttributesMapFromFile(
-    const std::string& file,
-    const std::string& delimiter);
+      const std::string& file,
+      const std::string& delimiter);
 
   /**
    * @brief Get an attribute map from a file.
@@ -159,9 +159,9 @@ public:
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
   static void getAttributesMapFromFile(
-    const std::string& file,
-    std::map<std::string, std::string>& params,
-    const std::string& delimiter);
+      const std::string& file,
+      std::map<std::string, std::string>& params,
+      const std::string& delimiter);
 
   /**
    * @brief Actualizes an attribute map with another.
@@ -173,8 +173,8 @@ public:
    * @param atts   The attributes to add to the map.
    */
   static void actualizeAttributesMap(
-    std::map<std::string, std::string>& attMap,
-    const std::map<std::string, std::string>& atts);
+      std::map<std::string, std::string>& attMap,
+      const std::map<std::string, std::string>& atts);
 
   /**
    * @brief Resolve the variables.

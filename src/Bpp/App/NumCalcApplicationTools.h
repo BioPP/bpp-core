@@ -87,10 +87,10 @@ public:
    * @return a parameter grid object.
    */
   static std::shared_ptr<ParameterGrid> getParameterGrid(
-    std::map<std::string, std::string>& params,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool warn = true);
+      std::map<std::string, std::string>& params,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true);
 };
 } // End of namespace bpp.
 #endif // BPP_APP_NUMCALCAPPLICATIONTOOLS_H

@@ -149,12 +149,12 @@ public:
    * @return The corresponding value.
    */
   static double getDoubleParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    double defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      double defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get an integer parameter.
@@ -168,12 +168,12 @@ public:
    * @return The corresponding value.
    */
   static int getIntParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    int defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      int defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get a string parameter.
@@ -225,12 +225,12 @@ public:
    * @return The corresponding value.
    */
   static bool getBooleanParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    bool defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      bool defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get a parameter.
@@ -286,14 +286,14 @@ public:
    *                         is set to true.
    */
   static std::string getAFilePath(
-    const std::string& parameter,
-    const std::map<std::string, std::string>& params,
-    bool isRequired = true,
-    bool mustExist = true,
-    const std::string& suffix = "",
-    bool suffixIsOptional = false,
-    const std::string& defaultPath = "none",
-    int warn = 0);
+      const std::string& parameter,
+      const std::map<std::string, std::string>& params,
+      bool isRequired = true,
+      bool mustExist = true,
+      const std::string& suffix = "",
+      bool suffixIsOptional = false,
+      const std::string& defaultPath = "none",
+      int warn = 0);
 
   /**
    * @brief Get a vector.

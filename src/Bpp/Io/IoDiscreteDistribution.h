@@ -47,8 +47,8 @@ public:
    * @throw Exception if an error occured.
    */
   virtual std::unique_ptr<DiscreteDistributionInterface> readDiscreteDistribution(
-    const std::string& distrDescription,
-    bool parseArguments = true) = 0;
+      const std::string& distrDescription,
+      bool parseArguments = true) = 0;
 
   /**
    * @return The arguments and their unparsed values from the last call of the read function, if there are any.
@@ -78,10 +78,10 @@ public:
    * @throw Exception if an error occured.
    */
   virtual void writeDiscreteDistribution(
-    const DiscreteDistributionInterface& dist,
-    OutputStream& out,
-    std::map<std::string, std::string>& globalAliases,
-    std::vector<std::string>& writtenNames) const = 0;
+      const DiscreteDistributionInterface& dist,
+      OutputStream& out,
+      std::map<std::string, std::string>& globalAliases,
+      std::vector<std::string>& writtenNames) const = 0;
 };
 } // end of namespace bpp.
 #endif // BPP_IO_IODISCRETEDISTRIBUTION_H

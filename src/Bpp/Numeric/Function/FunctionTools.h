@@ -79,8 +79,8 @@ public:
    */
 
   static std::shared_ptr<DataTable> computeGrid(
-    FunctionInterface& function,
-    const ParameterGrid& grid);
+      FunctionInterface& function,
+      const ParameterGrid& grid);
 };
 } // end of namespace bpp
 #endif // BPP_NUMERIC_FUNCTION_FUNCTIONTOOLS_H
