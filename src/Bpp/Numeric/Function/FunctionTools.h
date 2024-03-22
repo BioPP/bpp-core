@@ -1,48 +1,13 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: FunctionTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-04-13 10:00:00
-//
-
-/*
-  Copyright or © or Copr. CNRS, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_NUMERIC_FUNCTION_FUNCTIONTOOLS_H
 #define BPP_NUMERIC_FUNCTION_FUNCTIONTOOLS_H
 
 
 #include "../VectorTools.h"
+#include "../DataTable.h"
 #include "Functions.h"
 
 namespace bpp
@@ -103,18 +68,19 @@ public:
    *
    * @param function The function to use for the evaluation.
    * @param grid     The grid defining the set of points to evaluate.
-   * @return A pointer toward a dynamically created vector of vector
-   * of doubles. Each row correpsonds to a combination of parameters
-   * and the corresponding function value. There is hence one column
-   * per parameter, and one additional column containing the
-   * corresponding function evaluations. When DataTable supports
-   * different column type, we will probably return a DataTable instead.
-   * @throw Exception If the parameter names in the grid do not match
-   * the ones in the function, or a constraint is matched, etc.
+   *
+   * @return A shared pointer toward a dynamically created DataTable.
+   *         Each row corresponds to a combination of parameters
+   *         values and the corresponding function value. There is
+   *         hence one column per parameter, and one additional column
+   *         containing the corresponding function evaluations. When
+   *         DataTable supports different column type, we will
+   *         probably return a DataTable instead.
    */
-  static VVdouble* computeGrid(
-    FunctionInterface& function,
-    const ParameterGrid& grid);
+
+  static std::shared_ptr<DataTable> computeGrid(
+      FunctionInterface& function,
+      const ParameterGrid& grid);
 };
 } // end of namespace bpp
 #endif // BPP_NUMERIC_FUNCTION_FUNCTIONTOOLS_H

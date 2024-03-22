@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: GlobalGraph.cpp
-// Authors:
-//   Thomas Bigot
-// Last modified: 2017-06-27 00:00:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #include <algorithm>
 #include <sstream>
@@ -254,7 +218,7 @@ void GlobalGraph::linkInNodeStructure_(const GlobalGraph::Node& nodeA, const Glo
 Graph::NodeId GlobalGraph::createNode()
 {
   GlobalGraph::Node newNode = highestNodeID_++;
-  nodeStructure_[newNode] = std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> >();
+  nodeStructure_[newNode] = std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge>>();
   this->topologyHasChanged_();
 
   return newNode;
@@ -435,9 +399,9 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   const auto& assoc = foundNode->second;
   return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-               (assoc.first.size() + assoc.second.size() <= 1)
-               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
-                   assoc.first.begin()->first == assoc.second.begin()->first)));
+           (assoc.first.size() + assoc.second.size() <= 1)
+           || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+           assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 
@@ -623,7 +587,7 @@ std::vector<Graph::NodeId> GlobalGraph::getLeavesFromNode(const Graph::NodeId no
   return listOfLeaves;
 }
 
-void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::set<std::pair<Node, Node> >& alreadyFigured) const
+void GlobalGraph::nodeToDot_(const GlobalGraph::Node& node, ostream& out,  std::set<std::pair<Node, Node>>& alreadyFigured) const
 {
   out << node;
   const std::map<Node, Edge>& children = nodeStructure_.at(node).first;
@@ -818,14 +782,14 @@ void GlobalGraph::makeDirected()
   nodeStructureType undirectedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
   {
-    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge>>();
   }
 
   // copy each relation once, without the reciprocal link
   // (first met, first kept)
   // eg: A - B in undirected is represented as A->B and B->A
   //     in directed, becomes A->B only
-  std::set<pair<Node, Node> > alreadyConvertedRelations;
+  std::set<pair<Node, Node>> alreadyConvertedRelations;
   for (auto& currNodeRow : undirectedStructure)
   {
     Node nodeA = currNodeRow.first;
@@ -852,7 +816,7 @@ void GlobalGraph::makeUndirected()
   nodeStructureType directedStructure = nodeStructure_;
   for (auto& it : nodeStructure_)
   {
-    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge> >();
+    it.second = std::pair<std::map<Node, Edge>, std::map<Node, Edge>>();
   }
 
   // copy each relation twice, making the reciprocal link
@@ -877,7 +841,7 @@ bool GlobalGraph::containsReciprocalRelations() const
 {
   if (!directed_)
     throw Exception("Cannot state reciprocal link in an undirected graph.");
-  std::set<pair<Node, Node> > alreadyMetRelations;
+  std::set<pair<Node, Node>> alreadyMetRelations;
   for (const auto& currNodeRow : nodeStructure_)
   {
     Node nodeA = currNodeRow.first;
@@ -946,7 +910,7 @@ vector<Graph::EdgeId> GlobalGraph::getEdges(Graph::NodeId node) const
 void GlobalGraph::outputToDot(ostream& out, const std::string& name) const
 {
   out << (directed_ ? "digraph" : "graph") << " " << name << " {\n   ";
-  set<pair<Node, Node> > alreadyFigured;
+  set<pair<Node, Node>> alreadyFigured;
   nodeToDot_(root_, out, alreadyFigured);
   for (const auto& node: nodeStructure_)
   {

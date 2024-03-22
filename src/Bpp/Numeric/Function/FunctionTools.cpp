@@ -1,43 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: FunctionTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2009-04-13 10:47:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
-
+// SPDX-License-Identifier: CECILL-2.1
 
 #include "../../App/ApplicationTools.h"
 #include "FunctionTools.h"
@@ -87,21 +50,27 @@ size_t ParameterGrid::getTotalNumberOfPoints() const
   return n;
 }
 
-VVdouble* FunctionTools::computeGrid(
-  FunctionInterface& function,
-  const ParameterGrid& grid)
+shared_ptr<DataTable> FunctionTools::computeGrid(
+    FunctionInterface& function,
+    const ParameterGrid& grid)
 {
   // Init stuff...
   size_t n = grid.getNumberOfDimensions();
-  VVdouble* data = new VVdouble();
   if (n == 0)
-    return data; // Empty data table returned.
+    return make_shared<DataTable>(0);
+  ; // Empty data table returned.
 
   VVdouble points = grid.getPoints();
 
   // Get the parameter list. this may throw an exception if the grid does not
   // match the function parameters...
-  ParameterList pl = function.getParameters().createSubList(grid.getDimensionNames());
+  auto parNames = grid.getDimensionNames();
+  ParameterList pl = function.getParameters().createSubList(parNames);
+  auto colNames = parNames;
+
+  colNames.push_back("value");
+  auto data = make_shared<DataTable>(colNames);
+
   for (unsigned int i = 0; i < n; i++)
   {
     pl.setParameterValue(grid.getDimensionName(i), grid.getPointsForDimension(i)[0]);
@@ -110,7 +79,7 @@ VVdouble* FunctionTools::computeGrid(
   // Iterate over all dimensions:
   unsigned int currentDimension = 0;
   vector<unsigned int> currentPointInDimension(n);
-  vector<double> row(n + 1);
+  vector<string> row(n + 1);
   size_t nbPoints = grid.getTotalNumberOfPoints();
   ApplicationTools::displayMessage("Computing likelihood profile...");
   for (unsigned int i = 0; true; ++i)
@@ -119,10 +88,10 @@ VVdouble* FunctionTools::computeGrid(
     // We start by adding the current point to the table:
     for (unsigned int j = 0; j < n; ++j)
     {
-      row[j] = pl[j].getValue();
+      row[j] = TextTools::toString(pl[j].getValue());
     }
-    row[n] = function.f(pl);
-    data->push_back(row);
+    row[n] = TextTools::toString(function.f(pl));
+    data->addRow(row);
 
     // Now increment iterator:
     bool dimensionChanged = false;

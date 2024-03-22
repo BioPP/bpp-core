@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AssociationGraphObserver.h
-// Authors:
-//   Thomas Bigot
-// Last modified: vendredi 4 novembre 2016, à 10h 21
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_GRAPH_ASSOCIATIONGRAPHOBSERVER_H
 #define BPP_GRAPH_ASSOCIATIONGRAPHOBSERVER_H
@@ -77,7 +41,6 @@ public:
    * Specific copy of A and B objects, if clonable or not.
    *
    */
-
   template<class A, class B>
   static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && !std::is_abstract<B>::value, B*>::type* = 0)
   {
@@ -215,10 +178,10 @@ public:
   virtual const std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid) const = 0;
   virtual std::shared_ptr<N>  getNodeFromGraphid(NodeGraphid) = 0;
 
-  virtual std::vector<std::shared_ptr<N> > getNodesFromGraphid(std::vector<NodeGraphid> ) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getNodesFromGraphid(std::vector<NodeGraphid> ) const = 0;
   virtual std::shared_ptr<E>  getEdgeFromGraphid(EdgeGraphid) = 0;
   virtual const std::shared_ptr<E>  getEdgeFromGraphid(EdgeGraphid) const = 0;
-  virtual std::vector<std::shared_ptr<E> > getEdgesFromGraphid(std::vector<EdgeGraphid> ) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getEdgesFromGraphid(std::vector<EdgeGraphid> ) const = 0;
 
 
   /**
@@ -251,7 +214,7 @@ public:
    */
 
   virtual NodeIndex getNodeIndex(const std::shared_ptr<N>  nodeObject) const = 0;
-  virtual std::vector<NodeIndex> getNodeIndexes(std::vector<std::shared_ptr<N> > nodeObjects) const = 0;
+  virtual std::vector<NodeIndex> getNodeIndexes(std::vector<std::shared_ptr<N>> nodeObjects) const = 0;
 
 
   /**
@@ -260,7 +223,7 @@ public:
    * @return a node index
    */
   virtual EdgeIndex getEdgeIndex(const std::shared_ptr<E>  edgeObject) const = 0;
-  virtual std::vector<EdgeIndex> getEdgeIndexes(std::vector<std::shared_ptr<E> > edgeObjects) const = 0;
+  virtual std::vector<EdgeIndex> getEdgeIndexes(std::vector<std::shared_ptr<E>> edgeObjects) const = 0;
 
   /**
    * Set an index associated to a node
@@ -365,7 +328,7 @@ public:
    * @return a vector containing the neighbors
    */
 
-  virtual std::vector<std::shared_ptr<N> > getNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -373,7 +336,7 @@ public:
    * @param node the node one wants to get its neighbor edges
    * @return a vector containing the edges
    */
-  virtual std::vector<std::shared_ptr<E> > getEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getEdges(NodeIndex node) const = 0;
 
   /**
@@ -382,7 +345,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  virtual std::vector<std::shared_ptr<N> > getOutgoingNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getOutgoingNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getOutgoingNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -391,7 +354,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the outgoing edges
    */
-  virtual std::vector<std::shared_ptr<E> > getOutgoingEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getOutgoingEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getOutgoingEdges(NodeIndex node) const = 0;
 
 
@@ -401,7 +364,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the incoming neighbors
    */
-  virtual std::vector<std::shared_ptr<N> > getIncomingNeighbors(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getIncomingNeighbors(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<NodeIndex> getIncomingNeighbors(NodeIndex node) const = 0;
 
   /**
@@ -410,7 +373,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the incoming edges
    */
-  virtual std::vector<std::shared_ptr<E> > getIncomingEdges(const std::shared_ptr<N>  node) const = 0;
+  virtual std::vector<std::shared_ptr<E>> getIncomingEdges(const std::shared_ptr<N>  node) const = 0;
   virtual std::vector<EdgeIndex> getIncomingEdges(NodeIndex node) const = 0;
 
 
@@ -421,27 +384,27 @@ public:
    * @param maxDepth the max recursion depth
    * @return a vector containing the leaves
    */
-  virtual std::vector<std::shared_ptr<N> > getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const = 0;
+  virtual std::vector<std::shared_ptr<N>> getLeavesFromNode(std::shared_ptr<N>  node, unsigned int maxDepth) const = 0;
 
   /**
    * Get all the leaves objects of a graph, ie, nodes with only one neighbor,
    * @return a vector containing the leaves
    */
-  virtual std::vector<std::shared_ptr<N> > getAllLeaves() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllLeaves() const = 0;
   virtual std::vector<NodeIndex> getAllLeavesIndexes() const = 0;
 
   /**
    * Get all the inner nodes of a graph, ie, nodes with degree >= 2.
    * @return a vector containing the inner nodes.
    */
-  virtual std::vector<std::shared_ptr<N> > getAllInnerNodes() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllInnerNodes() const = 0;
   virtual std::vector<NodeIndex> getAllInnerNodesIndexes() const = 0;
 
   /**
    * Get all the defined nodes of a graphO,
    * @return a vector containing the nodesObjects
    */
-  virtual std::vector<std::shared_ptr<N> > getAllNodes() const = 0;
+  virtual std::vector<std::shared_ptr<N>> getAllNodes() const = 0;
   virtual std::vector<NodeIndex> getAllNodesIndexes() const = 0;
 
   /**
@@ -488,7 +451,7 @@ public:
    * @return a vector containing the branchesObjects
    */
 
-  virtual std::vector<std::shared_ptr<E> > getAllEdges() const = 0;
+  virtual std::vector<std::shared_ptr<E>> getAllEdges() const = 0;
   virtual std::vector<EdgeIndex> getAllEdgesIndexes() const = 0;
 
 

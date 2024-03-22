@@ -1,43 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: DataTable.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2005-08-07 00:00:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
-
+// SPDX-License-Identifier: CECILL-2.1
 
 #include "../Io/FileTools.h"
 #include "../Text/StringTokenizer.h"
@@ -106,10 +69,10 @@ DataTable::DataTable(const DataTable& table) :
   rowNames_(0),
   colNames_(0)
 {
-  if (table.rowNames_)
-    rowNames_ = new vector<string>(*table.rowNames_);
-  if (table.colNames_)
-    colNames_ = new vector<string>(*table.colNames_);
+  if (table.rowNames_.size())
+    rowNames_ = table.rowNames_;
+  if (table.colNames_.size())
+    colNames_ = table.colNames_;
 }
 
 DataTable& DataTable::operator=(const DataTable& table)
@@ -117,28 +80,17 @@ DataTable& DataTable::operator=(const DataTable& table)
   nRow_ = table.nRow_;
   nCol_ = table.nCol_;
   data_ = table.data_;
-  if (rowNames_)
-    delete rowNames_;
-  if (colNames_)
-    delete colNames_;
-  rowNames_ = 0;
-  colNames_ = 0;
-  if (table.rowNames_)
-    rowNames_ = new vector<string>(*table.rowNames_);
-  if (table.colNames_)
-    colNames_ = new vector<string>(*table.colNames_);
+  if (table.rowNames_.size())
+    rowNames_ = table.rowNames_;
+  if (table.colNames_.size())
+    colNames_ = table.colNames_;
   return *this;
 }
 
 /******************************************************************************/
 
 DataTable::~DataTable()
-{
-  if (rowNames_ != NULL)
-    delete rowNames_;
-  if (colNames_ != NULL)
-    delete colNames_;
-}
+{}
 
 /******************************************************************************/
 /*                             Cell access                                    */
@@ -166,14 +118,14 @@ const string& DataTable::operator()(size_t rowIndex, size_t colIndex) const
 
 string& DataTable::operator()(const string& rowName, const string& colName)
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     return (*this)(rowIndex, colIndex);
   }
   catch (ElementNotFoundException<string>& ex)
@@ -184,14 +136,14 @@ string& DataTable::operator()(const string& rowName, const string& colName)
 
 const string& DataTable::operator()(const string& rowName, const string& colName) const
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::operator(const string &, const string &).");
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::operator(const string &, const string &).");
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     return (*this)(rowIndex, colIndex);
   }
   catch (ElementNotFoundException<string>& ex)
@@ -204,13 +156,13 @@ const string& DataTable::operator()(const string& rowName, const string& colName
 
 string& DataTable::operator()(const string& rowName, size_t colIndex)
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::operator(const string &, size_t).");
   if (colIndex >= nCol_)
     throw IndexOutOfBoundsException("DataTable::operator(const string &, size_t).", colIndex, 0, nCol_ - 1);
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
     return (*this)(rowIndex, colIndex);
   }
   catch (ElementNotFoundException<string>& ex)
@@ -221,13 +173,13 @@ string& DataTable::operator()(const string& rowName, size_t colIndex)
 
 const string& DataTable::operator()(const string& rowName, size_t colIndex) const
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::operator(const string &, size_t).");
   if (colIndex >= nCol_)
     throw IndexOutOfBoundsException("DataTable::operator(const string &, size_t).", colIndex, 0, nCol_ - 1);
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
     return (*this)(rowIndex, colIndex);
   }
   catch (ElementNotFoundException<string>& ex)
@@ -240,11 +192,11 @@ const string& DataTable::operator()(const string& rowName, size_t colIndex) cons
 
 string& DataTable::operator()(size_t rowIndex, const string& colName)
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::operator(size_t, const string &).");
   try
   {
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     if (rowIndex >= data_[colIndex].size())
       throw IndexOutOfBoundsException("DataTable::operator(size_t, const string &).", rowIndex, 0, data_[colIndex].size() - 1);
     return (*this)(rowIndex, colIndex);
@@ -257,11 +209,11 @@ string& DataTable::operator()(size_t rowIndex, const string& colName)
 
 const string& DataTable::operator()(size_t rowIndex, const string& colName) const
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::operator(size_t, const string &).");
   try
   {
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     if (rowIndex >= data_[colIndex].size())
       throw IndexOutOfBoundsException("DataTable::operator(size_t, const string &).", rowIndex, 0, data_[colIndex].size() - 1);
     return (*this)(rowIndex, colIndex);
@@ -286,15 +238,13 @@ void DataTable::setRowNames(const vector<string>& rowNames)
     throw DimensionException("DataTable::setRowNames.", rowNames.size(), nRow_);
   else
   {
-    if (rowNames_ != NULL)
-      delete rowNames_;
-    rowNames_ = new vector<string>(rowNames.begin(), rowNames.end());
+    rowNames_ = rowNames;
   }
 }
 
 void DataTable::setRowName(size_t rowId, const string& rowName)
 {
-  if (VectorTools::contains(*rowNames_, rowName))
+  if (VectorTools::contains(rowNames_, rowName))
   {
     throw DuplicatedTableRowNameException("DataTable::setRowName(...). New row name " + rowName + " already exists");
   }
@@ -302,24 +252,24 @@ void DataTable::setRowName(size_t rowId, const string& rowName)
     throw DimensionException("DataTable::setRowName.", rowId, nRow_);
   else
   {
-    (*rowNames_)[rowId] = rowName;
+    (rowNames_)[rowId] = rowName;
   }
 }
 
 vector<string> DataTable::getRowNames() const
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::getRowNames().");
-  return *rowNames_;
+  return rowNames_;
 }
 
 string DataTable::getRowName(size_t index) const
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::getRowName(size_t).");
   if (index >= nRow_)
     throw IndexOutOfBoundsException("DataTable::getRowName(size_t).", index, 0, nRow_ - 1);
-  return (*rowNames_)[index];
+  return (rowNames_)[index];
 }
 
 /******************************************************************************/
@@ -332,26 +282,24 @@ void DataTable::setColumnNames(const vector<string>& colNames)
     throw DimensionException("DataTable::setColumnNames.", colNames.size(), nCol_);
   else
   {
-    if (colNames_ != NULL)
-      delete colNames_;
-    colNames_ = new vector<string>(colNames.begin(), colNames.end());
+    colNames_ = colNames;
   }
 }
 
 vector<string> DataTable::getColumnNames() const
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::getColumnNames().");
-  return *colNames_;
+  return colNames_;
 }
 
 string DataTable::getColumnName(size_t index) const
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::getColumnName(size_t).");
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::getColumnName(size_t).", index, 0, nCol_ - 1);
-  return (*colNames_)[index];
+  return (colNames_)[index];
 }
 
 /******************************************************************************/
@@ -374,11 +322,11 @@ const vector<string>& DataTable::getColumn(size_t index) const
 
 vector<string>& DataTable::getColumn(const string& colName)
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
   try
   {
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     return data_[colIndex];
   }
   catch (ElementNotFoundException<string>& ex)
@@ -389,11 +337,11 @@ vector<string>& DataTable::getColumn(const string& colName)
 
 const vector<string>& DataTable::getColumn(const string& colName) const
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::getColumn(const string &).");
   try
   {
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     return data_[colIndex];
   }
   catch (ElementNotFoundException<string>& ex)
@@ -404,11 +352,11 @@ const vector<string>& DataTable::getColumn(const string& colName) const
 
 bool DataTable::hasColumn(const string& colName) const
 {
-  if (colNames_ == NULL)
+  if (colNames_.size() == 0)
     return false;
-  for (size_t i = 0; i < colNames_->size(); i++)
+  for (size_t i = 0; i < colNames_.size(); i++)
   {
-    if ((*colNames_)[i] == colName)
+    if ((colNames_)[i] == colName)
       return true;
   }
   return false;
@@ -419,20 +367,20 @@ void DataTable::deleteColumn(size_t index)
   if (index >= nCol_)
     throw IndexOutOfBoundsException("DataTable::deleteColumn(size_t).", index, 0, nCol_ - 1);
   data_.erase(data_.begin() + static_cast<ptrdiff_t>(index));
-  if (colNames_)
-    colNames_->erase(colNames_->begin() + static_cast<ptrdiff_t>(index));
+  if (colNames_.size() != 0)
+    colNames_.erase(colNames_.begin() + static_cast<ptrdiff_t>(index));
   nCol_--;
 }
 
 void DataTable::deleteColumn(const string& colName)
 {
-  if (!colNames_)
+  if (colNames_.size() == 0)
     throw NoTableColumnNamesException("DataTable::deleteColumn(const string &).");
   try
   {
-    size_t colIndex = VectorTools::which(*colNames_, colName);
+    size_t colIndex = VectorTools::which(colNames_, colName);
     data_.erase(data_.begin() + static_cast<ptrdiff_t>(colIndex));
-    colNames_->erase(colNames_->begin() + static_cast<ptrdiff_t>(colIndex));
+    colNames_.erase(colNames_.begin() + static_cast<ptrdiff_t>(colIndex));
     nCol_--;
   }
   catch (ElementNotFoundException<string>& ex)
@@ -443,7 +391,7 @@ void DataTable::deleteColumn(const string& colName)
 
 void DataTable::addColumn(const vector<string>& newColumn)
 {
-  if (colNames_)
+  if (colNames_.size() != 0)
     throw TableColumnNamesException("DataTable::addColumn. Table has column names.");
   if (newColumn.size() != nRow_)
     throw DimensionException("DataTable::addColumn.", newColumn.size(), nRow_);
@@ -453,18 +401,18 @@ void DataTable::addColumn(const vector<string>& newColumn)
 
 void DataTable::addColumn(const string& colName, const vector<string>& newColumn)
 {
-  if (!colNames_)
+  if (colNames_.size() == 0)
   {
     if (nCol_ == 0)
-      colNames_ = new vector<string>();
+      colNames_ = vector<string>(0);
     else
       throw NoTableColumnNamesException("DataTable::addColumn. Table has column names.");
   }
   if (newColumn.size() != nRow_)
     throw DimensionException("DataTable::addColumn.", newColumn.size(), nRow_);
-  if (nCol_ > 0 && find(colNames_->begin(), colNames_->end(), colName) != colNames_->end())
+  if (nCol_ > 0 && find(colNames_.begin(), colNames_.end(), colName) != colNames_.end())
     throw DuplicatedTableColumnNameException("DataTable::addColumn(const string &, const vector<string> &). Column names must be unique.");
-  colNames_->push_back(colName);
+  colNames_.push_back(colName);
   data_.push_back(newColumn);
   nCol_++;
 }
@@ -487,11 +435,11 @@ vector<string> DataTable::getRow(size_t index) const
 
 vector<string> DataTable::getRow(const string& rowName) const
 {
-  if (!rowNames_)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::getRow(const string &).");
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
     vector<string> row;
     for (size_t i = 0; i < nCol_; i++)
     {
@@ -507,11 +455,11 @@ vector<string> DataTable::getRow(const string& rowName) const
 
 bool DataTable::hasRow(const string& rowName) const
 {
-  if (rowNames_ == NULL)
+  if (rowNames_.size() == 0)
     return false;
-  for (size_t i = 0; i < rowNames_->size(); i++)
+  for (size_t i = 0; i < rowNames_.size(); i++)
   {
-    if ((*rowNames_)[i] == rowName)
+    if ((rowNames_)[i] == rowName)
       return true;
   }
   return false;
@@ -526,24 +474,24 @@ void DataTable::deleteRow(size_t index)
       throw IndexOutOfBoundsException("DataTable::deleteRow(size_t).", index, 0, column->size() - 1);
     column->erase(column->begin() + static_cast<ptrdiff_t>(index));
   }
-  if (rowNames_)
-    rowNames_->erase(rowNames_->begin() + static_cast<ptrdiff_t>(index));
+  if (rowNames_.size() != 0)
+    rowNames_.erase(rowNames_.begin() + static_cast<ptrdiff_t>(index));
   nRow_--;
 }
 
 void DataTable::deleteRow(const string& rowName)
 {
-  if (!rowNames_)
+  if (rowNames_.size() == 0)
     throw NoTableRowNamesException("DataTable::deleteRow(const string &).");
   try
   {
-    size_t rowIndex = VectorTools::which(*rowNames_, rowName);
+    size_t rowIndex = VectorTools::which(rowNames_, rowName);
     for (size_t j = 0; j < nCol_; j++)
     {
       vector<string>* column = &data_[j];
       column->erase(column->begin() + static_cast<ptrdiff_t>(rowIndex));
     }
-    rowNames_->erase(rowNames_->begin() + static_cast<ptrdiff_t>(rowIndex));
+    rowNames_.erase(rowNames_.begin() + static_cast<ptrdiff_t>(rowIndex));
     nRow_--;
   }
   catch (ElementNotFoundException<string>& ex)
@@ -554,7 +502,7 @@ void DataTable::deleteRow(const string& rowName)
 
 void DataTable::addRow(const vector<string>& newRow)
 {
-  if (rowNames_)
+  if (rowNames_.size() != 0)
     throw TableRowNamesException("DataTable::addRow. Table has row names.");
   if (newRow.size() != nCol_)
     throw DimensionException("DataTable::addRow.", newRow.size(), nCol_);
@@ -580,18 +528,18 @@ void DataTable::setRow(size_t rowIndex, const vector<string>& newRow)
 
 void DataTable::addRow(const string& rowName, const vector<string>& newRow)
 {
-  if (!rowNames_)
+  if (rowNames_.size() == 0)
   {
     if (nRow_ == 0)
-      rowNames_ = new vector<string>();
+      rowNames_ = vector<string>(0);
     else
       throw NoTableRowNamesException("DataTable::addRow. Table has row names.");
   }
   if (newRow.size() != nCol_)
     throw DimensionException("DataTable::addRow.", newRow.size(), nCol_);
-  if (nRow_ > 0 && find(rowNames_->begin(), rowNames_->end(), rowName) != rowNames_->end())
+  if (nRow_ > 0 && find(rowNames_.begin(), rowNames_.end(), rowName) != rowNames_.end())
     throw DuplicatedTableRowNameException("DataTable::addRow(const string &, const vector<string> &). Row names must be unique.");
-  rowNames_->push_back(rowName);
+  rowNames_.push_back(rowName);
   for (size_t j = 0; j < nCol_; j++)
   {
     data_[j].push_back(newRow[j]);

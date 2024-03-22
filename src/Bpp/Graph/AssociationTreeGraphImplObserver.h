@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AssociationTreeGraphImplObserver.h
-// Authors:
-//   Thomas Bigot
-// Last modified: vendredi 4 novembre 2016, à 10h 21
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_GRAPH_ASSOCIATIONTREEGRAPHIMPLOBSERVER_H
 #define BPP_GRAPH_ASSOCIATIONTREEGRAPHIMPLOBSERVER_H
@@ -199,7 +163,7 @@ public:
    * @param node the concerned node
    * @return a vector of son Nodes
    */
-  std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getSons(const std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(node)));
   }
@@ -214,7 +178,7 @@ public:
    * @param node the concerned node
    * @return a vector of branch Nodes
    */
-  std::vector<std::shared_ptr<E> > getBranches(const std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<E>> getBranches(const std::shared_ptr<N>  node) const
   {
     return this->getEdgesFromGraphid(this->getGraph()->getBranches(this->getNodeGraphid(node)));
   }
@@ -271,7 +235,7 @@ public:
    * @param node the starting node
    * @return a vector containing the leaves
    */
-  std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getLeavesUnderNode(std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
   }
@@ -285,7 +249,7 @@ public:
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
-  std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node)
+  std::vector<std::shared_ptr<N>> removeSons(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
   }
@@ -371,12 +335,12 @@ public:
    * @return A vector of ancestor nodes ids.
    * @throw PhyloNodeNotFoundException If a node is not found.
    */
-  std::vector<std::shared_ptr<N> > getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor = true) const
+  std::vector<std::shared_ptr<N>> getNodePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB, bool includeAncestor = true) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getNodePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB), includeAncestor));
   }
 
-  std::vector<std::shared_ptr<E> > getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const
+  std::vector<std::shared_ptr<E>> getEdgePathBetweenTwoNodes(const std::shared_ptr<N>  nodeA, const std::shared_ptr<N>  nodeB) const
   {
     return this->getEdgesFromGraphid(this->getGraph()->getEdgePathBetweenTwoNodes(this->getNodeGraphid(nodeA), this->getNodeGraphid(nodeB)));
   }
@@ -391,12 +355,12 @@ public:
     return this->getEdgeIndexes(getEdgePathBetweenTwoNodes(this->getNode(nodeA), this->getNode(nodeB), includeAncestor));
   }
 
-  std::vector<std::shared_ptr<N> > getSubtreeNodes(const std::shared_ptr<N> localRoot) const
+  std::vector<std::shared_ptr<N>> getSubtreeNodes(const std::shared_ptr<N> localRoot) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSubtreeNodes(this->getNodeGraphid(localRoot)));
   }
 
-  std::vector<std::shared_ptr<E> > getSubtreeEdges(const std::shared_ptr<N> localRoot) const
+  std::vector<std::shared_ptr<E>> getSubtreeEdges(const std::shared_ptr<N> localRoot) const
   {
     return AssociationGraphImplObserver<N, E, TreeGraphImpl>::getEdgesFromGraphid(this->getGraph()->getSubtreeEdges(this->getNodeGraphid(localRoot)));
   }
@@ -416,7 +380,7 @@ public:
    * @param vNodeObject the vector of concerned nodes
    * @return the MRCA
    */
-  std::shared_ptr<N>  MRCA(const std::vector<std::shared_ptr<N> >  vNodeObject) const
+  std::shared_ptr<N>  MRCA(const std::vector<std::shared_ptr<N>>  vNodeObject) const
   {
     std::vector<Graph::NodeId> vNid(vNodeObject.size());
 
