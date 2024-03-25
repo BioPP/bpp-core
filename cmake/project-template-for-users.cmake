@@ -16,7 +16,7 @@
 # This is a basic configuration for users with Bio++ libraries installed in a standard system place (/usr/).
 
 # These two lines are CMake boilerplate
-cmake_minimum_required (VERSION 3.5) # Test of version. 2.5 is the oldest version supported by Bio++
+cmake_minimum_required (VERSION 3.5) # Test of version. 3.5 is the oldest version supported by Bio++
 project (myproject CXX) # The name is not critical
 
 # Find Bio++ libraries and import their configurations.
@@ -25,7 +25,7 @@ find_package (bpp-seq)
 
 # Bio++ REQUIRES using at least the C++14 standard.
 # This line specifies options passed to the compiler (you can add your own).
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 # Tells CMake to create a binary from dummy.cpp (replace with your .cpp file(s))
 add_executable (myprogram dummy.cpp other.cpp)
