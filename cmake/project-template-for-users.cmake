@@ -25,7 +25,7 @@ find_package (bpp-seq)
 
 # Bio++ REQUIRES using at least the C++14 standard.
 # This line specifies options passed to the compiler (you can add your own).
-set (CMAKE_CXX_FLAGS "-std=c++1'")
+add_compile_options(-std=c++11)
 
 # Tells CMake to create a binary from dummy.cpp (replace with your .cpp file(s))
 add_executable (myprogram dummy.cpp other.cpp)
