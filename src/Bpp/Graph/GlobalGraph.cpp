@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <limits>
 
 #include "../Exceptions.h"
 #include "../Text/TextTools.h"

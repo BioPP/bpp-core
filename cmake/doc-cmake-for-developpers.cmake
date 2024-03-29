@@ -27,7 +27,7 @@ project (bpp-something CXX)
 # - the CMake package
 # Do not change it unless there is a good reason...
 
-set (CMAKE_CXX_FLAGS "std=c++14 -Wall -Weffc++ -Wshadow -Wconversion")
+add_compile_options(std=c++14 -Wall -Weffc++ -Wshadow -Wconversion)
 # Define compile options to be used for all C++ targets.
 # NOTES for the future:
 # -> CMake >= 2.8.12 adds per target COMPILE_OPTIONS by using target_compile_options (<target> [PRIVATE|PUBLIC] <opt1> ... <optN>)
