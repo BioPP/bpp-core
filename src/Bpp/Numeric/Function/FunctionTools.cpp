@@ -90,7 +90,7 @@ shared_ptr<DataTable> FunctionTools::computeGrid(
     {
       row[j] = TextTools::toString(pl[j].getValue());
     }
-    row[n] = TextTools::toString(function.f(pl));
+    row[n] = TextTools::toString(function.f(pl),12);
     data->addRow(row);
 
     // Now increment iterator:
