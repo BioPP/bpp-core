@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AttributesTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-10-07 00:00:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Tools, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide basal and
-  utilitary classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_UTILS_ATTRIBUTESTOOLS_H
 #define BPP_UTILS_ATTRIBUTESTOOLS_H
@@ -159,8 +123,8 @@ public:
    * @return          The attribute map.
    */
   static std::map<std::string, std::string> getAttributesMap(
-    const std::vector<std::string>& argv,
-    const std::string& delimiter = "=");
+      const std::vector<std::string>& argv,
+      const std::string& delimiter = "=");
 
   /**
    * @brief Get an attribute map from a vector of arguments.
@@ -172,9 +136,9 @@ public:
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
   static void getAttributesMap(
-    const std::vector<std::string>& argv,
-    std::map<std::string, std::string>& am,
-    const std::string& delimiter = "=");
+      const std::vector<std::string>& argv,
+      std::map<std::string, std::string>& am,
+      const std::string& delimiter = "=");
 
   /**
    * @brief Get an attribute map from a file.
@@ -184,8 +148,8 @@ public:
    * @return An attribute map.
    */
   static std::map<std::string, std::string> getAttributesMapFromFile(
-    const std::string& file,
-    const std::string& delimiter);
+      const std::string& file,
+      const std::string& delimiter);
 
   /**
    * @brief Get an attribute map from a file.
@@ -195,9 +159,9 @@ public:
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
   static void getAttributesMapFromFile(
-    const std::string& file,
-    std::map<std::string, std::string>& params,
-    const std::string& delimiter);
+      const std::string& file,
+      std::map<std::string, std::string>& params,
+      const std::string& delimiter);
 
   /**
    * @brief Actualizes an attribute map with another.
@@ -209,8 +173,8 @@ public:
    * @param atts   The attributes to add to the map.
    */
   static void actualizeAttributesMap(
-    std::map<std::string, std::string>& attMap,
-    const std::map<std::string, std::string>& atts);
+      std::map<std::string, std::string>& attMap,
+      const std::map<std::string, std::string>& atts);
 
   /**
    * @brief Resolve the variables.
@@ -225,9 +189,9 @@ public:
    * @throw Exception If there is a syntax error.
    */
   static void resolveVariables(std::map<std::string, std::string>& am,
-                               char varCode = '$',
-                               char varBeg = '(',
-                               char varEnd = ')');
+      char varCode = '$',
+      char varBeg = '(',
+      char varEnd = ')');
 
   /**
    * @brief Global function that reads all parameters from command line and files,

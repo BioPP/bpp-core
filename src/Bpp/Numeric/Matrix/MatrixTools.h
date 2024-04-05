@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: MatrixTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2004-01-19 16:42:25
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus. This file is part of the Bio++ project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_NUMERIC_MATRIX_MATRIXTOOLS_H
 #define BPP_NUMERIC_MATRIX_MATRIXTOOLS_H
@@ -87,7 +51,6 @@ public:
    * @param A [in] Original matrix.
    * @param O [out] A copy of the given matrix.
    */
-
   template<class MatrixA, class MatrixO>
   static void copyUp(const MatrixA& A, MatrixO& O)
   {
@@ -112,7 +75,6 @@ public:
    * @param A [in] Original matrix.
    * @param O [out] A copy of the given matrix.
    */
-
   template<class MatrixA, class MatrixO>
   static void copyDown(const MatrixA& A, MatrixO& O)
   {
@@ -238,9 +200,9 @@ public:
   template<class Matrix, class Scalar>
   static void scale(Matrix& A, Scalar a, Scalar b = 0)
   {
-    if ((a==1) && (b==0))
+    if ((a == 1) && (b == 0))
       return;
-    
+
     for (size_t i = 0; i < A.getNumberOfRows(); i++)
     {
       for (size_t j = 0; j < A.getNumberOfColumns(); j++)
@@ -287,7 +249,6 @@ public:
    * @param O  [out] The dot product of two matrices (real part)
    * @param iO [out] The dot product of two matrices(imaginary part)
    */
-
   template<class Scalar>
   static void mult(const Matrix<Scalar>& A, const Matrix<Scalar>& iA, const Matrix<Scalar>& B, const Matrix<Scalar>& iB, Matrix<Scalar>& O, Matrix<Scalar>& iO)
   {
@@ -449,7 +410,6 @@ public:
    * @param B [in] Matrix B
    * @throw DimensionException If A and B have note the same size.
    */
-
   template<class MatrixA, class MatrixB>
   static void add(MatrixA& A, const MatrixB& B)
   {
@@ -593,9 +553,8 @@ public:
    *
    * @throw DimensionException If m is not a square matrix.
    */
-
   template<class Matrix, class Scalar>
-  static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar> >& vO)
+  static void Taylor(const Matrix& A, size_t p, std::vector< RowMatrix<Scalar>>& vO)
   {
     size_t n = A.getNumberOfRows();
     if (n != A.getNumberOfColumns())
@@ -1241,7 +1200,7 @@ public:
    * @param vO [out] The output vector of vector (will be resized accordingly).
    */
   template<class Scalar>
-  static void toVVdouble(const Matrix<Scalar>& M, std::vector< std::vector<Scalar> >& vO)
+  static void toVVdouble(const Matrix<Scalar>& M, std::vector< std::vector<Scalar>>& vO)
   {
     size_t n = M.getNumberOfRows();
     size_t m = M.getNumberOfColumns();
@@ -1292,10 +1251,10 @@ public:
    */
   template<class Scalar>
   static Scalar lap(Matrix<Scalar>& assignCost,
-                    std::vector<int>& rowSol,
-                    std::vector<int>& colSol,
-                    std::vector<Scalar>& u,
-                    std::vector<Scalar>& v)
+      std::vector<int>& rowSol,
+      std::vector<int>& colSol,
+      std::vector<Scalar>& u,
+      std::vector<Scalar>& v)
   {
     size_t dim = assignCost.getNumberOfRows();
     if (assignCost.getNumberOfColumns() != dim)
@@ -1339,7 +1298,7 @@ public:
         colSol[j - 1] = static_cast<int>(iMin);
       }
       else
-        colSol[j - 1] = -1;                                       // row already assigned, column not assigned.
+        colSol[j - 1] = -1; // row already assigned, column not assigned.
     }
 
     // Reduction tranfer

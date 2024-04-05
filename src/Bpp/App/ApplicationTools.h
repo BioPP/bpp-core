@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: ApplicationTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2005-10-21 16:19:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide basal and
-  utilitary classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_APP_APPLICATIONTOOLS_H
 #define BPP_APP_APPLICATIONTOOLS_H
@@ -185,12 +149,12 @@ public:
    * @return The corresponding value.
    */
   static double getDoubleParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    double defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      double defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get an integer parameter.
@@ -204,12 +168,12 @@ public:
    * @return The corresponding value.
    */
   static int getIntParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    int defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      int defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get a string parameter.
@@ -223,12 +187,12 @@ public:
    * @return The corresponding value.
    */
   static std::string getStringParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     std::string sParam = defaultValue;
     std::map<std::string, std::string>::const_iterator it1 = params.find(parameterName + suffix);
@@ -261,12 +225,12 @@ public:
    * @return The corresponding value.
    */
   static bool getBooleanParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    bool defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0);
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      bool defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0);
 
   /**
    * @brief Get a parameter.
@@ -280,12 +244,12 @@ public:
    * @return The corresponding value.
    */
   template<class T> static T getParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    T defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      T defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     T tParam = defaultValue;
     if (parameterExists(parameterName + suffix, params))
@@ -322,14 +286,14 @@ public:
    *                         is set to true.
    */
   static std::string getAFilePath(
-    const std::string& parameter,
-    const std::map<std::string, std::string>& params,
-    bool isRequired = true,
-    bool mustExist = true,
-    const std::string& suffix = "",
-    bool suffixIsOptional = false,
-    const std::string& defaultPath = "none",
-    int warn = 0);
+      const std::string& parameter,
+      const std::map<std::string, std::string>& params,
+      bool isRequired = true,
+      bool mustExist = true,
+      const std::string& suffix = "",
+      bool suffixIsOptional = false,
+      const std::string& defaultPath = "none",
+      int warn = 0);
 
   /**
    * @brief Get a vector.
@@ -345,13 +309,13 @@ public:
    * @return The corresponding value.
    */
   template<class T> static std::vector<T> getVectorParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     if (separator == ' ') throw Exception("ApplicationTools::getVectorParameter(). Separator cannot be a space character.");
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
@@ -385,28 +349,28 @@ public:
    * @throw Exception If a space character is used as separator.
    * @return The corresponding value.
    */
-  template<class T> static std::vector< std::vector<T> > getVectorOfVectorsParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    int warn = 0)
+  template<class T> static std::vector< std::vector<T>> getVectorOfVectorsParameter(
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      int warn = 0)
   {
     if (separator == ' ') throw Exception("ApplicationTools::getVectorOfVectorsParameter(). Separator cannot be a space character.");
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
-    if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+    if (TextTools::isEmpty(s)) return std::vector< std::vector<T>>(0);
     if (s[0] == '(' && s[s.size() - 1] == ')')
     {
       // This is a delimited vector:
       s = s.substr(1, s.size() - 2);
-      if (TextTools::isEmpty(s)) return std::vector< std::vector<T> >(0);
+      if (TextTools::isEmpty(s)) return std::vector< std::vector<T>>(0);
     }
     NestedStringTokenizer st(s, "(", ")", TextTools::toString(separator));
     size_t n = st.numberOfRemainingTokens();
     std::string s2;
-    std::vector< std::vector<T> > v(n);
+    std::vector< std::vector<T>> v(n);
     for (size_t i = 0; i < n; ++i)
     {
       s2 = st.nextToken();
@@ -446,14 +410,14 @@ public:
    * @return The corresponding value.
    */
   template<class T> static std::vector<T> getVectorParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    char rangeOperator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool warn = true)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      char rangeOperator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true)
   {
     std::string s = getStringParameter(parameterName, params, defaultValue, suffix, suffixIsOptional, warn);
     if (s[0] == '(' && s[s.size() - 1] == ')')
@@ -505,15 +469,14 @@ public:
    * @param warn             Tell if a warning must be sent in case the parameter is not found.
    * @return The corresponding value.
    */
-
   template<class T> static RowMatrix<T> getMatrixParameter(
-    const std::string& parameterName,
-    const std::map<std::string, std::string>& params,
-    char separator,
-    const std::string& defaultValue,
-    const std::string& suffix = "",
-    bool suffixIsOptional = true,
-    bool warn = true)
+      const std::string& parameterName,
+      const std::map<std::string, std::string>& params,
+      char separator,
+      const std::string& defaultValue,
+      const std::string& suffix = "",
+      bool suffixIsOptional = true,
+      bool warn = true)
   {
     RowMatrix<T> mat;
 

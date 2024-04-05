@@ -1,44 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: TextTools.cpp
-// Authors:
-//   Julien Dutheil
-//   Francois Gindraud (2017)
-// Created: 2003-08-08 12:57:50
-// Last modified: 2017-06-27 00:00:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #include <algorithm>
 #include <cctype>
@@ -129,11 +91,11 @@ std::string removeSurroundingWhiteSpaces(const std::string& s)
 {
   // Copy s from first non-whitespace to last non-whitespace
   auto isNotWhitespace = [](char c) {
-                           return !std::isspace(c);
-                         };
+        return !std::isspace(c);
+      };
   auto firstNonWhitespace = std::find_if(s.begin(), s.end(), isNotWhitespace);
   auto lastNonWhitespace = std::find_if(
-    s.rbegin(), std::reverse_iterator<std::string::const_iterator>(firstNonWhitespace), isNotWhitespace);
+        s.rbegin(), std::reverse_iterator<std::string::const_iterator>(firstNonWhitespace), isNotWhitespace);
   return std::string(firstNonWhitespace, lastNonWhitespace.base());
 }
 
@@ -332,8 +294,8 @@ std::string removeSubstrings(const std::string& s, char blockBeginning, char blo
     {
       if (blockDepth == 0)
         throw Exception(
-                std::string("TextTools::removeSubstrings(): unmatched block closing character at position ") +
-                std::to_string(i));
+              std::string("TextTools::removeSubstrings(): unmatched block closing character at position ") +
+              std::to_string(i));
       blockDepth--;
     }
     else if (blockDepth == 0)
@@ -347,10 +309,10 @@ std::string removeSubstrings(const std::string& s, char blockBeginning, char blo
 /******************************************************************************/
 
 std::string removeSubstrings(const std::string& s,
-                             char blockBeginning,
-                             char blockEnding,
-                             std::vector<std::string>& exceptionsBeginning,
-                             std::vector<std::string>& exceptionsEnding)
+    char blockBeginning,
+    char blockEnding,
+    std::vector<std::string>& exceptionsBeginning,
+    std::vector<std::string>& exceptionsEnding)
 {
   // TODO didn't upgrade... move to a parser like system ? it is very specific...
   std::string t;
@@ -404,8 +366,8 @@ std::string removeSubstrings(const std::string& s,
       }
       else if (blockCount < 0)
         throw Exception("TextTools::removeSubstrings(). " +
-                        std::string("Ending block character without corresponding beginning one at position ") +
-                        toString((int)i) + ".");
+              std::string("Ending block character without corresponding beginning one at position ") +
+              toString((int)i) + ".");
     }
   }
   t += s.substr(begPos);

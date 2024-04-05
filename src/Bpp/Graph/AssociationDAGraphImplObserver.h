@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AssociationDAGraphImplObserver.h
-// Authors:
-//   Laurent Guéguen
-// Last modified: lundi 19 décembre 2016, à 22h 14
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide utilitary
-  classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_GRAPH_ASSOCIATIONDAGRAPHIMPLOBSERVER_H
 #define BPP_GRAPH_ASSOCIATIONDAGRAPHIMPLOBSERVER_H
@@ -152,7 +116,7 @@ public:
    * @param node the concerned node
    * @return a vector of son Nodes
    */
-  std::vector<std::shared_ptr<N> > getFathers(const std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getFathers(const std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getFathers(this->getNodeGraphid(node)));
   }
@@ -189,7 +153,7 @@ public:
    * Return the sons of a node
    * @return a vector of son Nodes
    */
-  std::vector<std::shared_ptr<N> > getSons(const std::shared_ptr<N> node) const
+  std::vector<std::shared_ptr<N>> getSons(const std::shared_ptr<N> node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getSons(this->getNodeGraphid(node)));
   }
@@ -257,7 +221,7 @@ public:
    * @param node the starting node
    * @return a vector containing the leaves
    */
-  std::vector<std::shared_ptr<N> > getLeavesUnderNode(std::shared_ptr<N>  node) const
+  std::vector<std::shared_ptr<N>> getLeavesUnderNode(std::shared_ptr<N>  node) const
   {
     return this->getNodesFromGraphid(this->getGraph()->getLeavesUnderNode(this->getNodeGraphid(node)));
   }
@@ -266,7 +230,7 @@ public:
    * Remove the fathers of a node
    * @return a vector containing the removed fathers
    */
-  std::vector<std::shared_ptr<N> > removeFathers(const std::shared_ptr<N>  node)
+  std::vector<std::shared_ptr<N>> removeFathers(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeFathers(this->getNodeGraphid(node)));
   }
@@ -284,7 +248,7 @@ public:
    * Remove the sons of a node
    * @return a vector containing the removed nodes
    */
-  std::vector<std::shared_ptr<N> > removeSons(const std::shared_ptr<N>  node)
+  std::vector<std::shared_ptr<N>> removeSons(const std::shared_ptr<N>  node)
   {
     return this->getNodesFromGraphid(this->getGraph()->removeSons(this->getNodeGraphid(node)));
   }
@@ -381,12 +345,12 @@ public:
    * @return A vector of ancestor nodes ids.
    *
    */
-  std::vector<std::shared_ptr<N> > getBelowNodes(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<N>> getBelowNodes(const std::shared_ptr<N> localRoot)
   {
     return this->getNodesFromGraphid(this->getGraph()->getBelowNodes(this->getNodeGraphid(localRoot)));
   }
 
-  std::vector<std::shared_ptr<E> > getBelowEdges(const std::shared_ptr<N> localRoot)
+  std::vector<std::shared_ptr<E>> getBelowEdges(const std::shared_ptr<N> localRoot)
   {
     return AssociationGraphImplObserver<N, E, DAGraphImpl>::getEdgesFromGraphid(this->getGraph()->getBelowEdges(this->getNodeGraphid(localRoot)));
   }

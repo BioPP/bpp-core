@@ -1,44 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AttributesTools.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2003-10-07 00:00:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide basal and
-  utilitary classes. This file belongs to the Bio++ Project.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
-
-
+// SPDX-License-Identifier: CECILL-2.1
 
 // From the STL:
 #include <cstdlib>
@@ -76,8 +38,8 @@ std::vector<std::string> AttributesTools::getVector(int argc, char* argv[])
 /******************************************************************************/
 
 std::map<std::string, std::string> AttributesTools::getAttributesMap(
-  const std::vector<std::string>& argv,
-  const std::string& delimiter)
+    const std::vector<std::string>& argv,
+    const std::string& delimiter)
 {
   map<string, string> am;
   getAttributesMap(argv, am, delimiter);
@@ -87,9 +49,9 @@ std::map<std::string, std::string> AttributesTools::getAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::getAttributesMap(
-  const std::vector<std::string>& argv,
-  std::map<std::string, std::string>& am,
-  const std::string& delimiter)
+    const std::vector<std::string>& argv,
+    std::map<std::string, std::string>& am,
+    const std::string& delimiter)
 {
   vector<string> argv2(argv.size());
   // First make a few cleaning:
@@ -107,7 +69,7 @@ void AttributesTools::getAttributesMap(
   {
     string arg = argv2[i];
     if (arg == "")
-      continue;                   // Skipping void line.
+      continue; // Skipping void line.
     while (arg[arg.size() - 1] == '\\')
     {
       // Splitted line
@@ -143,9 +105,9 @@ void AttributesTools::getAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::getAttributesMapFromFile(
-  const std::string& file,
-  std::map<std::string, std::string>& params,
-  const std::string& delimiter)
+    const std::string& file,
+    std::map<std::string, std::string>& params,
+    const std::string& delimiter)
 {
   cout << "Parsing file " << file << " for options." << endl;
   ifstream input(file.c_str(), ios::in);
@@ -156,8 +118,8 @@ void AttributesTools::getAttributesMapFromFile(
 /******************************************************************************/
 
 std::map<std::string, std::string> AttributesTools::getAttributesMapFromFile(
-  const std::string& file,
-  const std::string& delimiter)
+    const std::string& file,
+    const std::string& delimiter)
 {
   map<string, string> params;
   getAttributesMapFromFile(file, params, delimiter);
@@ -167,8 +129,8 @@ std::map<std::string, std::string> AttributesTools::getAttributesMapFromFile(
 /******************************************************************************/
 
 void AttributesTools::actualizeAttributesMap(
-  std::map<std::string, std::string>& attMap,
-  const std::map<std::string, std::string>& atts)
+    std::map<std::string, std::string>& attMap,
+    const std::map<std::string, std::string>& atts)
 {
   for (map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
   {
@@ -179,10 +141,10 @@ void AttributesTools::actualizeAttributesMap(
 /******************************************************************************/
 
 void AttributesTools::resolveVariables(
-  std::map<std::string, std::string>& am,
-  char varCode,
-  char varBeg,
-  char varEnd)
+    std::map<std::string, std::string>& am,
+    char varCode,
+    char varBeg,
+    char varEnd)
 {
   // Now resolve any variable:
   for (map<string, string>::iterator it = am.begin(); it != am.end(); it++)
@@ -204,7 +166,8 @@ void AttributesTools::resolveVariables(
         }
         else
         {
-          if (varIt->second==value){
+          if (varIt->second == value)
+          {
             if (ApplicationTools::error)
               (*ApplicationTools::error << "Variable '" << varName << "' definition is cyclic and was ignored.").endLine();
           }
@@ -226,9 +189,9 @@ void AttributesTools::resolveVariables(
 /******************************************************************************/
 
 std::string AttributesTools::removeComments(
-  const std::string& s,
-  const std::string& begin,
-  const std::string& end)
+    const std::string& s,
+    const std::string& begin,
+    const std::string& end)
 {
   string r = s;
   string::size_type last = 0;
@@ -236,7 +199,7 @@ std::string AttributesTools::removeComments(
   {
     auto first = r.find(begin, last);
     if (first == string::npos)
-      return r;                   // No shell comment.
+      return r; // No shell comment.
     // else:
     last = r.find(end, first);
     if (last == string::npos)
@@ -258,7 +221,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
-    AttributesTools::getVector(args, argv), "=");
+        AttributesTools::getVector(args, argv), "=");
 
 
   // Look for a specified file with parameters:

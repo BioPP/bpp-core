@@ -1,43 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: AbstractDiscreteDistribution.cpp
-// Authors:
-//   Julien Dutheil
-// Created: ?
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
-
+// SPDX-License-Identifier: CECILL-2.1
 
 #include "../Random/RandomTools.h"
 #include "../VectorTools.h"
@@ -151,8 +114,8 @@ Vdouble AbstractDiscreteDistribution::getCategories() const
   Vdouble result(distribution_.size());
   unsigned int i = 0;
   for (map<double, double>::const_iterator it = distribution_.begin();
-       it != distribution_.end();
-       it++)
+      it != distribution_.end();
+      it++)
   {
     result[i] = it->first;
     i++;
@@ -167,8 +130,8 @@ Vdouble AbstractDiscreteDistribution::getProbabilities() const
   Vdouble result(distribution_.size());
   size_t i = 0;
   for (map<double, double>::const_iterator it = distribution_.begin();
-       it != distribution_.end();
-       it++)
+      it != distribution_.end();
+      it++)
   {
     result[i] = it->second;
     i++;
@@ -206,8 +169,8 @@ double AbstractDiscreteDistribution::rand() const
   double r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
   double cumprob = 0;
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     cumprob += i->second;
     if (r <= cumprob)
@@ -224,8 +187,8 @@ double AbstractDiscreteDistribution::getInfCumulativeProbability(double category
   double prob = 0;
   map<double, double>::const_iterator it = distribution_.find(category);
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != it;
-       i++)
+      i != it;
+      i++)
   {
     prob += i->second;
   }
@@ -241,8 +204,8 @@ double AbstractDiscreteDistribution::getIInfCumulativeProbability(double categor
   if (it == distribution_.end())
     return 0;
   for (map<double, double>::const_iterator i = ++it;
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     prob += i->second;
   }
@@ -258,8 +221,8 @@ double AbstractDiscreteDistribution::getSupCumulativeProbability(double category
   if (it == distribution_.end())
     return 0;
   for (map<double, double>::const_iterator i = ++it;
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     prob += i->second;
   }
@@ -273,8 +236,8 @@ double AbstractDiscreteDistribution::getSSupCumulativeProbability(double categor
   double prob = 0;
   map<double, double>::const_iterator it = distribution_.find(category);
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != it;
-       i++)
+      i != it;
+      i++)
   {
     prob += i->second;
   }
@@ -374,20 +337,20 @@ void AbstractDiscreteDistribution::discretizeEqualProportions()
       {
         values[i] *= mean / t / ec;
       }
-
     }
     else
     // for each category, sets the value v such that
     //      v * length_of_the_interval = the surface of the category
     {
-      double firstBound = intMinMax_->getLowerBound(), secondBound; 
+      double firstBound = intMinMax_->getLowerBound(), secondBound;
       double a = Expectation(firstBound), b;
       for (i = 0; i < numberOfCategories_ - 1; i++)
       {
         secondBound = bounds_[i];
         b = Expectation(secondBound);
         values[i] = (b - a) / ec;
-        if (values[i] < firstBound || values[i] > secondBound) { //May happen if the two bounds are undistinguishable.
+        if (values[i] < firstBound || values[i] > secondBound)   // May happen if the two bounds are undistinguishable.
+        {
           values[i] = (firstBound + secondBound) / 2.;
         }
         a = b;
@@ -395,11 +358,11 @@ void AbstractDiscreteDistribution::discretizeEqualProportions()
       }
       secondBound = intMinMax_->getUpperBound();
       values[numberOfCategories_ - 1] = (Expectation(secondBound) - a) / ec;
-      if (values[numberOfCategories_ - 1] < firstBound || values[numberOfCategories_ - 1] > secondBound) { //May happen if the two bounds are undistinguishable.
+      if (values[numberOfCategories_ - 1] < firstBound || values[numberOfCategories_ - 1] > secondBound)   // May happen if the two bounds are undistinguishable.
+      {
         values[numberOfCategories_ - 1] = (firstBound + secondBound) / 2.;
       }
     }
-
   }
   else
   // if maxX==minX, uniform discretization of the range
@@ -503,12 +466,14 @@ void AbstractDiscreteDistribution::discretizeEqualIntervals()
   double interval = (upperBound - lowerBound) / static_cast<double>(numberOfCategories_);
 
   // Compute bounds:
-  for (size_t i = 0; i < numberOfCategories_ - 1; ++i) {
+  for (size_t i = 0; i < numberOfCategories_ - 1; ++i)
+  {
     bounds_[i] = lowerBound + (static_cast<double>(i) + 1.) * interval;
   }
 
   // Compute values:
-  for (size_t i = 0; i < numberOfCategories_; ++i) {
+  for (size_t i = 0; i < numberOfCategories_; ++i)
+  {
     values[i] = lowerBound + (static_cast<double>(i) + 0.5) * interval;
   }
 
@@ -526,23 +491,32 @@ void AbstractDiscreteDistribution::discretizeEqualIntervals()
 
 /***********************************************************************/
 
-void AbstractDiscreteDistribution::discretize() {
-  if (discretizationScheme_ == DISCRETIZATION_EQUAL_PROB) {
+void AbstractDiscreteDistribution::discretize()
+{
+  if (discretizationScheme_ == DISCRETIZATION_EQUAL_PROB)
+  {
     discretizeEqualProportions();
-  } else if (discretizationScheme_ == DISCRETIZATION_EQUAL_INTERVAL) {
+  }
+  else if (discretizationScheme_ == DISCRETIZATION_EQUAL_INTERVAL)
+  {
     discretizeEqualIntervals();
-  } else {
+  }
+  else
+  {
     discretizeEqualProportions();
-    //Check bounds:
+    // Check bounds:
     deque<double> allBounds(bounds_.begin(), bounds_.end());
     allBounds.push_front(intMinMax_->getLowerBound());
     allBounds.push_back(intMinMax_->getUpperBound());
     bool check = true;
-    for (size_t i = 1; check && i < numberOfCategories_ + 1; ++i) {
-      if (allBounds[i] == allBounds[i - 1]) check = false;
+    for (size_t i = 1; check && i < numberOfCategories_ + 1; ++i)
+    {
+      if (allBounds[i] == allBounds[i - 1])
+        check = false;
     }
-    if (! check) {
-      //cout << "Unidentifiable bounds. Falling back to equal intervals." << endl;
+    if (!check)
+    {
+      // cout << "Unidentifiable bounds. Falling back to equal intervals." << endl;
       discretizeEqualIntervals();
     }
   }
@@ -564,7 +538,8 @@ Vdouble AbstractDiscreteDistribution::getBounds() const
 
 void AbstractDiscreteDistribution::restrictToConstraint(const ConstraintInterface& c)
 {
-  try {
+  try
+  {
     const IntervalConstraint& pi = dynamic_cast<const IntervalConstraint&>(c);
 
     if (!(*intMinMax_ <= pi))
@@ -572,7 +547,9 @@ void AbstractDiscreteDistribution::restrictToConstraint(const ConstraintInterfac
       *intMinMax_ &= c;
       discretize();
     }
-  } catch(exception& e) {
+  }
+  catch (exception& e)
+  {
     throw Exception("AbstractDiscreteDistribution::restrictToConstraint: the constraint is not an interval");
   }
 }

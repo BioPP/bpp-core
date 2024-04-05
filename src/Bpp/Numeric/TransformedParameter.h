@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: TransformedParameter.h
-// Authors:
-//   Julien Dutheil
-// Created: 2009-01-30 09:42:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 19, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_NUMERIC_TRANSFORMEDPARAMETER_H
 #define BPP_NUMERIC_TRANSFORMEDPARAMETER_H
@@ -221,8 +185,8 @@ public:
    */
   IntervalTransformedParameter(const std::string& name, double value, double lowerBound = 0, double upperBound = 1, double scale = 1, bool hyper = true) :
     TransformedParameter(name, hyper ?
-                         scale * atanh(2. * (value - lowerBound) / (upperBound - lowerBound) - 1.) :
-                         scale* tan(NumConstants::PI() * (value - lowerBound) / (upperBound - lowerBound) - NumConstants::PI() / 2.)),
+        scale * atanh(2. * (value - lowerBound) / (upperBound - lowerBound) - 1.) :
+        scale * tan(NumConstants::PI() * (value - lowerBound) / (upperBound - lowerBound) - NumConstants::PI() / 2.)),
     scale_(scale),
     lowerBound_(lowerBound),
     upperBound_(upperBound),
@@ -237,16 +201,16 @@ public:
   {
     if (value <= lowerBound_ || value >= upperBound_) throw ConstraintException("IntervalTransformedParameter::setValue", this, value);
     setValue(hyper_ ?
-             scale_ * atanh(2. * (value - lowerBound_) / (upperBound_ - lowerBound_) - 1.) :
-             scale_* std::tan(NumConstants::PI() * (value - lowerBound_) / (upperBound_ - lowerBound_) - NumConstants::PI() / 2.));
+        scale_ * atanh(2. * (value - lowerBound_) / (upperBound_ - lowerBound_) - 1.) :
+        scale_ * std::tan(NumConstants::PI() * (value - lowerBound_) / (upperBound_ - lowerBound_) - NumConstants::PI() / 2.));
   }
 
   double getOriginalValue() const
   {
     double x = getValue();
     double x2 = hyper_ ?
-                (tanh(x / scale_) + 1.) * (upperBound_ - lowerBound_) / 2. + lowerBound_ :
-                (atan(x / scale_) + NumConstants::PI() / 2.) * (upperBound_ - lowerBound_) / NumConstants::PI() + lowerBound_;
+        (tanh(x / scale_) + 1.) * (upperBound_ - lowerBound_) / 2. + lowerBound_ :
+        (atan(x / scale_) + NumConstants::PI() / 2.) * (upperBound_ - lowerBound_) / NumConstants::PI() + lowerBound_;
     return x2;
   }
 
@@ -255,16 +219,16 @@ public:
   {
     double x = getValue();
     double x2 = hyper_ ?
-                1. / (std::pow(cosh(x / scale_), 2)) * (upperBound_ - lowerBound_) / (2. * scale_) :
-                (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (std::pow(x / scale_, 2) + 1.));
+        1. / (std::pow(cosh(x / scale_), 2)) * (upperBound_ - lowerBound_) / (2. * scale_) :
+        (upperBound_ - lowerBound_) / (NumConstants::PI() * scale_ * (std::pow(x / scale_, 2) + 1.));
     return x2;
   }
   double getSecondOrderDerivative() const
   {
     double x = getValue();
     double x2 = hyper_ ?
-                -1. / (std::pow(cosh(x / scale_), 2)) * tanh(x / scale_) * (upperBound_ - lowerBound_) / (scale_ * scale_) :
-                -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * std::pow(scale_, 3) * std::pow((std::pow(x / scale_, 2) + 1.), 2));
+        -1. / (std::pow(cosh(x / scale_), 2)) * tanh(x / scale_) * (upperBound_ - lowerBound_) / (scale_ * scale_) :
+        -2. * x * (upperBound_ - lowerBound_) / (NumConstants::PI() * std::pow(scale_, 3) * std::pow((std::pow(x / scale_, 2) + 1.), 2));
     return x2;
   }
 };

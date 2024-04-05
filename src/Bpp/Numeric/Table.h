@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: Table.h
-// Authors:
-//   Laurent Guéguen
-// Created: dimanche 2 avril 2017, à 22h 59
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_NUMERIC_TABLE_H
 #define BPP_NUMERIC_TABLE_H
@@ -68,7 +32,7 @@ class Table :
 {
 protected:
   size_t nRow_, nCol_;
-  std::vector< std::vector<T> > data_;
+  std::vector< std::vector<T>> data_;
   std::vector<std::string> rowNames_;
   std::vector<std::string> colNames_;
 
@@ -119,7 +83,7 @@ public:
     colNames_(table.colNames_)
   {}
 
-  Table(const std::vector<std::vector<T> >& vt) :
+  Table(const std::vector<std::vector<T>>& vt) :
     nRow_(vt.size() == 0 ? 0 : vt[0].size()),
     nCol_(vt.size()),
     data_(vt),
@@ -137,7 +101,7 @@ public:
     return *this;
   }
 
-  Table& operator=(const std::vector<std::vector<T> >& vt)
+  Table& operator=(const std::vector<std::vector<T>>& vt)
   {
     nCol_ = vt.size();
     if (vt.size() == 0)
@@ -165,7 +129,7 @@ public:
    * @return The data.
    *
    */
-  const std::vector< std::vector<T> >& getData() const
+  const std::vector< std::vector<T>>& getData() const
   {
     return data_;
   }
@@ -540,17 +504,16 @@ public:
    * @param len the number of columns to delete
    * @throw IndexOutOfBoundsException If index is >= number of columns.
    */
-  
   void deleteColumns(size_t index, size_t len)
   {
     if (index >= nCol_)
       throw IndexOutOfBoundsException("Table::deleteColumns(size_t, size_t).", index, 0, nCol_ - 1);
-    if (index+len >= nCol_)
-      throw IndexOutOfBoundsException("Table::deleteColumns(size_t, size_t).", index+len, 0, nCol_ - 1);
-    
-    data_.erase(data_.begin() + (long)index, data_.begin() + (long)(index+len));
+    if (index + len >= nCol_)
+      throw IndexOutOfBoundsException("Table::deleteColumns(size_t, size_t).", index + len, 0, nCol_ - 1);
+
+    data_.erase(data_.begin() + (long)index, data_.begin() + (long)(index + len));
     if (colNames_.size() != 0)
-      colNames_.erase(colNames_.begin() + (long)(index), colNames_.begin() + (long)(index+len));
+      colNames_.erase(colNames_.begin() + (long)(index), colNames_.begin() + (long)(index + len));
 
     nCol_ -= len;
   }
@@ -1071,7 +1034,7 @@ public:
     StringTokenizer st1(firstLine, sep, false, true);
     std::vector<std::string> row1(st1.getTokens().begin(), st1.getTokens().end());
     size_t nCol = row1.size();
-    std::unique_ptr< Table<T> > dt;
+    std::unique_ptr< Table<T>> dt;
 
     if (header)
     {

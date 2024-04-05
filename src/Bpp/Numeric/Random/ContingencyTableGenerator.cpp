@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: ContingencyTableGenerator.cpp
-// Authors:
-//   Julien Dutheil
-// Created: 2010-12-10 16:19:00
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #include <iostream>
 
@@ -49,8 +13,8 @@ using namespace std;
 /**************************************************************************/
 
 ContingencyTableGenerator::ContingencyTableGenerator(
-  const std::vector<size_t>& nrowt,
-  const std::vector<size_t>& ncolt) :
+    const std::vector<size_t>& nrowt,
+    const std::vector<size_t>& ncolt) :
   nrowt_(nrowt),
   ncolt_(ncolt),
   nrow_(nrowt.size()),
@@ -112,7 +76,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
   {
     ia = nrowt_[l];
     ic = jc;
-    jc -= ia;/* = n_tot - sum(nr[0:l]) */
+    jc -= ia; /* = n_tot - sum(nr[0:l]) */
 
     for (m = 0; m < nc_1; ++m)
     {
@@ -135,15 +99,15 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
       /* Generate pseudo-random number */
       dummy = RandomTools::giveRandomNumberBetweenZeroAndEntry(1.0);
 
-      do/* Outer Loop */
+      do /* Outer Loop */
 
       /* Compute conditional expected value of MATRIX(L, M) */
 
       {
         nlm = static_cast<size_t>(ia * (static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
         x = exp(fact_[ia] + fact_[ib] + fact_[ic] + fact_[id]
-                - fact_[ie] - fact_[nlm]
-                - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
+              - fact_[ie] - fact_[nlm]
+              - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
         if (x >= dummy)
           break;
 
@@ -198,7 +162,7 @@ L160:
       ia -= nlm;
       jwork_[m] -= nlm;
     }
-    table(l, nc_1) = ia;/* last column in row l */
+    table(l, nc_1) = ia; /* last column in row l */
   }
 
   /* Compute entries in last row of MATRIX */

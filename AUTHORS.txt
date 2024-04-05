@@ -1,10 +1,10 @@
-Julien Dutheil <julien.dutheil@univ-montp2.fr>
-Sylvain Gaillard <sylvain.gaillard@angers.inra.fr>
-Nicolas Galtier <galtier@univ-montp2.fr>
-Céline Scornavacca <scornava@lirmm.fr>
+Julien Dutheil <dutheil@evolbio.mpg.de>
 Laurent Guéguen <gueguen@biomserv.univ-lyon1.fr>
-Ania Pawelczyk <ania.pawelczyk@gmail.com>
-François Gindraud <francois.gindraud@gmail.com>
+Sylvain Gaillard
+Nicolas Galtier
+François Gindraud
+Céline Scornavacca
+Ania Pawelczyk
 
 Contributed code to Bio++ was enabled thanks to the following institutions and resources:
 

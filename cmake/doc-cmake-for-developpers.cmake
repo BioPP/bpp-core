@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: The Bio++ Development Group
+#
+# SPDX-License-Identifier: CECILL-2.1
+
 # Documentation of the CMake system of Bio++
 # Authors:
 #   Francois Gindraud (2017)
@@ -11,7 +15,7 @@
 # Main CMakeLists.txt
 ####################################################################################################
 
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 3.5)
 # 2.8.11 is required for:
 # - clean target properties (link, include dir)
 
@@ -23,15 +27,15 @@ project (bpp-something CXX)
 # - the CMake package
 # Do not change it unless there is a good reason...
 
-set (CMAKE_CXX_FLAGS "std=c++11 -Wall -Weffc++ -Wshadow -Wconversion")
+add_compile_options(std=c++14 -Wall -Weffc++ -Wshadow -Wconversion)
 # Define compile options to be used for all C++ targets.
 # NOTES for the future:
 # -> CMake >= 2.8.12 adds per target COMPILE_OPTIONS by using target_compile_options (<target> [PRIVATE|PUBLIC] <opt1> ... <optN>)
 # -> CMake >= 3.1.x provides a CXX_STANDARD variable to set -std=...
 # -> It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
 
-SET(${PROJECT_NAME}_VERSION_CURRENT "2")
-SET(${PROJECT_NAME}_VERSION_REVISION "4")
+SET(${PROJECT_NAME}_VERSION_CURRENT "3")
+SET(${PROJECT_NAME}_VERSION_REVISION "0")
 SET(${PROJECT_NAME}_VERSION_AGE "0")
 MATH(EXPR ${PROJECT_NAME}_VERSION_MAJOR "${${PROJECT_NAME}_VERSION_CURRENT} - ${${PROJECT_NAME}_VERSION_AGE}")
 SET(${PROJECT_NAME}_VERSION_MINOR ${${PROJECT_NAME}_VERSION_AGE})

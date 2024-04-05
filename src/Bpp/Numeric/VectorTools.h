@@ -1,42 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: VectorTools.h
-// Authors:
-//   Julien Dutheil
-// Created: 2003-03-14 14:16:32
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
+// SPDX-License-Identifier: CECILL-2.1
 
 #ifndef BPP_NUMERIC_VECTORTOOLS_H
 #define BPP_NUMERIC_VECTORTOOLS_H
@@ -59,11 +23,11 @@
 
 namespace bpp
 {
-typedef std::vector<std::complex<double> > Vcomplex;
+typedef std::vector<std::complex<double>> Vcomplex;
 typedef std::vector<Vcomplex> VVcomplex;
 typedef std::vector<VVcomplex> VVVcomplex;
 
-typedef std::vector<std::complex<long double> > Vlcomplex;
+typedef std::vector<std::complex<long double>> Vlcomplex;
 typedef std::vector<Vlcomplex> VVlcomplex;
 typedef std::vector<VVlcomplex> VVVlcomplex;
 
@@ -91,7 +55,6 @@ typedef std::vector<VVVuint> VVVVuint;
  * @name Element-wise operations.
  * @{
  */
-
 template<class T>
 std::vector<T>  operator+(const std::vector<T>& v1, const std::vector<T>& v2)
 {
@@ -634,7 +597,6 @@ public:
    * @param v1 a std::vector.
    * @param v2 another std::vector.
    */
-
   template<class T>
   static T sumProd(const std::vector<T>& v1, const std::vector<T>& v2)
   {
@@ -694,7 +656,7 @@ public:
       return M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-                          [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
 
@@ -755,7 +717,7 @@ public:
       return M < 0 ? 0 : M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-                          [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
     return x * std::exp(M);
@@ -796,7 +758,6 @@ public:
    *
    * @{
    */
-
   template<class T>
   static std::vector<T> log(const std::vector<T>& v1)
   {
@@ -1447,9 +1408,9 @@ public:
   {
     OutputType n = (OutputType)v1.size();
     OutputType x =  scalar<InputType, OutputType>(
-      center<InputType, OutputType>(v1),
-      center<InputType, OutputType>(v2)
-      ) / n;
+          center<InputType, OutputType>(v1),
+          center<InputType, OutputType>(v2)
+          ) / n;
     if (unbiased) x = x * n / (n - 1);
     return x;
   }
@@ -1471,10 +1432,10 @@ public:
     {
       std::vector<InputType> wn = w / sum(w);
       OutputType x = scalar<InputType, OutputType>(
-        center<InputType, OutputType>(v1, wn, false),
-        center<InputType, OutputType>(v2, wn, false),
-        wn
-        );
+            center<InputType, OutputType>(v1, wn, false),
+            center<InputType, OutputType>(v2, wn, false),
+            wn
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr<double>(wn)));
@@ -1484,10 +1445,10 @@ public:
     else
     {
       OutputType x = scalar<InputType, OutputType>(
-        center<InputType, OutputType>(v1, w, false),
-        center<InputType, OutputType>(v2, w, false),
-        w
-        );
+            center<InputType, OutputType>(v1, w, false),
+            center<InputType, OutputType>(v2, w, false),
+            w
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr(w)));
@@ -1660,7 +1621,7 @@ public:
       throw DimensionException("VectorTools::miDiscrete. The two samples must have the same length.", v2.size(), v1.size());
     std::map<InputType, double> counts1;
     std::map<InputType, double> counts2;
-    std::map<InputType, std::map<InputType, double> > counts12;
+    std::map<InputType, std::map<InputType, double>> counts12;
     for (size_t i = 0; i < v1.size(); i++)
     {
       counts1[v1[i]]++;
@@ -1866,7 +1827,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> vectorUnion(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> vectorUnion(const std::vector< std::vector<T>>& vecElementL)
   {
     std::vector<T> unionEl;
     for (auto it : vecElementL)
@@ -1912,7 +1873,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> vectorIntersection(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> vectorIntersection(const std::vector< std::vector<T>>& vecElementL)
   {
     if (vecElementL.size() == 1) return vecElementL[0];
     std::vector<T> interEl;
@@ -1957,7 +1918,7 @@ public:
    * @param vecElementL A std::vector of std::vectors.
    */
   template<class T>
-  static std::vector<T> append(const std::vector< std::vector<T> >& vecElementL)
+  static std::vector<T> append(const std::vector< std::vector<T>>& vecElementL)
   {
     if (vecElementL.size() == 1) return vecElementL[0];
     std::vector<T> v;

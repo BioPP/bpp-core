@@ -1,43 +1,6 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
 //
-// File: Simplex.cpp
-// Authors:
-//   Laurent Guéguen
-// Created: mardi 31 mai 2011, à 13h 16
-//
-
-/*
-  Copyright or © or Copr. Bio++ Development Team, (November 17, 2004)
-  
-  This software is a computer program whose purpose is to provide classes
-  for numerical calculus.
-  
-  This software is governed by the CeCILL license under French law and
-  abiding by the rules of distribution of free software. You can use,
-  modify and/ or redistribute the software under the terms of the CeCILL
-  license as circulated by CEA, CNRS and INRIA at the following URL
-  "http://www.cecill.info".
-  
-  As a counterpart to the access to the source code and rights to copy,
-  modify and redistribute granted by the license, users are provided only
-  with a limited warranty and the software's author, the holder of the
-  economic rights, and the successive licensors have only limited
-  liability.
-  
-  In this respect, the user's attention is drawn to the risks associated
-  with loading, using, modifying and/or developing or reproducing the
-  software by the user in light of its specific status of free software,
-  that may mean that it is complicated to manipulate, and that also
-  therefore means that it is reserved for developers and experienced
-  professionals having in-depth computer knowledge. Users are therefore
-  encouraged to load and test the software's suitability as regards their
-  requirements in conditions enabling the security of their systems and/or
-  data to be ensured and, more generally, to use and operate it in the
-  same conditions as regards security.
-  
-  The fact that you are presently reading this means that you have had
-  knowledge of the CeCILL license and that you accept its terms.
-*/
-
+// SPDX-License-Identifier: CECILL-2.1
 
 #include "../NumConstants.h"
 #include "../VectorTools.h"
@@ -318,30 +281,30 @@ OrderedSimplex::OrderedSimplex(const std::vector<double>& probas, unsigned short
 void OrderedSimplex::fireParameterChanged(const ParameterList& pl)
 {
   Simplex::fireParameterChanged(pl);
-  const auto& probs=Simplex::getFrequencies();
+  const auto& probs = Simplex::getFrequencies();
 
   auto dim = probs.size();
 
   double x = 0;
   for (auto i = dim; i > 0; i--)
   {
-    x+= probs[i-1]/(int)i;
-    vValues_[i-1]=x;
+    x += probs[i - 1] / (int)i;
+    vValues_[i - 1] = x;
   }
-
 }
 
 void OrderedSimplex::setFrequencies(const std::vector<double>& vValues)
 {
   vValues_ = vValues;
-  
+
   auto dim = vValues.size();
   Vdouble vprob(dim);
-  
-  for (size_t i = 0; i < dim - 1; ++i)
-    vprob[i] = static_cast<double>(i+1) * (vValues[i] - vValues[i+1]);
 
-  vprob[dim-1] = static_cast<double>(dim) * vValues[dim-1];
+  for (size_t i = 0; i < dim - 1; ++i)
+  {
+    vprob[i] = static_cast<double>(i + 1) * (vValues[i] - vValues[i + 1]);
+  }
+
+  vprob[dim - 1] = static_cast<double>(dim) * vValues[dim - 1];
   Simplex::setFrequencies(vprob);
 }
-
