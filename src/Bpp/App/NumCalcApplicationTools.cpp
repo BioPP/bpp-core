@@ -84,6 +84,31 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
       throw Exception("Unvalid sequence specification, missing 'to' key: " + desc.substr(3, desc.size() - 5));
     if (keyvals.find("step") == keyvals.end() && keyvals.find("size") == keyvals.end())
       throw Exception("Unvalid sequence specification, missing 'step' or 'size' key: " + desc.substr(3, desc.size() - 5));
+    
+    const short ONE=0;
+    const short LOG=1;
+    const short EXP=2;
+    const short DIX=3;
+
+    short scale=ONE;
+    
+    if (keyvals.find("scale") != keyvals.end())
+    {
+      string sc=keyvals["scale"];
+      if (sc == "log")
+        scale=LOG;
+      else {
+        if (sc == "exp")
+          scale=EXP;
+        else {
+          if (sc == "10^")
+            scale = DIX;
+          else
+            throw Exception("Unknown scale " + sc + " for vector. Ask developpers.");
+        }
+      }
+    }
+    
     double start = TextTools::toDouble(keyvals["from"]);
     double end   = TextTools::toDouble(keyvals["to"]);
     if (keyvals.find("step") != keyvals.end())
@@ -91,7 +116,25 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
       double step = TextTools::toDouble(keyvals["step"]);
       for (double x = start; x <= end + NumConstants::TINY(); x += step)
       {
-        values.push_back(x);
+        double y;
+        switch (scale)
+        {
+        case ONE:
+          y=x;
+          break;
+        case LOG:
+          y=log(x);
+          break;
+        case EXP:
+          y=exp(x);
+          break;
+        case DIX:
+          y=pow(10,x);
+          break;
+        default:
+          y=x;
+        }
+        values.push_back(y);
       }
     }
     else
@@ -100,9 +143,46 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
       double step = (end - start) / (double)size;
       for (int i = 0; i < size - 1; i++)
       {
-        values.push_back(start + i * step);
+        double x = start + i * step;
+        double y;
+        switch (scale)
+        {
+        case ONE:
+          y=x;
+          break;
+        case LOG:
+          y=log(x);
+          break;
+        case EXP:
+          y=exp(x);
+          break;
+        case DIX:
+          y=pow(10,x);
+          break;
+        default:
+          y=x;
+        }
+        values.push_back(y);
       }
-      values.push_back(end); // for rounding purpose.
+      double y;
+      switch (scale)
+      {
+      case ONE:
+        y=end;
+        break;
+      case LOG:
+        y=log(end);
+        break;
+      case EXP:
+        y=exp(end);
+        break;
+      case DIX:
+        y=pow(10,end);
+        break;
+      default:
+        y=end;
+      }
+      values.push_back(y); // for rounding purpose.
     }
   }
   else // Direct enumaration of values
@@ -133,6 +213,8 @@ shared_ptr<ParameterGrid> NumCalcApplicationTools::getParameterGrid(
   bool suffixIsOptional,
   bool warn)
 {
+  ApplicationTools::displayMessage("");
+  ApplicationTools::displayMessage("ParameterGrid");
   unsigned int nbParams = ApplicationTools::getParameter<unsigned int>("grid.number_of_parameters", params, 1, suffix, suffixIsOptional, warn);
   auto grid = std::make_shared<ParameterGrid>();
   for (unsigned int i = 0; i < nbParams; i++)
@@ -140,6 +222,8 @@ shared_ptr<ParameterGrid> NumCalcApplicationTools::getParameterGrid(
     string name = ApplicationTools::getStringParameter("grid.parameter" + TextTools::toString(i + 1) + ".name", params, "", suffix, suffixIsOptional, warn);
     vector<double> values = getVector(ApplicationTools::getStringParameter("grid.parameter" + TextTools::toString(i + 1) + ".values", params, "", suffix, suffixIsOptional, warn));
     grid->addDimension(name, values);
+    IntervalConstraint bb(VectorTools::min(values),VectorTools::max(values),true,true);
+    ApplicationTools::displayResult(name,bb.getDescription());
   }
   return grid;
 }
