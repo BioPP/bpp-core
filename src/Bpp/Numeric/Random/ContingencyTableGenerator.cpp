@@ -104,7 +104,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
       /* Compute conditional expected value of MATRIX(L, M) */
 
       {
-        nlm = static_cast<size_t>(ia * (static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
+        nlm = ia * static_cast<size_t>((static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
         x = exp(fact_[ia] + fact_[ib] + fact_[ic] + fact_[id]
               - fact_[ie] - fact_[nlm]
               - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
@@ -118,12 +118,12 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
         do
         {
           /* Increment entry in row L, column M */
-          j = static_cast<size_t>((id - nlm) * static_cast<long double>(ia - nlm));
+          j = (id - nlm) * (ia - nlm);
           lsp = (j == 0);
           if (!lsp)
           {
             ++nlm;
-            x = x * j / (static_cast<long double>(nlm) * (ii + nlm));
+            x = x *  static_cast<long double>(j) / (static_cast<long double>(nlm) * static_cast<long double>(ii + nlm));
             sumprb += x;
             if (sumprb >= dummy)
               goto L160;
@@ -137,7 +137,7 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
             if (!lsm)
             {
               --nll;
-              y = y * j / (static_cast<long double>(id - nll) * (ia - nll));
+              y = y *  static_cast<long double>(j) / (static_cast<long double>(id - nll) * static_cast<long double>(ia - nll));
               sumprb += y;
               if (sumprb >= dummy)
               {
