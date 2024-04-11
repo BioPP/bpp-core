@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: CECILL-2.1
 
-#ifndef BPP_NUMERIC_FUNCTION_ABSTRACTNUMERICALDERIVATIVE_H
-#define BPP_NUMERIC_FUNCTION_ABSTRACTNUMERICALDERIVATIVE_H
+#ifndef BPP_NUMERIC_FUNCTION_NUMERICALDERIVATIVE_H
+#define BPP_NUMERIC_FUNCTION_NUMERICALDERIVATIVE_H
 
 
 #include "../Matrix/Matrix.h"
@@ -17,6 +17,38 @@
 namespace bpp
 {
 /**
+ * @brief Numerical derivative function wrapper.
+ *
+ * This interface provides a wrapper for Function object, implementing the DerivableSecondOrder interface.
+ * Derivations of this class can be used as full DerivableSecondOrder objects, with derivative functions.
+ */
+class NumericalDerivativeInterface :
+  public virtual SecondOrderDerivable
+{
+  /**
+   * @brief Set the interval value used in numerical approximation.
+   *
+   * Default value is 0.0001.
+   *
+   * @param h Interval value.
+   */
+  virtual void setInterval(double h) = 0;
+
+  /**
+   * @return The interval value used in numerical approximation.
+   */
+  virtual double getInterval() const = 0;
+
+  /**
+   * @brief Set the list of parameters to derivate numerically.
+   *
+   * @param variables A list of all parameter names.
+   */
+  virtual void setParametersToDerivate(const std::vector<std::string>& variables) = 0;
+
+};
+
+/**
  * @brief Numerical derivative function wrapper, partial implementation.
  *
  * This class provides a wrapper for Function object, implementing the DerivableSecondOrder interface
@@ -29,7 +61,7 @@ namespace bpp
  * In the last case, first and second order derivative will be computed numerically only if no appropriate analytical derivative is available.
  */
 class AbstractNumericalDerivative :
-  public virtual SecondOrderDerivable,
+  public virtual NumericalDerivativeInterface,
   public FunctionWrapper
 {
 protected:
@@ -86,26 +118,11 @@ public:
   AbstractNumericalDerivative* clone() const override = 0;
 
 public:
-  /**
-   * @brief Set the interval value used in numerical approximation.
-   *
-   * Default value is 0.0001.
-   *
-   * @param h Interval value.
-   */
-  void setInterval(double h) { h_ = h; }
+  void setInterval(double h) override { h_ = h; }
 
-  /**
-   * @return The interval value used in numerical approximation.
-   */
-  double getInterval() const { return h_; }
+  double getInterval() const override { return h_; }
 
-  /**
-   * @brief Set the list of parameters to derivate numerically.
-   *
-   * @param variables A list of all parameter names.
-   */
-  void setParametersToDerivate(const std::vector<std::string>& variables)
+  void setParametersToDerivate(const std::vector<std::string>& variables) override
   {
     variables_ = variables;
     index_.clear();
@@ -227,4 +244,4 @@ protected:
   virtual void updateDerivatives(const ParameterList& parameters) = 0;
 };
 } // end of namespace bpp.
-#endif // BPP_NUMERIC_FUNCTION_ABSTRACTNUMERICALDERIVATIVE_H
+#endif // BPP_NUMERIC_FUNCTION_NUMERICALDERIVATIVE_H
