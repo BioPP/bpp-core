@@ -25,6 +25,7 @@ namespace bpp
 class NumericalDerivativeInterface :
   public virtual SecondOrderDerivable
 {
+public:
   /**
    * @brief Set the interval value used in numerical approximation.
    *
