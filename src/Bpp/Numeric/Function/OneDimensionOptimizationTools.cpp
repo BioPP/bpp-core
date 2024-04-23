@@ -128,7 +128,7 @@ Bracket OneDimensionOptimizationTools::inwardBracketMinimum(
     double b,
     FunctionInterface& function,
     ParameterList parameters,
-    uint intervalsNum)
+    unsigned int intervalsNum)
 {
   Bracket bracket;
   // Copy the parameter to use.

@@ -6,7 +6,7 @@
 #define BPP_NUMERIC_FUNCTION_TWOPOINTSNUMERICALDERIVATIVE_H
 
 
-#include "AbstractNumericalDerivative.h"
+#include "NumericalDerivative.h"
 #include "Functions.h"
 
 // From the STL:
