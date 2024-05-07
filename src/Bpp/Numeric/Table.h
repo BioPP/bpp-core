@@ -1081,7 +1081,7 @@ public:
 
 
   /**
-   * @brief Write a Table object to stream in CVS-like format.
+   * @brief Write a Table object to stream in CSV-like format.
    *
    * @param data         The table to write.
    * @param out          The output stream.

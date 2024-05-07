@@ -133,9 +133,8 @@ void AttributesTools::actualizeAttributesMap(
     const std::map<std::string, std::string>& atts)
 {
   for (map<string, string>::const_iterator i = atts.begin(); i != atts.end(); i++)
-  {
     attMap[i->first] = i->second;
-  }
+
 }
 
 /******************************************************************************/
@@ -233,7 +232,14 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
     string file = (cmdParams.find("param") != cmdParams.end()) ? cmdParams["param"] : cmdParams["params"];
 
     if (std::find(vParam_.begin(), vParam_.end(), file) != vParam_.end())
-      throw Exception("Param name " + file + " already seen.");
+    {
+      cout << file << " already seen. Skipping." << endl;
+      if (cmdParams.find("param") != cmdParams.end())
+        cmdParams.erase("param");
+      else
+        cmdParams.erase("params");
+      break;
+    }
 
     if (!FileTools::fileExists(file))
       throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);

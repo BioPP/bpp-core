@@ -135,6 +135,7 @@ public:
    * @param am        The attribute map to fill.
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
+
   static void getAttributesMap(
       const std::vector<std::string>& argv,
       std::map<std::string, std::string>& am,
@@ -158,6 +159,7 @@ public:
    * @param params    An attribute map to fill.
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
+  
   static void getAttributesMapFromFile(
       const std::string& file,
       std::map<std::string, std::string>& params,
@@ -172,6 +174,7 @@ public:
    * @param attMap The attributes map.
    * @param atts   The attributes to add to the map.
    */
+
   static void actualizeAttributesMap(
       std::map<std::string, std::string>& attMap,
       const std::map<std::string, std::string>& atts);
