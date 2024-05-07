@@ -89,7 +89,7 @@ public:
    *
    * @return           A bracket object.
    */
-  static Bracket inwardBracketMinimum(double a, double b, FunctionInterface& function, ParameterList parameters, uint intervalsNum = 10);
+  static Bracket inwardBracketMinimum(double a, double b, FunctionInterface& function, ParameterList parameters, unsigned int intervalsNum = 10);
 
 
   static unsigned int lineMinimization(
