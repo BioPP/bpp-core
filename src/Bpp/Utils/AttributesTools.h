@@ -173,11 +173,13 @@ public:
    *
    * @param attMap The attributes map.
    * @param atts   The attributes to add to the map.
+   * @param replace if existing params of attMap should be replaced
    */
 
   static void actualizeAttributesMap(
       std::map<std::string, std::string>& attMap,
-      const std::map<std::string, std::string>& atts);
+      const std::map<std::string, std::string>& atts,
+      bool replace = true);
 
   /**
    * @brief Resolve the variables.
