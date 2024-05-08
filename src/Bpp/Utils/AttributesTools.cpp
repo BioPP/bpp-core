@@ -87,16 +87,6 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
       string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
-      // if ((name == "param") || (name == "params"))
-      // {
-      //   if (std::find(vParam_.begin(),vParam_.end(),value)!=vParam_.end())
-      //     throw Exception("Param name " + value + " already seen.");
-
-      //   //Recursive inclusion:
-      //   getAttributesMapFromFile(value, am, delimiter);
-      //   vParam_.push_back(value);
-      // }
-      // else
       am[name] = value;
     }
   }
@@ -229,42 +219,51 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
   // Look for specified files with parameters:
   // With priority to the deeper
   
-  map<string, string> paramsfile, params;
-  actualizeAttributesMap(paramsfile, cmdParams);
-  
-  while (paramsfile.find("param") != paramsfile.end() || paramsfile.find("params") != paramsfile.end())
+  map<string, string> params;
+
+  if (cmdParams.find("param") != cmdParams.end())
   {
-    string file = (paramsfile.find("param") != paramsfile.end()) ? paramsfile["param"] : paramsfile["params"];
+    StringTokenizer st(cmdParams["param"],",");
+    cmdParams.erase("param");
+    vector<string> vfile; 
 
-    if (std::find(vParam_.begin(), vParam_.end(), file) != vParam_.end())
+    while (st.hasMoreToken())
+      vfile.push_back(st.nextToken());
+
+    size_t i = 0;
+    while (i != vfile.size())
     {
-      cout << file << " already seen. Skipping." << endl;
-      if (paramsfile.find("param") != paramsfile.end())
-        paramsfile.erase("param");
-      else
-        paramsfile.erase("params");
-      continue;
+      const auto& file = vfile[i];
+      if (std::find(vfile.begin(), vfile.begin()+i, file) != vfile.begin()+i)
+      {
+        cout << file << " already seen. Skipping." << endl;
+        i++;
+        continue;
+      }
+
+      if (!FileTools::fileExists(file))
+        throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
+
+      params = getAttributesMapFromFile(file, "=");
+
+      // Actualize list of param files
+      if (params.find("param") != params.end())
+      {
+        StringTokenizer st2(params["param"],",");
+        params.erase("param");
+
+        while (st2.hasMoreToken())
+          vfile.push_back(st2.nextToken());
+      }
+      
+      // Actualize attributes with ones passed to last file:
+      actualizeAttributesMap(cmdParams, params, false);
+      resolveVariables(cmdParams);
+
+      i ++;
     }
-
-    if (!FileTools::fileExists(file))
-      throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
-
-    params = getAttributesMapFromFile(file, "=");
-    if (paramsfile.find("param") != paramsfile.end())
-      paramsfile.erase("param");
-    else
-      paramsfile.erase("params");
-
-    // Actualize attributes with ones passed to last file:
-    actualizeAttributesMap(paramsfile, params, true);
-    resolveVariables(paramsfile);
-
-    vParam_.push_back(file);
   }
 
-  actualizeAttributesMap(cmdParams, paramsfile, false);
-  resolveVariables(cmdParams);
-  
   return cmdParams;
 }
 
