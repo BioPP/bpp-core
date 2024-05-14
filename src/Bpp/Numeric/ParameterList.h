@@ -207,9 +207,8 @@ public:
    * as it avoid an object copy. The ParameterList will own the pointer
    * after addition, if it is successful.
    *
-   * @param param A ppointer toward the parameter to add to the list.
+   * @param param A pointer toward the parameter to add to the list.
    */
-
   virtual void addParameter(Parameter* param);
 
   /**
@@ -217,7 +216,6 @@ public:
    *
    * @param param The shared_ptr parameter to add to the list.
    */
-
   virtual void shareParameter(const std::shared_ptr<Parameter>& param);
 
 
@@ -228,7 +226,6 @@ public:
    * @param param The parameter to add to the list.
    * @throw IndexOutOfBoundsException if the index is not valid.
    */
-
   virtual void setParameter(size_t index, const Parameter& param);
 
 //  virtual void setParameter(size_t index, Parameter* param);

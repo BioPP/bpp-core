@@ -73,11 +73,8 @@ public:
    *         Each row corresponds to a combination of parameters
    *         values and the corresponding function value. There is
    *         hence one column per parameter, and one additional column
-   *         containing the corresponding function evaluations. When
-   *         DataTable supports different column type, we will
-   *         probably return a DataTable instead.
+   *         containing the corresponding function evaluations.
    */
-
   static std::shared_ptr<DataTable> computeGrid(
       FunctionInterface& function,
       const ParameterGrid& grid);

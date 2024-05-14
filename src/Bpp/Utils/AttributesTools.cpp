@@ -234,7 +234,8 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
     while (i != vfile.size())
     {
       const auto& file = vfile[i];
-      if (std::find(vfile.begin(), vfile.begin()+i, file) != vfile.begin()+i)
+      auto ii = static_cast<vector<string>::difference_type>(i);
+      if (std::find(vfile.begin(), vfile.begin() + ii, file) != vfile.begin() + ii)
       {
         cout << file << " already seen. Skipping." << endl;
         i++;
