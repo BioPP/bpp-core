@@ -247,6 +247,8 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 
       params = getAttributesMapFromFile(file, "=");
 
+      resolveVariables(params);
+      
       // Actualize list of param files
       if (params.find("param") != params.end())
       {

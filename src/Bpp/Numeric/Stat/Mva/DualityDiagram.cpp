@@ -137,7 +137,7 @@ void DualityDiagram::compute_(const Matrix<double>& matrix,
   if (nbAxes_ > rank)
   {
     if (verbose)
-      ApplicationTools::displayWarning("The number of axes to kept has been reduced to conserve only significant axes");
+      ApplicationTools::displayWarning("The number of axes to keep has been reduced to conserve only significant axes");
     nbAxes_ = rank;
   }
 

@@ -154,6 +154,7 @@ double MetaOptimizer::doStep()
         dynamic_cast<SecondOrderDerivable&>(function()).enableSecondOrderDerivatives(false);
       if (getVerbose() > 1)
         cout << endl;
+
       getParameters_().matchParametersValues(opt.getParameters());
     }
     tolTest += nbParameters_[i] > 0 ? 1 : 0;
