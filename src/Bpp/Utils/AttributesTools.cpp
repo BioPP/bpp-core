@@ -214,6 +214,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
         AttributesTools::getVector(args, argv), "=");
+
   resolveVariables(cmdParams);
 
   // Look for specified files with parameters:
@@ -246,23 +247,20 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
         throw Exception("AttributesTools::parseOptions(). Parameter file not found.: " + file);
 
       params = getAttributesMapFromFile(file, "=");
-
-      resolveVariables(params);
+      actualizeAttributesMap(cmdParams, params, false);
       
+      resolveVariables(cmdParams);
+        
       // Actualize list of param files
-      if (params.find("param") != params.end())
+      if (cmdParams.find("param") != cmdParams.end())
       {
-        StringTokenizer st2(params["param"],",");
-        params.erase("param");
+        StringTokenizer st2(cmdParams["param"],",");
+        cmdParams.erase("param");
 
         while (st2.hasMoreToken())
           vfile.push_back(st2.nextToken());
       }
       
-      // Actualize attributes with ones passed to last file:
-      actualizeAttributesMap(cmdParams, params, false);
-      resolveVariables(cmdParams);
-
       i ++;
     }
   }
