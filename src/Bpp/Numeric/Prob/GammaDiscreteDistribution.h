@@ -34,7 +34,7 @@ public:
 
   /**
    * @brief Build a new discretized gamma distribution.
-   * @param n the number of categories to use.
+   * @param n the number of categories to use (n>1).
    * @param alpha The alpha parameter (shape)
    * @param beta The beta parameter (rate)
    * @param minimumAlpha The minimum allowed value for parameter alpha.
