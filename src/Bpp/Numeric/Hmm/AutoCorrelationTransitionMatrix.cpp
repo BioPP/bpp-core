@@ -16,11 +16,11 @@ AutoCorrelationTransitionMatrix::AutoCorrelationTransitionMatrix(std::shared_ptr
   vAutocorrel_()
 {
   size_t size = static_cast<size_t>(getNumberOfStates());
-  double p = 1. / static_cast<double>(size);
+  double p = 0.95;
 
   for (size_t i = 0; i < size; ++i)
   {
-    vAutocorrel_.push_back(1. / static_cast<double>(size));
+    vAutocorrel_.push_back(0.95);
     addParameter_(new Parameter(prefix + "lambda" + TextTools::toString(i + 1), p, Parameter::PROP_CONSTRAINT_EX));
   }
 
