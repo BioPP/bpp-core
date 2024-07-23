@@ -192,10 +192,10 @@ public:
 
   std::vector<Graph::EdgeId> getBelowEdges(Graph::NodeId localRoot) const;
 
-  // recursive function for getSubtreeNodes
+  // recursive function for getBelowNodes
   void fillSubtreeMetNodes_(std::vector<Graph::NodeId>& metNodes, Graph::NodeId localRoot) const;
 
-  // recursive function for getSubtreeEdges
+  // recursive function for getBelowEdges
   void fillSubtreeMetEdges_(std::vector<Graph::EdgeId>& metEdges, Graph::NodeId localRoot) const;
 
   // recursive function for getLeavesUnderNode
