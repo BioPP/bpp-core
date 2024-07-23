@@ -18,8 +18,8 @@ string MetaOptimizerInfos::IT_TYPE_FULL = "full";
 /**************************************************************************/
 
 MetaOptimizer::MetaOptimizer(
-    shared_ptr<FunctionInterface> function,
-    unique_ptr<MetaOptimizerInfos> desc,
+    std::shared_ptr<FunctionInterface> function,
+    std::unique_ptr<MetaOptimizerInfos> desc,
     unsigned int n) :
   AbstractOptimizer(function),
   optDesc_(std::move(desc)), optParameters_(optDesc_->getNumberOfOptimizers()),
