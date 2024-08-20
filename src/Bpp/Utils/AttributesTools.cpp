@@ -155,7 +155,7 @@ void AttributesTools::resolveVariables(
         {
           if (ApplicationTools::error)
             (*ApplicationTools::error << "Variable '" << varName << "' is undefined and was ignored.").endLine();
-          index1 = string::npos;
+          varValue = "";
         }
         else
         {
@@ -163,18 +163,15 @@ void AttributesTools::resolveVariables(
           {
             if (ApplicationTools::error)
               (*ApplicationTools::error << "Variable '" << varName << "' definition is cyclic and was ignored.").endLine();
-            index1 = string::npos;
+            varValue = "";
           }
           else
-          {
             varValue = varIt->second;
-            string newValue = value.substr(0, index1) + varValue + value.substr(index2 + 1);
-            it->second = newValue;
-            value = it->second;
-            index1 = value.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
-          }
         }
-        // Modify original field:
+        string newValue = value.substr(0, index1) + varValue + value.substr(index2 + 1);
+        it->second = newValue;
+        value = it->second;
+        index1 = value.find(TextTools::toString(varCode) + TextTools::toString(varBeg));
       }
       else
         throw Exception("Syntax error, variable name is not closed.");
