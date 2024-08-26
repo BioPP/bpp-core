@@ -67,10 +67,10 @@ public:
   double randC() const
   {
     double x = RandomTools::randGamma(getParameterValue("alpha"),
-          getParameterValue("beta"));
+        getParameterValue("beta"));
     while (!intMinMax_->isCorrect(x))
       x = RandomTools::randGamma(getParameterValue("alpha"),
-            getParameterValue("beta"));
+          getParameterValue("beta"));
 
     return x + offset_;
   }

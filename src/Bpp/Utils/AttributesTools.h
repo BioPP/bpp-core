@@ -159,7 +159,7 @@ public:
    * @param params    An attribute map to fill.
    * @param delimiter The string that separates attribute names from arguments (for instance '=').
    */
-  
+
   static void getAttributesMapFromFile(
       const std::string& file,
       std::map<std::string, std::string>& params,

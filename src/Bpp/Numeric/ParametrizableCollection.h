@@ -117,7 +117,7 @@ public:
 
     std::vector<size_t> vCh;
 
-    std::map<size_t, ParameterList > mNumPl;
+    std::map<size_t, ParameterList> mNumPl;
 
     for (size_t i = 0; i < parameters.size(); i++)
     {
@@ -129,7 +129,7 @@ public:
       mNumPl[num].addParameter(Parameter(n.substr(0, t), parameters[i].getValue()));
     }
 
-    std::map<size_t, ParameterList >::iterator it;
+    std::map<size_t, ParameterList>::iterator it;
 
     // Then we update all objects in the set:
     for (it = mNumPl.begin(); it != mNumPl.end(); it++)

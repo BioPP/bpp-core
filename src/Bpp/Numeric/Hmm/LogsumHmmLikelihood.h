@@ -60,10 +60,10 @@ protected:
    * where the x are the observed states, and y the hidden states.
    *
    */
-  mutable std::vector< std::vector<double>> dLogLikelihood_;
+  mutable std::vector<std::vector<double>> dLogLikelihood_;
   mutable std::vector<double> partialDLogLikelihoods_;
 
-  mutable std::vector< std::vector<double>> d2LogLikelihood_;
+  mutable std::vector<std::vector<double>> d2LogLikelihood_;
   mutable std::vector<double> partialD2LogLikelihoods_;
 
   /**
@@ -205,7 +205,7 @@ public:
 
   Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override;
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append = false) const override;
+  void getHiddenStatesPosteriorProbabilities(std::vector<std::vector<double>>& probs, bool append = false) const override;
 
   void computeLikelihood();
 

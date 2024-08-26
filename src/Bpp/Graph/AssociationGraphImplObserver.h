@@ -54,13 +54,13 @@ private:
    * List of nodes, stored at the same ID than the corresponding nodes
    * in the observed graph.
    */
-  std::vector<Nref > graphidToN_;
+  std::vector<Nref> graphidToN_;
 
   /**
    * List of edges, stored at the same ID than the corresponding edges
    * in the observed graph.
    */
-  std::vector<Eref > graphidToE_;
+  std::vector<Eref> graphidToE_;
 
   /**
    * Can find a Node with the corresponding object.
@@ -85,12 +85,12 @@ private:
   /**
    * List of nodes, stored at a given index.
    */
-  std::vector<Nref > indexToN_;
+  std::vector<Nref> indexToN_;
 
   /**
    * List of edges, stored at a given index.
    */
-  std::vector<Eref > indexToE_;
+  std::vector<Eref> indexToE_;
 
   /**
    * Can find a Node index with the corresponding object.
@@ -381,7 +381,7 @@ private:
   /**
    * Get incoming / outgoing neighbors according to the enum type
    */
-  std::vector<Nref > getNeighbors_(const Nref nodeObject, neighborType type) const
+  std::vector<Nref> getNeighbors_(const Nref nodeObject, neighborType type) const
   {
     NodeGraphid node = getNodeGraphid(nodeObject);
 
@@ -404,7 +404,7 @@ private:
   /**
    * Get incoming / outgoing edges according to the enum type
    */
-  std::vector<Eref > getEdges_(const Nref nodeObject, neighborType type) const
+  std::vector<Eref> getEdges_(const Nref nodeObject, neighborType type) const
   {
     NodeGraphid node = getNodeGraphid(nodeObject);
 
@@ -631,9 +631,9 @@ public:
     return graphidToN_.at(node);
   }
 
-  std::vector<Nref > getNodesFromGraphid(std::vector<NodeGraphid> nodes) const
+  std::vector<Nref> getNodesFromGraphid(std::vector<NodeGraphid> nodes) const
   {
-    std::vector<Nref > nodeObjects;
+    std::vector<Nref> nodeObjects;
     for (typename std::vector<NodeGraphid>::iterator currNode = nodes.begin(); currNode != nodes.end(); currNode++)
     {
       if (*currNode > graphidToN_.size())
@@ -662,9 +662,9 @@ public:
     return graphidToE_.at(edge);
   }
 
-  std::vector<Eref > getEdgesFromGraphid(std::vector<EdgeGraphid> edges) const
+  std::vector<Eref> getEdgesFromGraphid(std::vector<EdgeGraphid> edges) const
   {
-    std::vector<Eref > edgeObjects;
+    std::vector<Eref> edgeObjects;
     for (const auto& currEdge:edges)
     {
       if (currEdge > graphidToE_.size())
@@ -734,7 +734,7 @@ public:
     return found->second;
   }
 
-  std::vector<NodeIndex> getNodeIndexes(std::vector<Nref > nodes) const
+  std::vector<NodeIndex> getNodeIndexes(std::vector<Nref> nodes) const
   {
     std::vector<NodeIndex> nodeIndexes(nodes.size());
 
@@ -756,7 +756,7 @@ public:
     return found->second;
   }
 
-  std::vector<EdgeIndex> getEdgeIndexes(std::vector<Eref > edges) const
+  std::vector<EdgeIndex> getEdgeIndexes(std::vector<Eref> edges) const
   {
     std::vector<EdgeIndex> edgeIndexes(edges.size());
 
@@ -1070,7 +1070,7 @@ public:
    *
    * They are in the same order as the graphIds (and not necessary Indexes).
    */
-  std::vector<Nref > getNeighbors(const Nref node) const
+  std::vector<Nref> getNeighbors(const Nref node) const
   {
     return getNodesFromGraphid(getGraph()->getNeighbors(getNodeGraphid(node)));
   }
@@ -1093,7 +1093,7 @@ public:
    * @return a vector containing the edges
    *
    */
-  std::vector<Eref > getEdges(const Nref node) const
+  std::vector<Eref> getEdges(const Nref node) const
   {
     return getEdgesFromGraphid(getGraph()->getEdges(getNodeGraphid(node)));
   }
@@ -1110,7 +1110,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the outgoing neighbors
    */
-  std::vector<Nref > getOutgoingNeighbors(const Nref node) const
+  std::vector<Nref> getOutgoingNeighbors(const Nref node) const
   {
     return getNodesFromGraphid(getGraph()->getOutgoingNeighbors(getNodeGraphid(node)));
   }
@@ -1126,7 +1126,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the outgoing edges
    */
-  std::vector<Eref > getOutgoingEdges(const Nref node) const
+  std::vector<Eref> getOutgoingEdges(const Nref node) const
   {
     return getEdgesFromGraphid(getGraph()->getOutgoingEdges(getNodeGraphid(node)));
   }
@@ -1142,7 +1142,7 @@ public:
    * @param node the node one wants to get its neighbors
    * @return a vector containing the incoming neighbors
    */
-  std::vector<Nref > getIncomingNeighbors(const Nref node) const
+  std::vector<Nref> getIncomingNeighbors(const Nref node) const
   {
     return getNodesFromGraphid(getGraph()->getIncomingNeighbors(getNodeGraphid(node)));
   }
@@ -1159,7 +1159,7 @@ public:
    * @param node the node one wants to get its edges
    * @return a vector containing the incoming edges
    */
-  std::vector<Eref > getIncomingEdges(const Nref node) const
+  std::vector<Eref> getIncomingEdges(const Nref node) const
   {
     return getEdgesFromGraphid(getGraph()->getIncomingEdges(getNodeGraphid(node)));
   }
@@ -1179,7 +1179,7 @@ public:
    *
    * They are in the same order as the graphIds (and not necessary Indexes).
    */
-  std::vector<Nref > getLeavesFromNode(Nref node, unsigned int maxDepth) const
+  std::vector<Nref> getLeavesFromNode(Nref node, unsigned int maxDepth) const
   {
     return getNodesFromGraphid(getGraph()->getLeavesFromNode(getNodeGraphid(node), maxDepth));
   }
@@ -1190,9 +1190,9 @@ public:
    *
    * They are in the same order as the graphIds (and not necessary Indexes).
    */
-  std::vector<Nref > getAllLeaves() const
+  std::vector<Nref> getAllLeaves() const
   {
-    std::vector<Nref > leavesToReturn;
+    std::vector<Nref> leavesToReturn;
     // fetching all the graph Leaves
     std::vector<NodeGraphid> graphLeaves = getGraph()->getAllLeaves();
     // testing if they are defined in this observer
@@ -1233,9 +1233,9 @@ public:
    *
    * They are in the same order as the graphIds (and not necessary Indexes).
    */
-  std::vector<Nref > getAllInnerNodes() const
+  std::vector<Nref> getAllInnerNodes() const
   {
-    std::vector<Nref > nodesToReturn;
+    std::vector<Nref> nodesToReturn;
     // fetching all the graph Leaves
     std::vector<NodeGraphid> graphNodes = getGraph()->getAllInnerNodes();
     // testing if they are defined in this observer
@@ -1275,10 +1275,10 @@ public:
    *
    * They are in the same order as the graphIds (and not necessary Indexes).
    */
-  std::vector<Nref > getAllNodes() const
+  std::vector<Nref> getAllNodes() const
   {
-    std::vector<Nref > nodesToReturn;
-    for (typename std::vector<Nref >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
+    std::vector<Nref> nodesToReturn;
+    for (typename std::vector<Nref>::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
     {
       if (*currNodeObject != 00)
       {
@@ -1315,8 +1315,8 @@ public:
    */
   std::vector<EdgeIndex> getAllEdgesIndexes() const
   {
-    std::vector<typename AssociationGraphObserver<N, E>::EdgeIndex > indexesToReturn;
-    for (typename std::vector<Eref >::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
+    std::vector<typename AssociationGraphObserver<N, E>::EdgeIndex> indexesToReturn;
+    for (typename std::vector<Eref>::const_iterator currEdgeObject = graphidToE_.begin(); currEdgeObject != graphidToE_.end(); currEdgeObject++)
     {
       if (*currEdgeObject != 00)
       {
@@ -1402,10 +1402,10 @@ public:
    * Get all the defined branches of a graph,
    * @return a vector containing the branchesObjects
    */
-  std::vector<Eref > getAllEdges() const
+  std::vector<Eref> getAllEdges() const
   {
-    std::vector<Eref > branchesToReturn;
-    for (typename std::vector<Eref >::const_iterator currBrObject = graphidToE_.begin(); currBrObject != graphidToE_.end(); currBrObject++)
+    std::vector<Eref> branchesToReturn;
+    for (typename std::vector<Eref>::const_iterator currBrObject = graphidToE_.begin(); currBrObject != graphidToE_.end(); currBrObject++)
     {
       if (*currBrObject != 00)
       {
@@ -1437,7 +1437,7 @@ public:
   std::pair<Nref, Nref> getNodes(Eref edge) const
   {
     std::pair<NodeGraphid, NodeGraphid> nodes = getGraph()->getNodes(getEdgeGraphid(edge));
-    return std::pair<Nref, Nref >(getNodeFromGraphid(nodes.first), getNodeFromGraphid(nodes.second));
+    return std::pair<Nref, Nref>(getNodeFromGraphid(nodes.first), getNodeFromGraphid(nodes.second));
   }
 
   /**
@@ -1474,7 +1474,7 @@ public:
    * Delete unused object edges, since they have been deleted in the graph
    * @param edgesToDelete a vector of Edges to delete
    */
-  void deletedEdgesUpdate(const std::vector< unsigned int >& edgesToDelete)
+  void deletedEdgesUpdate(const std::vector<unsigned int>& edgesToDelete)
   {
     for (typename std::vector<EdgeGraphid>::const_iterator currEdge = edgesToDelete.begin(); currEdge != edgesToDelete.end(); currEdge++)
     {
@@ -1492,7 +1492,7 @@ public:
    * Delete unused object nodes, since they have been deleted in the graph
    * @param nodesToDelete a vector of N to delete
    */
-  void deletedNodesUpdate(const std::vector< unsigned int >& nodesToDelete)
+  void deletedNodesUpdate(const std::vector<unsigned int>& nodesToDelete)
   {
     for (typename std::vector<EdgeGraphid>::const_iterator currNode = nodesToDelete.begin(); currNode != nodesToDelete.end(); currNode++)
     {
@@ -1542,7 +1542,7 @@ public:
   size_t getNumberOfLeaves() const
   {
     size_t nb = 0;
-    for (typename std::vector<Nref >::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
+    for (typename std::vector<Nref>::const_iterator currNodeObject = graphidToN_.begin(); currNodeObject != graphidToN_.end(); currNodeObject++)
     {
       if ((*currNodeObject != 00) && (isLeaf(*currNodeObject)))
         nb++;

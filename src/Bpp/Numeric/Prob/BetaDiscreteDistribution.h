@@ -59,10 +59,10 @@ public:
   double randC() const override
   {
     double x = RandomTools::randBeta(getParameterValue("alpha"),
-          getParameterValue("beta"));
+        getParameterValue("beta"));
     while (!intMinMax_->isCorrect(x))
       x = RandomTools::randBeta(getParameterValue("alpha"),
-            getParameterValue("beta"));
+          getParameterValue("beta"));
     return x;
   }
 

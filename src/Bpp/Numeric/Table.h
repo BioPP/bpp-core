@@ -32,7 +32,7 @@ class Table :
 {
 protected:
   size_t nRow_, nCol_;
-  std::vector< std::vector<T>> data_;
+  std::vector<std::vector<T>> data_;
   std::vector<std::string> rowNames_;
   std::vector<std::string> colNames_;
 
@@ -129,7 +129,7 @@ public:
    * @return The data.
    *
    */
-  const std::vector< std::vector<T>>& getData() const
+  const std::vector<std::vector<T>>& getData() const
   {
     return data_;
   }
@@ -1034,7 +1034,7 @@ public:
     StringTokenizer st1(firstLine, sep, false, true);
     std::vector<std::string> row1(st1.getTokens().begin(), st1.getTokens().end());
     size_t nCol = row1.size();
-    std::unique_ptr< Table<T>> dt;
+    std::unique_ptr<Table<T>> dt;
 
     if (header)
     {

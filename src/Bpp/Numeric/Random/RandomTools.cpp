@@ -98,7 +98,7 @@ double RandomTools::DblGammaLessThanOne(double dblAlpha)
     if (dblRand0 <= (dblexp / (dblAlpha + dblexp)))
     {
       dblTemp = pow(((dblAlpha + dblexp) * dblRand0) /
-            dblexp, 1.0 / dblAlpha);
+          dblexp, 1.0 / dblAlpha);
       if (dblRand1 <= exp(-1.0 * dblTemp))
         return dblTemp;
     }
@@ -883,7 +883,7 @@ double RandomTools::incompletebetafe2(double a,
 
    Cephes Math Library, Release 2.8:  June, 2000
    Copyright 1984, 1995, 2000 by Stephen L. Moshier
-*************************************************************************/
+ *************************************************************************/
 double RandomTools::incompletebetaps(double a, double b, double x, double maxgam)
 {
   double result;

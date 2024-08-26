@@ -42,32 +42,32 @@ public:
    *
    */
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && !std::is_abstract<B>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if<!std::is_base_of<B, A>::value && !std::is_abstract<B>::value, B*>::type* = 0)
   {
     return new B(a);
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value && std::is_abstract<B>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if<!std::is_base_of<B, A>::value && std::is_abstract<B>::value, B*>::type* = 0)
   {
     throw Exception("Unknow AssociationGraphObserver::copy(const A& a, typename std::enable_if< !std::is_base_of<B, A>::value&& std::is_abstract<B>::value, B*>::type* = 0)");
     return 0;
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && !std::is_abstract<A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if<std::is_base_of<B, A>::value && !std::is_abstract<A>::value, B*>::type* = 0)
   {
     return dynamic_cast<B*>(new A(a));
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && std::is_abstract<A>::value && std::is_base_of<Clonable, A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if<std::is_base_of<B, A>::value && std::is_abstract<A>::value && std::is_base_of<Clonable, A>::value, B*>::type* = 0)
   {
     return dynamic_cast<B*>(a.clone());
   }
 
   template<class A, class B>
-  static B* copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value && std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type* = 0)
+  static B* copy(const A& a, typename std::enable_if<std::is_base_of<B, A>::value && std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type* = 0)
   {
     throw Exception("Unknow AssociationGraphObserver::copy(const A& a, typename std::enable_if< std::is_base_of<B, A>::value&& std::is_abstract<A>::value && !std::is_base_of<Clonable, A>::value, B*>::type*= 0)");
     return 0;

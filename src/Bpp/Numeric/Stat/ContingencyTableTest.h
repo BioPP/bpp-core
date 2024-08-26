@@ -36,7 +36,7 @@ public:
    * @param nbPermutations If greater than 0, performs a randomization test instead of using the chisquare approximation.
    * @param warn Should a warning message be displayed in case of unsufficient observations?
    */
-  ContingencyTableTest(const std::vector< std::vector<size_t>>& table, unsigned int nbPermutations = 0, bool warn = true);
+  ContingencyTableTest(const std::vector<std::vector<size_t>>& table, unsigned int nbPermutations = 0, bool warn = true);
   virtual ~ContingencyTableTest() {}
 
   ContingencyTableTest* clone() const { return new ContingencyTableTest(*this); }

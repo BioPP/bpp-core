@@ -213,14 +213,14 @@ bool ApplicationTools::getBooleanParameter(
       || (sParam == "1"))
     bParam = true;
   else if ((sParam == "false")
-      || (sParam == "FALSE")
-      || (sParam == "f")
-      || (sParam == "F")
-      || (sParam == "no")
-      || (sParam == "NO")
-      || (sParam == "n")
-      || (sParam == "N")
-      || (sParam == "0"))
+           || (sParam == "FALSE")
+           || (sParam == "f")
+           || (sParam == "F")
+           || (sParam == "no")
+           || (sParam == "NO")
+           || (sParam == "n")
+           || (sParam == "N")
+           || (sParam == "0"))
     bParam = false;
   else
     throw Exception("ApplicationTools::getBooleanParameter. Wrong description:" + sParam);

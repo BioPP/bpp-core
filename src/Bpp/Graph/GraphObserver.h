@@ -41,13 +41,13 @@ public:
    * Delete unused object edges, since they have been deleted in the graph
    * @param edgesToDelete a vector of Edges to delete
    */
-  virtual void deletedEdgesUpdate(const std::vector< unsigned int >& edgesToDelete) = 0;
+  virtual void deletedEdgesUpdate(const std::vector<unsigned int>& edgesToDelete) = 0;
 
   /**
    * Delete unused object nodes, since they have been deleted in the graph
    * @param nodesToDelete a vector of N to delete
    */
-  virtual void deletedNodesUpdate(const std::vector< unsigned int >& nodesToDelete) = 0;
+  virtual void deletedNodesUpdate(const std::vector<unsigned int>& nodesToDelete) = 0;
 
   // /@}
 };

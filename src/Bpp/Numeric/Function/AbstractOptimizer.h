@@ -79,7 +79,7 @@ protected:
 
   time_t startTime_;
 
-  std::vector< std::shared_ptr<OptimizationListener>> listeners_;
+  std::vector<std::shared_ptr<OptimizationListener>> listeners_;
 
   bool updateParameters_;
 

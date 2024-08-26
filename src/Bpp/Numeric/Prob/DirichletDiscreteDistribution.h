@@ -69,7 +69,7 @@ class DirichletDiscreteDistribution :
   public AbstractParameterAliasable
 {
 private:
-  std::vector<BetaDiscreteDistribution* > vpBDD_;
+  std::vector<BetaDiscreteDistribution*> vpBDD_;
 
 public:
   /**

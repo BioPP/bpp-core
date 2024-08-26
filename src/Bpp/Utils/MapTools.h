@@ -23,7 +23,7 @@ public:
    * @param myMap the map to check.
    * @return a vector of all keys.
    */
-  template<class Key, class T, class Cmp >
+  template<class Key, class T, class Cmp>
   static std::vector<Key> getKeys(const std::map<Key, T, Cmp>& myMap)
   {
     std::vector<Key> keys;
@@ -40,7 +40,7 @@ public:
    * @param myMap the map to check.
    * @return a vector of all keys.
    */
-  template<class Key, class T >
+  template<class Key, class T>
   static std::vector<Key> getKeys(const std::map<Key, T>& myMap)
   {
     std::vector<Key> keys;
@@ -57,7 +57,7 @@ public:
    * @param myMap the map to check.
    * @return a vector of all values.
    */
-  template<class Key, class T, class Cmp >
+  template<class Key, class T, class Cmp>
   static std::vector<T> getValues(const std::map<Key, T, Cmp>& myMap)
   {
     std::vector<T> values;
@@ -74,7 +74,7 @@ public:
    * @param myMap the map to check.
    * @return a vector of all values.
    */
-  template<class Key, class T >
+  template<class Key, class T>
   static std::vector<T> getValues(const std::map<Key, T>& myMap)
   {
     std::vector<T> values;

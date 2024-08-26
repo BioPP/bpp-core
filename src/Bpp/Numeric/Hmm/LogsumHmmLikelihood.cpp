@@ -290,7 +290,7 @@ double LogsumHmmLikelihood::getLikelihoodForASite(size_t site) const
 
 Vdouble LogsumHmmLikelihood::getLikelihoodForEachSite() const
 {
-  std::vector< std::vector<double>> vv;
+  std::vector<std::vector<double>> vv;
   getHiddenStatesPosteriorProbabilities(vv);
 
   Vdouble ret(nbSites_);
@@ -335,7 +335,7 @@ Vdouble LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite(size_
   return probs;
 }
 
-void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append) const
+void LogsumHmmLikelihood::getHiddenStatesPosteriorProbabilities(std::vector<std::vector<double>>& probs, bool append) const
 {
   size_t offset = append ? probs.size() : 0;
   probs.resize(offset + nbSites_);

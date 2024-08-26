@@ -14,7 +14,7 @@ double DownhillSimplexMethod::DSMStopCondition::getCurrentTolerance() const
 {
   const DownhillSimplexMethod* dsm = dynamic_cast<const DownhillSimplexMethod*>(optimizer_);
   double rTol = 2.0 * NumTools::abs(dsm->y_[dsm->iHighest_] - dsm->y_[dsm->iLowest_]) /
-      (NumTools::abs(dsm->y_[dsm->iHighest_]) + NumTools::abs(dsm->y_[dsm->iLowest_]));
+                (NumTools::abs(dsm->y_[dsm->iHighest_]) + NumTools::abs(dsm->y_[dsm->iLowest_]));
   return rTol;
 }
 

@@ -22,8 +22,8 @@ ComputationTree::ComputationTree(const std::string& formula, const std::map<std:
   std::string str2 = formula;
 
   str2.erase(std::remove_if(str2.begin(),
-        str2.end(),
-        [](char x){
+      str2.end(),
+      [](char x){
     return std::isspace(x);
   }),
       str2.end());
@@ -59,7 +59,7 @@ std::shared_ptr<Operator> ComputationTree::readFormula_(const std::string& formu
       continue;
 
     if ((c == '+' || c == '-') && !(i == 1 || formula[i - 2] == '*' || formula[i - 2] == '/'
-        || formula[i - 2] == '+' || formula[i - 2] == '-' || formula[i - 2] == '('))
+                                    || formula[i - 2] == '+' || formula[i - 2] == '-' || formula[i - 2] == '('))
     {
       std::shared_ptr<Operator> left = readFormula_(formula.substr(0, i - 1), functionNames);
       std::shared_ptr<Operator> right = readFormula_(formula.substr(i), functionNames);

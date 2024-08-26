@@ -751,7 +751,7 @@ private:
           }
           if (NumTools::abs<Real>(H_(TOST(m), TOST(m - 1))) * (NumTools::abs<Real>(q) + NumTools::abs<Real>(r)) <
               eps * (NumTools::abs<Real>(p) * (NumTools::abs<Real>(H_(TOST(m - 1), TOST(m - 1))) + NumTools::abs<Real>(z) +
-              NumTools::abs<Real>(H_(TOST(m + 1), TOST(m + 1))))))
+                                               NumTools::abs<Real>(H_(TOST(m + 1), TOST(m + 1))))))
           {
             break;
           }
@@ -993,7 +993,7 @@ private:
               if ((vr == 0.0) && (vi == 0.0))
               {
                 vr = eps * norm * (NumTools::abs<Real>(w) + NumTools::abs<Real>(q) +
-                    NumTools::abs<Real>(x) + NumTools::abs<Real>(y) + NumTools::abs<Real>(z));
+                                   NumTools::abs<Real>(x) + NumTools::abs<Real>(y) + NumTools::abs<Real>(z));
               }
               cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
               H_(TOST(i), TOST(n - 1)) = cdivr;

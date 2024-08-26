@@ -214,20 +214,20 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
-        AttributesTools::getVector(args, argv), "=");
+      AttributesTools::getVector(args, argv), "=");
 
   resolveVariables(cmdParams);
 
   // Look for specified files with parameters:
   // With priority to the deeper
-  
+
   map<string, string> params;
 
   if (cmdParams.find("param") != cmdParams.end())
   {
-    StringTokenizer st(cmdParams["param"],",");
+    StringTokenizer st(cmdParams["param"], ",");
     cmdParams.erase("param");
-    vector<string> vfile; 
+    vector<string> vfile;
 
     while (st.hasMoreToken())
       vfile.push_back(st.nextToken());
@@ -249,20 +249,20 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 
       params = getAttributesMapFromFile(file, "=");
       actualizeAttributesMap(cmdParams, params, false);
-      
+
       resolveVariables(cmdParams);
-        
+
       // Actualize list of param files
       if (cmdParams.find("param") != cmdParams.end())
       {
-        StringTokenizer st2(cmdParams["param"],",");
+        StringTokenizer st2(cmdParams["param"], ",");
         cmdParams.erase("param");
 
         while (st2.hasMoreToken())
           vfile.push_back(st2.nextToken());
       }
-      
-      i ++;
+
+      i++;
     }
   }
 

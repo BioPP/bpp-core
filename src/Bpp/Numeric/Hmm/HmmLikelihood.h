@@ -62,7 +62,7 @@ public:
   virtual std::shared_ptr<const HmmEmissionProbabilities> getHmmEmissionProbabilities() const = 0;
   virtual std::shared_ptr<HmmEmissionProbabilities> getHmmEmissionProbabilities() = 0;
 
-  virtual void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append) const = 0;
+  virtual void getHiddenStatesPosteriorProbabilities(std::vector<std::vector<double>>& probs, bool append) const = 0;
 
   virtual Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const = 0;
 

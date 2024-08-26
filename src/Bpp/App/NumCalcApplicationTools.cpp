@@ -47,23 +47,25 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
       throw Exception("Unvalid sequence specification, missing 'to' key: " + desc.substr(3, desc.size() - 5));
     if (keyvals.find("step") == keyvals.end() && keyvals.find("size") == keyvals.end())
       throw Exception("Unvalid sequence specification, missing 'step' or 'size' key: " + desc.substr(3, desc.size() - 5));
-    
-    const short ONE=0;
-    const short LOG=1;
-    const short EXP=2;
-    const short DIX=3;
 
-    short scale=ONE;
-    
+    const short ONE = 0;
+    const short LOG = 1;
+    const short EXP = 2;
+    const short DIX = 3;
+
+    short scale = ONE;
+
     if (keyvals.find("scale") != keyvals.end())
     {
-      string sc=keyvals["scale"];
+      string sc = keyvals["scale"];
       if (sc == "log")
-        scale=LOG;
-      else {
+        scale = LOG;
+      else
+      {
         if (sc == "exp")
-          scale=EXP;
-        else {
+          scale = EXP;
+        else
+        {
           if (sc == "10^")
             scale = DIX;
           else
@@ -71,7 +73,7 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
         }
       }
     }
-    
+
     double start = TextTools::toDouble(keyvals["from"]);
     double end   = TextTools::toDouble(keyvals["to"]);
     if (keyvals.find("step") != keyvals.end())
@@ -83,19 +85,19 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
         switch (scale)
         {
         case ONE:
-          y=x;
+          y = x;
           break;
         case LOG:
-          y=log(x);
+          y = log(x);
           break;
         case EXP:
-          y=exp(x);
+          y = exp(x);
           break;
         case DIX:
-          y=pow(10,x);
+          y = pow(10, x);
           break;
         default:
-          y=x;
+          y = x;
         }
         values.push_back(y);
       }
@@ -111,19 +113,19 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
         switch (scale)
         {
         case ONE:
-          y=x;
+          y = x;
           break;
         case LOG:
-          y=log(x);
+          y = log(x);
           break;
         case EXP:
-          y=exp(x);
+          y = exp(x);
           break;
         case DIX:
-          y=pow(10,x);
+          y = pow(10, x);
           break;
         default:
-          y=x;
+          y = x;
         }
         values.push_back(y);
       }
@@ -131,19 +133,19 @@ vector<double> NumCalcApplicationTools::getVector(const std::string& desc)
       switch (scale)
       {
       case ONE:
-        y=end;
+        y = end;
         break;
       case LOG:
-        y=log(end);
+        y = log(end);
         break;
       case EXP:
-        y=exp(end);
+        y = exp(end);
         break;
       case DIX:
-        y=pow(10,end);
+        y = pow(10, end);
         break;
       default:
-        y=end;
+        y = end;
       }
       values.push_back(y); // for rounding purpose.
     }
@@ -185,8 +187,8 @@ shared_ptr<ParameterGrid> NumCalcApplicationTools::getParameterGrid(
     string name = ApplicationTools::getStringParameter("grid.parameter" + TextTools::toString(i + 1) + ".name", params, "", suffix, suffixIsOptional, warn);
     vector<double> values = getVector(ApplicationTools::getStringParameter("grid.parameter" + TextTools::toString(i + 1) + ".values", params, "", suffix, suffixIsOptional, warn));
     grid->addDimension(name, values);
-    IntervalConstraint bb(VectorTools::min(values),VectorTools::max(values),true,true);
-    ApplicationTools::displayResult(name,bb.getDescription());
+    IntervalConstraint bb(VectorTools::min(values), VectorTools::max(values), true, true);
+    ApplicationTools::displayResult(name, bb.getDescription());
   }
   return grid;
 }

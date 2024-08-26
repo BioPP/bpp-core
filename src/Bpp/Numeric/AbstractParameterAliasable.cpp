@@ -249,9 +249,9 @@ ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterLi
   for (const auto& it : aliasListenersRegister_)
   {
     if ((pl.hasParameter(it.second->getFrom()) ||
-        aliases.hasParameter(it.second->getFrom()))
+         aliases.hasParameter(it.second->getFrom()))
         && !(aliases.hasParameter(it.second->getAlias()) ||
-        pl.hasParameter(it.second->getAlias())))
+             pl.hasParameter(it.second->getAlias())))
     {
       b = true;
       aliases.addParameter(parameter(it.second->getAlias()));
@@ -266,7 +266,7 @@ ParameterList AbstractParameterAliasable::getAliasedParameters(const ParameterLi
     {
       if (aliases.hasParameter(it.second->getFrom())
           && !(aliases.hasParameter(it.second->getAlias()) ||
-          pl.hasParameter(it.second->getAlias())))
+               pl.hasParameter(it.second->getAlias())))
       {
         b = true;
         aliases.addParameter(parameter(it.second->getAlias()));
@@ -302,9 +302,9 @@ ParameterList AbstractParameterAliasable::getFromParameters(const ParameterList&
   for (const auto& it : aliasListenersRegister_)
   {
     if ((pl.hasParameter(it.second->getAlias()) ||
-        from.hasParameter(it.second->getAlias()))
+         from.hasParameter(it.second->getAlias()))
         && !(from.hasParameter(it.second->getFrom()) ||
-        pl.hasParameter(it.second->getFrom())))
+             pl.hasParameter(it.second->getFrom())))
     {
       b = true;
       from.addParameter(parameter(it.second->getFrom()));
@@ -319,7 +319,7 @@ ParameterList AbstractParameterAliasable::getFromParameters(const ParameterList&
     {
       if (from.hasParameter(it.second->getAlias())
           && !(from.hasParameter(it.second->getFrom()) ||
-          pl.hasParameter(it.second->getFrom())))
+               pl.hasParameter(it.second->getFrom())))
       {
         b = true;
         from.addParameter(parameter(it.second->getFrom()));

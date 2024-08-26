@@ -263,7 +263,7 @@ template<class T> class RangeSet :
 public:
 
 private:
-  std::vector< Range<T>* > ranges_;
+  std::vector<Range<T>*> ranges_;
 
 public:
   RangeSet() : ranges_() {}
@@ -366,9 +366,9 @@ public:
     return *ranges_[i];
   }
 
-  const std::vector< Range<T>* >& getSet() const { return ranges_; }
+  const std::vector<Range<T>*>& getSet() const { return ranges_; }
 
-  std::vector< Range<T>* >& getSet() { return ranges_; }
+  std::vector<Range<T>*>& getSet() { return ranges_; }
 
   void clear()
   {

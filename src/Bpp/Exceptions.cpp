@@ -51,7 +51,7 @@ Exception::Exception(std::string text, int stack)
     int status;
 
     char* ret = abi::__cxa_demangle(beginName.c_str(),
-          NULL, NULL, &status);
+        NULL, NULL, &status);
     beginName = "";
     if (status == 0)
     {

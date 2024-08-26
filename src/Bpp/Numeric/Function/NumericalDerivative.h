@@ -46,7 +46,6 @@ public:
    * @param variables A list of all parameter names.
    */
   virtual void setParametersToDerivate(const std::vector<std::string>& variables) = 0;
-
 };
 
 /**

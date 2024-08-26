@@ -12,13 +12,13 @@ using namespace bpp;
 using namespace std;
 
 /******************************************************************************
-*                              The Point class                               *
-******************************************************************************/
+ *                              The Point class                               *
+ ******************************************************************************/
 inline void BracketPoint::set(double xval, double fval) { this->x = xval; this->f = fval; }
 
 /******************************************************************************
-*                             The Bracket class                              *
-******************************************************************************/
+ *                             The Bracket class                              *
+ ******************************************************************************/
 inline void Bracket::setA(double xa, double fa) { a.set(xa, fa); }
 inline void Bracket::setB(double xb, double fb) { b.set(xb, fb); }
 inline void Bracket::setC(double xc, double fc) { c.set(xc, fc); }
@@ -66,7 +66,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
     double q = (bracket.b.x - bracket.c.x) * (bracket.b.f - bracket.a.f);
 
     double xu = bracket.b.x - ((bracket.b.x - bracket.c.x) * q - (bracket.b.x - bracket.a.x) * r) /
-        (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
+                (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
     double xulim = (bracket.b.x) + GLIMIT * (bracket.c.x - bracket.b.x);
     double fu;
 

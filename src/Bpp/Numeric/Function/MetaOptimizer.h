@@ -25,8 +25,8 @@ public:
 
 private:
   std::vector<std::string> names_;
-  std::vector< std::shared_ptr<OptimizerInterface>> optimizers_;
-  std::vector< std::vector<std::string>> parameterNames_;
+  std::vector<std::shared_ptr<OptimizerInterface>> optimizers_;
+  std::vector<std::vector<std::string>> parameterNames_;
   std::vector<unsigned short> derivatives_;
   std::vector<std::string> itTypes_;
 

@@ -178,7 +178,7 @@ public:
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilitiesForASite. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append = false) const override
+  void getHiddenStatesPosteriorProbabilities(std::vector<std::vector<double>>& probs, bool append = false) const override
   {
     throw (NotImplementedException("LowMemoryRescaledHmmLikelihood::getHiddenStatesPosteriorProbabilities. This class can't compute posterior probabilities, use RescaledHmmLikelihood instead."));
   }

@@ -284,7 +284,7 @@ void GlobalGraph::unregisterObserver(GraphObserver* observer)
 
 /**********************************************/
 
-std::vector< GlobalGraph::Node > GlobalGraph::getNeighbors_(const GlobalGraph::Node& node, bool outgoing) const
+std::vector<GlobalGraph::Node> GlobalGraph::getNeighbors_(const GlobalGraph::Node& node, bool outgoing) const
 {
   nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
   if (foundNode == nodeStructure_.end())
@@ -299,7 +299,7 @@ std::vector< GlobalGraph::Node > GlobalGraph::getNeighbors_(const GlobalGraph::N
   return result;
 }
 
-std::vector< GlobalGraph::Edge > GlobalGraph::getEdges_(const GlobalGraph::Node& node, bool outgoing) const
+std::vector<GlobalGraph::Edge> GlobalGraph::getEdges_(const GlobalGraph::Node& node, bool outgoing) const
 {
   nodeStructureType::const_iterator foundNode = nodeStructure_.find(node);
   if (foundNode == nodeStructure_.end())
@@ -315,22 +315,22 @@ std::vector< GlobalGraph::Edge > GlobalGraph::getEdges_(const GlobalGraph::Node&
   return result;
 }
 
-vector< Graph::NodeId > GlobalGraph::getIncomingNeighbors(Graph::NodeId node) const
+vector<Graph::NodeId> GlobalGraph::getIncomingNeighbors(Graph::NodeId node) const
 {
   return getNeighbors_(node, false);
 }
 
-vector< Graph::EdgeId > GlobalGraph::getIncomingEdges(const Graph::NodeId node) const
+vector<Graph::EdgeId> GlobalGraph::getIncomingEdges(const Graph::NodeId node) const
 {
   return getEdges_(node, false);
 }
 
-vector< Graph::NodeId > GlobalGraph::getOutgoingNeighbors(const Graph::NodeId node) const
+vector<Graph::NodeId> GlobalGraph::getOutgoingNeighbors(const Graph::NodeId node) const
 {
   return getNeighbors_(node, true);
 }
 
-vector< Graph::EdgeId > GlobalGraph::getOutgoingEdges(const Graph::NodeId node) const
+vector<Graph::EdgeId> GlobalGraph::getOutgoingEdges(const Graph::NodeId node) const
 {
   return getEdges_(node, true);
 }
@@ -400,9 +400,9 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   const auto& assoc = foundNode->second;
   return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-           (assoc.first.size() + assoc.second.size() <= 1)
-           || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
-           assoc.first.begin()->first == assoc.second.begin()->first)));
+               (assoc.first.size() + assoc.second.size() <= 1)
+               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+                   assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 
@@ -434,7 +434,7 @@ size_t GlobalGraph::getNumberOfIncomingNeighbors(const Graph::NodeId node) const
   return foundNode->second.second.size();
 }
 
-vector< Graph::NodeId > GlobalGraph::getNeighbors(const Graph::NodeId node) const
+vector<Graph::NodeId> GlobalGraph::getNeighbors(const Graph::NodeId node) const
 {
   vector<Graph::NodeId> result;
   vector<Graph::NodeId> neighborsToInsert;
@@ -627,7 +627,7 @@ bool GlobalGraph::isTree() const
 }
 
 
-bool GlobalGraph::nodesAreMetOnlyOnce_(const GlobalGraph::Node& node, set< GlobalGraph::Node >& metNodes, const GlobalGraph::Node& originNode) const
+bool GlobalGraph::nodesAreMetOnlyOnce_(const GlobalGraph::Node& node, set<GlobalGraph::Node>& metNodes, const GlobalGraph::Node& originNode) const
 {
   // insert().second <=> not yet in the set
   if (!metNodes.insert(node).second)

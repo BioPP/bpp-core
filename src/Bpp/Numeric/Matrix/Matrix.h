@@ -93,7 +93,7 @@ class RowMatrix :
   public Matrix<Scalar>
 {
 protected:
-  std::vector< std::vector<Scalar>> m_;
+  std::vector<std::vector<Scalar>> m_;
 
 public:
   RowMatrix() : m_() {}
@@ -201,7 +201,7 @@ class ColMatrix :
   public Matrix<Scalar>
 {
 private:
-  std::vector< std::vector<Scalar>> m_;
+  std::vector<std::vector<Scalar>> m_;
 
 public:
   ColMatrix() : m_() {}

@@ -205,7 +205,7 @@ public:
 
   Vdouble getHiddenStatesPosteriorProbabilitiesForASite(size_t site) const override;
 
-  void getHiddenStatesPosteriorProbabilities(std::vector< std::vector<double>>& probs, bool append = false) const override;
+  void getHiddenStatesPosteriorProbabilities(std::vector<std::vector<double>>& probs, bool append = false) const override;
 
 protected:
   void computeForward_();
