@@ -173,7 +173,7 @@ public:
    */
   bool hasObject(std::shared_ptr<N> object) const
   {
-    for (const auto key : objectsSet_)
+    for (const auto& key : objectsSet_)
     {
       if (key.second == object)
         return true;
@@ -191,7 +191,7 @@ public:
    */
   size_t getFirstKey(std::shared_ptr<N> object) const
   {
-    for (const auto key:objectsSet_)
+    for (const auto& key:objectsSet_)
     {
       if (key.second == object)
         return key.first;
