@@ -46,6 +46,8 @@ public:
 
   virtual int getWarningLevel() const { return warn_; }
 
+  virtual void setWarningLevel(int warn) { warn_ = warn; }
+
   virtual void help(const std::string& program) const;
 };
 } // end of namespace bpp;
