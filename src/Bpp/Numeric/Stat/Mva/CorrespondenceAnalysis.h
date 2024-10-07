@@ -27,15 +27,15 @@ private:
   double n_;
 
 public:
-/**
- * @brief Build a new CorrespondenceAnalysis object.
- *
- * @param data The input data (a RowMatrix) to analyse.
- * @param nbAxes The number of kept axes during the analysis.
- * @param tol Tolerance threshold for null eigenvalues (a value less than tol times the first one is considered as null)
- * @param verbose Should warnings be dispayed.
- * @throw Exception if an error occured.
- */
+  /**
+   * @brief Build a new CorrespondenceAnalysis object.
+   *
+   * @param data The input data (a RowMatrix) to analyse.
+   * @param nbAxes The number of kept axes during the analysis.
+   * @param tol Tolerance threshold for null eigenvalues (a value less than tol times the first one is considered as null)
+   * @param verbose Should warnings be dispayed.
+   * @throw Exception if an error occured.
+   */
   CorrespondenceAnalysis(
       const Matrix<double>& data,
       unsigned int nbAxes,

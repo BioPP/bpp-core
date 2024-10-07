@@ -155,7 +155,7 @@ void GlobalGraph::switchNodes(Graph::NodeId nodeA, Graph::NodeId nodeB)
   nodeFatherRow->second.second[son] = foundEdge;
 
 
-//    std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
+  //    std::map<GlobalGraph::Node, std::pair<std::map<GlobalGraph::Node, GlobalGraph::Edge>, std::map<GlobalGraph::Node, GlobalGraph::Edge> > >::iterator ita = nodeStructure_.find(nodeA);
 
   edgeStructure_[foundEdge] = pair<Node, Node>(son, father);
 
@@ -400,9 +400,9 @@ bool GlobalGraph::isLeaf(const Graph::NodeId node) const
   const auto& assoc = foundNode->second;
   return (!isDirected() && (assoc.first.size() <= 1))
          || (isDirected() && (
-               (assoc.first.size() + assoc.second.size() <= 1)
-               || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
-                   assoc.first.begin()->first == assoc.second.begin()->first)));
+           (assoc.first.size() + assoc.second.size() <= 1)
+           || (assoc.first.size() == 1 &&  assoc.second.size() == 1 &&
+           assoc.first.begin()->first == assoc.second.begin()->first)));
 }
 
 

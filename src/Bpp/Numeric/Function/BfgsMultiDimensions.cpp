@@ -106,11 +106,11 @@ double BfgsMultiDimensions::doStep()
 
   firstOrderDerivableFunction().enableFirstOrderDerivatives(false);
   nbEval_ += OneDimensionOptimizationTools::lineSearch(f1dim_,
-      getParameters_(), xi_,
-      gradient_,
-      // getStopCondition()->getTolerance(),
-      0, 0,
-      getVerbose() > 0 ? getVerbose() - 1 : 0);
+        getParameters_(), xi_,
+        gradient_,
+        // getStopCondition()->getTolerance(),
+        0, 0,
+        getVerbose() > 0 ? getVerbose() - 1 : 0);
   firstOrderDerivableFunction().enableFirstOrderDerivatives(true);
 
   for (i = 0; i < n; ++i)

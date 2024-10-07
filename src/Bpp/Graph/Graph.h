@@ -171,7 +171,7 @@ public:
 
   virtual void unregisterObserver(GraphObserver* observer) = 0;
 
-// /@}
+  // /@}
 
   /** @name Nodes Functions
    *  These methodes of the graph concern the node management.

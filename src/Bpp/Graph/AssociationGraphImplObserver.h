@@ -323,10 +323,10 @@ public:
   }
 
 public:
-/*
- *@brief Check if has node/edge
- *
- */
+  /*
+   *@brief Check if has node/edge
+   *
+   */
   bool hasNode(Nref nodeObject) const
   {
     if (nodeObject == 0)

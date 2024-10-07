@@ -66,7 +66,7 @@ Bracket OneDimensionOptimizationTools::bracketMinimum(
     double q = (bracket.b.x - bracket.c.x) * (bracket.b.f - bracket.a.f);
 
     double xu = bracket.b.x - ((bracket.b.x - bracket.c.x) * q - (bracket.b.x - bracket.a.x) * r) /
-                (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
+        (2.0 * NumTools::sign(NumTools::max(NumTools::abs(q - r), NumConstants::VERY_TINY()), q - r));
     double xulim = (bracket.b.x) + GLIMIT * (bracket.c.x - bracket.b.x);
     double fu;
 
