@@ -228,7 +228,7 @@ public:
    */
   virtual void setParameter(size_t index, const Parameter& param);
 
-//  virtual void setParameter(size_t index, Parameter* param);
+  //  virtual void setParameter(size_t index, Parameter* param);
 
   /**
    * @brief Add new parameters at the end of the list.

@@ -136,7 +136,7 @@ public:
     return *this;
   }
 
-//  virtual ~RowMatrix() {}
+  //  virtual ~RowMatrix() {}
 
 public:
   RowMatrix* clone() const { return new RowMatrix(*this); }

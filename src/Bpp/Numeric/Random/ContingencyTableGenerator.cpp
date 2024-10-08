@@ -106,8 +106,8 @@ RowMatrix<size_t> ContingencyTableGenerator::rcont2()
       {
         nlm = ia * static_cast<size_t>((static_cast<long double>(id) / static_cast<long double>(ie)) + 0.5);
         x = exp(fact_[ia] + fact_[ib] + fact_[ic] + fact_[id]
-            - fact_[ie] - fact_[nlm]
-            - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
+              - fact_[ie] - fact_[nlm]
+              - fact_[id - nlm] - fact_[ia - nlm] - fact_[ii + nlm]);
         if (x >= dummy)
           break;
 

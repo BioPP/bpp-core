@@ -98,7 +98,7 @@ double RandomTools::DblGammaLessThanOne(double dblAlpha)
     if (dblRand0 <= (dblexp / (dblAlpha + dblexp)))
     {
       dblTemp = pow(((dblAlpha + dblexp) * dblRand0) /
-          dblexp, 1.0 / dblAlpha);
+            dblexp, 1.0 / dblAlpha);
       if (dblRand1 <= exp(-1.0 * dblTemp))
         return dblTemp;
     }

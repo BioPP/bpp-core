@@ -165,7 +165,7 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
   {
     if (args.find("n") == args.end())
       throw Exception("Missing argument 'n' (number of classes) in " + distName
-          + " distribution");
+            + " distribution");
     unsigned int nbClasses = TextTools::to<unsigned int>(args["n"]);
 
     if (distName == "Gamma")
@@ -234,9 +234,9 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
       if (args.find("end") == args.end())
         throw Exception("Missing argument 'end' in Uniform distribution");
       rDist.reset(new UniformDiscreteDistribution(
-          nbClasses,
-          TextTools::to<double>(args["begin"]),
-          TextTools::to<double>(args["end"])));
+            nbClasses,
+            TextTools::to<double>(args["begin"]),
+            TextTools::to<double>(args["end"])));
     }
     else
     {

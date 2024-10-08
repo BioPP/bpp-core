@@ -114,8 +114,8 @@ Vdouble AbstractDiscreteDistribution::getCategories() const
   Vdouble result(distribution_.size());
   unsigned int i = 0;
   for (map<double, double>::const_iterator it = distribution_.begin();
-       it != distribution_.end();
-       it++)
+      it != distribution_.end();
+      it++)
   {
     result[i] = it->first;
     i++;
@@ -130,8 +130,8 @@ Vdouble AbstractDiscreteDistribution::getProbabilities() const
   Vdouble result(distribution_.size());
   size_t i = 0;
   for (map<double, double>::const_iterator it = distribution_.begin();
-       it != distribution_.end();
-       it++)
+      it != distribution_.end();
+      it++)
   {
     result[i] = it->second;
     i++;
@@ -169,8 +169,8 @@ double AbstractDiscreteDistribution::rand() const
   double r = RandomTools::giveRandomNumberBetweenZeroAndEntry(1);
   double cumprob = 0;
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     cumprob += i->second;
     if (r <= cumprob)
@@ -187,8 +187,8 @@ double AbstractDiscreteDistribution::getInfCumulativeProbability(double category
   double prob = 0;
   map<double, double>::const_iterator it = distribution_.find(category);
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != it;
-       i++)
+      i != it;
+      i++)
   {
     prob += i->second;
   }
@@ -204,8 +204,8 @@ double AbstractDiscreteDistribution::getIInfCumulativeProbability(double categor
   if (it == distribution_.end())
     return 0;
   for (map<double, double>::const_iterator i = ++it;
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     prob += i->second;
   }
@@ -221,8 +221,8 @@ double AbstractDiscreteDistribution::getSupCumulativeProbability(double category
   if (it == distribution_.end())
     return 0;
   for (map<double, double>::const_iterator i = ++it;
-       i != distribution_.end();
-       i++)
+      i != distribution_.end();
+      i++)
   {
     prob += i->second;
   }
@@ -236,8 +236,8 @@ double AbstractDiscreteDistribution::getSSupCumulativeProbability(double categor
   double prob = 0;
   map<double, double>::const_iterator it = distribution_.find(category);
   for (map<double, double>::const_iterator i = distribution_.begin();
-       i != it;
-       i++)
+      i != it;
+      i++)
   {
     prob += i->second;
   }

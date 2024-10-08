@@ -518,13 +518,13 @@ public:
     nCol_ -= len;
   }
 
-/**
- * @brief Delete the given column.
- *
- * @param colName The name of the column.
- * @throw NoTableColumnNamesException If no column names are associated to this table.
- * @throw TableColumnNameNotFoundException If colName do not match existing column names.
- */
+  /**
+   * @brief Delete the given column.
+   *
+   * @param colName The name of the column.
+   * @throw NoTableColumnNamesException If no column names are associated to this table.
+   * @throw TableColumnNameNotFoundException If colName do not match existing column names.
+   */
   void deleteColumn(const std::string& colName)
   {
     if ((colNames_.size() == 0))

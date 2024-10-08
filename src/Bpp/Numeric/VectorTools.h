@@ -656,7 +656,7 @@ public:
       return M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-        [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
 
@@ -717,7 +717,7 @@ public:
       return M < 0 ? 0 : M;
 
     T x = std::accumulate(std::next(v1.begin()), v1.end(), std::exp(v1[0] - M),
-        [&M](T y, T z){
+          [&M](T y, T z){
         return y + std::exp(z - M);
       });
     return x * std::exp(M);
@@ -1408,9 +1408,9 @@ public:
   {
     OutputType n = (OutputType)v1.size();
     OutputType x =  scalar<InputType, OutputType>(
-        center<InputType, OutputType>(v1),
-        center<InputType, OutputType>(v2)
-        ) / n;
+          center<InputType, OutputType>(v1),
+          center<InputType, OutputType>(v2)
+          ) / n;
     if (unbiased) x = x * n / (n - 1);
     return x;
   }
@@ -1432,10 +1432,10 @@ public:
     {
       std::vector<InputType> wn = w / sum(w);
       OutputType x = scalar<InputType, OutputType>(
-          center<InputType, OutputType>(v1, wn, false),
-          center<InputType, OutputType>(v2, wn, false),
-          wn
-          );
+            center<InputType, OutputType>(v1, wn, false),
+            center<InputType, OutputType>(v2, wn, false),
+            wn
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr<double>(wn)));
@@ -1445,10 +1445,10 @@ public:
     else
     {
       OutputType x = scalar<InputType, OutputType>(
-          center<InputType, OutputType>(v1, w, false),
-          center<InputType, OutputType>(v2, w, false),
-          w
-          );
+            center<InputType, OutputType>(v1, w, false),
+            center<InputType, OutputType>(v2, w, false),
+            w
+            );
       if (unbiased)
       {
         x = x / (1 - sum(sqr(w)));

@@ -542,8 +542,8 @@ void ParameterList::deleteParameters(const std::vector<size_t>& indices)
     size_t index = *i;
     if (index >= size())
       throw IndexOutOfBoundsException("ParameterList::deleteParameter.", index, 0, size());
-//    Parameter* p = parameters_[index].get();
-//    delete p;
+    //    Parameter* p = parameters_[index].get();
+    //    delete p;
     parameters_.erase(parameters_.begin() + static_cast<ptrdiff_t>(index));
   }
 }

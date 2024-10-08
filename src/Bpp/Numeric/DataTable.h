@@ -390,7 +390,7 @@ public:
   void setRow(const size_t rowIndex, const std::vector<std::string>& newRow);
 
 
-/** @} */
+  /** @} */
 
 public:
   /**

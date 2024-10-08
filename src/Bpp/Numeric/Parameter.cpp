@@ -94,7 +94,7 @@ std::shared_ptr<ConstraintInterface> Parameter::removeConstraint()
 void Parameter::removeParameterListener(const std::string& listenerId)
 {
   listeners_.erase(std::remove_if(listeners_.begin(), listeners_.end(),
-      [&listenerId](std::shared_ptr<ParameterListener>& pl) {
+        [&listenerId](std::shared_ptr<ParameterListener>& pl) {
     return pl->getId() == listenerId; // put your condition here
   }), listeners_.end());
 }

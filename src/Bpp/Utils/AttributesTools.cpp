@@ -214,7 +214,7 @@ std::map<std::string, std::string> AttributesTools::parseOptions(int args, char*
 {
   // Get the parameters from command line:
   map<string, string> cmdParams = AttributesTools::getAttributesMap(
-      AttributesTools::getVector(args, argv), "=");
+        AttributesTools::getVector(args, argv), "=");
 
   resolveVariables(cmdParams);
 
