@@ -244,6 +244,24 @@ public:
   }
 
 public:
+  virtual const FunctionInterface& function() const
+  {
+    return *function_;
+  }
+  virtual FunctionInterface& function()
+  {
+    return *function_;
+  }
+  std::shared_ptr<const FunctionInterface> getFunction() const
+  {
+    return function_;
+  }
+  std::shared_ptr<FunctionInterface> getFunction()
+  {
+    return function_;
+  }
+
+
   bool hasParameter(const std::string& name) const override
   {
     return function_->hasParameter(name);
