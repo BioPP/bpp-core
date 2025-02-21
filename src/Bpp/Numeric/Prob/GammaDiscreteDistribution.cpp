@@ -29,9 +29,6 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, dou
   // NB: if this is the case, then a warning is shown. This may happen in optimization
   // algorithms.
 
-  if (n <= 1)
-    throw Exception("At least 2 classes for Gamma discrete distribution.");
-
   addParameter_(new Parameter("Gamma.alpha", alpha, std::make_shared<IntervalConstraint>(1, minimumAlpha, true)));
   addParameter_(new Parameter("Gamma.beta", beta, std::make_shared<IntervalConstraint>(1, minimumBeta, true)));
   if (paramOffset)
