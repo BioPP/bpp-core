@@ -826,7 +826,7 @@ public:
       throw Exception("AssociationGraphImplObserver::addNodeIndex : nodeObject has already an index: " + nodeToString(nodeObject));
 
     NodeIndex index = NodeIndex(indexToN_.size());
-    for (auto i = 0; i < indexToN_.size(); i++)
+    for (size_t i = 0; i < indexToN_.size(); i++)
     {
       if (!indexToN_.at(size_t(i)))
       {
@@ -856,8 +856,8 @@ public:
     if (EToIndex_.find(edgeObject) != EToIndex_.end())
       throw Exception("AssociationGraphImplObserver::addEdgeIndex : edgeObject has already an index: " + edgeToString(edgeObject));
 
-    EdgeIndex index = indexToE_.size();
-    for (auto i = 0; i < indexToE_.size(); i++)
+    size_t index = indexToE_.size();
+    for (size_t i = 0; i < indexToE_.size(); i++)
     {
       if (!indexToE_.at(i))
       {
@@ -871,8 +871,8 @@ public:
 
     // now storing the edge
     indexToE_.at(index) = edgeObject;
-    EToIndex_[edgeObject] = index;
-    return index;
+    EToIndex_[edgeObject] = (EdgeIndex)index;
+    return (EdgeIndex)index;
   }
 
   /**
