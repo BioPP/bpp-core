@@ -158,6 +158,16 @@ public:
   }
 
   /**
+   * @return A random number drawn from a Poisson distribution.
+   * @param rate The rate of the distribution.
+   */
+  static int randPoisson(double rate)
+  {
+    std::poisson_distribution<int> dis(rate);
+    return dis(DEFAULT_GENERATOR);
+  }
+
+  /**
    * @brief Pick (and extract) one element randomly in a vector and return it.
    * @param v The vector of elements.
 
