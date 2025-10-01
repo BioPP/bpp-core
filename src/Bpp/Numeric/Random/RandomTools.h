@@ -131,12 +131,12 @@ public:
 
   /**
    * @return A random number drawn from a gamma distribution.
-   * @param alpha The alpha parameter.
-   * @param beta The beta parameter.
+   * @param alpha The shape parameter.
+   * @param beta The rate parameter.
    */
   static double randGamma(double alpha, double beta)
   {
-    std::gamma_distribution<double> dis(alpha, beta);
+    std::gamma_distribution<double> dis(alpha, 1./beta); //Note: in the std, beta is the scale = 1/rate, while we use the "shape,rate" parametrization.
     return dis(DEFAULT_GENERATOR);
   }
 
@@ -154,6 +154,16 @@ public:
   static double randExponential(double mean)
   {
     std::exponential_distribution<double> dis(mean);
+    return dis(DEFAULT_GENERATOR);
+  }
+
+  /**
+   * @return A random number drawn from a Poisson distribution.
+   * @param rate The rate of the distribution.
+   */
+  static int randPoisson(double rate)
+  {
+    std::poisson_distribution<int> dis(rate);
     return dis(DEFAULT_GENERATOR);
   }
 

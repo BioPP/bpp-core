@@ -112,7 +112,7 @@ string ApplicationTools::getAFilePath(
   {
     throw Exception("You must specify a file for this parameter: " + parameter + (suffixIsOptional ? "" : suffix));
   }
-  if (filePath == "none")
+  if (filePath == "none" || filePath == "None" || filePath == "NONE")
     return filePath;
   if (mustExist && !FileTools::fileExists(filePath))
   {
