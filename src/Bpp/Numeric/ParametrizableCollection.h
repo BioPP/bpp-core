@@ -95,7 +95,7 @@ public:
     resetParameters_();
 
     objectsSet_.clear();
-    vChanged_.empty();
+    auto v = vChanged_.empty();
   }
 
   ~ParametrizableCollection()

@@ -87,6 +87,8 @@ void AttributesTools::getAttributesMap(
     {
       string name  = string(arg.begin(), arg.begin() + static_cast<ptrdiff_t>(limit));
       string value = string(arg.begin() + static_cast<ptrdiff_t>(limit + delimiter.size()), arg.end());
+      if (value=="\\t")
+        value="\t"; 
       am[name] = value;
     }
   }

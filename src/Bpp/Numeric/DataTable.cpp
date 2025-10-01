@@ -554,10 +554,12 @@ void DataTable::addRow(const string& rowName, const vector<string>& newRow)
 unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool header, int rowNames)
 {
   string firstLine  = FileTools::getNextLine(in);
-  StringTokenizer st1(firstLine, sep, false, true);
+  const string sept(sep=="\\t"?"\t":sep);
+
+  StringTokenizer st1(firstLine, sept, false, true);
   vector<string> row1(st1.getTokens().begin(), st1.getTokens().end());
   string secondLine = FileTools::getNextLine(in);
-  StringTokenizer st2(secondLine, sep, false, true);
+  StringTokenizer st2(secondLine, sept, false, true);
   vector<string> row2(st2.getTokens().begin(), st2.getTokens().end());
   size_t nCol = row1.size();
   bool hasRowNames;
@@ -591,7 +593,7 @@ unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool heade
   string line = FileTools::getNextLine(in);
   while (!TextTools::isEmpty(line))
   {
-    StringTokenizer st(line, sep, false, true);
+    StringTokenizer st(line, sept, false, true);
     if (hasRowNames)
     {
       string rowName = *st.getTokens().begin();
@@ -623,6 +625,8 @@ unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool heade
 
 void DataTable::write(const DataTable& data, ostream& out, const string& sep, bool alignHeaders)
 {
+  const string sept(sep=="\\t"?"\t":sep);
+
   size_t n = data.getNumberOfColumns();
   if (n == 0)
     return;
@@ -630,11 +634,11 @@ void DataTable::write(const DataTable& data, ostream& out, const string& sep, bo
   { // Write header
     vector<string> colNames = data.getColumnNames();
     if (alignHeaders && data.hasRowNames())
-      out << sep;
+      out << sept;
     out << colNames[0];
     for (size_t i = 1; i < n; i++)
     {
-      out << sep << colNames[i];
+      out << sept << colNames[i];
     }
     out << endl;
   }
@@ -642,11 +646,11 @@ void DataTable::write(const DataTable& data, ostream& out, const string& sep, bo
   for (size_t i = 0; i < data.getNumberOfRows(); i++)
   {
     if (data.hasRowNames())
-      out << data.getRowName(i) << sep;
+      out << data.getRowName(i) << sept;
     out << data(i, 0);
     for (size_t j = 1; j < n; j++)
     {
-      out << sep << data(i, j);
+      out << sept << data(i, j);
     }
     out << endl;
   }
@@ -654,18 +658,21 @@ void DataTable::write(const DataTable& data, ostream& out, const string& sep, bo
 
 void DataTable::write(const DataTable& data, bpp::OutputStream& out, const string& sep, bool alignHeaders)
 {
+  const string sept(sep=="\\t"?"\t":sep);
+
   size_t n = data.getNumberOfColumns();
   if (n == 0)
     return;
+  
   if (data.hasColumnNames())
   { // Write header
     vector<string> colNames = data.getColumnNames();
     if (alignHeaders && data.hasRowNames())
-      out << sep;
+      out << sept;
     out << colNames[0];
     for (size_t i = 1; i < n; i++)
     {
-      out << sep << colNames[i];
+      out << sept << colNames[i];
     }
     out.endLine();
   }
@@ -673,11 +680,11 @@ void DataTable::write(const DataTable& data, bpp::OutputStream& out, const strin
   for (size_t i = 0; i < data.getNumberOfRows(); i++)
   {
     if (data.hasRowNames())
-      out << data.getRowName(i) << sep;
+      out << data.getRowName(i) << sept;
     out << data(i, 0);
     for (size_t j = 1; j < n; j++)
     {
-      out << sep << data(i, j);
+      out << sept << data(i, j);
     }
     out.endLine();
   }

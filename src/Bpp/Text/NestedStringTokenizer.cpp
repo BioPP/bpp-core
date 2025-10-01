@@ -40,7 +40,7 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           }
           else
           {
-            // Ignore this token untill closing block is found
+            // Ignore this token until closing block is found
             cache += s.substr(index, newIndex - index + 1);
             index = newIndex + 1;
             newIndex = s.find_first_of(delimiters, index);
@@ -52,7 +52,10 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
           if (blocks == 0)
           {
-            tokens_.push_back(cache + token);
+            auto s2 = cache + token;
+            if (s2=="\\t")
+              s2="\t"; 
+            tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex;
             endBlockFound = true;
@@ -79,7 +82,10 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
 
           if (blocks == 0)
           {
-            tokens_.push_back(cache + token);
+            auto s2 = cache + token;
+            if (s2=="\\t")
+              s2="\t"; 
+            tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex + delimiters.size();
             endBlockFound = true;
@@ -98,7 +104,10 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           blocks += static_cast<int>(TextTools::count(token, open)) - static_cast<int>(TextTools::count(token, end));
           if (blocks == 0)
           {
-            tokens_.push_back(cache + token);
+            auto s2 = cache + token;
+            if (s2=="\\t")
+              s2="\t"; 
+            tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex;
             endBlockFound = true;
