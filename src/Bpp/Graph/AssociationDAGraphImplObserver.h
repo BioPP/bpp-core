@@ -237,7 +237,6 @@ public:
 
   /**
    * Remove a father of a node
-   * @return a vector containing the removed nodes
    */
   void removeFather(const std::shared_ptr<N> node, const std::shared_ptr<N> father)
   {

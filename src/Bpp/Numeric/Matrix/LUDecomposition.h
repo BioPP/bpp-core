@@ -79,7 +79,6 @@ public:
    * @brief LU Decomposition
    *
    * @param  A   Rectangular matrix
-   * @return LU Decomposition object to access L, U and piv.
    */
 
   // This is the constructor in JAMA C++ port. However, it seems to have some bug...

@@ -226,7 +226,6 @@ public:
    * @param vin The vector to sample.
    * @param vout [out] The output vector to fill, with the appropriate size.
    * @param replace Should sampling be with replacement?
-   * @return A vector which is a sample of v.
    * @throw IndexOutOfBoundException if the sample size exceeds the original
    * size when sampling without replacement.
    * @throw EmptyVectorException if the vector is empty.
@@ -381,7 +380,6 @@ public:
    * @param w [in] The vector of weights.
    * @param vout [out] The output vector to fill, with the appropriate size already set.
    * @param replace Should sampling be with replacement?
-   * @return A vector which is a sample of v.
    * @throw IndexOutOfBoundException if the sample size exceeds the original
    * size when sampling without replacement.
    * @throw EmptyVectorException if the vector is empty.

@@ -629,9 +629,11 @@ public:
   }
 
   /**
-   * @author Laurent Gueguen
-   * @return Log-normalize std::vector v1, ie add a constant to the elements of v
+   * @brief Log-normalize std::vector v, ie add a constant to the elements of v
    *  such that @f$\sum_i(\exp(v_i)) = 1@f$.
+   * 
+   * @author Laurent Gueguen
+   *
    * @param v std::vector.
    */
   template<class T>
