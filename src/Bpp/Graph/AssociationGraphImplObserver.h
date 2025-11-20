@@ -998,19 +998,19 @@ private:
     const AssociationGraphImplObserver<N, E, GraphImpl>& agio_;
 
 public:
-    NodeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
+    NodeIteratorClass(AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); }
 
-    NodeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
+    NodeIteratorClass(const AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); }
 
-    NodeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    NodeIteratorClass(AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) {start(); }
 
-    NodeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    NodeIteratorClass(const AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) {start(); }
 
-    ~NodeIteratorClass<GraphIterator, is_const>() {}
+    ~NodeIteratorClass() {}
 
     void next() {it_.next(); while (!it_.end() && agio_.getNodeFromGraphid(*it_) == 0) it_.next(); }
 
@@ -1336,19 +1336,19 @@ private:
     const AssociationGraphImplObserver<N, E, GraphImpl>& agio_;
 
 public:
-    EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
+    EdgeIteratorClass(AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); }
 
-    EdgeIteratorClass<GraphIterator, is_const>(AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    EdgeIteratorClass(AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) { start(); }
 
-    EdgeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
+    EdgeIteratorClass(const AssociationGraphImplObserver<N, E, GraphImpl>& agio) : it_(*agio.getGraph()),
       agio_(agio) { start(); }
 
-    EdgeIteratorClass<GraphIterator, is_const>(const AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
+    EdgeIteratorClass(const AssociationGraphImplObserver<N, E, GraphImpl>& agio, Nref n) : it_(*agio.getGraph(), agio.getNodeGraphid(n)),
       agio_(agio) { start(); }
 
-    ~EdgeIteratorClass<GraphIterator, is_const>() {}
+    ~EdgeIteratorClass() {}
 
     void next() {it_.next(); while (!it_.end() && (agio_.getEdgeFromGraphid(*it_) == 0)) it_.next(); }
 
