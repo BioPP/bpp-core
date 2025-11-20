@@ -53,8 +53,8 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           if (blocks == 0)
           {
             auto s2 = cache + token;
-            if (s2=="\\t")
-              s2="\t"; 
+            if (s2 == "\\t")
+              s2 = "\t";
             tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex;
@@ -83,8 +83,8 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           if (blocks == 0)
           {
             auto s2 = cache + token;
-            if (s2=="\\t")
-              s2="\t"; 
+            if (s2 == "\\t")
+              s2 = "\t";
             tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex + delimiters.size();
@@ -105,8 +105,8 @@ NestedStringTokenizer::NestedStringTokenizer(const std::string& s, const std::st
           if (blocks == 0)
           {
             auto s2 = cache + token;
-            if (s2=="\\t")
-              s2="\t"; 
+            if (s2 == "\\t")
+              s2 = "\t";
             tokens_.push_back(s2);
             cache = ""; // reset cache.
             index = newIndex;

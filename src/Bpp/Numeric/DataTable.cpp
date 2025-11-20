@@ -554,7 +554,7 @@ void DataTable::addRow(const string& rowName, const vector<string>& newRow)
 unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool header, int rowNames)
 {
   string firstLine  = FileTools::getNextLine(in);
-  const string sept(sep=="\\t"?"\t":sep);
+  const string sept(sep == "\\t" ? "\t" : sep);
 
   StringTokenizer st1(firstLine, sept, false, true);
   vector<string> row1(st1.getTokens().begin(), st1.getTokens().end());
@@ -625,7 +625,7 @@ unique_ptr<DataTable> DataTable::read(istream& in, const string& sep, bool heade
 
 void DataTable::write(const DataTable& data, ostream& out, const string& sep, bool alignHeaders)
 {
-  const string sept(sep=="\\t"?"\t":sep);
+  const string sept(sep == "\\t" ? "\t" : sep);
 
   size_t n = data.getNumberOfColumns();
   if (n == 0)
@@ -658,12 +658,12 @@ void DataTable::write(const DataTable& data, ostream& out, const string& sep, bo
 
 void DataTable::write(const DataTable& data, bpp::OutputStream& out, const string& sep, bool alignHeaders)
 {
-  const string sept(sep=="\\t"?"\t":sep);
+  const string sept(sep == "\\t" ? "\t" : sep);
 
   size_t n = data.getNumberOfColumns();
   if (n == 0)
     return;
-  
+
   if (data.hasColumnNames())
   { // Write header
     vector<string> colNames = data.getColumnNames();

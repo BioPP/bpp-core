@@ -63,7 +63,7 @@ public:
    * FileTools::getFileName("/path/file.ext") returns "file".
    * This method is not recursive, hence
    * FileTools::getfileName("/home/me/archive.tar.gz") returns "archive".
-.   *
+     .   *
    * An empty string is returned if 'path' is not a valid path toward a file.
    *
    * @param path A file path.

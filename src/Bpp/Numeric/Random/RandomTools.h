@@ -136,7 +136,7 @@ public:
    */
   static double randGamma(double alpha, double beta)
   {
-    std::gamma_distribution<double> dis(alpha, 1./beta); //Note: in the std, beta is the scale = 1/rate, while we use the "shape,rate" parametrization.
+    std::gamma_distribution<double> dis(alpha, 1. / beta); // Note: in the std, beta is the scale = 1/rate, while we use the "shape,rate" parametrization.
     return dis(DEFAULT_GENERATOR);
   }
 

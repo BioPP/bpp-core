@@ -25,7 +25,8 @@ find_package (bpp-seq)
 
 # Bio++ REQUIRES using at least the C++14 standard.
 # This line specifies options passed to the compiler (you can add your own).
-add_compile_options(-std=c++14)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Tells CMake to create a binary from dummy.cpp (replace with your .cpp file(s))
 add_executable (myprogram dummy.cpp other.cpp)
@@ -62,11 +63,11 @@ target_link_libraries (myprogram ${BPP_LIBS_SHARED})
 # find_package of a a module also does a find_package of dependency Bio++ modules.
 #
 # So, for bpp-phyl (which depends on bpp-seq and bpp-core):
-find_package (bpp-phyl3)
+find_package (bpp-phyl)
 # Is equivalent to:
-find_package (bpp-core3)
-find_package (bpp-seq3)
-find_package (bpp-phyl3)
+find_package (bpp-core)
+find_package (bpp-seq)
+find_package (bpp-phyl)
 # And the following target_link_libraries commands are equivalent:
 target_link_libraries (myprogram bpp-phyl-shared)
 target_link_libraries (myprogram bpp-core-shared bpp-seq-shared bpp-phyl-shared)

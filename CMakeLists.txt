@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: CECILL-2.1
 
 cmake_minimum_required(VERSION 3.10)
-project(bpp-core3 CXX)
+project(bpp-core CXX)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Compile options
-set(CMAKE_CXX_STANDARD 14)
-
 add_compile_options(-Wall -Weffc++ -Wshadow -Wconversion)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -27,7 +27,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-set(${PROJECT_NAME}_VERSION_CURRENT "1")
+set(${PROJECT_NAME}_VERSION_CURRENT "3")
 set(${PROJECT_NAME}_VERSION_REVISION "0")
 set(${PROJECT_NAME}_VERSION_AGE "0")
 

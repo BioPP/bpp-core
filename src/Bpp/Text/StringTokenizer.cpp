@@ -30,8 +30,8 @@ StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimi
       else
       {
         auto s2 = s.substr(index);
-        if (s2=="\\t")
-          s2="\t"; 
+        if (s2 == "\\t")
+          s2 = "\t";
         tokens_.push_back(s2);
         index = newIndex;
       }
@@ -59,8 +59,8 @@ StringTokenizer::StringTokenizer(const std::string& s, const std::string& delimi
       else
       {
         auto s2 = s.substr(index);
-        if (s2=="\\t")
-          s2="\t"; 
+        if (s2 == "\\t")
+          s2 = "\t";
         tokens_.push_back(s2);
         index = newIndex;
       }

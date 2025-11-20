@@ -15,11 +15,14 @@
 # Main CMakeLists.txt
 ####################################################################################################
 
-cmake_minimum_required (VERSION 3.5)
+cmake_minimum_required (VERSION 3.10)
 # 2.8.11 is required for:
 # - clean target properties (link, include dir)
 
 project (bpp-something CXX)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Defines a lot of stuff including PROJECT_NAME which will contain "bpp-something"
 # PROJECT_NAME is used to name:
 # - the library
@@ -27,12 +30,8 @@ project (bpp-something CXX)
 # - the CMake package
 # Do not change it unless there is a good reason...
 
-add_compile_options(std=c++14 -Wall -Weffc++ -Wshadow -Wconversion)
+add_compile_options(-Wall -Weffc++ -Wshadow -Wconversion)
 # Define compile options to be used for all C++ targets.
-# NOTES for the future:
-# -> CMake >= 2.8.12 adds per target COMPILE_OPTIONS by using target_compile_options (<target> [PRIVATE|PUBLIC] <opt1> ... <optN>)
-# -> CMake >= 3.1.x provides a CXX_STANDARD variable to set -std=...
-# -> It also provides a "feature" property on targets which annotates, and auto selects the right -std=...
 
 SET(${PROJECT_NAME}_VERSION_CURRENT "3")
 SET(${PROJECT_NAME}_VERSION_REVISION "0")
