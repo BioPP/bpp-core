@@ -177,30 +177,24 @@ public:
   /**
    * @brief Return the quantile of the continuous version of the
    * distribution, ie y such that @f$ Prob(X<y)=x @f$
-   *
-   **/
-
+   */
   virtual double qProb(double x) const = 0;
 
   /**
    * @brief Return the cumulative quantile of the continuous version
    * of the distribution, ie @f$ Prob(X<x) @f$.
-   *
-   **/
-
+   */
   virtual double pProb(double x) const = 0;
 
   /**
    * @brief Return a primitive function used for the expectation
    * of the continuous version of the distribution, ie
    * @f$ E(X|...<=X<a) = \int_{...}^a t.dProb(t) dt @f$.
-   *
-   **/
-
+   */
   virtual double Expectation(double a) const = 0;
 
   /**
-   *@brief Sets the median value to true to say that the value in a
+   * @brief Sets the median value to true to say that the value in a
    * class is proportional to the median value of the class, the
    * proportionality factor being such that the sum of the values
    * equals the expectation of the distribution. If it is set to
@@ -212,7 +206,6 @@ public:
    * @param median tells how the value associated to each class is
    * computed.
    */
-
   virtual void setMedian(bool median) = 0;
 
   /**
@@ -222,7 +215,7 @@ public:
   virtual void discretize() = 0;
 
   /**
-   *@return A vector of all the bounds
+   * @return A vector of all the bounds
    */
   virtual Vdouble getBounds() const = 0;
 
@@ -232,8 +225,7 @@ public:
   virtual double getBound(size_t) const = 0;
 
   /**
-   *@brief methods about the range of the definition
-   *
+   * @brief methods about the range of the definition
    **/
 
   /**

@@ -28,6 +28,7 @@ public:
   static short DISCRETIZATION_EQUAL_PROB;
   static short DISCRETIZATION_EQUAL_INTERVAL;
   static short DISCRETIZATION_EQUAL_PROB_WHEN_POSSIBLE;
+  static short DISCRETIZATION_FIXED_BOUNDS;
 
   /**
    * @brief Comparator class for AbstractDiscreteDistribution.
@@ -103,6 +104,8 @@ public:
    * With additional precision value to discriminate categories (default 1e-12)
    */
   AbstractDiscreteDistribution(size_t nbClasses, double precision, const std::string& prefix = "", short discretization = DISCRETIZATION_EQUAL_PROB);
+  
+  AbstractDiscreteDistribution(const std::vector<double>& bounds, const std::string& prefix = "");
 
   AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde);
 
@@ -200,6 +203,7 @@ public:
 protected:
   void discretizeEqualProportions();
   void discretizeEqualIntervals();
+  void discretizeFixedBounds();
 };
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_ABSTRACTDISCRETEDISTRIBUTION_H

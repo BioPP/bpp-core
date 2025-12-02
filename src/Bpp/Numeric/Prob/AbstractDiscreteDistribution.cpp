@@ -12,6 +12,7 @@ using namespace std;
 short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_PROB = 1;
 short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_INTERVAL = 2;
 short AbstractDiscreteDistribution::DISCRETIZATION_EQUAL_PROB_WHEN_POSSIBLE = 3;
+short AbstractDiscreteDistribution::DISCRETIZATION_FIXED_BOUNDS = 4;
 
 AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, const std::string& prefix, short discretization) :
   AbstractParameterAliasable(prefix),
@@ -31,6 +32,16 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(size_t nbClasses, dou
   intMinMax_(new IntervalConstraint(-NumConstants::VERY_BIG(), NumConstants::VERY_BIG(), true, true)),
   median_(false),
   discretizationScheme_(discretization)
+{}
+
+AbstractDiscreteDistribution::AbstractDiscreteDistribution(const vector<double>& bounds, const std::string& prefix) :
+  AbstractParameterAliasable(prefix),
+  numberOfCategories_(bounds.size() - 1),
+  distribution_(),
+  bounds_(bounds.begin() + 1, bounds.end() - 2),
+  intMinMax_(new IntervalConstraint(*bounds.begin(), *bounds.rbegin(), true, true)),
+  median_(false),
+  discretizationScheme_(DISCRETIZATION_FIXED_BOUNDS)
 {}
 
 AbstractDiscreteDistribution::AbstractDiscreteDistribution(const AbstractDiscreteDistribution& adde) :
@@ -491,6 +502,38 @@ void AbstractDiscreteDistribution::discretizeEqualIntervals()
 
 /***********************************************************************/
 
+void AbstractDiscreteDistribution::discretizeFixedBounds()
+{
+  /* discretization of distribution with a pre-defined set of bounds
+   */
+
+  distribution_.clear();
+  vector<double> values(numberOfCategories_);
+
+  double lowerBound = intMinMax_->getLowerBound();
+  double upperBound = intMinMax_->getUpperBound();
+  double condProb = pProb(upperBound) - pProb(lowerBound);
+
+  // Compute values:
+  deque<double> allBounds(bounds_.begin(), bounds_.end());
+  allBounds.push_front(lowerBound);
+  allBounds.push_back(upperBound);
+  for (size_t i = 0; i < numberOfCategories_; ++i)
+  {
+    values[i] = (allBounds[i] + allBounds[i+1]) / 2.;
+  }
+
+  // Compute proportions:
+  for (size_t i = 0; i < numberOfCategories_; ++i)
+  {
+    distribution_[values[i]] = (pProb(allBounds[i + 1]) - pProb(allBounds[i])) / condProb;
+  }
+
+  return;
+}
+
+/***********************************************************************/
+
 void AbstractDiscreteDistribution::discretize()
 {
   if (discretizationScheme_ == DISCRETIZATION_EQUAL_PROB)
@@ -500,6 +543,10 @@ void AbstractDiscreteDistribution::discretize()
   else if (discretizationScheme_ == DISCRETIZATION_EQUAL_INTERVAL)
   {
     discretizeEqualIntervals();
+  }
+  else if (discretizationScheme_ == DISCRETIZATION_FIXED_BOUNDS)
+  {
+    discretizeFixedBounds();
   }
   else
   {

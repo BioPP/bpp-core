@@ -40,6 +40,21 @@ GammaDiscreteDistribution::GammaDiscreteDistribution(size_t n, double alpha, dou
   discretize();
 }
 
+GammaDiscreteDistribution::GammaDiscreteDistribution(const vector<double>& bounds, double alpha, double beta, double minimumAlpha, double minimumBeta) :
+  AbstractDiscreteDistribution(bounds, "Gamma."),
+  alpha_(alpha),
+  beta_(beta),
+  offset_(0),
+  ga1_(1)
+{
+  addParameter_(new Parameter("Gamma.alpha", alpha, std::make_shared<IntervalConstraint>(1, minimumAlpha, true)));
+  addParameter_(new Parameter("Gamma.beta", beta, std::make_shared<IntervalConstraint>(1, minimumBeta, true)));
+
+  ga1_ = exp(RandomTools::lnGamma(alpha_ + 1) - RandomTools::lnGamma(alpha_));
+
+  discretize();
+}
+
 GammaDiscreteDistribution::GammaDiscreteDistribution(const GammaDiscreteDistribution& gdd) :
   AbstractDiscreteDistribution(gdd),
   alpha_(gdd.alpha_),

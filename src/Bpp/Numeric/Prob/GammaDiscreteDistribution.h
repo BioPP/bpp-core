@@ -51,8 +51,19 @@ public:
    * If @f$ alpha > 1 @f$, the minimum value of the distribution is
    * set to offset+1e-12, otherwise it is offset.
    */
-
   GammaDiscreteDistribution(size_t n, double alpha = 1., double beta = 1., double minimumAlpha = 0.05, double minimumBeta = 0.05, bool paramOffset = false, double offset = 0);
+
+  /**
+   * @brief Build a new discretized gamma distribution for a set of user-defined bounds
+   * @param alpha The alpha parameter (shape)
+   * @param beta The beta parameter (rate)
+   * @param minimumAlpha The minimum allowed value for parameter alpha.
+   * @param minimumBeta The minimum allowed value for parameter beta.
+   *
+   * The Parameters are: alpha and beta @f$ \in [minimumBound;\infty[ @f$.
+   * Small values of alpha and/or beta can lead to discretization issues.
+   */
+  GammaDiscreteDistribution(const std::vector<double>& bounds, double alpha = 1., double beta = 1., double minimumAlpha = 0.0001, double minimumBeta = 0.0001);
 
   GammaDiscreteDistribution(const GammaDiscreteDistribution&);
 
@@ -80,6 +91,15 @@ public:
   double pProb(double x) const;
 
   double Expectation(double a) const;
+
+  /**
+   * @brief Set the discretization policy.
+   *
+   * @param discretization Either DISCRETIZATION_EQUAL_PROB or DISCRETIZATION_EQUAL_INTERVAL. 
+   * @warning Default is set to EQUAL_PROB. Changing to EQUAL_INTERVAL necessitates to call restrictToConstraint with a finite interval first.
+   */
+  void setDiscretizationPolicy(short discretization) { discretizationScheme_ = discretization; };
 };
+
 } // end of namespace bpp.
 #endif // BPP_NUMERIC_PROB_GAMMADISCRETEDISTRIBUTION_H
