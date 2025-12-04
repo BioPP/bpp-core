@@ -115,6 +115,8 @@ private:
   std::map<std::string, std::shared_ptr<AliasParameterListener>> aliasListenersRegister_;
 
 public:
+  AbstractParameterAliasable() = default;
+  
   AbstractParameterAliasable(const std::string& prefix) :
     AbstractParametrizable(prefix),
     independentParameters_(),

@@ -31,6 +31,8 @@ private:
   std::string prefix_;
 
 public:
+  AbstractParametrizable() = default;
+  
   AbstractParametrizable(const std::string& prefix) : parameters_(), prefix_(prefix) {}
 
   virtual ~AbstractParametrizable() {}
