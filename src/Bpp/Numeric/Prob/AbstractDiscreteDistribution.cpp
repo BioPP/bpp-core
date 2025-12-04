@@ -38,7 +38,7 @@ AbstractDiscreteDistribution::AbstractDiscreteDistribution(const vector<double>&
   AbstractParameterAliasable(prefix),
   numberOfCategories_(bounds.size() - 1),
   distribution_(),
-  bounds_(bounds.begin() + 1, bounds.end() - 2),
+  bounds_(bounds.begin() + 1, bounds.end() - 1),
   intMinMax_(new IntervalConstraint(*bounds.begin(), *bounds.rbegin(), true, true)),
   median_(false),
   discretizationScheme_(DISCRETIZATION_FIXED_BOUNDS)
