@@ -86,7 +86,10 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
     rf = args["probas"];
     StringTokenizer strtok2(rf.substr(1, rf.length() - 2), ",");
     while (strtok2.hasMoreToken())
-      probas.push_back(TextTools::toDouble(strtok2.nextToken()));
+    {
+      auto val = TextTools::toDouble(strtok2.nextToken());
+      probas.push_back(val==0?val+0.00000001:val);
+    }
 
     double sum = VectorTools::sum(probas);
     if (fabs(1. - sum) > 0.00001)
