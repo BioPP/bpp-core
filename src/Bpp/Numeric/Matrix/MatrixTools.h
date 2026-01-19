@@ -838,7 +838,7 @@ public:
   }
 
   /**
-   * @param A [in] The matrix to transpose.
+   * @param A [in] A matrix.
    * @return if symmetric
    */
   template<class MatrixA>
@@ -852,6 +852,28 @@ public:
       for (size_t j = i + 1; j < A.getNumberOfRows(); j++)
       {
         if (A(i, j) != A(j, i))
+          return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * @param A [in] A matrix.
+   * @return if anti-symmetric
+   */
+  
+  template<class MatrixA>
+  static bool isAntiSymmetric(const MatrixA& A)
+  {
+    if (A.getNumberOfColumns() != A.getNumberOfRows())
+      return false;
+
+    for (size_t i = 0; i < A.getNumberOfColumns(); i++)
+    {
+      for (size_t j = i + 1; j < A.getNumberOfRows(); j++)
+      {
+        if (A(i, j) != -A(j, i))
           return false;
       }
     }
