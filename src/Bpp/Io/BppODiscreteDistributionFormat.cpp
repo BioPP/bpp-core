@@ -88,6 +88,15 @@ unique_ptr<DiscreteDistributionInterface> BppODiscreteDistributionFormat::readDi
     while (strtok2.hasMoreToken())
       probas.push_back(TextTools::toDouble(strtok2.nextToken()));
 
+    double sum = VectorTools::sum(probas);
+    if (fabs(1. - sum) > 0.00001)
+      throw Exception("BppODiscreteDistributionFormat for SimpleDiscreteDistribution: Probabilities must equal 1 (sum =" + TextTools::toString(sum) + ").");
+    else
+    {
+      for (size_t ip =0; ip< probas.size(); ip++)
+        probas[ip]=probas[ip]/sum;
+    }
+    
     std::map<size_t, std::vector<double>> ranges;
 
     if (args.find("ranges") != args.end())
