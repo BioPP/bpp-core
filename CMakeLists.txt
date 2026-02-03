@@ -27,7 +27,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 #           library implements.
 # In other words, the library implements all the interface numbers in the
 # range from number current - age to current.
-set(${PROJECT_NAME}_VERSION_CURRENT "3")
+set(${PROJECT_NAME}_VERSION_CURRENT "6")
 set(${PROJECT_NAME}_VERSION_REVISION "0")
 set(${PROJECT_NAME}_VERSION_AGE "0")
 
