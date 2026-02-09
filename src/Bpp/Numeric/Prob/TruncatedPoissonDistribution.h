@@ -1,3 +1,9 @@
+// SPDX-FileCopyrightText: The Bio++ Development Group
+//
+// SPDX-License-Identifier: CECILL-2.1
+
+
+
 #ifndef BPP_NUMERIC_PROB_TRUNCATEDPOISSONDISTRIBUTION_H
 #define BPP_NUMERIC_PROB_TRUNCATEDPOISSONDISTRIBUTION_H
 
