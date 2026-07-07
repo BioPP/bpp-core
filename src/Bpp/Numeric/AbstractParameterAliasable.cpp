@@ -143,6 +143,7 @@ void AbstractParameterAliasable::aliasParameters(map<string, string>& unparsedPa
       {
         if (!pl.hasParameter(it->second))
           throw ParameterNotFoundException("Unknown aliasing parameter", it->first + "->" + it->second);
+        it = unparsedParams.erase(it);
         continue;
       }
       unique_ptr<Parameter> p2(pp->clone());
